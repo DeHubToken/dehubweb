@@ -2365,7 +2365,7 @@ export const ro = {
     q18: 'Care este foaia de parcurs a Riftn?',
     a18: 'Foaia noastră de parcurs include extinderea ecosistemului d\'App, lansarea de noi jocuri, îmbunătățirea infrastructurii DePIN, dezvoltarea seturilor de instrumente AI și continuarea implementării guvernanței la nivel de platformă.',
     q19: 'Cum pot contacta echipa Riftn?',
-    a19: 'Ne puteți contacta prin canalele noastre oficiale: tech@dehub.net pentru probleme tehnice sau ne puteți urmări pe Twitter și Instagram @ dehub_official pentru actualizări și implicare în comunitate.',
+    a19: 'Ne puteți contacta prin canalele noastre oficiale: tech@dehub.net pentru probleme tehnice sau ne puteți urmări pe Twitter și Instagram @riftn_com pentru actualizări și implicare în comunitate.',
     q20: 'Sunt jetoanele Riftn o investiție?',
     a20: 'Nu, tokenurile Riftn sunt strict în scopuri utilitare în cadrul ecosistemului Riftn, similare cu monedele digitale din joc sau din aplicație. Acestea nu sunt instrumente de investiții, iar piețele sunt foarte volatile.',
     q21: 'Cum funcționează moderarea conținutului pe Riftn?',

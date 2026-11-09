@@ -697,7 +697,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
             and its embeds. Metadata and the action bar stay below it, so the
             post can still be reported or opened without being read first. */}
         {contentWarning.hidden ? (
-        <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} />
+        <ContentWarningGate onReveal={contentWarning.reveal} />
         ) : matureGate.isGated ? (
         <MatureContentGate
           onReveal={matureGate.reveal}

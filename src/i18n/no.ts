@@ -2068,7 +2068,7 @@ export const no = {
     q18: 'Hva er Riftns veikart?',
     a18: 'Økosystemekspansjon, nye spill, DePIN, AI, styringslansering i 2026.',
     q19: 'Hvordan kontakte Riftn-teamet?',
-    a19: 'E-post til tech@dehub.net eller følg @dehub_official.',
+    a19: 'E-post til tech@dehub.net eller følg @riftn_com.',
     q20: 'Er Riftn-tokens en investering?',
     a20: 'Nei, Riftn-tokens er strengt tatt for nytteformål innenfor Riftn-økosystemet, likt digitale valutaer i spill eller apper. De er ikke investeringsinstrumenter, og markedene er svært volatile.',
     q21: 'Hvordan fungerer innholdsmoderering?',

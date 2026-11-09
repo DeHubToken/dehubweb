@@ -9,7 +9,7 @@ export const topBlockchainProjects2026Post: BlogPostType = {
   excerpt: 'We counted every commit and every active developer across 123 public GitHub repos behind 86 blockchains over 90 days, then ranked the 50 most active. Solana leads, Ethereum has the biggest team, and some big names have gone quiet.',
   content: `Which blockchains are actually being built in 2026? Prices and headlines move every day, but code is harder to fake. We counted every commit and every active developer across 123 public GitHub repositories behind 86 blockchain projects over the last 90 days, then ranked the **50 most active blockchain projects by GitHub activity**. Every number below comes from the projects' own public code.
 
-![How we scored the top 50 blockchain projects by GitHub activity](/media/fig-chains-method.jpg)
+![How we scored the top 50 blockchain projects by GitHub activity](/media/fig-chains-method-riftn.jpg)
 
 ## How we scored the top 50 blockchain projects
 
@@ -23,7 +23,7 @@ GitHub activity is not the same as price, users or security. Some teams build in
 
 ## The top 10 most active blockchains
 
-![The top 10 most active blockchain projects on GitHub in 2026, by activity score](/media/fig-chains-top10.jpg)
+![The top 10 most active blockchain projects on GitHub in 2026, by activity score](/media/fig-chains-top10-riftn.jpg)
 
 ### #1 Solana: 100/100
 
@@ -153,35 +153,35 @@ GitHub activity is not the same as price, users or security. Some teams build in
 
 Commits show how much code lands each day. Solana is far ahead, with two validator teams working at once. Dash is a surprise at #2 on raw commits, though roughly 350 of its 1,222 commits are ports of Bitcoin Core changes.
 
-![Most commits in the last 90 days: Solana 2,618, Dash 1,222, Base 1,185, Cardano 1,146, Tempo 1,087](/media/fig-chains-commits.jpg)
+![Most commits in the last 90 days: Solana 2,618, Dash 1,222, Base 1,185, Cardano 1,146, Tempo 1,087](/media/fig-chains-commits-riftn.jpg)
 
 ## The biggest developer teams
 
 Developers show how many people are behind the code. Ethereum and Solana are neck and neck, Bitcoin is third, and Polkadot makes the top four on people even though it ranks lower on commits.
 
-![Most active developers in the last 90 days: Ethereum 129, Solana 128, Bitcoin 81, Polkadot 73, Chainlink 62](/media/fig-chains-devs.jpg)
+![Most active developers in the last 90 days: Ethereum 129, Solana 128, Bitcoin 81, Polkadot 73, Chainlink 62](/media/fig-chains-devs-riftn.jpg)
 
 ## Layer 2s ship fast
 
-![Layer 2 blockchains ranked by GitHub activity in 2026](/media/fig-chains-l2.jpg)
+![Layer 2 blockchains ranked by GitHub activity in 2026](/media/fig-chains-l2-riftn.jpg)
 
 Ethereum's Layer 2s are some of the busiest codebases in crypto. Optimism (#7) and Base (#9) lead, followed by Starknet (#12), Arbitrum (#13), Linea (#23), Taiko (#37), Celo (#38) and zkSync (#49). Because Base, Celo and many others run on the OP Stack, every commit to Optimism's code helps a whole family of chains. Scroll (15 commits), Mantle (17) and Unichain (1) were much quieter in public.
 
 ## Privacy chains are busy
 
-![Privacy blockchains ranked by GitHub activity: Zcash, Monero, Aleo and Mina](/media/fig-chains-privacy.jpg)
+![Privacy blockchains ranked by GitHub activity: Zcash, Monero, Aleo and Mina](/media/fig-chains-privacy-riftn.jpg)
 
 Privacy is one of the most active corners of crypto. Zcash is #4 overall as it moves to its new Zebra node, Monero is #19 with 35 developers, Aleo is #20 and Mina is #26. All four are building zero-knowledge or private-payment tech in the open.
 
 ## Big names, little code?
 
-![Commits in the last 90 days for the biggest coins: Solana 2,618, Cardano 1,146, Bitcoin 740, Ethereum 696, Dogecoin 8](/media/fig-chains-bignames.jpg)
+![Commits in the last 90 days for the biggest coins: Solana 2,618, Cardano 1,146, Bitcoin 740, Ethereum 696, Dogecoin 8](/media/fig-chains-bignames-riftn.jpg)
 
 Market value and public code do not always match. Solana, Cardano, Bitcoin and Ethereum are all top 5. BNB Chain is #42 with 100 commits, while Litecoin (22 commits), TRON (12) and Dogecoin (8) fall outside the top 50. Some of these teams build in private branches or ship rarely by design, so low public activity does not mean a chain has stopped working.
 
 ## Gone quiet
 
-![Blockchain projects with no public commits in the last 90 days](/media/fig-chains-quiet.jpg)
+![Blockchain projects with no public commits in the last 90 days](/media/fig-chains-quiet-riftn.jpg)
 
 These projects had zero commits on the default branch of their main public repo between 28 July and 26 October 2026:
 
@@ -198,7 +198,7 @@ These projects had zero commits on the default branch of their main public repo 
 
 Riftn is a social and streaming app, not a blockchain, so it is not ranked here. But for scale, its public web and mobile apps took 5,558 commits in the same 90 days, about twice as many as Solana, the busiest blockchain on this list. On Riftn, anyone can request a feature on [riftn.com/features](https://riftn.com/features) and watch the community build it.
 
-![For scale: Riftn 5,558 commits in 90 days, Solana 2,618, Dash 1,222, Base 1,185](/media/fig-chains-dehub.jpg)
+![For scale: Riftn 5,558 commits in 90 days, Solana 2,618, Dash 1,222, Base 1,185](/media/fig-chains-dehub-riftn.jpg)
 
 > Disclosure: Riftn publishes this index. Riftn is not included in the ranking.
 
@@ -240,7 +240,7 @@ See our sister ranking, the [Top 50 Decentralized Social Apps 2026](/guides/top-
 ## Build with Riftn
 
 Open [riftn.com](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-50-blockchain-projects-2026-banner.png',
+  bannerImage: '/media/top-50-blockchain-projects-2026-banner-riftn.png',
   bannerImageAlt: 'Top 50 blockchain projects 2026 ranked by GitHub activity, by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',

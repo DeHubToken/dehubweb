@@ -22,7 +22,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
-import { chatRefusalText, ShownChatError, wasShownToUser } from '@/lib/chat-refusal';
+import { chatRefusalText, isAuthRefusal, ShownChatError, wasShownToUser } from '@/lib/chat-refusal';
+import { ensureFreshToken, refreshTokenShared } from '@/lib/api/dehub/core';
 import { parseChatBadges, type ChatCreatorBadge } from '@/lib/live/chat-badges';
 import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 
@@ -636,6 +637,9 @@ export function useLiveChatMessages(roomId: string | null) {
     // message simply disappear. Say what happened and drop the row that will
     // never be confirmed.
     const unsubError = onLiveChatError(roomId, (data) => {
+      // Signed-out refusals are healed by the send that got them (new token,
+      // sent again); only a session that is really over is shown, by the send.
+      if (isAuthRefusal(data)) return;
       const message = chatRefusalText(data);
       // One toast per refusal even if several sends come back refused at once.
       toast.error(message, { id: data?.code === 'SLOW_DOWN' ? 'chat-slow-down' : undefined });
@@ -780,10 +784,18 @@ export function useLiveChatMessages(roomId: string | null) {
         // server's reason (slow down, blocked link, ...); remember it so the
         // send does not add a second, vaguer toast on top.
         let refused = false;
-        const confirmed = await confirmChatDelivery({
+        let signedOut = false;
+        // The send carries the token, so a connection that came back from a
+        // sleep as a guest is signed in again by the send itself. Make sure
+        // it is a live one first.
+        await ensureFreshToken().catch(() => undefined);
+        const deliver = () => confirmChatDelivery({
           listen: (event, handler) => {
             if (event === 'message') return onLiveChatMessage(roomId, handler);
-            if (event === 'error') return onLiveChatError(roomId, (data) => { refused = true; handler(data); });
+            if (event === 'error') return onLiveChatError(roomId, (data) => {
+              if (isAuthRefusal(data)) signedOut = true; else refused = true;
+              handler(data);
+            });
             socket.on(event, handler); return () => { socket.off(event, handler); };
           },
           emit: () => { emitSendMessage({
@@ -798,6 +810,16 @@ export function useLiveChatMessages(roomId: string | null) {
           messageEvent: 'message', errorEvent: 'error',
           matches: message => roomMessageMatches(message, { account: walletAddress, content, room: roomId, attachment: imageUrl || audioUrl }),
         });
+        let confirmed = await deliver();
+        // Refused as signed out while signed in here: get a new token and
+        // send once more, quietly. Only a session that is really over says so.
+        if (!confirmed && signedOut) {
+          signedOut = false;
+          const fresh = await refreshTokenShared().catch(() => null);
+          if (!fresh) throw new Error(_translateCopy("copy.de1ad7135e96", { defaultValue: "Your sign-in session expired. Please sign in again." }));
+          confirmed = await deliver();
+          if (!confirmed && signedOut) throw new Error(_translateCopy("copy.de1ad7135e96", { defaultValue: "Your sign-in session expired. Please sign in again." }));
+        }
         if (!confirmed && refused) throw new ShownChatError('refused');
         if (!confirmed) throw new Error(_translateCopy("copy.b13c7f1738c8", { defaultValue: "Message was not confirmed. Your draft has been kept." }));
 

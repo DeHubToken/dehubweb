@@ -2364,7 +2364,7 @@ export const sv = {
     q18: 'Vad är Riftn:s vägplan?',
     a18: 'Vår vägplan inkluderar att expandera d\'App-ekosystemet, lansera nya spel, förbättra DePIN-infrastrukturen, utveckla AI-vertygslådor och fortsätta med plattformövergripande styrningsutrollning.',
     q19: 'Hur kan jag kontakta Riftn-teamet?',
-    a19: 'Du kan nå oss genom våra officiella kanaler: tech@dehub.net för tekniska frågor, eller följ oss på Twitter och Instagram @dehub_official för uppdateringar och gemenskapsengagemang.',
+    a19: 'Du kan nå oss genom våra officiella kanaler: tech@dehub.net för tekniska frågor, eller följ oss på Twitter och Instagram @riftn_com för uppdateringar och gemenskapsengagemang.',
     q20: 'Är Riftn-tokens en investering?',
     a20: 'Nej, Riftn-tokens är endast avsedda för användningsändamål inom Riftn-ekosystemet, liknande digitala valutor i spelet eller i appen. De är inte investeringsinstrument och marknaderna är mycket volatila.',
     q21: 'Hur fungerar innehållsmoderering på Riftn?',

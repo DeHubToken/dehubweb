@@ -2176,6 +2176,7 @@
     "returnHome": "Voltar ao início"
   },
   "profile": {
+    "unavailable": "Perfil indisponível",
     "viewGrid": "Vista de grelha",
     "viewList": "Visualização de lista",
     "viewMode": "Ver",
@@ -12463,6 +12464,19 @@
     "subscriptionTokensValueNote": "Os tokens de subscrição mantêm o seu valor em dólares. Se o preço do token se mover antes de usá-los, você verá mais ou menos tokens, mas eles sempre compram a mesma quantidade de geração de IA. Eles não podem ser retirados, enviados ou negociados.",
     "topUpEmptyHint": "Adicione tokens para gerar com IA"
   },
+  "accountDeactivation": {
+    "acknowledge": "Entendo que meu perfil ficará oculto e que serei desconectado de todos os dispositivos.",
+    "title": "Desativar conta",
+    "short": "Oculte seu perfil por enquanto. Entre novamente para restaurá-lo",
+    "description": "Faça uma pausa. Seu perfil, posts e comentários ficam ocultos e você sai de todos os dispositivos. Nada é excluído, e ao entrar de novo tudo volta.",
+    "button": "Desativar",
+    "confirmTitle": "Desativar sua conta?",
+    "confirmBody": "Seu perfil, posts e comentários serão ocultados e você sairá de todos os dispositivos. Entre novamente quando quiser para desfazer.",
+    "busy": "Desativando…",
+    "done": "Conta desativada",
+    "receipt": "Seu perfil, posts e comentários estão ocultos. Entre novamente quando quiser para recuperar tudo.",
+    "error": "Não foi possível desativar sua conta. Tente novamente."
+  },
   "accountDeletion": {
     "title": "Apagar a sua conta",
     "description": "Exclua permanentemente a sua conta e os seus dados pessoais",
@@ -12476,7 +12490,11 @@
     "error": "Não foi possível enviar o seu pedido de eliminação. A sua conta não foi confirmada para eliminação. Tente novamente.",
     "back": "Voltar para as Configurações",
     "signIn": "Inicie sessão para apagar a sua conta",
-    "acknowledge": "Salvei os detalhes de recuperação da minha carteira e entendi que a exclusão é permanente."
+    "acknowledge": "Salvei os detalhes de recuperação da minha carteira e entendi que a exclusão é permanente.",
+    "signedInAs": "Sessão iniciada como",
+    "confirmTitle": "Excluir sua conta para sempre?",
+    "confirmBody": "Sua conta e tudo nela serão excluídos. Você será desconectado e isso não pode ser desfeito.",
+    "confirmBodyNamed": "{{who}} e tudo nela serão excluídos. Você será desconectado e isso não pode ser desfeito."
   },
   "miniApps": {
     "badge": {

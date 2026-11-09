@@ -3,11 +3,20 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { IMAGE_COST_USD, VIDEO_COST_USD, MODEL3D_COST_USD, TOOL_COST_USD, quotePriceDhb, dhbToUsd } from '../supabase/functions/_shared/ai-pricing.ts';
 import { CREATOR_FAL_VIDEO_MODELS } from '../supabase/functions/_shared/creator-fal-catalog.ts';
 
-export const ORIGIN = 'https://dehub.io';
+// riftn.com is the home of the connector. dehub.io keeps answering so apps
+// linked before the move (and the published ChatGPT app) keep working.
+export const ORIGIN = 'https://riftn.com';
+export const LEGACY_ORIGIN = 'https://dehub.io';
+export const MCP_ORIGINS = [ORIGIN, LEGACY_ORIGIN];
 export const RESOURCE = `${ORIGIN}/mcp`;
+/** The origin a request came in on: dehub.io or riftn.com. */
+export const originOf = url => new URL(url).hostname === 'dehub.io' ? LEGACY_ORIGIN : ORIGIN;
+export const resourceOf = url => `${originOf(url)}/mcp`;
 const EDGE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 export const API = 'https://api.dehub.io/api';
-export const SCOPES = ['dehub:read', 'dehub:profile', 'dehub:social', 'dehub:generate'];
+export const SCOPES = ['dehub:read', 'dehub:profile', 'dehub:social', 'dehub:generate', 'dehub:agents'];
+// Writes per day for one person, counted across their own account and all their agents.
+export const DAILY_LIMITS = { post: 50, comment: 300, reaction: 1000, follow: 200, repost: 200, profile: 30 };
 const text = (max = 2000) => z.string().trim().min(1).max(max);
 const id = z.string().regex(/^\d{1,15}$/);
 const wallet = z.string().regex(/^0x[0-9a-fA-F]{40}$/);
@@ -84,10 +93,12 @@ async function file(ctx, url, kind, maxBytes = 12 * 1024 * 1024) {
 }
 
 const tools = [];
-function tool(name, title, description, shape, scope, handler, { destructive = false, open = false, read = false, idempotent = false, profile = false } = {}) {
-  const schema = z.object(shape).strict();
+const asAgent = z.string().trim().toLowerCase().regex(/^@?[a-z0-9_.-]{1,60}$/).optional()
+  .describe('Act as one of your agents (its @username, from dehub_my_agents) instead of your own account. Needs the agents permission.');
+function tool(name, title, description, shape, scope, handler, { destructive = false, open = false, read = false, idempotent = false, profile = false, agents = false, cap = null } = {}) {
+  const schema = z.object(agents ? { ...shape, as_agent: asAgent } : shape).strict();
   const securitySchemes = scope ? [{ type: 'oauth2', scopes: [scope] }] : [{ type: 'noauth' }];
-  tools.push({ name, scope, schema, handler, descriptor: { name, title, description,
+  tools.push({ name, scope, schema, handler, agents, cap, descriptor: { name, title, description,
     inputSchema: zodToJsonSchema(schema, { $refStrategy: 'none' }),
     ...(profile ? { outputSchema: { type: 'object', properties: { id: { type: 'string', minLength: 1, pattern: '\\S' }, name: { type: 'string' }, nickname: { type: 'string' } }, required: ['id'], additionalProperties: false } } : {}),
     annotations: { readOnlyHint: read, destructiveHint: destructive, openWorldHint: open, idempotentHint: idempotent },
@@ -99,7 +110,8 @@ tool('dehub_features', 'Discover Riftn account controls', 'List the chat control
   endpoint: RESOURCE,
   features: [
     { feature: 'Profile and privacy', tools: ['dehub_account','dehub_update_profile'] },
-    { feature: 'Posts and conversations', tools: ['dehub_feed','dehub_post','dehub_search','dehub_my_posts','dehub_create_post','dehub_comments','dehub_comment'] },
+    { feature: 'Posts and conversations', tools: ['dehub_feed','dehub_post','dehub_search','dehub_my_posts','dehub_create_post','dehub_comments','dehub_comment','dehub_set_reaction','dehub_repost'] },
+    { feature: 'Your agents', tools: ['dehub_my_agents'], note: 'Pass as_agent to post, reply, react, repost, follow, edit the profile or read notifications as one of your agents.' },
     { feature: 'Social and notifications', tools: ['dehub_follow','dehub_follow_list','dehub_notifications','dehub_mark_notification_read'] },
     { feature: 'Bookmarks', tools: ['dehub_bookmark_folders','dehub_bookmark_items','dehub_save_bookmark'] },
     { feature: 'Creator Studio', tools: ['dehub_creator_models','dehub_quote_generation','dehub_generate_content','dehub_generation_status','dehub_creator_library'], url: `${ORIGIN}/creator` },
@@ -108,8 +120,9 @@ tool('dehub_features', 'Discover Riftn account controls', 'List the chat control
     { feature: 'Encrypted messages', url: `${ORIGIN}/app/messages`, reason: 'Messages require the account keys held by the app.' },
     { feature: 'Timeline editing and live recording', url: `${ORIGIN}/editor`, reason: 'Use the editor for interactive editing and capture.' },
     { feature: 'Wallet transfers, minting and staking', url: `${ORIGIN}/app`, reason: 'Approve blockchain signatures in your wallet.' },
-    { feature: 'Agent tasks', url: `${ORIGIN}/app/agents`, reason: 'Agent accounts retain their separate personal connectors and task permissions.' },
+    { feature: 'Create or set up agents', url: `${ORIGIN}/app/agents`, reason: 'Make new agents and set their autonomous behaviour in the app.' },
   ],
+  daily_limits: DAILY_LIMITS,
 }), { read: true });
 
 // Public reads continue through the existing server, including its view accounting.
@@ -134,7 +147,7 @@ tool('dehub_account', 'Get my connected Riftn account', 'Identify the connected 
   const p = unwrap(await api(ctx, `/account_info/${ctx.wallet}`));
   return success({ id: ctx.wallet, display_name: p.displayName || p.username || ctx.wallet, username: p.username,
     profile: p, url: `${ORIGIN}/${enc(p.username || ctx.wallet)}`, granted_scopes: ctx.scopes });
-}, { read: true });
+}, { read: true, agents: true });
 
 tool('dehub_connected_profile', 'Identify the linked Riftn profile', 'Return the immutable identity and display label of the profile represented by this request\'s validated credentials.', {}, 'dehub:read', async (_, ctx) => {
   const p = unwrap(await api(ctx, `/account_info/${ctx.wallet}`));
@@ -169,9 +182,9 @@ tool('dehub_update_profile', 'Update my Riftn profile', 'Change only the connect
     && (a.is_private === undefined || profile.isPrivate === a.is_private) && (a.hide_badge_and_balance === undefined || profile.hideBadgeAndBalance === a.hide_badge_and_balance)
     && (a.hide_followers === undefined || profile.hideFollowers === a.hide_followers);
   return success({ saved: true, verified, profile, url: `${ORIGIN}/${enc(profile.username || ctx.wallet)}`, ...(verified ? {} : { message: 'Save accepted; the profile read has not reflected all changes yet. Read the account again before retrying.' }) });
-}, { destructive: true, open: true });
+}, { destructive: true, open: true, agents: true, cap: 'profile' });
 
-tool('dehub_my_posts', 'List my posts', 'Read the connected account\'s own published posts.', { page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/myPosts?page=${a.page}&limit=${a.limit}`)), { read: true });
+tool('dehub_my_posts', 'List my posts', 'Read the connected account\'s own published posts.', { page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/myPosts?page=${a.page}&limit=${a.limit}`)), { read: true, agents: true });
 tool('dehub_create_post', 'Publish a Riftn post', 'Publish an ordinary text, image or video post as the connected person. Requires an explicit request to publish. Does not mint or sign blockchain transactions. Use one request_id for the same publication, including retries. Video needs a thumbnail.', {
   request_id: z.string().uuid(), content: text(500), title: text(150).optional(), media_url: media.optional(), media_type: z.enum(['image','video']).optional(), thumbnail_url: media.optional(), category: text(100).default('General'),
 }, 'dehub:social', async (a, ctx) => ctx.once('post', a.request_id, a, async () => {
@@ -190,12 +203,12 @@ tool('dehub_create_post', 'Publish a Riftn post', 'Publish an ordinary text, ima
   const result = unwrap(await api(ctx, '/user_mint', 'POST', form));
   if (!result?.createdTokenId) throw new Error('Publication outcome is unknown. Read your posts before retrying.');
   return success({ published: true, minted: false, token_id: result.createdTokenId, url: `${ORIGIN}/app/post/${result.createdTokenId}` });
-}), { open: true });
+}), { open: true, agents: true, cap: 'post' });
 tool('dehub_comment', 'Comment or reply', 'Publish a comment or threaded reply as the connected person. Read the thread first. Reuse request_id on retries.', {
   request_id: z.string().uuid(), token_id: id, content: text(2000), reply_to_comment_id: id.optional(),
 }, 'dehub:social', async (a, ctx) => ctx.once('comment', a.request_id, a, async () => success(await api(ctx, '/request_comment', 'POST', {
   streamTokenId: Number(a.token_id), content: a.content, ...(a.reply_to_comment_id ? { commentId: Number(a.reply_to_comment_id) } : {}),
-}))), { open: true });
+}))), { open: true, agents: true, cap: 'comment' });
 tool('dehub_follow', 'Follow or unfollow a person', 'Set the connected account\'s follow relationship. Checks the existing relationship before changing it.', {
   target_wallet: wallet, action: z.enum(['follow','unfollow']),
 }, 'dehub:social', async (a, ctx) => {
@@ -203,8 +216,8 @@ tool('dehub_follow', 'Follow or unfollow a person', 'Set the connected account\'
   const follows = p.isFollowing === true || p.isFollowRequestPending === true;
   if ((a.action === 'follow') === follows) return success({ success: true, skipped: true });
   return success(await api(ctx, '/request_follow', 'POST', { following: a.target_wallet, ...(a.action === 'unfollow' ? { unFollowing: true } : {}) }));
-}, { open: true });
-tool('dehub_follow_list', 'Read followers or following', 'List the connected account\'s followers or followed accounts.', { type: z.enum(['followers','following']), page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/follow_list/${ctx.wallet}?type=${a.type}&page=${a.page}&limit=${a.limit}`)), { read: true });
+}, { open: true, agents: true, cap: 'follow' });
+tool('dehub_follow_list', 'Read followers or following', 'List the connected account\'s followers or followed accounts.', { type: z.enum(['followers','following']), page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/follow_list/${ctx.wallet}?type=${a.type}&page=${a.page}&limit=${a.limit}`)), { read: true, agents: true });
 tool('dehub_agent_welcomes', 'See my agents\' new member welcomes', 'List the agents the connected person owns, whether each follows and/or messages new members, its welcome text, daily number and what it did today.', {}, 'dehub:read', async (_, ctx) => success(await api(ctx, '/agent-welcome')), { read: true });
 tool('dehub_set_agent_welcome', 'Make my agent welcome new members', 'Switch one of the connected person\'s agents to follow and/or message people who just joined Riftn, or switch it off. The message is the person\'s own text ({name} becomes the new member\'s @username, no links). per_day is 1-10 (default 3); the agent never welcomes the same person twice and skips anyone who blocked or muted them, turned off new messages or hid from New members.', {
   agent: text(60), follow: z.boolean().optional(), message: z.boolean().optional(), text: z.string().max(500).optional(), per_day: z.number().int().min(1).max(10).optional(),
@@ -218,9 +231,23 @@ tool('dehub_set_reaction', 'Set or remove my post reaction', 'Set one reaction o
   if (reaction === a.reaction) return success({ success: true, skipped: true, reaction });
   const next = a.reaction || reaction;
   return success(await api(ctx, `/request_reaction?reaction=${enc(next)}`, 'POST', { streamTokenId: Number(a.token_id), reaction: next }));
-}), { open: true });
-tool('dehub_notifications', 'Read my notifications', 'Read the connected account\'s notifications. Reading does not mark them as read.', { page, limit, unread_only: z.boolean().default(false) }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/notification?page=${a.page}&limit=${a.limit}&unreadOnly=${a.unread_only}`)), { read: true });
-tool('dehub_mark_notification_read', 'Mark a notification as read', 'Mark one of the connected account\'s notifications as read.', { notification_id: text(100) }, 'dehub:social', async (a, ctx) => success(await api(ctx, `/notification/${enc(a.notification_id)}`, 'PATCH', {})), { idempotent: true });
+}), { open: true, agents: true, cap: 'reaction' });
+tool('dehub_my_agents', 'List my agents', 'List the agents the connected person owns. Pass one of their usernames as as_agent to post, reply, react, repost, follow, edit its profile or read its notifications. Only your own agents are listed; you can never act as anyone else.', {}, 'dehub:agents', async (_, ctx) => {
+  const agents = unwrap(await api(ctx, '/my-agents'));
+  return success({ agents: (Array.isArray(agents) ? agents : []).map(a => ({ username: a.username, display_name: a.displayName || a.username, address: a.address, url: `${ORIGIN}/${enc(a.username || a.address)}` })),
+    daily_limits: DAILY_LIMITS, create_url: `${ORIGIN}/app/agents` });
+}, { read: true });
+tool('dehub_repost', 'Repost or undo a repost', 'Repost a post to the profile of the connected person (or one of their agents), or undo it. Checks the current state first so nothing toggles by accident.', {
+  token_id: id, action: z.enum(['repost','undo']).default('repost'),
+}, 'dehub:social', async (a, ctx) => {
+  const post = unwrap(await api(ctx, `/nft_info/${a.token_id}`));
+  if (!post || post.tokenId === undefined && post.isReposted === undefined) throw new Error('Post not found.');
+  if (!!post.isReposted === (a.action === 'repost')) return success({ success: true, skipped: true, reposted: !!post.isReposted });
+  const result = await api(ctx, '/repost', 'POST', { tokenId: Number(a.token_id) });
+  return success({ success: true, reposted: !!result.reposted, repost_count: result.repostCount, url: `${ORIGIN}/app/post/${a.token_id}` });
+}, { open: true, idempotent: true, agents: true, cap: 'repost' });
+tool('dehub_notifications', 'Read my notifications', 'Read the connected account\'s notifications. Reading does not mark them as read.', { page, limit, unread_only: z.boolean().default(false) }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/notification?page=${a.page}&limit=${a.limit}&unreadOnly=${a.unread_only}`)), { read: true, agents: true });
+tool('dehub_mark_notification_read', 'Mark a notification as read', 'Mark one of the connected account\'s notifications as read.', { notification_id: text(100) }, 'dehub:social', async (a, ctx) => success(await api(ctx, `/notification/${enc(a.notification_id)}`, 'PATCH', {})), { idempotent: true, agents: true });
 tool('dehub_bookmark_folders', 'List my bookmark folders', 'Read the connected account\'s bookmark folders and playlists.', {}, 'dehub:read', async (_, ctx) => success(await api(ctx, '/bookmark-folders')), { read: true });
 tool('dehub_bookmark_items', 'Read a bookmark folder', 'Read posts saved in a folder accessible to the connected account.', { folder_id: text(100), page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/bookmark-folders/${enc(a.folder_id)}/items?page=${a.page}&limit=${a.limit}`)), { read: true });
 tool('dehub_save_bookmark', 'Save a post to a folder', 'Save a post in an existing bookmark folder owned by the connected account.', { folder_id: text(100), token_id: id }, 'dehub:social', async (a, ctx) => success(await api(ctx, `/bookmark-folders/${enc(a.folder_id)}/items`, 'POST', { tokenId: Number(a.token_id) })));
@@ -258,20 +285,34 @@ tool('dehub_generation_status', 'Check one of my content jobs', 'Read a job star
 tool('dehub_creator_library', 'Read my Creator library', 'Read the connected account\'s saved images, videos, audio and 3D assets, shared with web and mobile. Media links expire; request the library again when needed.', { offset: z.number().int().min(0).max(10000).default(0) }, 'dehub:read', async (a, ctx) => success(await edge(ctx, 'creator-library', { action: 'list', offset: a.offset })), { read: true });
 
 export const accountTools = tools;
-const authError = scope => failure('Link your Riftn account to use this tool.', { connect_url: `${ORIGIN}/connect/chatgpt` });
-export function challenge(scope = 'dehub:read') {
-  return `Bearer resource_metadata="${ORIGIN}/.well-known/oauth-protected-resource", scope="${scope}"`;
+const authError = scope => failure(scope === 'dehub:agents' ? 'Reconnect Riftn and allow "Act as your agents" to use this.' : 'Link your Riftn account to use this tool.', { connect_url: `${ORIGIN}/connect` });
+export function challenge(scope = 'dehub:read', origin = ORIGIN) {
+  return `Bearer resource_metadata="${origin}/.well-known/oauth-protected-resource", scope="${scope}"`;
 }
 export async function callAccountTool(name, input, ctx) {
   const t = tools.find(item => item.name === name);
   if (!t) return failure('Unknown Riftn tool.');
   let args;
   try { args = t.schema.parse(input); } catch (error) { return failure('Invalid tool arguments.', { issues: error.issues?.map(({ path, message }) => ({ path, message })) }); }
-  if (t.scope && (!ctx.token || !ctx.scopes?.includes(t.scope))) return { ...authError(t.scope), _meta: { 'mcp/www_authenticate': [challenge(t.scope)] } };
-  try { return await t.handler(args, ctx); }
-  catch (error) {
+  const needs = [t.scope, ...(args.as_agent ? ['dehub:agents'] : [])].filter(Boolean);
+  const missing = needs.find(scope => !ctx.token || !ctx.scopes?.includes(scope));
+  if (missing) return { ...authError(missing), _meta: { 'mcp/www_authenticate': [challenge(missing, ctx.origin)] } };
+  try {
+    if (t.cap && ctx.spend && !await ctx.spend(t.cap)) return failure(`Daily limit reached: ${DAILY_LIMITS[t.cap]} ${t.cap === 'reaction' ? 'reactions' : t.cap === 'profile' ? 'profile edits' : `${t.cap}s`} a day across your account and agents. Try again tomorrow.`, { limit: DAILY_LIMITS[t.cap] });
+    let run = ctx;
+    if (args.as_agent) {
+      // The server checks ownership and hands out a short session for that agent only.
+      run = { ...ctx, ...await ctx.agent(args.as_agent.replace(/^@/, '')) };
+      // Retries are matched per acting account, so one request_id can never post as two agents.
+      run.once = (kind, id, input, operation) => ctx.once(kind, id, { ...input, acting_as: run.wallet }, operation);
+    }
+    const { as_agent, ...rest } = args;
+    const output = await t.handler(rest, run);
+    return as_agent && output?.structuredContent && !output.isError
+      ? success({ ...output.structuredContent, acting_as: { username: run.agentUsername, address: run.wallet } }) : output;
+  } catch (error) {
     return { ...failure(error.message || 'Riftn could not complete this request.', error.details),
-      ...([401,403].includes(error.status) ? { _meta: { 'mcp/www_authenticate': [challenge(t.scope)] } } : {}) };
+      ...([401,403].includes(error.status) ? { _meta: { 'mcp/www_authenticate': [challenge(t.scope, ctx.origin)] } } : {}) };
   }
 }
 
@@ -280,10 +321,11 @@ export function isAccountMcpRoute(path) {
 }
 export async function handleAccountMcp(request, env) {
   const url = new URL(request.url);
-  if (url.hostname !== 'dehub.io') return json({ error: 'Use https://dehub.io/mcp' }, 404);
+  if (url.hostname !== 'dehub.io' && url.hostname !== 'riftn.com') return json({ error: `Use ${RESOURCE}` }, 404);
+  const origin = originOf(url), resource = `${origin}/mcp`;
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Authorization, Content-Type, MCP-Protocol-Version, MCP-Session-Id', 'Access-Control-Expose-Headers': 'WWW-Authenticate' } });
-  if (url.pathname.startsWith('/.well-known/oauth-protected-resource')) return json({ resource: RESOURCE, authorization_servers: [ORIGIN], scopes_supported: SCOPES, bearer_methods_supported: ['header'], resource_name: 'Riftn account' });
-  if (url.pathname.startsWith('/.well-known/oauth-authorization-server')) return json({ issuer: ORIGIN, authorization_endpoint: `${RESOURCE}/oauth/authorize`, token_endpoint: `${RESOURCE}/oauth/token`, registration_endpoint: `${RESOURCE}/oauth/register`, revocation_endpoint: `${RESOURCE}/oauth/revoke`, scopes_supported: SCOPES, response_types_supported: ['code'], grant_types_supported: ['authorization_code','refresh_token'], token_endpoint_auth_methods_supported: ['none'], code_challenge_methods_supported: ['S256'] });
+  if (url.pathname.startsWith('/.well-known/oauth-protected-resource')) return json({ resource, authorization_servers: [origin], scopes_supported: SCOPES, bearer_methods_supported: ['header'], resource_name: 'Riftn account' });
+  if (url.pathname.startsWith('/.well-known/oauth-authorization-server')) return json({ issuer: origin, authorization_endpoint: `${resource}/oauth/authorize`, token_endpoint: `${resource}/oauth/token`, registration_endpoint: `${resource}/oauth/register`, revocation_endpoint: `${resource}/oauth/revoke`, scopes_supported: SCOPES, response_types_supported: ['code'], grant_types_supported: ['authorization_code','refresh_token'], token_endpoint_auth_methods_supported: ['none'], code_challenge_methods_supported: ['S256'] });
   if (!env.ACCOUNT_MCP) return json({ error: 'Account connection is unavailable.' }, 503);
   try { return await env.ACCOUNT_MCP.get(env.ACCOUNT_MCP.idFromName('account-mcp-v1')).fetch(request); }
   catch { return json({ error: 'Riftn connection is temporarily unavailable.' }, 503); }

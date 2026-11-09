@@ -2104,6 +2104,7 @@
     "returnHome": "Zur Startseite"
   },
   "profile": {
+    "unavailable": "Profil nicht verfügbar",
     "viewGrid": "Rasteransicht",
     "viewList": "Listenansicht",
     "viewMode": "Anzeigen",
@@ -11692,6 +11693,19 @@
     "subscriptionTokensValueNote": "Abonnement-Token behalten ihren Dollar-Wert. Wenn sich der Token-Preis bewegt, bevor Sie sie verwenden, werden Sie mehr oder weniger Token sehen, aber sie kaufen immer die gleiche Menge an KI-Generierung. Sie können nicht abgehoben, gesendet oder gehandelt werden.",
     "topUpEmptyHint": "Tokens zum Generieren mit KI hinzufügen"
   },
+  "accountDeactivation": {
+    "acknowledge": "Ich verstehe, dass mein Profil ausgeblendet wird und ich überall abgemeldet werde.",
+    "title": "Konto deaktivieren",
+    "short": "Profil vorerst ausblenden. Erneut anmelden, um es wiederherzustellen",
+    "description": "Mach eine Pause. Dein Profil, deine Beiträge und Kommentare werden ausgeblendet und du wirst überall abgemeldet. Nichts wird gelöscht; mit der nächsten Anmeldung ist alles wieder da.",
+    "button": "Deaktivieren",
+    "confirmTitle": "Konto deaktivieren?",
+    "confirmBody": "Dein Profil, deine Beiträge und Kommentare werden ausgeblendet und du wirst auf allen Geräten abgemeldet. Melde dich jederzeit wieder an, um das rückgängig zu machen.",
+    "busy": "Wird deaktiviert…",
+    "done": "Konto deaktiviert",
+    "receipt": "Dein Profil, deine Beiträge und Kommentare sind ausgeblendet. Melde dich jederzeit wieder an, um alles zurückzuholen.",
+    "error": "Dein Konto konnte nicht deaktiviert werden. Bitte versuche es erneut."
+  },
   "accountDeletion": {
     "title": "Konto löschen",
     "description": "Lösche dein Konto und deine persönlichen Daten dauerhaft",
@@ -11705,7 +11719,11 @@
     "error": "Deine Löschanfrage konnte nicht gesendet werden. Dein Konto wurde nicht zur Löschung vorgemerkt. Bitte versuche es erneut.",
     "back": "Zurück zu den Einstellungen",
     "signIn": "Melde dich an, um dein Konto zu löschen",
-    "acknowledge": "Ich habe meine Wallet-Wiederherstellungsdaten gespeichert und verstehe, dass die Löschung dauerhaft ist."
+    "acknowledge": "Ich habe meine Wallet-Wiederherstellungsdaten gespeichert und verstehe, dass die Löschung dauerhaft ist.",
+    "signedInAs": "Angemeldet als",
+    "confirmTitle": "Konto endgültig löschen?",
+    "confirmBody": "Dein Konto und alle Inhalte werden gelöscht. Du wirst abgemeldet und das kann nicht rückgängig gemacht werden.",
+    "confirmBodyNamed": "{{who}} und alle Inhalte werden gelöscht. Du wirst abgemeldet und das kann nicht rückgängig gemacht werden."
   },
   "miniApps": {
     "badge": {
@@ -16416,7 +16434,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "In der Rubrik",
     "ee1c1eecf1b6": "Riftn wurde von einigen der größten und vertrauenswürdigsten Veröffentlichungen der Welt behandelt. Hier sind die Artikel, die unsere Mission, die Medienlandschaft zu demokratisieren, in den Fokus rücken.",
     "6ccae4bbf68d": "Der Verleger hat das Original entfernt; dies öffnet die Wayback Machine-Kapazität.",

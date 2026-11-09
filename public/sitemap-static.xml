@@ -775,6 +775,84 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/videos"/>
   </url>
   <url>
+    <loc>https://riftn.com/images</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/images?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/images"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/images?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/images?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/images?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/images?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/images"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/images?hl=ar</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/images?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/images"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/images?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/images?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/images?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/images?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/images"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/images?hl=es</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/images?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/images"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/images?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/images?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/images?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/images?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/images"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/images?hl=fr</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/images?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/images"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/images?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/images?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/images?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/images?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/images"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/images?hl=nl</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/images?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/images"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/images?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/images?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/images?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/images?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/images"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/images?hl=tr</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/images?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/images"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/images?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/images?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/images?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/images?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/images"/>
+  </url>
+  <url>
     <loc>https://riftn.com/shorts</loc>
     <lastmod>2026-07-13T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
@@ -3271,6 +3349,84 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/apk"/>
   </url>
   <url>
+    <loc>https://riftn.com/chat</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/chat?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/chat"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/chat?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/chat?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/chat?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/chat?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/chat"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/chat?hl=ar</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/chat?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/chat"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/chat?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/chat?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/chat?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/chat?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/chat"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/chat?hl=es</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/chat?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/chat"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/chat?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/chat?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/chat?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/chat?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/chat"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/chat?hl=fr</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/chat?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/chat"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/chat?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/chat?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/chat?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/chat?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/chat"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/chat?hl=nl</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/chat?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/chat"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/chat?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/chat?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/chat?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/chat?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/chat"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/chat?hl=tr</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/chat?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/chat"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/chat?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/chat?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/chat?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/chat?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/chat"/>
+  </url>
+  <url>
     <loc>https://riftn.com/connect</loc>
     <lastmod>2026-08-04T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
@@ -5609,6 +5765,84 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/admin-manual?hl=nl"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/admin-manual?hl=tr"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/admin-manual"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn</loc>
+    <lastmod>2026-11-06T19:26:20.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar</loc>
+    <lastmod>2026-11-06T19:26:20.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es</loc>
+    <lastmod>2026-11-06T19:26:20.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr</loc>
+    <lastmod>2026-11-06T19:26:20.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl</loc>
+    <lastmod>2026-11-06T19:26:20.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr</loc>
+    <lastmod>2026-11-06T19:26:20.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/open-appeal-binance-recover-876-bnb-pioneer-burn"/>
   </url>
   <url>
     <loc>https://riftn.com/guides/top-100-crypto-projects-2026</loc>

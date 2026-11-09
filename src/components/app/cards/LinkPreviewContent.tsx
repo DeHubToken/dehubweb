@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useState } from 'react';
 import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
@@ -18,9 +19,9 @@ export function LinkPreviewContent({ preview, chat = false, composer = false }: 
 
   return <div className={composer && showImage ? 'flex' : undefined} data-link-preview-layout={showImage ? 'image' : sourceTile ? 'source-tile' : 'compact'}>
     {showImage && <div className={composer ? 'relative w-32 h-24 shrink-0 bg-white/5 overflow-hidden' : 'relative w-full aspect-[1.91/1] bg-white/5 overflow-hidden'}>
-      {chat && <img src={preview.image!} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40" loading="lazy" />}
+      {chat && <img src={outsideImage(preview.image!)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40" loading="lazy" />}
       <img
-        src={preview.image!}
+        src={outsideImage(preview.image!)}
         alt={preview.title}
         className={`relative w-full h-full ${chat ? 'object-contain' : 'object-cover'}`}
         loading="lazy"

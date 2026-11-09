@@ -110,7 +110,7 @@ type PageTab = 'requests' | 'shipping' | 'shipped';
 const NOT_FEASIBLE = 'not_feasible' as const;
 type CategoryChip = FeatureCategory | 'all' | typeof NOT_FEASIBLE;
 
-const DEHUB_GITHUB_URL = 'https://github.com/DeHubToken';
+const DEHUB_GITHUB_URL = 'https://github.com/Riftn';
 
 const SHIPPED_PAGE_SIZE = 20;
 

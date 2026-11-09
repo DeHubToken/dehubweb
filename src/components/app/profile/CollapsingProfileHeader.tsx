@@ -3,7 +3,8 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import './profile-collapse.css';
 
-/** Floating Back over the cover until the tabs row pins and carries its own
+/** Floating Back over the cover (on a squared glass chip, so it reads on
+ *  white banners too) until the tabs row pins and carries its own
  *  Back, identity and Follow. There is no compact bar in between. */
 export function CollapsingProfileHeader({ tabsPinned = false }: { tabsPinned?: boolean }) {
   const { theme } = useAppTheme();

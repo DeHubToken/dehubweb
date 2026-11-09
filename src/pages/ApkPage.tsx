@@ -24,7 +24,7 @@ const PLAY_URL = "https://play.google.com/store/apps/details?id=io.dehub.mobile"
 // `releases/latest/download/<asset>` form always resolves to the newest release
 // carrying that filename, so publishing a new build needs no change here — keep
 // the asset named exactly `dehub.apk` and this link follows it.
-const RELEASE_REPO = "DeHubToken/dehub-mobile";
+const RELEASE_REPO = "Riftn/riftn-mobile";
 const DOWNLOAD_URL = `https://github.com/${RELEASE_REPO}/releases/latest/download/dehub.apk`;
 const RELEASE_API = `https://api.github.com/repos/${RELEASE_REPO}/releases/latest`;
 
@@ -207,9 +207,9 @@ export default function ApkPage() {
       name: "Riftn",
       url: "https://riftn.com",
       sameAs: [
-        "https://x.com/dehub_official",
-        "https://t.me/dehub_dhb",
-        "https://github.com/DeHubToken",
+        "https://x.com/riftn_com",
+        "https://t.me/riftn_com",
+        "https://github.com/Riftn",
         PLAY_URL,
       ],
     },

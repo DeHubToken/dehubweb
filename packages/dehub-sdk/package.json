@@ -4,7 +4,7 @@
   "description": "Build mini apps for DeHub: sign-in, payments, posting and notifications, plus server helpers to verify tokens, receipts and webhooks.",
   "license": "MIT",
   "homepage": "https://riftn.com/docs/developers",
-  "repository": { "type": "git", "url": "https://github.com/DeHubToken/dehubweb.git", "directory": "packages/dehub-sdk" },
+  "repository": { "type": "git", "url": "https://github.com/Riftn/riftn-web.git", "directory": "packages/dehub-sdk" },
   "keywords": ["dehub", "mini-app", "miniapp", "sdk", "web3", "social"],
   "type": "module",
   "sideEffects": false,

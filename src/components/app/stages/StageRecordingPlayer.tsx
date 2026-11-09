@@ -128,6 +128,7 @@ export function StageRecordingPlayer({
   return (
     <div
       data-glass-playback-surface
+      data-audio-player
       data-no-navigate
       role="group"
       aria-label={t('stages.stageRecording')}
@@ -159,7 +160,7 @@ export function StageRecordingPlayer({
         ) : isPlaying ? (
           <Pause className="w-4 h-4" fill="currentColor" />
         ) : (
-          <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+          <Play className="w-4 h-4" fill="currentColor" />
         )}
       </span>
 

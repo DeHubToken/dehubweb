@@ -9,7 +9,7 @@ export const topDecentralizedSocialApps2026Post: BlogPostType = {
   excerpt: 'We ranked the 50 most active decentralized and crypto social apps of 2026, from Bluesky and Mastodon to Farcaster, Lens, Zora and Nostr, on users, features, public GitHub activity and future potential. Every number is sourced.',
   content: `Which decentralized social apps are actually being used and built in 2026? We ranked the 50 most active decentralized and crypto social apps on four things: **how many people use them, what they can do, how hard their teams are building in public on GitHub, and where they are heading**. Every user number below links to its source, and every developer number comes from the projects' own public code.
 
-![The DeSoc Index 2026: how we scored 50 decentralized social apps](/media/fig-desoc-method.jpg)
+![The DeSoc Index 2026: how we scored 50 decentralized social apps](/media/fig-desoc-method-riftn.jpg)
 
 ## How we scored the top 50 decentralized social apps
 
@@ -24,7 +24,7 @@ Numbers were checked on 24 and 25 October 2026. User figures move fast, so treat
 
 ## #1 Riftn: 34/40, our top pick
 
-![Riftn, built in public: 6,083 commits in 90 days, the most of any decentralized social app](/media/fig-desoc-dehub.jpg)
+![Riftn, built in public: 6,083 commits in 90 days, the most of any decentralized social app](/media/fig-desoc-dehub-riftn.jpg)
 
 Riftn is one of the early pioneers of decentralized streaming and social, first appearing on the scene in 2020. The audience is still small, but it is our top pick for the sheer development effort behind it, driven by a community using a first-of-its-kind prompt feature that lets anyone build the app in real time. It has almost every feature you will find on Twitter (X), Facebook, Twitch, Instagram and TikTok, and much more you will not, including hundreds of popular requested features that the likes of YouTube ignore, gathered from blogs all over the web.
 
@@ -39,7 +39,7 @@ Riftn is one of the early pioneers of decentralized streaming and social, first 
 
 Users tell you where a network is today. Commits tell you where it will be next year. These are the busiest public codebases in decentralized social over the last 90 days.
 
-![Public commits in the last 90 days: Riftn 6,083, Amethyst 4,275, Pixelfed 3,726, Hive 1,780, Damus 1,481](/media/fig-desoc-commits-v2.jpg)
+![Public commits in the last 90 days: Riftn 6,083, Amethyst 4,275, Pixelfed 3,726, Hive 1,780, Damus 1,481](/media/fig-desoc-commits-v2-riftn.jpg)
 
 ## The full top 50 at a glance
 
@@ -98,25 +98,25 @@ Users tell you where a network is today. Commits tell you where it will be next 
 
 ### The big open networks
 
-![The big open networks: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-networks.jpg)
+![The big open networks: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-networks-riftn.jpg)
 
 Twelve apps on open protocols: the AT Protocol behind Bluesky, ActivityPub behind Mastodon and the fediverse, and Matrix for chat-style communities. These have the biggest audiences in decentralized social, and almost none of them pay creators.
 
 ### Nostr and Bitcoin social
 
-![Nostr and Bitcoin social: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-nostr.jpg)
+![Nostr and Bitcoin social: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-nostr-riftn.jpg)
 
 Nostr is a simple protocol where your identity is a key pair and your posts travel through relays anyone can run. Most of these apps pay creators in bitcoin through Lightning "zaps". The audience is small, about 15,000 trusted monthly users in late 2025, but the builders are some of the busiest in the space.
 
 ### Crypto social and SocialFi
 
-![Crypto social and SocialFi: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-socialfi.jpg)
+![Crypto social and SocialFi: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-socialfi-riftn.jpg)
 
 Apps that put tokens, coins or on-chain ownership at the centre. This is where 2026 hit hardest: two protocols changed owners, a hack drained one app, and creator coins drew heavy criticism.
 
 ### Private chat and communities
 
-![Private chat and communities: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-chat.jpg)
+![Private chat and communities: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-chat-riftn.jpg)
 
 Encrypted messengers and on-chain community chat. Less public than a feed, but often where crypto communities actually live.
 
@@ -714,7 +714,7 @@ A power client for Farcaster with multiple accounts, scheduling and analytics.
 
 ## Who fell off since 2024
 
-![Who fell off: friend.tech, Fantasy Top and Farcaster's ownership changes](/media/fig-desoc-fallen.jpg)
+![Who fell off: friend.tech, Fantasy Top and Farcaster's ownership changes](/media/fig-desoc-fallen-riftn.jpg)
 
 - **friend.tech:** the 2023 SocialFi hit peaked near $52M in deposits, then the team renounced its contracts in September 2024 with deposits down 92%. Source: [DL News](https://www.dlnews.com/articles/defi/friend-tech-shuts-down-after-revenue-and-users-plummet/).
 - **Fantasy Top:** the trading-card game for crypto influencers closed at the end of June 2026 after paying out more than $20M. Source: [eGamers](https://egamers.io/fantasy-top-closes-due-to-poor-player-involvement/).
@@ -782,7 +782,7 @@ The established apps here are real, working networks, many of them open source. 
 ## Try the #1 pick
 
 Open [riftn.com](https://riftn.com), browse the feed, go live, or post a feature request on [riftn.com/features](https://riftn.com/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-50-decentralized-social-apps-2026-banner.png',
+  bannerImage: '/media/top-50-decentralized-social-apps-2026-banner-riftn.png',
   bannerImageAlt: 'Top 50 decentralized social apps 2026, the DeSoc Index by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-25T20:00:00.000Z',

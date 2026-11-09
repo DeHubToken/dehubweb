@@ -2557,7 +2557,7 @@ export const az = {
     q20: 'Mənbə kodunu harada tapa bilərəm?',
     a20: 'Mənbə kodu GitHub-da mövcuddur. Daha çox məlumat üçün keçidlərimizə baxın.',
     q21: 'Dəstək komandası ilə necə əlaqə saxlaya bilərəm?',
-    a21: 'tech@dehub.net ünvanına yaza və ya Twitter-də @dehub_official hesabını izləyə bilərsiniz.',
+    a21: 'tech@dehub.net ünvanına yaza və ya Twitter-də @riftn_com hesabını izləyə bilərsiniz.',
     stillHaveQuestions: 'Hələ sualınız var?',
     stillHaveQuestionsDesc: 'Bizimlə əlaqə saxlayın və sizə kömək etməkdən məmnun olacağıq.',
     techSupport: 'Texniki Dəstək',

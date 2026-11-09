@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHand
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -181,10 +182,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: Peri
                   )}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-zinc-500 truncate">{getHandle(entry)}</span>
-                <span className="flex-1" />
-                <span className="text-zinc-400 shrink-0 tabular-nums">{formatValue(entry)}</span>
+              <div className="flex items-center gap-2 text-xs min-w-0">
+                {/* A long handle ellipsizes instead of pushing the value past the row's padding. */}
+                <span className="text-zinc-500 truncate min-w-0 flex-1">{getHandle(entry)}</span>
+                <span className="text-zinc-400 shrink-0 tabular-nums text-right">{formatValue(entry)}</span>
               </div>
             </div>
           </Link>
@@ -195,7 +196,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: Peri
 });
 
 export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function SidebarLeaderboard(_props, ref) {
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [activePeriod, setActivePeriod] = useState<PeriodLabel>('All');

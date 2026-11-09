@@ -9,7 +9,7 @@ export const topCryptoProjects2026Post: BlogPostType = {
   excerpt: 'We counted every commit and every active developer across more than 370 public GitHub repos behind 270 crypto projects over 90 days, then ranked the 100 most active. An AI agent framework leads, wallets are the busiest corner, and about 1 in 6 commits now credit AI.',
   content: `Which crypto projects are actually being built right now? Prices move every day, but code is much harder to fake. We counted every commit and every active developer across more than 370 public GitHub repositories behind 270 crypto projects over the last 90 days, then ranked the **100 most active crypto projects by GitHub activity**. Blockchains, wallets, DeFi, Bitcoin and Lightning, developer tools and AI are all in one list, and every number comes from the projects' own public code.
 
-![How we scored the top 100 crypto projects by GitHub activity](/media/fig-crypto-method.jpg)
+![How we scored the top 100 crypto projects by GitHub activity](/media/fig-crypto-method-riftn.jpg)
 
 ## How we scored the top 100 crypto projects
 
@@ -18,13 +18,14 @@ export const topCryptoProjects2026Post: BlogPostType = {
 - **Developers (50 points):** unique human commit authors in the same window.
 - **Scale:** both parts use a log scale against the leader, so the busiest project on commits gets 50 and the biggest team gets 50. A project needs both a lot of code and a lot of people to reach the top.
 - **Forks:** where a project runs a fork of another codebase (for example a Geth or Reth fork), we removed the upstream commits it pulled in, so only its own work counts.
+- **Riftn:** Riftn publishes this index and is scored with the same formula. Because most of its builders ship through its public request board instead of GitHub, its developer count includes them. That is the one difference, and it is spelled out in Riftn's entry. Totals and charts about the whole list (developers, project types, AI share) cover the 100 other projects.
 - **What is in scope:** anything crypto. Layer 1s and Layer 2s, Ethereum and Bitcoin clients, wallets, DeFi apps, bridges, oracles, zero-knowledge tools, developer libraries and AI agent frameworks.
 
 GitHub activity is not the same as price, users or security. Some teams build in private, some ship in big batches, and some projects are simply finished. Treat this as a picture of who is building in public right now, not as investment advice.
 
 ## The top 10 most active crypto projects
 
-![The top 10 most active crypto projects on GitHub in 2026, by activity score](/media/fig-crypto-top10.jpg)
+![The top 10 most active crypto projects on GitHub in 2026, by activity score: ElizaOS 90, DefiLlama 87, MetaMask 84, Ledger Live 80, Solana 79, Trezor 77, Ethereum 72, Foundry 72, Nethermind 70, Riftn 70](/media/fig-crypto-top10-riftn.jpg)
 
 ### #1 ElizaOS: 90/100
 
@@ -89,12 +90,13 @@ GitHub activity is not the same as price, users or security. Some teams build in
 - **What they are building:** Ethereum's C# execution client, with work on block-level access lists for the next upgrade and big speed-ups to the EVM and RPC.
 - **Website:** [nethermind.io](https://www.nethermind.io)
 
-### #10 Reth: 69/100
+### #10 Riftn: 70/100
 
-- **Activity:** 813 commits from 75 developers.
-- **Repo:** paradigmxyz/reth.
-- **What they are building:** Paradigm's Rust Ethereum client. Base, Tempo and many other chains build their own nodes on top of it, so its code reaches far beyond Ethereum.
-- **Website:** [reth.rs](https://reth.rs)
+- **Activity:** 5,525 commits from 25 developers.
+- **Repos:** Riftn/riftn-web and Riftn/riftn-mobile, plus the public request board at [riftn.com/features](https://riftn.com/features).
+- **How we counted developers:** only 1 person commits to Riftn's GitHub. The other 24 are community members whose feature requests were filed or shipped on the request board between 28 July and 26 October 2026. They describe the feature, it gets built with AI, and it ships, so they are counted as builders even though they never open GitHub. Counted on GitHub alone, Riftn would score 44 and miss the top 100. Over all time, 30 people have shipped features this way.
+- **What they are building:** a social and streaming app where posts, tips and subscriptions run on chain, and where the roadmap is whatever the community asks for. Riftn publishes this index, so check its numbers the same way you would check anyone else's.
+- **Website:** [riftn.com](https://riftn.com)
 
 ## The full top 100 at a glance
 
@@ -107,101 +109,101 @@ GitHub activity is not the same as price, users or security. Some teams build in
 7. **Ethereum**: 72/100. Layer 1. 697 commits, 126 developers. The biggest smart contract chain: Geth plus the protocol specs (ethereum/go-ethereum, ethereum/consensus-specs, ethereum/execution-specs).
 8. **Foundry**: 72/100. Developer tools. 1,340 commits, 75 developers. The most popular toolkit for writing and testing smart contracts (foundry-rs/foundry).
 9. **Nethermind**: 70/100. Ethereum client. 1,765 commits, 54 developers. Ethereum execution client written in C# (NethermindEth/nethermind).
-10. **Reth**: 69/100. Ethereum client. 813 commits, 75 developers. Paradigm's Rust Ethereum client, also used by Base and Tempo (paradigmxyz/reth).
-11. **Erigon**: 69/100. Ethereum client. 1,413 commits, 49 developers. Ethereum client built for archive nodes and speed (erigontech/erigon).
-12. **Bitcoin**: 68/100. Layer 1. 699 commits, 76 developers. Bitcoin Core, the reference Bitcoin node (bitcoin/bitcoin).
-13. **Zcash**: 68/100. Privacy coin. 1,042 commits, 55 developers. Privacy coin, building the Zebra node and shared Rust libraries (ZcashFoundation/zebra, zcash/librustzcash).
-14. **CCXT**: 67/100. Exchange library. 1,009 commits, 53 developers. Open source library that connects trading code to more than 100 exchanges (ccxt/ccxt).
-15. **Miden**: 67/100. ZK rollup. 769 commits, 59 developers. Zero-knowledge rollup with private accounts, spun out of Polygon (0xMiden/miden-vm, 0xMiden/miden-node, 0xMiden/miden-client).
-16. **Tempo**: 66/100. Payments chain. 1,025 commits, 44 developers. Payments-first blockchain from Stripe and Paradigm (tempoxyz/tempo).
-17. **Cardano**: 65/100. Layer 1. 1,147 commits, 37 developers. Proof-of-stake Layer 1 built in Haskell (IntersectMBO/cardano-node, IntersectMBO/cardano-ledger, IntersectMBO/ouroboros-consensus).
-18. **Chainlink**: 65/100. Oracle network. 462 commits, 63 developers. Oracle network that brings outside data on chain (smartcontractkit/chainlink).
-19. **Optimism**: 64/100. Layer 2. 549 commits, 51 developers. The OP Stack behind Optimism, Base and many other Layer 2s (ethereum-optimism/optimism, ethereum-optimism/op-geth).
-20. **Base**: 64/100. Layer 2. 1,185 commits, 29 developers. Coinbase's Layer 2, now running its own Rust node (base/node-reth, base/node).
-21. **Zama**: 63/100. FHE. 598 commits, 45 developers. Fully homomorphic encryption, so smart contracts can compute on encrypted data (zama-ai/fhevm, zama-ai/tfhe-rs).
-22. **Polkadot**: 63/100. Layer 0. 286 commits, 72 developers. Polkadot SDK for the relay chain and its parachains (paritytech/polkadot-sdk).
-23. **Status**: 63/100. Messenger and wallet. 1,627 commits, 22 developers. Private messenger, crypto wallet and browser in one app (status-im/status-desktop, status-im/status-go).
-24. **Sui**: 63/100. Layer 1. 468 commits, 50 developers. Layer 1 built on the Move language (MystenLabs/sui).
-25. **Besu**: 63/100. Ethereum client. 398 commits, 54 developers. Java Ethereum client from the Hyperledger community (hyperledger/besu).
-26. **CoW Protocol**: 62/100. DEX. 822 commits, 32 developers. DEX aggregator that protects traders from MEV (cowprotocol/cowswap, cowprotocol/services).
-27. **viem and wagmi**: 62/100. Developer tools. 233 commits, 70 developers. The TypeScript libraries most Ethereum apps use to talk to the chain (wevm/viem, wevm/wagmi).
-28. **Starknet**: 62/100. Layer 2. 403 commits, 47 developers. ZK rollup on Ethereum, with the Cairo language and Pathfinder node (starkware-libs/sequencer, starkware-libs/cairo, eqlabs/pathfinder).
-29. **Alloy**: 61/100. Developer tools. 307 commits, 53 developers. Rust libraries for Ethereum, used by Reth and Foundry (alloy-rs/alloy, alloy-rs/core).
-30. **Safe**: 61/100. Smart wallet. 690 commits, 30 developers. Smart account wallet that secures billions in team and DAO funds (safe-global/safe-wallet-monorepo, safe-global/safe-smart-account, safe-global/safe-transaction-service).
-31. **Zashi (Zcash wallet)**: 61/100. Wallet. 1,934 commits, 14 developers. The Zcash wallet for Android and iOS (Electric-Coin-Company/zashi-android, Electric-Coin-Company/zashi-ios).
-32. **OneKey**: 60/100. Hardware wallet. 1,004 commits, 21 developers. Open source hardware and software wallet (OneKeyHQ/app-monorepo, OneKeyHQ/firmware-pro).
-33. **Hedera**: 60/100. Layer 1. 482 commits, 34 developers. Hashgraph Layer 1, now developed in the open as Hiero (hiero-ledger/hiero-consensus-node).
-34. **Internet Computer**: 60/100. Layer 1. 703 commits, 26 developers. Layer 1 that hosts full apps on chain (dfinity/ic).
-35. **Bisq**: 60/100. Bitcoin DEX. 1,410 commits, 16 developers. Peer-to-peer Bitcoin exchange with no sign-up (bisq-network/bisq, bisq-network/bisq2).
-36. **XRP Ledger**: 60/100. Layer 1. 367 commits, 38 developers. Payments Layer 1 and its JavaScript library (XRPLF/rippled, XRPLF/xrpl.js).
-37. **Arbitrum**: 60/100. Layer 2. 784 commits, 23 developers. The largest optimistic rollup on Ethereum (OffchainLabs/nitro, OffchainLabs/nitro-contracts).
-38. **Hardhat**: 59/100. Developer tools. 527 commits, 29 developers. Ethereum development environment from the Nomic Foundation (NomicFoundation/hardhat).
-39. **LDK**: 59/100. Bitcoin Layer 2. 409 commits, 34 developers. Lightning Dev Kit, the toolkit many Lightning wallets are built on (lightningdevkit/rust-lightning, lightningdevkit/ldk-node).
-40. **Celestia**: 59/100. Data availability. 443 commits, 32 developers. Data availability layer for rollups (celestiaorg/celestia-app, celestiaorg/celestia-node).
-41. **Monero**: 59/100. Privacy coin. 362 commits, 36 developers. Privacy coin with private-by-default payments (monero-project/monero).
-42. **Cashu**: 59/100. Bitcoin ecash. 404 commits, 33 developers. Bitcoin ecash protocol for private payments (cashubtc/cdk, cashubtc/nutshell).
-43. **Blockstream Green**: 58/100. Bitcoin wallet. 449 commits, 28 developers. Bitcoin and Liquid wallet plus the Jade hardware wallet (Blockstream/green_android, Blockstream/green_ios, Blockstream/Jade).
-44. **Curve**: 58/100. DEX. 1,756 commits, 11 developers. Stablecoin DEX and the crvUSD stablecoin (curvefi/curve-frontend, curvefi/curve-stablecoin).
-45. **Plonky3**: 58/100. ZK proving. 487 commits, 25 developers. Toolkit for building fast zero-knowledge provers (Plonky3/Plonky3).
-46. **IOTA**: 58/100. Layer 1. 454 commits, 26 developers. Layer 1 now running a Move-based network (iotaledger/iota).
-47. **Core Lightning**: 58/100. Bitcoin Layer 2. 377 commits, 29 developers. Lightning Network node from Blockstream (ElementsProject/lightning).
-48. **Rotki**: 58/100. Portfolio tracker. 979 commits, 15 developers. Open source, self-hosted crypto portfolio tracker (rotki/rotki).
-49. **Ambire**: 57/100. Smart wallet. 1,514 commits, 11 developers. Smart account wallet for Ethereum chains (AmbireTech/extension).
-50. **Lighthouse**: 57/100. Ethereum client. 230 commits, 37 developers. Rust Ethereum consensus client from Sigma Prime (sigp/lighthouse).
-51. **Monad**: 57/100. Layer 1. 296 commits, 31 developers. Parallel EVM Layer 1 (category-labs/monad-bft, category-labs/monad).
-52. **Aleo**: 57/100. Privacy Layer 1. 668 commits, 17 developers. Privacy Layer 1 for zero-knowledge apps (ProvableHQ/snarkOS, ProvableHQ/snarkVM).
-53. **Morpho**: 56/100. Lending. 723 commits, 16 developers. Lending protocol and vaults (morpho-org/morpho-blue, morpho-org/vault-v2, morpho-org/sdks).
-54. **Linea**: 56/100. Layer 2. 331 commits, 27 developers. Consensys' ZK rollup on Ethereum (Consensys/linea-monorepo).
-55. **Aztec**: 56/100. Privacy Layer 2. 331 commits, 27 developers. Privacy-first ZK rollup on Ethereum (AztecProtocol/aztec-packages).
-56. **BitBox**: 56/100. Hardware wallet. 454 commits, 21 developers. Swiss hardware wallet and its app (BitBoxSwiss/bitbox-wallet-app, BitBoxSwiss/bitbox02-firmware).
-57. **Lodestar**: 56/100. Ethereum client. 458 commits, 20 developers. TypeScript Ethereum consensus client (ChainSafe/lodestar).
-58. **Fedimint**: 56/100. Bitcoin custody. 493 commits, 19 developers. Community-run Bitcoin custody with ecash (fedimint/fedimint).
-59. **Dash**: 56/100. Payments coin. 733 commits, 14 developers. Payments coin forked from Bitcoin (dashpay/dash).
-60. **Prysm**: 55/100. Ethereum client. 328 commits, 23 developers. Go Ethereum consensus client (OffchainLabs/prysm).
-61. **Zeus**: 55/100. Bitcoin wallet. 1,276 commits, 9 developers. Bitcoin and Lightning wallet (ZeusLN/zeus).
-62. **Aptos**: 55/100. Layer 1. 324 commits, 23 developers. Move-based Layer 1 (aptos-labs/aptos-core).
-63. **Nimbus**: 55/100. Ethereum client. 302 commits, 24 developers. Lightweight Ethereum consensus client from Status (status-im/nimbus-eth2).
-64. **Sei**: 55/100. Layer 1. 515 commits, 16 developers. Parallel EVM Layer 1 (sei-protocol/sei-chain).
-65. **Akash**: 54/100. Compute network. 942 commits, 10 developers. Decentralized cloud compute marketplace (akash-network/node, akash-network/provider, akash-network/console).
-66. **Solidity**: 54/100. Language. 225 commits, 26 developers. The main smart contract language on Ethereum (ethereum/solidity).
-67. **Lightning (LND)**: 54/100. Bitcoin Layer 2. 388 commits, 18 developers. The most used Lightning Network node (lightningnetwork/lnd).
-68. **Breez**: 54/100. Bitcoin Layer 2. 532 commits, 14 developers. SDKs that let any app send Bitcoin over Lightning, Liquid and Spark (breez/spark-sdk).
-69. **XMTP**: 54/100. Messaging. 662 commits, 12 developers. Wallet-to-wallet messaging protocol (xmtp/libxmtp, xmtp/xmtp-js).
-70. **NEAR**: 54/100. Layer 1. 283 commits, 21 developers. Sharded Layer 1 (near/nearcore).
-71. **Mina**: 54/100. ZK Layer 1. 821 commits, 10 developers. Lightweight ZK Layer 1 (MinaProtocol/mina, o1-labs/proof-systems).
-72. **Electrum**: 54/100. Bitcoin wallet. 445 commits, 15 developers. One of the oldest Bitcoin wallets (spesmilo/electrum).
-73. **Anchor**: 53/100. Developer tools. 114 commits, 37 developers. The framework most Solana programs are written with (solana-foundation/anchor).
-74. **BTCPay Server**: 53/100. Bitcoin payments. 255 commits, 21 developers. Self-hosted Bitcoin payment processor (btcpayserver/btcpayserver).
-75. **Hyperlane**: 53/100. Messaging. 483 commits, 13 developers. Permissionless cross-chain messaging (hyperlane-xyz/hyperlane-monorepo).
-76. **GMX**: 53/100. Perps DEX. 937 commits, 8 developers. Perpetuals exchange on Arbitrum and Avalanche (gmx-io/gmx-synthetics, gmx-io/gmx-interface).
-77. **Bittensor**: 53/100. AI network. 512 commits, 12 developers. Network that pays for useful AI work (opentensor/subtensor).
-78. **Filecoin**: 52/100. Storage network. 142 commits, 28 developers. Decentralized storage network (filecoin-project/lotus, filecoin-project/builtin-actors).
-79. **Polygon**: 52/100. Sidechain. 237 commits, 19 developers. Polygon PoS chain and the AggLayer (0xPolygon/bor, 0xPolygon/heimdall-v2, agglayer/agglayer).
-80. **Freqtrade**: 52/100. Trading bots. 527 commits, 11 developers. Open source crypto trading bot (freqtrade/freqtrade).
-81. **Teku**: 52/100. Ethereum client. 295 commits, 16 developers. Consensys' Java Ethereum consensus client (Consensys/teku).
-82. **Unstoppable Wallet**: 52/100. Wallet. 753 commits, 8 developers. Multi-chain non-custodial wallet (horizontalsystems/unstoppable-wallet-android, horizontalsystems/unstoppable-wallet-ios).
-83. **ethPandaOps**: 51/100. Ethereum testing. 346 commits, 13 developers. The Ethereum Foundation team that tests every network upgrade (ethpandaops/ethereum-package, ethpandaops/dora, ethpandaops/assertoor).
-84. **Rocket Pool**: 51/100. Liquid staking. 334 commits, 13 developers. Decentralized Ethereum liquid staking (rocket-pool/smartnode).
-85. **Avalanche**: 51/100. Layer 1. 223 commits, 17 developers. Layer 1 with custom subnets (ava-labs/avalanchego).
-86. **Grandine**: 51/100. Ethereum client. 329 commits, 13 developers. Fast Rust Ethereum consensus client (grandinetech/grandine).
-87. **Jolt**: 51/100. ZK proving. 202 commits, 18 developers. a16z's zkVM for proving any program (a16z/jolt).
-88. **LI.FI**: 51/100. Bridge aggregator. 473 commits, 10 developers. Bridge and DEX aggregator API (lifinance/contracts, lifinance/sdk).
-89. **Stacks**: 51/100. Bitcoin Layer 2. 208 commits, 17 developers. Smart contract Layer 2 for Bitcoin (stacks-network/stacks-core).
-90. **TON**: 50/100. Layer 1. 330 commits, 12 developers. Layer 1 linked to Telegram (ton-blockchain/ton).
-91. **Bitcoin Dev Kit**: 50/100. Bitcoin tools. 93 commits, 27 developers. Library for building Bitcoin wallets (bitcoindevkit/bdk, bitcoindevkit/bdk-ffi).
-92. **Blockscout**: 50/100. Block explorer. 344 commits, 11 developers. Open source block explorer used by hundreds of chains (blockscout/blockscout, blockscout/frontend).
-93. **Cake Wallet**: 50/100. Wallet. 205 commits, 15 developers. Monero, Bitcoin and multi-coin wallet (cake-tech/cake_wallet).
-94. **Rabby**: 50/100. Wallet. 427 commits, 9 developers. Ethereum wallet for DeFi users (RabbyHub/Rabby, RabbyHub/rabby-mobile).
-95. **Euler**: 49/100. Lending. 562 commits, 7 developers. Modular lending protocol (euler-xyz/euler-vault-kit, euler-xyz/evk-periphery, euler-xyz/euler-lite).
-96. **Kaia**: 49/100. Layer 1. 220 commits, 13 developers. Asian Layer 1 formed from Klaytn and Finschia (kaiachain/kaia).
-97. **Flow**: 49/100. Layer 1. 351 commits, 9 developers. Layer 1 for consumer apps and NFTs (onflow/flow-go, onflow/cadence).
-98. **Espresso**: 48/100. Shared sequencer. 294 commits, 10 developers. Shared sequencing and fast confirmations for rollups (EspressoSystems/espresso-network).
-99. **Wasabi**: 48/100. Bitcoin wallet. 156 commits, 14 developers. Privacy-focused Bitcoin wallet (WalletWasabi/WalletWasabi).
-100. **Haveno**: 48/100. Monero DEX. 652 commits, 5 developers. Peer-to-peer Monero exchange (haveno-dex/haveno).
+10. **Riftn**: 70/100. Social and streaming app. 5,525 commits, 25 developers (1 committing on GitHub plus 24 community builders whose feature requests were filed or shipped in the window). The social app where anyone can request a feature and watch it get built (Riftn/riftn-web, Riftn/riftn-mobile, riftn.com/features).
+11. **Reth**: 69/100. Ethereum client. 813 commits, 75 developers. Paradigm's Rust Ethereum client, also used by Base and Tempo (paradigmxyz/reth).
+12. **Erigon**: 69/100. Ethereum client. 1,413 commits, 49 developers. Ethereum client built for archive nodes and speed (erigontech/erigon).
+13. **Bitcoin**: 68/100. Layer 1. 699 commits, 76 developers. Bitcoin Core, the reference Bitcoin node (bitcoin/bitcoin).
+14. **Zcash**: 68/100. Privacy coin. 1,042 commits, 55 developers. Privacy coin, building the Zebra node and shared Rust libraries (ZcashFoundation/zebra, zcash/librustzcash).
+15. **CCXT**: 67/100. Exchange library. 1,009 commits, 53 developers. Open source library that connects trading code to more than 100 exchanges (ccxt/ccxt).
+16. **Miden**: 67/100. ZK rollup. 769 commits, 59 developers. Zero-knowledge rollup with private accounts, spun out of Polygon (0xMiden/miden-vm, 0xMiden/miden-node, 0xMiden/miden-client).
+17. **Tempo**: 66/100. Payments chain. 1,025 commits, 44 developers. Payments-first blockchain from Stripe and Paradigm (tempoxyz/tempo).
+18. **Cardano**: 65/100. Layer 1. 1,147 commits, 37 developers. Proof-of-stake Layer 1 built in Haskell (IntersectMBO/cardano-node, IntersectMBO/cardano-ledger, IntersectMBO/ouroboros-consensus).
+19. **Chainlink**: 65/100. Oracle network. 462 commits, 63 developers. Oracle network that brings outside data on chain (smartcontractkit/chainlink).
+20. **Optimism**: 64/100. Layer 2. 549 commits, 51 developers. The OP Stack behind Optimism, Base and many other Layer 2s (ethereum-optimism/optimism, ethereum-optimism/op-geth).
+21. **Base**: 64/100. Layer 2. 1,185 commits, 29 developers. Coinbase's Layer 2, now running its own Rust node (base/node-reth, base/node).
+22. **Zama**: 63/100. FHE. 598 commits, 45 developers. Fully homomorphic encryption, so smart contracts can compute on encrypted data (zama-ai/fhevm, zama-ai/tfhe-rs).
+23. **Polkadot**: 63/100. Layer 0. 286 commits, 72 developers. Polkadot SDK for the relay chain and its parachains (paritytech/polkadot-sdk).
+24. **Status**: 63/100. Messenger and wallet. 1,627 commits, 22 developers. Private messenger, crypto wallet and browser in one app (status-im/status-desktop, status-im/status-go).
+25. **Sui**: 63/100. Layer 1. 468 commits, 50 developers. Layer 1 built on the Move language (MystenLabs/sui).
+26. **Besu**: 63/100. Ethereum client. 398 commits, 54 developers. Java Ethereum client from the Hyperledger community (hyperledger/besu).
+27. **CoW Protocol**: 62/100. DEX. 822 commits, 32 developers. DEX aggregator that protects traders from MEV (cowprotocol/cowswap, cowprotocol/services).
+28. **viem and wagmi**: 62/100. Developer tools. 233 commits, 70 developers. The TypeScript libraries most Ethereum apps use to talk to the chain (wevm/viem, wevm/wagmi).
+29. **Starknet**: 62/100. Layer 2. 403 commits, 47 developers. ZK rollup on Ethereum, with the Cairo language and Pathfinder node (starkware-libs/sequencer, starkware-libs/cairo, eqlabs/pathfinder).
+30. **Alloy**: 61/100. Developer tools. 307 commits, 53 developers. Rust libraries for Ethereum, used by Reth and Foundry (alloy-rs/alloy, alloy-rs/core).
+31. **Safe**: 61/100. Smart wallet. 690 commits, 30 developers. Smart account wallet that secures billions in team and DAO funds (safe-global/safe-wallet-monorepo, safe-global/safe-smart-account, safe-global/safe-transaction-service).
+32. **Zashi (Zcash wallet)**: 61/100. Wallet. 1,934 commits, 14 developers. The Zcash wallet for Android and iOS (Electric-Coin-Company/zashi-android, Electric-Coin-Company/zashi-ios).
+33. **OneKey**: 60/100. Hardware wallet. 1,004 commits, 21 developers. Open source hardware and software wallet (OneKeyHQ/app-monorepo, OneKeyHQ/firmware-pro).
+34. **Hedera**: 60/100. Layer 1. 482 commits, 34 developers. Hashgraph Layer 1, now developed in the open as Hiero (hiero-ledger/hiero-consensus-node).
+35. **Internet Computer**: 60/100. Layer 1. 703 commits, 26 developers. Layer 1 that hosts full apps on chain (dfinity/ic).
+36. **Bisq**: 60/100. Bitcoin DEX. 1,410 commits, 16 developers. Peer-to-peer Bitcoin exchange with no sign-up (bisq-network/bisq, bisq-network/bisq2).
+37. **XRP Ledger**: 60/100. Layer 1. 367 commits, 38 developers. Payments Layer 1 and its JavaScript library (XRPLF/rippled, XRPLF/xrpl.js).
+38. **Arbitrum**: 60/100. Layer 2. 784 commits, 23 developers. The largest optimistic rollup on Ethereum (OffchainLabs/nitro, OffchainLabs/nitro-contracts).
+39. **Hardhat**: 59/100. Developer tools. 527 commits, 29 developers. Ethereum development environment from the Nomic Foundation (NomicFoundation/hardhat).
+40. **LDK**: 59/100. Bitcoin Layer 2. 409 commits, 34 developers. Lightning Dev Kit, the toolkit many Lightning wallets are built on (lightningdevkit/rust-lightning, lightningdevkit/ldk-node).
+41. **Celestia**: 59/100. Data availability. 443 commits, 32 developers. Data availability layer for rollups (celestiaorg/celestia-app, celestiaorg/celestia-node).
+42. **Monero**: 59/100. Privacy coin. 362 commits, 36 developers. Privacy coin with private-by-default payments (monero-project/monero).
+43. **Cashu**: 59/100. Bitcoin ecash. 404 commits, 33 developers. Bitcoin ecash protocol for private payments (cashubtc/cdk, cashubtc/nutshell).
+44. **Blockstream Green**: 58/100. Bitcoin wallet. 449 commits, 28 developers. Bitcoin and Liquid wallet plus the Jade hardware wallet (Blockstream/green_android, Blockstream/green_ios, Blockstream/Jade).
+45. **Curve**: 58/100. DEX. 1,756 commits, 11 developers. Stablecoin DEX and the crvUSD stablecoin (curvefi/curve-frontend, curvefi/curve-stablecoin).
+46. **Plonky3**: 58/100. ZK proving. 487 commits, 25 developers. Toolkit for building fast zero-knowledge provers (Plonky3/Plonky3).
+47. **IOTA**: 58/100. Layer 1. 454 commits, 26 developers. Layer 1 now running a Move-based network (iotaledger/iota).
+48. **Core Lightning**: 58/100. Bitcoin Layer 2. 377 commits, 29 developers. Lightning Network node from Blockstream (ElementsProject/lightning).
+49. **Rotki**: 58/100. Portfolio tracker. 979 commits, 15 developers. Open source, self-hosted crypto portfolio tracker (rotki/rotki).
+50. **Ambire**: 57/100. Smart wallet. 1,514 commits, 11 developers. Smart account wallet for Ethereum chains (AmbireTech/extension).
+51. **Lighthouse**: 57/100. Ethereum client. 230 commits, 37 developers. Rust Ethereum consensus client from Sigma Prime (sigp/lighthouse).
+52. **Monad**: 57/100. Layer 1. 296 commits, 31 developers. Parallel EVM Layer 1 (category-labs/monad-bft, category-labs/monad).
+53. **Aleo**: 57/100. Privacy Layer 1. 668 commits, 17 developers. Privacy Layer 1 for zero-knowledge apps (ProvableHQ/snarkOS, ProvableHQ/snarkVM).
+54. **Morpho**: 56/100. Lending. 723 commits, 16 developers. Lending protocol and vaults (morpho-org/morpho-blue, morpho-org/vault-v2, morpho-org/sdks).
+55. **Linea**: 56/100. Layer 2. 331 commits, 27 developers. Consensys' ZK rollup on Ethereum (Consensys/linea-monorepo).
+56. **Aztec**: 56/100. Privacy Layer 2. 331 commits, 27 developers. Privacy-first ZK rollup on Ethereum (AztecProtocol/aztec-packages).
+57. **BitBox**: 56/100. Hardware wallet. 454 commits, 21 developers. Swiss hardware wallet and its app (BitBoxSwiss/bitbox-wallet-app, BitBoxSwiss/bitbox02-firmware).
+58. **Lodestar**: 56/100. Ethereum client. 458 commits, 20 developers. TypeScript Ethereum consensus client (ChainSafe/lodestar).
+59. **Fedimint**: 56/100. Bitcoin custody. 493 commits, 19 developers. Community-run Bitcoin custody with ecash (fedimint/fedimint).
+60. **Dash**: 56/100. Payments coin. 733 commits, 14 developers. Payments coin forked from Bitcoin (dashpay/dash).
+61. **Prysm**: 55/100. Ethereum client. 328 commits, 23 developers. Go Ethereum consensus client (OffchainLabs/prysm).
+62. **Zeus**: 55/100. Bitcoin wallet. 1,276 commits, 9 developers. Bitcoin and Lightning wallet (ZeusLN/zeus).
+63. **Aptos**: 55/100. Layer 1. 324 commits, 23 developers. Move-based Layer 1 (aptos-labs/aptos-core).
+64. **Nimbus**: 55/100. Ethereum client. 302 commits, 24 developers. Lightweight Ethereum consensus client from Status (status-im/nimbus-eth2).
+65. **Sei**: 55/100. Layer 1. 515 commits, 16 developers. Parallel EVM Layer 1 (sei-protocol/sei-chain).
+66. **Akash**: 54/100. Compute network. 942 commits, 10 developers. Decentralized cloud compute marketplace (akash-network/node, akash-network/provider, akash-network/console).
+67. **Solidity**: 54/100. Language. 225 commits, 26 developers. The main smart contract language on Ethereum (ethereum/solidity).
+68. **Lightning (LND)**: 54/100. Bitcoin Layer 2. 388 commits, 18 developers. The most used Lightning Network node (lightningnetwork/lnd).
+69. **Breez**: 54/100. Bitcoin Layer 2. 532 commits, 14 developers. SDKs that let any app send Bitcoin over Lightning, Liquid and Spark (breez/spark-sdk).
+70. **XMTP**: 54/100. Messaging. 662 commits, 12 developers. Wallet-to-wallet messaging protocol (xmtp/libxmtp, xmtp/xmtp-js).
+71. **NEAR**: 54/100. Layer 1. 283 commits, 21 developers. Sharded Layer 1 (near/nearcore).
+72. **Mina**: 54/100. ZK Layer 1. 821 commits, 10 developers. Lightweight ZK Layer 1 (MinaProtocol/mina, o1-labs/proof-systems).
+73. **Electrum**: 54/100. Bitcoin wallet. 445 commits, 15 developers. One of the oldest Bitcoin wallets (spesmilo/electrum).
+74. **Anchor**: 53/100. Developer tools. 114 commits, 37 developers. The framework most Solana programs are written with (solana-foundation/anchor).
+75. **BTCPay Server**: 53/100. Bitcoin payments. 255 commits, 21 developers. Self-hosted Bitcoin payment processor (btcpayserver/btcpayserver).
+76. **Hyperlane**: 53/100. Messaging. 483 commits, 13 developers. Permissionless cross-chain messaging (hyperlane-xyz/hyperlane-monorepo).
+77. **GMX**: 53/100. Perps DEX. 937 commits, 8 developers. Perpetuals exchange on Arbitrum and Avalanche (gmx-io/gmx-synthetics, gmx-io/gmx-interface).
+78. **Bittensor**: 53/100. AI network. 512 commits, 12 developers. Network that pays for useful AI work (opentensor/subtensor).
+79. **Filecoin**: 52/100. Storage network. 142 commits, 28 developers. Decentralized storage network (filecoin-project/lotus, filecoin-project/builtin-actors).
+80. **Polygon**: 52/100. Sidechain. 237 commits, 19 developers. Polygon PoS chain and the AggLayer (0xPolygon/bor, 0xPolygon/heimdall-v2, agglayer/agglayer).
+81. **Freqtrade**: 52/100. Trading bots. 527 commits, 11 developers. Open source crypto trading bot (freqtrade/freqtrade).
+82. **Teku**: 52/100. Ethereum client. 295 commits, 16 developers. Consensys' Java Ethereum consensus client (Consensys/teku).
+83. **Unstoppable Wallet**: 52/100. Wallet. 753 commits, 8 developers. Multi-chain non-custodial wallet (horizontalsystems/unstoppable-wallet-android, horizontalsystems/unstoppable-wallet-ios).
+84. **ethPandaOps**: 51/100. Ethereum testing. 346 commits, 13 developers. The Ethereum Foundation team that tests every network upgrade (ethpandaops/ethereum-package, ethpandaops/dora, ethpandaops/assertoor).
+85. **Rocket Pool**: 51/100. Liquid staking. 334 commits, 13 developers. Decentralized Ethereum liquid staking (rocket-pool/smartnode).
+86. **Avalanche**: 51/100. Layer 1. 223 commits, 17 developers. Layer 1 with custom subnets (ava-labs/avalanchego).
+87. **Grandine**: 51/100. Ethereum client. 329 commits, 13 developers. Fast Rust Ethereum consensus client (grandinetech/grandine).
+88. **Jolt**: 51/100. ZK proving. 202 commits, 18 developers. a16z's zkVM for proving any program (a16z/jolt).
+89. **LI.FI**: 51/100. Bridge aggregator. 473 commits, 10 developers. Bridge and DEX aggregator API (lifinance/contracts, lifinance/sdk).
+90. **Stacks**: 51/100. Bitcoin Layer 2. 208 commits, 17 developers. Smart contract Layer 2 for Bitcoin (stacks-network/stacks-core).
+91. **TON**: 50/100. Layer 1. 330 commits, 12 developers. Layer 1 linked to Telegram (ton-blockchain/ton).
+92. **Bitcoin Dev Kit**: 50/100. Bitcoin tools. 93 commits, 27 developers. Library for building Bitcoin wallets (bitcoindevkit/bdk, bitcoindevkit/bdk-ffi).
+93. **Blockscout**: 50/100. Block explorer. 344 commits, 11 developers. Open source block explorer used by hundreds of chains (blockscout/blockscout, blockscout/frontend).
+94. **Cake Wallet**: 50/100. Wallet. 205 commits, 15 developers. Monero, Bitcoin and multi-coin wallet (cake-tech/cake_wallet).
+95. **Rabby**: 50/100. Wallet. 427 commits, 9 developers. Ethereum wallet for DeFi users (RabbyHub/Rabby, RabbyHub/rabby-mobile).
+96. **Euler**: 49/100. Lending. 562 commits, 7 developers. Modular lending protocol (euler-xyz/euler-vault-kit, euler-xyz/evk-periphery, euler-xyz/euler-lite).
+97. **Kaia**: 49/100. Layer 1. 220 commits, 13 developers. Asian Layer 1 formed from Klaytn and Finschia (kaiachain/kaia).
+98. **Flow**: 49/100. Layer 1. 351 commits, 9 developers. Layer 1 for consumer apps and NFTs (onflow/flow-go, onflow/cadence).
+99. **Espresso**: 48/100. Shared sequencer. 294 commits, 10 developers. Shared sequencing and fast confirmations for rollups (EspressoSystems/espresso-network).
+100. **Wasabi**: 48/100. Bitcoin wallet. 156 commits, 14 developers. Privacy-focused Bitcoin wallet (WalletWasabi/WalletWasabi).
 
 ## Why crypto communities win when anyone can build with AI
 
-![About 1 in 6 commits in the top 100 crypto projects credit an AI coding assistant](/media/fig-crypto-ai.jpg)
+![About 1 in 6 commits in the top 100 crypto projects credit an AI coding assistant](/media/fig-crypto-ai-riftn.jpg)
 
 AI has changed who gets to build. A designer, a moderator, a trader with an idea or a long-time community member can now describe what they want and ship working code the same day. Code is no longer the scarce part. What is scarce is people who care enough to keep showing up, and who all push in the same direction.
 
@@ -221,43 +223,47 @@ A company hires a team. A crypto network grows a crowd, gives it ownership, and 
 
 Commits show how much code lands each day. ElizaOS is in a league of its own, and wallets fill three of the next four spots. Solana is the busiest blockchain, and the Zcash wallet Zashi shipped more code than Ethereum's Geth.
 
-![Most commits in the last 90 days: ElizaOS 17,062, Ledger Live 5,915, MetaMask 4,704, Trezor 3,872, Solana 2,618](/media/fig-crypto-commits.jpg)
+![Most commits in the last 90 days: ElizaOS 17,062, Ledger Live 5,915, MetaMask 4,704, Trezor 3,872, Solana 2,618](/media/fig-crypto-commits-riftn.jpg)
 
 ## The biggest developer crowds
 
 Developers show how many people are behind the code. DefiLlama's open adapter repo has the biggest crowd by far. MetaMask, ElizaOS, Ethereum and Solana each had more than 100 people landing code in 90 days.
 
-![Most active developers in the last 90 days: DefiLlama 512, MetaMask 163, ElizaOS 147, Ethereum 126, Solana 117](/media/fig-crypto-devs.jpg)
+![Most active developers in the last 90 days: DefiLlama 512, MetaMask 163, ElizaOS 147, Ethereum 126, Solana 117](/media/fig-crypto-devs-riftn.jpg)
 
 ## What kind of projects make the top 100
 
-![The top 100 crypto projects by type: 36 blockchains, 17 wallets, 16 developer tools, 11 Ethereum clients, 9 DeFi, 9 Bitcoin and Lightning, 2 AI](/media/fig-crypto-categories.jpg)
+![The top 100 crypto projects by type: 36 blockchains, 17 wallets, 16 developer tools, 11 Ethereum clients, 9 DeFi, 9 Bitcoin and Lightning, 2 AI](/media/fig-crypto-categories-riftn.jpg)
 
 - **Blockchains (36):** Solana, Ethereum, Bitcoin, Zcash, Miden, Tempo and Cardano lead. Layer 2s Optimism, Base, Starknet, Arbitrum, Linea and Aztec all make it.
 - **Wallets (17):** the surprise of this ranking. MetaMask, Ledger Live and Trezor are all top 6, and OneKey, Safe, Status, BitBox, Rabby and others follow. Wallets are where crypto meets users, and that is where the most code is going.
 - **Developer tools, data and infra (16):** DefiLlama, Foundry, CCXT, Chainlink, Zama, viem and wagmi, Alloy and Hardhat.
 - **Ethereum clients (11):** see below.
 - **DeFi and trading (9):** CoW Protocol, Curve, Morpho, GMX, Rocket Pool, LI.FI, Euler, Freqtrade and Haveno.
-- **Bitcoin and Lightning (9):** Bisq, LDK, Cashu, Core Lightning, Fedimint, LND, Breez, BTCPay Server and Stacks, on top of Bitcoin Core itself at #12.
+- **Bitcoin and Lightning (9):** Bisq, LDK, Cashu, Core Lightning, Fedimint, LND, Breez, BTCPay Server and Stacks, on top of Bitcoin Core itself at #13.
 - **AI (2):** ElizaOS and Bittensor.
 
 ## Ethereum's client army
 
-![Ethereum clients in the top 100: Nethermind, Reth, Erigon, Besu, Lighthouse, Lodestar, Prysm, Nimbus, Teku and Grandine](/media/fig-crypto-eth.jpg)
+![Ethereum clients in the top 100: Nethermind, Reth, Erigon, Besu, Lighthouse, Lodestar, Prysm, Nimbus, Teku and Grandine](/media/fig-crypto-eth-riftn.jpg)
 
-Ethereum is built by many independent teams on purpose, so that a bug in one client cannot take the network down. Ten of them made the top 100 on their own: Nethermind (#9), Reth (#10), Erigon (#11), Besu (#25), Lighthouse (#50), Lodestar (#57), Prysm (#60), Nimbus (#63), Teku (#81) and Grandine (#86), plus ethPandaOps (#83), the team that tests every upgrade. Add Geth and the specs and Ethereum's core clients shipped more than 7,000 commits in 90 days.
+Ethereum is built by many independent teams on purpose, so that a bug in one client cannot take the network down. Ten of them made the top 100 on their own: Nethermind (#9), Reth (#11), Erigon (#12), Besu (#26), Lighthouse (#51), Lodestar (#58), Prysm (#61), Nimbus (#64), Teku (#82) and Grandine (#87), plus ethPandaOps (#84), the team that tests every upgrade. Add Geth and the specs and Ethereum's core clients shipped more than 7,000 commits in 90 days.
 
 ## Big names, little public code
 
 Market value and public code do not always match. Uniswap's public repos had 34 commits in 90 days because most of its app is now built in private. Aave (45), Pendle (13), The Graph (4), EigenLayer (1) and Zora (1) were also quiet in public, and Hyperliquid's core code is closed. Among older coins, Litecoin (20 commits), TRON (12) and Dogecoin (8) fall well outside the top 100. Low public activity does not mean a project has stopped working, but it does mean the community cannot see or help with the work.
 
-## For scale: Riftn
+## Where Riftn ranks: #10
 
-Riftn is a social and streaming app, so it is not ranked here. But for scale, its public web and mobile apps took 5,525 commits in the same 90 days. On commits alone that would place it #3 of all 270 crypto projects we measured, behind only ElizaOS and Ledger Live. On Riftn, anyone can request a feature on [riftn.com/features](https://riftn.com/features) and watch it get built, which is the community-plus-AI model this article is about.
+Riftn scores 70/100, which puts it at #10, between Nethermind and Reth. Its public web and mobile apps took 5,525 commits in the 90 days, the third most of all 271 crypto projects we measured, behind only ElizaOS and Ledger Live.
 
-![For scale: Riftn 5,525 commits in 90 days, ElizaOS 17,062, Ledger Live 5,915, MetaMask 4,704](/media/fig-crypto-dehub.jpg)
+Its developer number is where it differs from everyone else on the list. Only one person commits to Riftn's GitHub. The other 24 developers are community members who asked for a feature on [riftn.com/features](https://riftn.com/features) that was filed or shipped in the same window. This is the community-plus-AI model this article is about: people who never touch GitHub still decide what gets built, and AI turns their requests into code.
 
-> Disclosure: Riftn publishes this index. Riftn is not included in the ranking.
+![Most commits in 90 days: ElizaOS 17,062, Ledger Live 5,915, Riftn 5,525, MetaMask 4,704, Trezor 3,872, Solana 2,618](/media/fig-crypto-riftn-rank.jpg)
+
+> Just missed: **Haveno**, the peer-to-peer Monero exchange, is now #101 with 48/100 (652 commits, 5 developers).
+
+> Disclosure: Riftn publishes this index. It is scored with the same formula as every other project, with its community builders counted as developers.
 
 ## Frequently asked questions
 
@@ -276,6 +282,10 @@ DefiLlama, with 512 people landing code in 90 days, most of them protocol teams 
 ### Why does AI help crypto communities more than companies?
 
 AI makes writing code cheap, so the limit becomes how many motivated people you have. Crypto networks give thousands of people ownership and a reason to build, and with AI each of them can now ship real code. About 1 in 6 commits in the top 100 already credit an AI assistant.
+
+### Where does Riftn rank?
+
+#10, with 70/100 from 5,525 commits and 25 developers. One of those developers commits on GitHub and 24 are community members whose feature requests on the public request board were filed or shipped in the same 90 days. Riftn publishes this index and uses the same formula as everyone else.
 
 ### Does GitHub activity predict a coin's price?
 
@@ -301,11 +311,12 @@ See our sister ranking, the [Top 50 Blockchain Projects 2026](/guides/top-50-blo
 - [foundry-rs/foundry](https://github.com/foundry-rs/foundry)
 - [NethermindEth/nethermind](https://github.com/NethermindEth/nethermind)
 - [paradigmxyz/reth](https://github.com/paradigmxyz/reth)
+- [Riftn/riftn-web](https://github.com/Riftn/riftn-web), [Riftn/riftn-mobile](https://github.com/Riftn/riftn-mobile) and the [Riftn request board](https://riftn.com/features)
 
 ## Build with Riftn
 
 Open [riftn.com](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-100-crypto-projects-2026-banner.png',
+  bannerImage: '/media/top-100-crypto-projects-2026-banner-riftn.png',
   bannerImageAlt: 'Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T23:30:00.000Z',

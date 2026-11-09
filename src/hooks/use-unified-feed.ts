@@ -573,13 +573,13 @@ function isUnairedLivePost(item: { postType?: string; stream?: { startedAt?: str
 
 /**
  * True when `params` describe exactly the request the index.html boot script
- * issued (page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=all, no
+ * issued (page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=all, no
  * other filters). Must stay in lockstep with the inline <script> in index.html.
  */
 function isBootDefaultFeedParams(params: UnifiedFeedParams): boolean {
   return (
     params.page === 1 &&
-    params.limit === 20 &&
+    params.limit === 10 &&
     params.sortBy === 'createdAt' &&
     params.sortOrder === 'desc' &&
     params.status === 'all' &&

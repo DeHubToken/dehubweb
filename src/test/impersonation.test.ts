@@ -7,7 +7,7 @@
  * failure is invisible in the UI — hence a test rather than a manual check.
  */
 import { describe, it, expect } from 'vitest';
-import { foldName, looksLike, checkImpersonation } from '@/lib/impersonation';
+import { foldName, looksLike, checkImpersonation, staffImpersonated } from '@/lib/impersonation';
 
 describe('foldName', () => {
   it('folds case, spacing and punctuation away', () => {
@@ -78,5 +78,27 @@ describe('checkImpersonation', () => {
       isCreator: false,
       isImpersonating: false,
     });
+  });
+});
+
+describe('staffImpersonated', () => {
+  const MAL = '0x9324840523a5d17dd12a2f11a9472e5a199c1937';
+  const STRANGER = '0x1111111111111111111111111111111111111111';
+
+  it('flags copies of Mal from another wallet', () => {
+    for (const displayName of ['Mal | Riftn Founder', 'mal.eth', 'Real MaI', 'Мal Official', 'maldoteth']) {
+      expect(staffImpersonated({ address: STRANGER, displayName })).toBe('Mal');
+    }
+    expect(staffImpersonated({ address: STRANGER, username: 'real_maldoteth' })).toBe('Mal');
+    expect(staffImpersonated({ address: STRANGER, displayName: 'Riftn Support' })).toBe('Riftn');
+  });
+
+  it('never flags the real owner or ordinary names', () => {
+    expect(staffImpersonated({ address: MAL, displayName: 'mal', username: 'maldoteth' })).toBeNull();
+    // His new wallet: the @maldoteth username is his
+    expect(staffImpersonated({ address: STRANGER, displayName: 'Mal | Founder', username: 'maldoteth' })).toBeNull();
+    for (const displayName of ['Mal', 'MaI', 'Мal', 'Its Mal', 'Malek', 'Malik', 'Kemal', 'Mal Jones', 'Normal']) {
+      expect(staffImpersonated({ address: STRANGER, displayName })).toBeNull();
+    }
   });
 });

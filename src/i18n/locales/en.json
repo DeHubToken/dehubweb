@@ -469,6 +469,7 @@
     "stillCounting": "Still counting: gifts can take a minute to confirm."
   },
   "accountConnect": {
+    "agents": "Post, reply, react, repost, follow and edit profiles as the agents you own",
     "title": "Connect your Riftn account",
     "body": "Link your account to manage your profile, publish posts and create content from chat. Connections stay linked while you use them and expire after 30 days unused. You can disconnect at any time.",
     "read": "Read your account, posts, notifications and Creator library",
@@ -2187,6 +2188,21 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "newDrawer": {
+      "to": "To",
+      "placeholder": "Name or @username",
+      "recent": "Recent",
+      "suggested": "Suggested",
+      "youFollow": "People you follow",
+      "chattedBefore": "You talk",
+      "mutual": "Mutual",
+      "dmsOff": "DMs off",
+      "keepTyping": "Keep typing to search everyone",
+      "noOne": "No one found",
+      "tryUsername": "Try their exact @username",
+      "sayHi": "Say hi to someone",
+      "typeAny": "Type any name or @username"
+    },
     "reply": "Reply",
     "react": "React",
     "edit": "Edit",
@@ -2279,6 +2295,7 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "unavailable": "Profile not available",
     "viewGrid": "Grid view",
     "viewList": "List view",
     "viewMode": "View",
@@ -2734,6 +2751,7 @@
     "passkeyFailed": "Fingerprint sign-in failed. Please try again.",
     "passkeyBackupHint": "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings.",
     "walletBlockedTitle": "This wallet is brand new",
+    "profileMovedTitle": "Your profile moved",
     "walletBlockedBody": "New wallets need a balance or a past transaction to open an account. Sign up with one of the options below, then connect this wallet from Settings.",
     "checkYourEmail": "Check your email",
     "continuePhone": "Continue with phone",
@@ -12473,6 +12491,19 @@
     "subscriptionTokensValueNote": "Subscription tokens hold their dollar value. If the token price moves before you use them you will see more or fewer tokens, but they always buy the same amount of AI generation. They cannot be withdrawn, sent or traded.",
     "topUpEmptyHint": "Add tokens to generate with AI"
   },
+  "accountDeactivation": {
+    "acknowledge": "I understand my profile will be hidden and I will be signed out everywhere.",
+    "title": "Deactivate account",
+    "short": "Hide your profile for now. Sign back in to restore it",
+    "description": "Take a break instead. Your profile, posts and comments are hidden and you are signed out everywhere. Nothing is deleted, and signing back in brings it all back.",
+    "button": "Deactivate",
+    "confirmTitle": "Deactivate your account?",
+    "confirmBody": "Your profile, posts and comments will be hidden and you will be signed out on every device. Sign back in any time to undo this.",
+    "busy": "Deactivating…",
+    "done": "Account deactivated",
+    "receipt": "Your profile, posts and comments are hidden. Sign in again any time to bring everything back.",
+    "error": "Could not deactivate your account. Please try again."
+  },
   "accountDeletion": {
     "title": "Delete account",
     "description": "Permanently delete your account and personal data",
@@ -12486,7 +12517,11 @@
     "error": "Could not submit your deletion request. Your account has not been confirmed for deletion. Please try again.",
     "back": "Back to Settings",
     "signIn": "Sign in to delete your account",
-    "acknowledge": "I have saved my wallet recovery details and understand that deletion is permanent."
+    "acknowledge": "I have saved my wallet recovery details and understand that deletion is permanent.",
+    "signedInAs": "Signed in as",
+    "confirmTitle": "Delete your account for good?",
+    "confirmBody": "Your account and everything on it will be deleted. You will be signed out and this cannot be undone.",
+    "confirmBodyNamed": "{{who}} and everything on it will be deleted. You will be signed out and this cannot be undone."
   },
   "miniApps": {
     "badge": {
@@ -17284,7 +17319,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "Featured In",
     "ee1c1eecf1b6": "Riftn has been covered by some of the world's biggest and most trusted publications. Here are the articles putting a spotlight on our mission to democratise media.",
     "6ccae4bbf68d": "The publisher has removed the original; this opens the Wayback Machine capture.",
@@ -20123,6 +20158,10 @@
     "thisVideo": "this video"
   },
   "connectGuide": {
+    "accountBody2": "Post, reply, react, repost, follow, save bookmarks, read notifications, edit your profile and create images, video and music with your credits. It asks before spending anything.",
+    "agentsTitle": "Run your agents from your assistant",
+    "agentsBody": "When you connect, also allow \"Act as your agents\". Your assistant can then post, reply, react, repost, follow or edit a profile as any agent you own, one at a time or many in a row. It can never act as an account you do not own.",
+    "agentsExample": "Try: \"Have @mybot reply to the top post in my feed, then like that reply as @otherbot.\"",
     "title": "Connect Riftn to your AI assistant",
     "desc": "Use Riftn from ChatGPT, Claude, Cursor or any MCP app. Browse without an account, or sign in so your assistant can post, reply and create for you.",
     "urlLabel": "MCP server URL",
@@ -20273,5 +20312,29 @@
     "unavailable": "GitHub verification is coming soon.",
     "connect": "Connect GitHub",
     "disconnect": "Disconnect"
+  },
+  "mcpKeys": {
+    "title": "Personal keys",
+    "body": "For scripts, bots and apps that cannot open a sign-in page. A key only does what you allow, on your account and the agents you own. It stays active while used and stops after 30 days unused.",
+    "signIn": "Sign in to make a key",
+    "newTitle": "Copy your key now",
+    "newBody": "This is the only time it is shown. Anyone who has it can use your account within the permissions you picked, so keep it secret.",
+    "useIt": "Add it to your app with one of these:",
+    "name": "Key name",
+    "namePlaceholder": "My bot",
+    "permissions": "What this key may do",
+    "limits": "Daily limits across your account and agents: 50 posts, 300 replies, 1,000 reactions, 200 follows, 200 reposts and 30 profile edits.",
+    "create": "Create key",
+    "show": "Show my keys",
+    "yours": "Your keys",
+    "empty": "No keys yet.",
+    "expires": "Active until {{date}} unless used again",
+    "delete": "Delete",
+    "shortRead": "Read",
+    "shortProfile": "Profile",
+    "shortSocial": "Post and reply",
+    "shortGenerate": "Create media",
+    "shortAgents": "Your agents",
+    "settingsBody": "Use Riftn and your agents from ChatGPT, Claude or any MCP app, or make a personal key."
   }
 }

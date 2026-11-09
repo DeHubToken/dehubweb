@@ -2233,7 +2233,7 @@ export const uz = {
     q18: 'Riftnning yo&#39;l xaritasi nima?',
     a18: 'Bizning yo&#39;l xaritamiz d&#39;App ekotizimini kengaytirish, yangi o&#39;yinlarni ishga tushirish, DePIN infratuzilmasini takomillashtirish, AI vositalarini ishlab chiqish va platforma bo&#39;ylab boshqaruvni joriy etishni davom ettirishni o&#39;z ichiga oladi.',
     q19: 'Riftn jamoasi bilan qanday bog&#39;lanishim mumkin?',
-    a19: 'Texnik muammolar bo&#39;yicha biz bilan rasmiy kanallarimiz orqali bog&#39;lanishingiz mumkin: tech@dehub.net yoki yangiliklar va hamjamiyat bilan aloqalar uchun bizni Twitter va Instagramda @dehub_official sahifalarida kuzatib boring.',
+    a19: 'Texnik muammolar bo&#39;yicha biz bilan rasmiy kanallarimiz orqali bog&#39;lanishingiz mumkin: tech@dehub.net yoki yangiliklar va hamjamiyat bilan aloqalar uchun bizni Twitter va Instagramda @riftn_com sahifalarida kuzatib boring.',
     q20: 'Riftn tokenlari investitsiyami?',
     a20: 'Yo&#39;q, Riftn tokenlari faqat Riftn ekotizimida foydali maqsadlar uchun mo&#39;ljallangan, o&#39;yin ichidagi yoki ilova ichidagi raqamli valyutalarga o&#39;xshash. Ular investitsiya vositalari emas va bozorlar juda o&#39;zgaruvchan.',
     q21: 'Riftn’da kontent moderatsiyasi qanday ishlaydi?',

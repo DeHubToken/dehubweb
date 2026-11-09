@@ -1,5 +1,6 @@
 import { BlogPost as BlogPostType } from '@/types/blog';
 import { riftnRelaunchPost } from './posts/riftnRelaunchPost';
+import { binancePioneerBurnAppealPost } from './posts/binancePioneerBurnAppealPost';
 import { yearlyWrapUp2025Post } from './posts/yearlyWrapUp2025Post';
 import { townHallJan2026Post } from './posts/townHallJan2026Post';
 import { devUpdateJan2026Post } from './posts/devUpdateJan2026Post';
@@ -130,7 +131,7 @@ const massiveWeekPost: BlogPostType = {
 
     We had no questions submitted, and nobody has raised their hand to speak for the open mic, so we'll wrap it up there everyone. **Have an amazing night, Riftn family. The best is yet to come.**
   `,
-  bannerImage: '/media/town-hall-ama-banner-new.png',
+  bannerImage: '/media/town-hall-ama-banner-new-riftn.png',
   bannerImageAlt: 'Riftn Town Hall and AMA Highlights showcasing major announcements',
   author: {
     name: 'Riftn Team',
@@ -1415,6 +1416,7 @@ const bnbPoolUpdatePost: BlogPostType = {
 };
 
 export const newPosts: BlogPostType[] = [
+  binancePioneerBurnAppealPost,
   riftnRelaunchPost,
   tokenExchangeListingsUpdatePost,
   q4DevelopmentOverviewPost,

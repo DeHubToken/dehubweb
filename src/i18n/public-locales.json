@@ -1,5 +1,5 @@
 {
-  "version": "96f466ca5b945a5f",
+  "version": "2dd5798e22622202",
   "routes": {
     "/": [
       "ar",
@@ -135,6 +135,13 @@
       "tr"
     ],
     "/buy": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/chat": [
       "ar",
       "es",
       "fr",
@@ -1142,6 +1149,13 @@
       "nl",
       "tr"
     ],
+    "/guides/open-appeal-binance-recover-876-bnb-pioneer-burn": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
     "/guides/paving-the-way-framework-for-community-driven-forks": [
       "ar",
       "es",
@@ -1486,6 +1500,13 @@
       "tr"
     ],
     "/guides/young-creators-ground-you-own": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/images": [
       "ar",
       "es",
       "fr",

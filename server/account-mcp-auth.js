@@ -1,10 +1,14 @@
-import { API, ORIGIN, RESOURCE, SCOPES, accountTools, callAccountTool, challenge, edge, hash, json, pkce, random, readJson, verifySession } from './account-mcp.js';
+import { API, DAILY_LIMITS, MCP_ORIGINS, ORIGIN, SCOPES, accountTools, callAccountTool, challenge, edge, hash, json, originOf, pkce, random, readJson, resourceOf, verifySession } from './account-mcp.js';
 
 const HOUR = 3600000, DAY = 24 * HOUR;
 // A grant stays linked while it is used: each refresh pushes the deadline out.
 const GRANT_TTL = 30 * DAY;
 // Riftn access tokens last 15 minutes, so rotate the connector's own session early.
 const SESSION_REFRESH_AFTER = 12 * 60000;
+// Personal keys: at most this many per person, shown once, stored hashed.
+const MAX_KEYS = 10;
+// Agent sessions from the server last 10 minutes; reuse them for 8.
+const AGENT_SESSION_REUSE = 8 * 60000;
 const oauthError = (message, code = 'invalid_request', status = 400) => json({ error: code, error_description: message }, status);
 const result = payload => ({ content: [{ type: 'text', text: JSON.stringify(payload) }], structuredContent: payload });
 const fail = message => ({ ...result({ error: message }), isError: true });
@@ -15,7 +19,7 @@ export function validRedirect(value) {
 const live = row => row && row.expires > Date.now() ? row.value : null;
 const record = (value, ttl) => ({ value, expires: Date.now() + ttl });
 // Clients may omit the RFC 8707 resource or add a trailing slash; anything else is refused.
-const resourceOk = value => value === null || value.replace(/\/$/, '') === RESOURCE;
+const resourceOk = (value, resource) => value === null || value.replace(/\/$/, '') === resource;
 // dehub.io reaches the Worker through the direct gateway, so CF-Connecting-IP is the
 // gateway for every visitor. The gateway sets X-Real-IP; only used for rate limits.
 const clientIp = request => (request.headers.get('X-DeHub-Public-Host') === 'dehub.io' && request.headers.get('X-Real-IP')) || request.headers.get('CF-Connecting-IP') || 'unknown';
@@ -58,11 +62,14 @@ export class AccountMcpAuth {
   async bearer(request) {
     const raw = request.headers.get('Authorization') || '';
     if (!raw) return null;
-    const match = /^Bearer (dhm_[a-f0-9]{64})$/i.exec(raw);
+    const match = /^Bearer (dh[mk]_[a-f0-9]{64})$/i.exec(raw);
     if (!match) throw new Error('Invalid connection token.');
-    const access = await this.get(`access:${await hash(match[1])}`);
-    const grant = access && await this.get(`grant:${access.grant}`);
+    const personal = match[1].toLowerCase().startsWith('dhk_');
+    const access = await this.get(`${personal ? 'key' : 'access'}:${await hash(match[1])}`);
+    let grant = access && await this.get(`grant:${access.grant}`);
     if (!grant) throw new Error('Expired or revoked connection. Link your Riftn account again.');
+    // A personal key stays alive while it is used: slide it at most once a day.
+    if (personal && grant.deadline - Date.now() < GRANT_TTL - DAY) grant = await this.slideKey(access.grant, grant);
     const current = await this.fresh(access.grant, grant);
     if (await verifySession(current.token, this.fetcher) !== current.wallet) throw new Error('Riftn session changed. Link your account again.');
     return { ...current, id: access.grant };
@@ -102,6 +109,32 @@ export class AccountMcpAuth {
       this.rotations.set(grantId, rotation);
     }
     return rotation;
+  }
+  async slideKey(grantId, grant) {
+    const next = { ...grant, deadline: Date.now() + GRANT_TTL };
+    await this.put(`grant:${grantId}`, next, GRANT_TTL);
+    await this.put(`key:${grant.keyHash}`, { grant: grantId }, GRANT_TTL);
+    await this.put(`owner:${grant.wallet}:${grantId}`, grantId, GRANT_TTL);
+    return next;
+  }
+  async revoke(grantId, grant) {
+    await this.store.delete([`grant:${grantId}`, `owner:${grant.wallet}:${grantId}`, ...(grant.keyHash ? [`key:${grant.keyHash}`] : [])]);
+  }
+  // A short server session for one of this person's agents. The server checks
+  // ownership on every new session; nothing here trusts the agent name.
+  async agentSession(grant, name) {
+    const key = `${grant.wallet}:${name.toLowerCase()}`;
+    this.agents ??= new Map();
+    const cached = this.agents.get(key);
+    if (cached && Date.now() - cached.at < AGENT_SESSION_REUSE) return cached.value;
+    const data = await readJson(await this.fetcher(`${API}/my-agents/${encodeURIComponent(name)}/session`, { method: 'POST',
+      headers: { Authorization: `Bearer ${grant.token}`, 'Content-Type': 'application/json' }, body: '{}', redirect: 'manual', signal: AbortSignal.timeout(12000) }));
+    const wallet = String(data.address || '').toLowerCase();
+    if (typeof data.token !== 'string' || !/^0x[a-f0-9]{40}$/.test(wallet) || wallet === grant.wallet) throw new Error('That is not one of your agents.');
+    const value = { token: data.token, wallet, agentUsername: data.username || name };
+    if (this.agents.size > 500) this.agents.clear();
+    this.agents.set(key, { at: Date.now(), value });
+    return value;
   }
   async issue(grantId, grant) {
     const access = `dhm_${random()}`, refresh = `dhr_${random()}`;
@@ -234,22 +267,23 @@ export class AccountMcpAuth {
       // Never redirect an OAuth error until the client's exact callback is known.
       if (!client || !client.redirects.includes(redirect)) return oauthError('Unknown client or callback URL.');
       if (url.searchParams.get('response_type') !== 'code' || url.searchParams.get('code_challenge_method') !== 'S256' || !/^[A-Za-z0-9_-]{43}$/.test(url.searchParams.get('code_challenge') || '')) return oauthError('Authorization code with S256 PKCE is required.');
-      if (!resourceOk(url.searchParams.get('resource'))) return oauthError('The resource must be https://dehub.io/mcp.', 'invalid_target');
+      const resource = resourceOf(url);
+      if (!resourceOk(url.searchParams.get('resource'), resource)) return oauthError(`The resource must be ${resource}.`, 'invalid_target');
       const scopes = scopeList(url.searchParams.get('scope') || SCOPES.join(' '));
       if (!scopes.length || scopes.some(s => !SCOPES.includes(s))) return oauthError('Unsupported permission requested.', 'invalid_scope');
       const ip = await hash(clientIp(request));
       if (!await this.budget(`authorize:${ip}`, 30)) return oauthError('Please wait before connecting again.', 'temporarily_unavailable', 429);
       const pending = random();
       await this.put(`pending:${pending}`, { client: url.searchParams.get('client_id'), clientName: client.name, redirect, scopes,
-        challenge: url.searchParams.get('code_challenge'), state: (url.searchParams.get('state') || '').slice(0, 2048), resource: RESOURCE }, 10 * 60000);
+        challenge: url.searchParams.get('code_challenge'), state: (url.searchParams.get('state') || '').slice(0, 2048), resource }, 10 * 60000);
       return new Response(null, { status: 302, headers: { Location: `${ORIGIN}/connect/chatgpt?authorization=${pending}`, 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
     }
     if (route === 'request' && request.method === 'GET') {
       const pending = await this.get(`pending:${url.searchParams.get('id')}`);
       return pending ? json({ client_name: pending.clientName, callback_origin: new URL(pending.redirect).origin, scopes: pending.scopes }) : oauthError('Connection request expired. Start again from your chat app.');
     }
-    if (['approve','connections','disconnect'].includes(route)) {
-      if (request.method !== 'POST' || request.headers.get('Origin') !== ORIGIN) return oauthError('Open this connection on dehub.io.', 'access_denied', 403);
+    if (['approve','connections','disconnect','keys'].includes(route)) {
+      if (request.method !== 'POST' || !MCP_ORIGINS.includes(request.headers.get('Origin'))) return oauthError('Open this connection on riftn.com.', 'access_denied', 403);
       const token = request.headers.get('x-dehub-token') || '';
       if (!token || token.length > 8192) return oauthError('Sign in to Riftn first.', 'access_denied', 401);
       const wallet = await verifySession(token, this.fetcher);
@@ -261,15 +295,31 @@ export class AccountMcpAuth {
         const connections = [];
         for (const [key, row] of rows) {
           const grant = live(row) && await this.get(`grant:${row.value}`);
-          if (grant) connections.push({ id: row.value, client_name: grant.clientName, scopes: grant.scopes, expires_at: grant.deadline });
+          if (grant) connections.push({ id: row.value, client_name: grant.clientName, scopes: grant.scopes, expires_at: grant.deadline, kind: grant.keyHash ? 'key' : 'app', ...(grant.keyHint ? { hint: grant.keyHint } : {}) });
           else await this.store.delete(key);
         }
         return json({ connections });
       }
       if (route === 'disconnect') {
         const grant = await this.get(`grant:${input.id}`);
-        if (grant?.wallet === wallet) { await this.store.delete(`grant:${input.id}`); await this.store.delete(`owner:${wallet}:${input.id}`); }
+        if (grant?.wallet === wallet) await this.revoke(input.id, grant);
         return json({ disconnected: true });
+      }
+      if (route === 'keys') {
+        const name = String(input.name || '').trim().slice(0, 60) || 'Personal key';
+        const scopes = scopeList(Array.isArray(input.scopes) ? input.scopes.join(' ') : input.scopes);
+        if (!scopes.length || scopes.some(s => !SCOPES.includes(s))) return oauthError('Choose what this key may do.', 'invalid_scope');
+        const owned = await this.store.list({ prefix: `owner:${wallet}:`, limit: 100 });
+        let keys = 0;
+        for (const [, row] of owned) if ((live(row) && (await this.get(`grant:${row.value}`))?.keyHash)) keys++;
+        if (keys >= MAX_KEYS) return oauthError(`You can have ${MAX_KEYS} keys. Delete one first.`, 'access_denied', 409);
+        const key = `dhk_${random()}`, keyHash = await hash(key), grantId = random();
+        const session = await this.connectorSession(token, name);
+        const grant = { client: 'personal-key', clientName: name, wallet, ...session, scopes, deadline: Date.now() + GRANT_TTL, keyHash, keyHint: key.slice(-4) };
+        await this.put(`grant:${grantId}`, grant, GRANT_TTL);
+        await this.put(`key:${keyHash}`, { grant: grantId }, GRANT_TTL);
+        await this.put(`owner:${wallet}:${grantId}`, grantId, GRANT_TTL);
+        return json({ id: grantId, key, name, scopes, expires_at: grant.deadline }, 201);
       }
       const pending = await this.consume(`pending:${input.request_id}`, () => true);
       if (!pending) return oauthError('Connection request expired or already used.');
@@ -282,14 +332,14 @@ export class AccountMcpAuth {
       return json({ redirect: target.href });
     }
     if (route === 'token' && request.method === 'POST') {
-      const body = new URLSearchParams(await request.text());
-      if (!resourceOk(body.get('resource'))) return oauthError('Wrong resource.', 'invalid_target');
+      const body = new URLSearchParams(await request.text()), resource = resourceOf(url);
+      if (!resourceOk(body.get('resource'), resource)) return oauthError('Wrong resource.', 'invalid_target');
       if (!/^[a-f0-9]{64}$/.test(body.get('client_id') || '')) return oauthError('Unknown client.', 'invalid_client');
       if (body.get('grant_type') === 'authorization_code') {
         const verifier = body.get('code_verifier') || '';
         if (!/^[A-Za-z0-9._~-]{43,128}$/.test(verifier)) return oauthError('Invalid PKCE verifier.', 'invalid_grant');
         const digest = await pkce(verifier);
-        const code = await this.consume(`code:${await hash(body.get('code') || '')}`, row => row.client === body.get('client_id') && row.redirect === body.get('redirect_uri') && row.challenge === digest && row.resource === RESOURCE);
+        const code = await this.consume(`code:${await hash(body.get('code') || '')}`, row => row.client === body.get('client_id') && row.redirect === body.get('redirect_uri') && row.challenge === digest && row.resource === resource);
         if (!code) return oauthError('Invalid or used authorization code.', 'invalid_grant');
         const session = await this.connectorSession(code.token, code.clientName);
         const grantId = random(), grant = { client: code.client, clientName: code.clientName, wallet: code.wallet, ...session, scopes: code.scopes, deadline: Date.now() + GRANT_TTL };
@@ -314,7 +364,7 @@ export class AccountMcpAuth {
       const body = new URLSearchParams(await request.text()), token = body.get('token') || '';
       const row = await this.get(`${token.startsWith('dhr_') ? 'refresh' : 'access'}:${await hash(token)}`);
       const grant = row && await this.get(`grant:${row.grant}`);
-      if (grant && (!body.get('client_id') || grant.client === body.get('client_id'))) { await this.store.delete(`grant:${row.grant}`); await this.store.delete(`owner:${grant.wallet}:${row.grant}`); }
+      if (grant && (!body.get('client_id') || grant.client === body.get('client_id'))) await this.revoke(row.grant, grant);
       return json({});
     }
     return oauthError('Unknown connection route.', 'invalid_request', 404);
@@ -329,7 +379,8 @@ export class AccountMcpAuth {
       if (request.method === 'GET' && (request.headers.get('Accept') || '').includes('text/html')) return new Response(null, { status: 302, headers: { Location: `${ORIGIN}/connect`, 'Cache-Control': 'no-store' } });
       if (request.method !== 'POST') return json({ error: 'Use Streamable HTTP POST.' }, 405, { Allow: 'POST, OPTIONS' });
       let grant;
-      try { grant = await this.bearer(request); } catch { return json({ error: 'Link your Riftn account again.' }, 401, { 'WWW-Authenticate': challenge() }); }
+      const origin = originOf(url);
+      try { grant = await this.bearer(request); } catch { return json({ error: 'Link your Riftn account again.' }, 401, { 'WWW-Authenticate': challenge('dehub:read', origin) }); }
       const raw = await request.text();
       if (raw.length > 65536) return json({ error: 'Request is too large.' }, 413);
       let rpc;
@@ -338,14 +389,16 @@ export class AccountMcpAuth {
       if (rpc.method.startsWith('notifications/') && rpc.id === undefined) return new Response(null, { status: 202 });
       const reply = value => json({ jsonrpc: '2.0', id: rpc.id ?? null, result: value });
       if (rpc.method === 'initialize') return reply({ protocolVersion: ['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(rpc.params?.protocolVersion) ? rpc.params.protocolVersion : '2025-06-18', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dehub-mcp', title: 'Riftn', version: '3.0.0' },
-        instructions: 'Browse Riftn publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections renew while used, expire after 30 days unused, and can be disconnected on dehub.io/connect/chatgpt.' });
+        instructions: 'Browse Riftn publicly. Link an account to manage its profile, posts, replies, reactions, reposts, relationships, bookmarks, notifications and Creator library. With the agents permission, list your agents with dehub_my_agents and pass as_agent to do the same things as one of them; you can never act as an account you do not own. Confirm the acting identity before writes. Writes have daily limits across your account and agents (see dehub_features). Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Connections and personal keys renew while used, expire after 30 days unused, and can be removed on riftn.com/connect.' });
       if (rpc.method === 'ping') return reply({});
       if (rpc.method === 'tools/list') return reply({ tools: accountTools.map(t => t.descriptor) });
       if (['resources/list','resources/templates/list','prompts/list'].includes(rpc.method)) return reply({ [rpc.method === 'resources/templates/list' ? 'resourceTemplates' : rpc.method.split('/')[0]]: [] });
       if (rpc.method !== 'tools/call') return json({ jsonrpc: '2.0', id: rpc.id ?? null, error: { code: -32601, message: 'Method not found' } });
       if (!await this.budget(`tools:${grant?.wallet || await hash(clientIp(request))}`, grant ? 120 : 60)) return reply(fail('Rate limit reached. Please wait a minute.'));
-      const ctx = { fetch: this.fetcher, token: grant?.token || '', wallet: grant?.wallet, scopes: grant?.scopes || [],
+      const ctx = { fetch: this.fetcher, token: grant?.token || '', wallet: grant?.wallet, scopes: grant?.scopes || [], origin,
         once: (kind, id, args, operation) => this.once(grant.wallet, kind, id, args, operation),
+        spend: kind => this.budget(`day:${kind}:${grant.wallet}`, DAILY_LIMITS[kind], DAY),
+        agent: name => this.agentSession(grant, name),
         generate: args => this.generate(args, ctx), generationStatus: id => this.generationStatus(id, ctx) };
       return reply(await callAccountTool(rpc.params?.name, rpc.params?.arguments ?? {}, ctx));
     } catch (error) {

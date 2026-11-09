@@ -512,7 +512,15 @@ describe('proxied pages', () => {
     const all = nodes(jsonLd(body));
     expect(all.map((n) => n['@type'])).not.toContain('SearchAction');
     const site = all.find((n) => n['@type'] === 'WebSite')!;
-    expect(site).toMatchObject({ name: 'Riftn', url: 'https://riftn.com' });
+    expect(site).toMatchObject({ name: 'Riftn', url: 'https://riftn.com', alternateName: ['riftn.com'] });
+    // Former names belong to the company, never to the site name Google shows.
+    expect(JSON.stringify(site)).not.toMatch(/dehub/i);
+    expect(all.find((n) => n['@type'] === 'Organization')!.alternateName).toEqual(['DeHub', 'dehub.io']);
+    // The main pages we want as sitelinks are linked from the homepage (Home is the page itself).
+    const sections = body.match(/<nav aria-label="Riftn sections">[\s\S]*?<\/nav>/)![0];
+    expect([...sections.matchAll(/href="([^"]+)"/g)].map((m) => m[1])).toEqual(
+      ['/videos', '/images', '/arcade', '/stream', '/docs'].map((p) => `https://riftn.com${p}`),
+    );
     expect(site.potentialAction).toBeUndefined();
     expect(all.find((n) => n['@type'] === 'Organization')!.logo).toMatchObject({ '@type': 'ImageObject', width: 512, height: 512 });
     // The money guides are linked from the homepage, not only from /docs/blog.

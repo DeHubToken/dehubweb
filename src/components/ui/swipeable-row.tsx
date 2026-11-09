@@ -68,6 +68,7 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
   const gesture = useRef<Gesture | null>(null);
   const armed = useRef(false);
   const mounted = useRef(true);
+  const hideTimer = useRef<number | null>(null);
 
   const maxOffset = actions.length * ACTION_WIDTH;
   const last = actions[actions.length - 1];
@@ -82,6 +83,20 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
     }
     const panel = actionsRef.current;
     if (panel) {
+      // Hidden outright while the row is shut. Clipping alone is not enough:
+      // on first paint some phones draw the composited track before the
+      // overflow clip applies, and the red Delete flashed across every row
+      // as the Messages tab opened. On a closing slide it hides once the
+      // row is back, so the buttons do not vanish mid-slide.
+      if (hideTimer.current !== null) window.clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+      if (px > 0) panel.style.visibility = '';
+      else if (animate) {
+        hideTimer.current = window.setTimeout(() => {
+          hideTimer.current = null;
+          if (offset.current === 0 && actionsRef.current) actionsRef.current.style.visibility = 'hidden';
+        }, SNAP_MS);
+      } else panel.style.visibility = 'hidden';
       panel.setAttribute('aria-hidden', String(px === 0));
       panel.querySelectorAll('button').forEach((button) => { button.disabled = px === 0; });
     }
@@ -107,6 +122,7 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
     mounted.current = true;
     return () => {
       mounted.current = false;
+      if (hideTimer.current !== null) window.clearTimeout(hideTimer.current);
       if (closeOpenRow === close) closeOpenRow = null;
     };
   }, [close]);
@@ -251,7 +267,7 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
         >
           {children}
         </div>
-        <div ref={actionsRef} data-swipe-actions aria-hidden="true" className="flex shrink-0">
+        <div ref={actionsRef} data-swipe-actions aria-hidden="true" className="flex shrink-0" style={{ visibility: 'hidden' }}>
         {actions.map((action, i) => (
           <button
             key={action.key}

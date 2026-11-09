@@ -60,6 +60,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'badge-delegation', label: 'Badge delegation', labelKey: 'settings.badgeDelegation', keywords: 'badge lend borrow tier delegate' },
   { tab: 'profile', anchor: 'profiles', label: 'Profiles', labelKey: 'settings.profiles', keywords: 'accounts switch add account multiple' },
   { tab: 'profile', anchor: 'creator', label: 'Creator', labelKey: 'commandCentre.creator', keywords: 'creator studio create image video song music 3d generate' },
+  { tab: 'profile', anchor: 'connect-ai', label: 'Connect AI', labelKey: 'nav.connectAi', keywords: 'mcp ai assistant chatgpt claude cursor connector api key token agents bot automation' },
 
   // Appearance
   { tab: 'appearance', anchor: 'theme', label: 'Theme', labelKey: 'settings.theme', keywords: 'dark light mode skin cosmic jungle osaka winter island hacker horror minimal appearance' },
@@ -71,6 +72,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'appearance', anchor: 'default-feed', label: 'Default feed', labelKey: 'settings.defaultFeed', keywords: 'home shorts videos images music audio live open start tab' },
   { tab: 'appearance', anchor: 'feed-toggles', label: 'Reset feed toggles', labelKey: 'settings.feedToggles', keywords: 'filters sort default remember clear' },
   { tab: 'appearance', anchor: 'post-landing', label: 'After you post', labelKey: 'settings.postLanding', keywords: 'animation post ghost morph pill drop motion' },
+  { tab: 'appearance', anchor: 'chat-text-size', label: 'Chat text size', labelKey: 'settings.chatTextSize', keywords: 'font size bigger larger text zoom accessibility vision read chat messages small' },
   { tab: 'appearance', anchor: 'default-profile-tab', label: 'Default profile tab', labelKey: 'settings.defaultProfileTab', keywords: 'landing tab visitors' },
   { tab: 'appearance', anchor: 'autoplay', label: 'Auto-play', labelKey: 'settings.autoPlay', keywords: 'autoplay video play automatically' },
   { tab: 'appearance', anchor: 'autoplay-muted', label: 'Start autoplay muted', labelKey: 'settings.autoPlayMuted', keywords: 'autoplay mute muted sound audio silent quiet volume' },
@@ -113,7 +115,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'privacy', anchor: 'two-factor', label: 'Two-Factor Auth', labelKey: 'settings.twoFactorAuth', keywords: '2fa mfa authenticator security' },
   { tab: 'privacy', anchor: 'wallet-unlock', label: 'Wallet unlock prompt', labelKey: 'settings.walletUnlockInterval', keywords: 'password timeout lock wallet' },
   { tab: 'privacy', anchor: 'biometric-unlock', label: 'Biometric unlock', labelKey: 'copy.18e709a14cb1', keywords: 'fingerprint face id passkey' },
-  { tab: 'privacy', anchor: 'wallet-recovery', label: 'Back up wallet', labelKey: 'copy.ef9ec257e675', keywords: 'backup recovery 12 words seed phrase mnemonic private key export old account' },
+  { tab: 'privacy', anchor: 'wallet-recovery', label: 'Back up wallet', labelKey: 'copy.ef9ec257e675', keywords: 'backup recovery 12 words seed phrase mnemonic private key export' },
   { tab: 'privacy', anchor: 'active-sessions', label: 'Active sessions', labelKey: 'settings.activeSessions', keywords: 'devices logged in sign out revoke' },
   { tab: 'privacy', anchor: 'your-data', label: 'Your Data', labelKey: 'settings.yourData', keywords: 'export download import gdpr' },
   { tab: 'privacy', anchor: 'blocked-users', label: 'Blocked Users', labelKey: 'copy.34e1447eb1e2', keywords: 'block unblock mute' },
@@ -159,7 +161,8 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'support', anchor: 'report-bug', label: 'Report a Bug', labelKey: 'settings.reportBug', keywords: 'bug issue feedback support help' },
   { tab: 'support', anchor: 'terms', label: 'Terms of Service', labelKey: 'settings.termsOfService', keywords: 'terms legal' },
   { tab: 'support', anchor: 'privacy-policy', label: 'Privacy Policy', labelKey: 'settings.privacyPolicy', keywords: 'privacy legal' },
-  { tab: 'support', anchor: 'delete-account', label: 'Delete account or data', labelKey: 'settings.deleteAccountData', keywords: 'delete close remove account gdpr' },
+  { tab: 'support', anchor: 'deactivate-account', label: 'Deactivate account', labelKey: 'accountDeactivation.title', keywords: 'deactivate disable pause hide break account' },
+  { tab: 'support', anchor: 'delete-account', label: 'Delete account', labelKey: 'accountDeletion.title', keywords: 'delete close remove account gdpr' },
 ];
 
 export interface SettingsSearchHit extends SettingsSearchEntry {

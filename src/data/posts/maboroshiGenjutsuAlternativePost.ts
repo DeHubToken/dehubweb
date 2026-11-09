@@ -168,7 +168,7 @@ Yes. Uploads, previews and results belong to your account and are shared with th
 
 Higgsfield's figures in this guide come from its Genjutsu launch page as checked in September 2026. It prices in credits and changes its plans often, so check its live pricing before you compare. Maboroshi prices are the retail rates at the time of writing. The price you see before each step is always the price you pay.
   `,
-  bannerImage: '/media/maboroshi-genjutsu-alternative-banner.jpg',
+  bannerImage: '/media/maboroshi-genjutsu-alternative-banner-riftn.jpg',
   bannerImageAlt: 'Maboroshi, the Higgsfield Genjutsu alternative on Riftn: swap anyone in a real video, with no subscription',
   author: {
     name: 'Riftn Team',

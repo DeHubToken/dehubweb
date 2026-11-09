@@ -141,9 +141,8 @@ flowchart TD
   (64 MiB, t=3 — well above the OWASP baseline, and stronger than the PBKDF2 wallets it
   replaced), and only ever stored as ciphertext. Decrypted key material lives in JS memory
   only — never in localStorage or sessionStorage. The derived EOA drives a Safe smart
-  account, and the core API issues a short-lived session token. The legacy Web3Auth SDK is
-  retained solely for a one-time key export so pre-migration users can import the same key
-  and keep the same address (`src/lib/legacy-web3auth.ts`).
+  account, and the core API issues a short-lived session token. The app no longer recovers
+  Web3Auth-era keys; a pre-migration account that was never moved over is handled by support.
 - **Chains** — EVM (Base, BNB Chain, Ethereum) and Solana. DHB is DeHub's native token.
 - **Text content is on-chain** — post bodies, comments and other text are written to chain
   as part of the tokenized post, so they are **permanent, immutable and impossible to
@@ -194,7 +193,7 @@ flowchart TD
 ### Installation
 
 ```sh
-git clone https://github.com/DeHubToken/dehubweb.git
+git clone https://github.com/Riftn/riftn-web.git
 cd dehubweb
 npm install --legacy-peer-deps
 ```

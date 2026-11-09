@@ -40,7 +40,7 @@ Riftn is built to invert that:
 - **Chronological, transparent feeds**: no shady algorithm deciding who sees your work.
 - **On-chain content ownership**: any upload can be minted to your wallet. Nobody can silently delete your library or hold your audience hostage.
 - **Creator-first economics**: tokenized uploads, pay-per-view, token-gated content, on-chain tradable subscriptions, and ad revenue sharing that pays up to 90% out to the ecosystem instead of the house.
-- **Open source**: the code is public on [GitHub](https://github.com/DeHubToken), and the platform is designed so the community can fork, audit and build on it.
+- **Open source**: the code is public on [GitHub](https://github.com/Riftn), and the platform is designed so the community can fork, audit and build on it.
 - **Privacy**: end-to-end encrypted messaging, open sourced so the encryption claims can actually be verified.
 
 ## How it works
@@ -90,12 +90,12 @@ Tokenized uploads (pay-per-view and token-gated), tradable subscriptions with re
 Through on-chain community voting. Stakeholder weight is multiplied within capped limits to prevent whale manipulation, and each vote burns DHB to discourage bad actors while rewarding meaningful participation.
 
 ### Is Riftn really open source?
-Yes, the code is public under the [DeHubToken organization on GitHub](https://github.com/DeHubToken), including the web app and the E2EE messaging implementation.
+Yes, the code is public under the [Riftn organization on GitHub](https://github.com/Riftn), including the web app and the E2EE messaging implementation.
 
 ### Where can I follow Riftn?
-On Riftn itself at [riftn.com](https://riftn.com), on X at [@dehub_official](https://x.com/dehub_official), and on [Telegram](https://t.me/dehub_dhb).
+On Riftn itself at [riftn.com](https://riftn.com), on X at [@riftn_com](https://x.com/riftn_com), and on [Telegram](https://t.me/riftn_com).
   `,
-  bannerImage: '/media/what-is-dehub-banner.png',
+  bannerImage: '/media/what-is-dehub-banner-riftn.png',
   bannerImageAlt: 'Riftn | the open source, user-owned social platform for creators and communities',
   author: {
     name: 'Riftn Team',

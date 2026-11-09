@@ -702,7 +702,7 @@ export function VideosFeed({ showFilters = false, refreshKey = 0, searchQuery = 
         dislikes: item.totalVotes?.against || 0,
         thumbnail: getMediaUrl(item.imageUrl) || '',
         videoUrl: item.videoUrl
-          ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
+          ? getMediaUrl(item.videoUrl)!
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,

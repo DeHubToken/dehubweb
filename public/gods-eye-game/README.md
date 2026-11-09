@@ -1,8 +1,8 @@
 # God's Eye View — Riftn Arcade
 
 Upstream: `bilawalsidhu/gods-eye-view` at `591f299d11f38a612629a274463196d57ae3862e` (10 October 2026).
-Riftn build source: `DeHubToken/gods-eye-view` at `07b8d5a`.
-Cloud build: https://github.com/DeHubToken/gods-eye-view/actions/runs/38168689654
+Riftn build source: `Riftn/gods-eye-view` at `07b8d5a`.
+Cloud build: https://github.com/Riftn/gods-eye-view/actions/runs/38168689654
 
 The Riftn arcade bundle workflow builds with `vite.dehub.config.js`, flattens Cesium assets for `/gods-eye-game/`, excludes non-commercial Bhote Koshi imagery and river coordinates, and verifies opaque-origin iframe startup. Both web and native mobile load these same production assets.
 

@@ -23,7 +23,7 @@ The model catalogue is the same names you would cross-shop anywhere in 2026:
 
 No model on that list is decorative. Every one of them is selectable in the composer and priced before you run it.
 
-![Riftn AI generation is priced per job in DHB, not in plan-dependent credits](/media/ai-creator-pay-per-job-banner.jpg)
+![Riftn AI generation is priced per job in DHB, not in plan-dependent credits](/media/ai-creator-pay-per-job-banner-riftn.jpg)
 
 ### How Riftn credits work, and why the unit matters
 
@@ -38,7 +38,7 @@ Riftn prices in **DHB, pegged at 1,000 DHB = $1 of generation**. That gives you 
 
 And the big one: **Riftn credit never expires.** Top up 50,000 DHB today and it is all still there in a year. That single property changes what every "price per credit" figure in the next section really means.
 
-![Riftn gives 400 DHB of free AI credit every day, accruing to a 12,000 cap](/media/ai-creator-daily-credits-banner.jpg)
+![Riftn gives 400 DHB of free AI credit every day, accruing to a 12,000 cap](/media/ai-creator-daily-credits-banner-riftn.jpg)
 
 ### Free every day, and it adds up while you sleep
 
@@ -109,7 +109,7 @@ Provider prices move, and when they do, Riftn's per-job quotes move with them, t
 
 Every Riftn account starts with **1,400 DHB free on day one**, the 1,000 starter plus the first daily 400, and no card is required. That is a Veo 3.1 Fast video with change to spare, or a stack of premium images, and the daily 400 keeps arriving and banking either way. Head to [riftn.com/creator](/creator), sign in, and make something.
   `,
-  bannerImage: '/media/ai-creator-studio-banner.jpg',
+  bannerImage: '/media/ai-creator-studio-banner-riftn.jpg',
   bannerImageAlt: 'Riftn Creator, AI credits that never expire, with Veo, Seedance and Kling live',
   author: {
     name: 'Riftn Team',

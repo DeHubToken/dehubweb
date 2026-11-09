@@ -6,7 +6,7 @@
   },
   "/apk": {
     "h1": "Download de Riftn APK",
-    "body": "<p>Sla de appwinkels over en haal hier de nieuwste versie van Riftn, rechtstreeks bij ons: geen winkelaccount nodig en niet wachten op een beoordeling.</p>\n<p><a href=\"https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk\">Download de Riftn APK</a>, Android 8 en hoger. Sta installaties vanuit je browser toe als Android daarom vraagt.</p>\n<p>Liever via een winkel? Riftn staat ook <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">op Google Play</a>.</p>"
+    "body": "<p>Sla de appwinkels over en haal hier de nieuwste versie van Riftn, rechtstreeks bij ons: geen winkelaccount nodig en niet wachten op een beoordeling.</p>\n<p><a href=\"https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk\">Download de Riftn APK</a>, Android 8 en hoger. Sta installaties vanuit je browser toe als Android daarom vraagt.</p>\n<p>Liever via een winkel? Riftn staat ook <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">op Google Play</a>.</p>"
   },
   "/converter": {
     "h1": "Importeer een video",

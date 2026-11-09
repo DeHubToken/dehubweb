@@ -7,13 +7,12 @@
  * signs for itself (MetaMask, Phantom, Trust, via wagmi).
  *
  * The stored value for the built-in wallet is still the string 'web3auth'.
- * That name is historical: signing moved to @/lib/smart-wallet, and Web3Auth
- * survives only as the one-time migration path in @/lib/legacy-web3auth that
- * lets someone recover a pre-migration account — nothing on the posting path
- * touches it. The string stays anyway, because it is written into every
- * signed-in browser's localStorage and renaming it would read as "no tag at
- * all" to every existing session, stranding all of them at once in precisely
- * the way described below. The value stays; the vocabulary in here doesn't.
+ * That name is historical: signing moved to @/lib/smart-wallet, and nothing on
+ * the login or posting path touches Web3Auth's login any more. The string
+ * stays anyway, because it is written into every signed-in browser's
+ * localStorage and renaming it would read as "no tag at all" to every existing
+ * session, stranding all of them at once in precisely the way described below.
+ * The value stays; the vocabulary in here doesn't.
  *
  * This tag is load-bearing a long way from where it is written. The built-in
  * wallet's key is gone after every reload and every auto-lock, and since login

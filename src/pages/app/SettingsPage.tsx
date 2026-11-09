@@ -20,6 +20,7 @@ import Camera from "@/components/ui/cut-icons/camera";
 import Link2 from "@/components/ui/cut-icons/link";
 import Users from "@/components/ui/cut-icons/communities";
 import CreatorIcon from "@/components/ui/cut-icons/creator";
+import ConnectIcon from "@/components/ui/cut-icons/connect";
 import Moon from "@/components/ui/cut-icons/appearance";
 import Lock from "@/components/ui/cut-icons/privacy";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
@@ -43,6 +44,7 @@ import Ban from "@/components/ui/cut-icons/blocked";
 import Megaphone from "@/components/ui/cut-icons/advertising";
 import Radio from "@/components/ui/cut-icons/live";
 import Trash2 from "@/components/ui/cut-icons/delete";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import SettingsIcon from "@/components/ui/cut-icons/settings";
 import User from "@/components/ui/cut-icons/profile";
@@ -146,6 +148,7 @@ import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useLeftHanded } from '@/hooks/use-left-handed';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { PostLandingSetting } from '@/components/app/settings/PostLandingSetting';
+import { ChatTextSizeSetting } from '@/components/app/settings/ChatTextSizeSetting';
 import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
@@ -1284,6 +1287,17 @@ function ProfileSettings() {
           onClick={() => navigate('/creator')}
           action={<ExternalLink className="size-4 text-zinc-500" />}
         />
+
+        {/* Use the account (and the agents you own) from an AI assistant over MCP. */}
+        <SettingsRow
+          as="button"
+          anchor="connect-ai"
+          icon={<ConnectIcon />}
+          title={t('nav.connectAi', 'Connect AI')}
+          description={t('mcpKeys.settingsBody')}
+          onClick={() => navigate('/connect')}
+          action={<ExternalLink className="size-4 text-zinc-500" />}
+        />
       </div>
 
     </div>
@@ -1343,10 +1357,19 @@ function SupportSettings() {
         />
         <SettingsRow
           as="button"
+          anchor="deactivate-account"
+          icon={<Pause />}
+          title={t('accountDeactivation.title', 'Deactivate account')}
+          description={t('accountDeactivation.short', 'Hide your profile for now. Sign back in to restore it')}
+          onClick={() => navigate('/delete-account#deactivate')}
+          action={arrow}
+        />
+        <SettingsRow
+          as="button"
           anchor="delete-account"
-          icon={<Trash2 />}
-          title={t('settings.deleteAccountData', 'Delete account or data')}
-          description={t('settings.deleteAccountDataDesc', 'Request removal of your account or your data')}
+          icon={<Trash2 style={{ color: '#ef4444' }} />}
+          title={t('accountDeletion.title', 'Delete account')}
+          description={t('accountDeletion.description', 'Permanently delete your account and personal data')}
           onClick={() => navigate('/delete-account')}
           action={arrow}
         />
@@ -2703,6 +2726,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
           <DefaultFeedSetting />
           <FeedTogglesSetting />
           <PostLandingSetting />
+          <ChatTextSizeSetting />
           <SettingsRow
             icon={<LayoutGrid />}
             anchor="default-profile-tab"

@@ -24,3 +24,13 @@ describe('chat refusal text', () => {
     expect(wasShownToUser(new Error('x'))).toBe(false);
   });
 });
+
+describe('isAuthRefusal', () => {
+  it('knows a signed-out refusal by code, or by the older servers\' message', async () => {
+    const { isAuthRefusal } = await import('@/lib/chat-refusal');
+    expect(isAuthRefusal({ code: 'AUTH_REQUIRED', message: 'Authentication required' })).toBe(true);
+    expect(isAuthRefusal({ message: 'Authentication required' })).toBe(true);
+    expect(isAuthRefusal({ code: 'SLOW_DOWN', message: 'Slow down' })).toBe(false);
+    expect(isAuthRefusal({ message: 'You are banned from chat' })).toBe(false);
+  });
+});

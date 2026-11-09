@@ -20,7 +20,7 @@ With app store presence secured, we're now gearing up for what will be one of th
 ---
 
 **[Download Riftn on Google Play Store](https://play.google.com/store/apps/details?id=io.dehub.mobile&hl)**`,
-  bannerImage: '/media/google-playstore-banner.png',
+  bannerImage: '/media/google-playstore-banner-riftn.png',
   bannerImageAlt: 'Riftn Google Play Store listing announcement banner',
   author: { name: 'Riftn Team' },
   publishedAt: '2025-12-01T00:00:00.000Z',

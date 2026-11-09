@@ -25,7 +25,7 @@ import { isOwnHandlePath } from '@/lib/own-profile-path';
 import {
   FeedSkeleton,
   ExploreSkeleton,
-  ProfileSkeleton,
+  SeededProfileSkeleton,
   MessagesSkeleton,
   NotificationsSkeleton,
   LeaderboardSkeleton,
@@ -87,7 +87,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   // Home also serves the clean feed-tab URLs /videos and /shorts (HomePage
   // reads the path to pick the active tab), so the same cached instance backs
   // all three — no duplicate mount.
-  { key: 'home', path: ['/', '/app', '/videos', '/shorts'], component: HomePage, skeleton: FeedSkeleton },
+  { key: 'home', path: ['/', '/app', '/videos', '/images', '/shorts'], component: HomePage, skeleton: FeedSkeleton },
   { key: 'explore', path: ['/app/explore', '/explore'], component: ExplorePage, skeleton: ExploreSkeleton },
   { key: 'notifications', path: ['/app/notifications', '/notifications'], component: NotificationsPage, skeleton: NotificationsSkeleton },
   { key: 'messages', path: ['/app/messages', '/messages'], component: MessagesPage, skeleton: MessagesSkeleton },
@@ -130,7 +130,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
   { key: 'ads', path: ['/app/ads', '/ads'], component: AdsPage, skeleton: GenericPageSkeleton },
   { key: 'arcade', path: ['/arcade', '/app/arcade'], component: ArcadePage, skeleton: GridSkeleton },
-  { key: 'profile', path: ['/app/profile', '/profile'], component: ProfilePage, skeleton: ProfileSkeleton },
+  { key: 'profile', path: ['/app/profile', '/profile'], component: ProfilePage, skeleton: SeededProfileSkeleton },
 ];
 
 function matchesPath(config: CachedPageConfig, pathname: string): boolean {

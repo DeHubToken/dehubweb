@@ -328,7 +328,7 @@ function generateMetaHTML(data: {
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${twitterImageUrl}">
   <meta name="twitter:image:alt" content="${title}">
-  <meta name="twitter:site" content="@dehub_official">${twitterVideoTags}
+  <meta name="twitter:site" content="@riftn_com">${twitterVideoTags}
 
   ${!data.isBot
             ? `
@@ -963,10 +963,10 @@ serve(async (req) => {
                         logo: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg',
                         sameAs: [
                             'https://www.wikidata.org/wiki/Q140518527',
-                            'https://x.com/dehub_official',
-                            'https://github.com/DeHubToken',
+                            'https://x.com/riftn_com',
+                            'https://github.com/Riftn',
                             'https://www.linkedin.com/company/dehub-dao',
-                            'https://t.me/dehub_dhb',
+                            'https://t.me/riftn_com',
                             'https://play.google.com/store/apps/details?id=io.dehub.mobile',
                             'https://www.coingecko.com/en/coins/dehub',
                             'https://coinmarketcap.com/currencies/dehub/',

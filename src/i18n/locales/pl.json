@@ -2099,6 +2099,7 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
+    "unavailable": "Profil niedostępny",
     "viewGrid": "Widok siatki",
     "viewList": "Widok listy",
     "viewMode": "Zobacz",
@@ -11752,6 +11753,19 @@
     "subscriptionTokensValueNote": "Tokeny abonamentowe utrzymują swoją wartość w dolarach. Jeśli cena tokena zmieni się przed ich użyciem, zobaczysz więcej lub mniej tokenów, ale zawsze kupują tę samą ilość generowania sztucznej inteligencji. Nie można ich wycofywać, wysyłać ani handlować nimi.",
     "topUpEmptyHint": "Dodaj tokeny do wygenerowania za pomocą sztucznej inteligencji"
   },
+  "accountDeactivation": {
+    "acknowledge": "Rozumiem, że mój profil zostanie ukryty i zostanę wylogowany wszędzie.",
+    "title": "Dezaktywuj konto",
+    "short": "Ukryj profil na jakiś czas. Zaloguj się ponownie, aby go przywrócić",
+    "description": "Zrób sobie przerwę. Twój profil, posty i komentarze zostaną ukryte, a Ty wylogujesz się wszędzie. Nic nie zostanie usunięte, a po ponownym zalogowaniu wszystko wróci.",
+    "button": "Dezaktywuj",
+    "confirmTitle": "Dezaktywować konto?",
+    "confirmBody": "Twój profil, posty i komentarze zostaną ukryte, a Ty zostaniesz wylogowany na wszystkich urządzeniach. Zaloguj się ponownie w dowolnej chwili, aby to cofnąć.",
+    "busy": "Dezaktywowanie…",
+    "done": "Konto dezaktywowane",
+    "receipt": "Twój profil, posty i komentarze są ukryte. Zaloguj się ponownie w dowolnej chwili, aby wszystko odzyskać.",
+    "error": "Nie udało się dezaktywować konta. Spróbuj ponownie."
+  },
   "accountDeletion": {
     "title": "Usuwanie konta",
     "description": "Trwale usuń swoje konto i dane osobowe",
@@ -11765,7 +11779,11 @@
     "error": "Nie można przesłać prośby o usunięcie. Twoje konto nie zostało potwierdzone do usunięcia. Spróbuj ponownie.",
     "back": "Wróć do Ustawień",
     "signIn": "Zaloguj się, aby usunąć konto",
-    "acknowledge": "Zapisałem szczegóły odzyskiwania portfela i rozumiem, że usunięcie jest trwałe."
+    "acknowledge": "Zapisałem szczegóły odzyskiwania portfela i rozumiem, że usunięcie jest trwałe.",
+    "signedInAs": "Zalogowano jako",
+    "confirmTitle": "Usunąć konto na zawsze?",
+    "confirmBody": "Twoje konto i cała jego zawartość zostaną usunięte. Zostaniesz wylogowany, a tej operacji nie można cofnąć.",
+    "confirmBodyNamed": "{{who}} i cała zawartość zostaną usunięte. Zostaniesz wylogowany, a tej operacji nie można cofnąć."
   },
   "miniApps": {
     "badge": {
@@ -16480,7 +16498,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "Wydano w",
     "ee1c1eecf1b6": "Riftn został opisany przez niektóre z największe i najbardziej zaufane publikacje na świecie. Poniżej znajdują się artykuły, które podkreślają naszą misję demokratyzacji mediów.",
     "6ccae4bbf68d": "Publikator usunął oryginał; otwiera się kopia Wayback Machine.",

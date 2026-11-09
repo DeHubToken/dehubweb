@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { DmMessage } from '@/lib/api/dehub/dm';
-import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory, type MessagePage } from '../dm-head';
+import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, markRecentlySent, type MessageHistory, type MessagePage } from '../dm-head';
 
 const message = (id: string, second: number, extra = {}): DmMessage => ({
   _id: id, createdAt: new Date(second * 1000).toISOString(), isRead: false, ...extra,
@@ -44,5 +44,14 @@ describe('bounded message recovery', () => {
   it('removes stale cached history when the server returns the complete remaining thread', () => {
     const old = history(page([message('a', 3)]), page([message('deleted-old', 1)]));
     expect(messageHistoryItems(mergeMessageHead(old, page([message('a', 3)], false), 4000).pages).map(m => m._id)).toEqual(['a']);
+  });
+
+  it('keeps a just-sent reply that a head fetched before its save does not have yet', () => {
+    // Sent at 5s (server clock) but the poll started at 7s by this clock, so
+    // the time check alone would drop it.
+    markRecentlySent('sent-reply');
+    const old = history(page([message('sent-reply', 5), message('a', 4)]));
+    const next = mergeMessageHead(old, page([message('a', 4)], false), 7000);
+    expect(messageHistoryItems(next.pages).map(m => m._id)).toEqual(['sent-reply', 'a']);
   });
 });

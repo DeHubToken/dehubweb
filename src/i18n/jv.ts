@@ -2252,7 +2252,7 @@ export const jv = {
     q12: 'Pira total pasokan token Riftn?',
     q16: 'Apa iku Pasar NFT Phygital?',
     q18: 'Apa roadmap Riftn?',
-    a19: 'Sampeyan bisa ngubungi kita liwat saluran resmi kita: tech@dehub.net kanggo masalah teknis, utawa tututi kita ing Twitter lan Instagram @dehub_official kanggo nganyari lan keterlibatan komunitas.',
+    a19: 'Sampeyan bisa ngubungi kita liwat saluran resmi kita: tech@dehub.net kanggo masalah teknis, utawa tututi kita ing Twitter lan Instagram @riftn_com kanggo nganyari lan keterlibatan komunitas.',
     a22: 'Ora. Sampeyan bisa mlebu nganggo Google, Apple utawa Telegram, kanthi kode sing dikirim menyang alamat email sampeyan utawa liwat SMS, utawa nganggo passkey, lan dompet non-kustodial digawe kanggo sampeyan ing latar mburi — sampeyan sing nyekel kunci lan kita ora nate njupuk kustodi. Yen sampeyan wis duwe dompet, sampeyan bisa nyambungake utawa ngimpor kuncine. Mlebu sing dudu adhedhasar dompet uga biaya gas-e disubsidi, supaya sampeyan bisa posting, menehi tip, lan ngumpulake tanpa kudu tuku token asli.',
     a25: 'Badge ngurangi biaya platform sampeyan sebesar 0,69% saben tingkat, nambah jatah posting saben dina gratis lan menehi diskon kanggo apa wae sing ngluwihi jatah kasebut, menehi diskon 5%–30% sing padha nalika tuku token Riftn, mbukak kunci kekuwatan super lan kosmetik profil, lan nggawe tampilan lan reaksi sampeyan luwih diitung. Telulas tingkat kasebut regane ing dolar tinimbang jumlah token sing tetep, lan yen sampeyan wis entuk tingkat, rega ora bisa njupuk maneh saka sampeyan.',
     q27: 'Apa iku Stages?',

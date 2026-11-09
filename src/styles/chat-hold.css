@@ -52,31 +52,16 @@
 }
 [data-chat-hold-tile='danger'] { color: #f87171; }
 
-/* Live chat: the held line glows in place inside a soft frame. */
-[data-chat-held='frame'] { position: relative; }
-[data-chat-held='frame']::before {
-  content: '';
-  position: absolute;
-  inset: 0 8px;
-  border-radius: 18px;
-  pointer-events: none;
-  border: 1px solid color-mix(in srgb, var(--stage-ink, #f4f4f5) 16%, transparent);
-  background: color-mix(in srgb, var(--stage-ink, #f4f4f5) 6%, transparent);
+/* Live chat: the held line glows in place: the text only, no frame or box. */
+[data-chat-held='frame'] {
+  text-shadow: 0 0 8px color-mix(in srgb, currentColor 45%, transparent);
+  transition: text-shadow 0.25s ease;
 }
-[data-chat-held='frame']::before {
-  box-shadow: 0 0 24px rgb(255 255 255 / 0.08);
-}
-/* The line being answered keeps a quiet outline while the reply bar is up. Phones only. */
+/* The line being answered keeps a soft text glow while the reply bar is up. Phones only. */
 @media (max-width: 767px) {
-  [data-chat-replying] { position: relative; }
-  [data-chat-replying]::before {
-    content: '';
-    position: absolute;
-    inset: 0 8px;
-    border-radius: 18px;
-    pointer-events: none;
-    border: 1px solid color-mix(in srgb, var(--stage-ink, #f4f4f5) 16%, transparent);
-    background: color-mix(in srgb, var(--stage-ink, #f4f4f5) 6%, transparent);
+  [data-chat-replying] {
+    text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent);
+    transition: text-shadow 0.25s ease;
   }
 }
 

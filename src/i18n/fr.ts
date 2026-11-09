@@ -2486,7 +2486,7 @@ export const fr = {
     q18: 'Quelle est la feuille de route de Riftn ?',
     a18: "Notre feuille de route comprend l'expansion de l'écosystème de d'Apps, le lancement de nouveaux jeux, l'amélioration de l'infrastructure DePIN, le développement d'outils IA et le lancement officiel de la gouvernance début 2026.",
     q19: 'Comment contacter l\'équipe Riftn ?',
-    a19: "Vous pouvez nous contacter via nos canaux officiels : tech@dehub.net pour les problèmes techniques, ou suivez-nous sur Twitter et Instagram @dehub_official pour les mises à jour et l'engagement communautaire.",
+    a19: "Vous pouvez nous contacter via nos canaux officiels : tech@dehub.net pour les problèmes techniques, ou suivez-nous sur Twitter et Instagram @riftn_com pour les mises à jour et l'engagement communautaire.",
     q20: 'Les jetons Riftn sont-ils un investissement ?',
     a20: "Non, les jetons Riftn sont strictement à des fins utilitaires au sein de l'écosystème Riftn, similaires aux monnaies numériques dans le jeu ou dans l'application. Ce ne sont pas des instruments d'investissement et les marchés sont très volatils.",
     q21: 'Comment fonctionne la modération de contenu sur Riftn ?',

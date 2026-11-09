@@ -10,7 +10,7 @@
   },
   "/apk": {
     "h1": "Riftn APK’yı indirin",
-    "body": "<p>Mağazalarla uğraşmayın, Riftn’ın en yeni sürümünü doğrudan bizden, buradan alın: mağaza hesabı yok, inceleme kuyruğu beklemek yok.</p>\n<p><a href=\"https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk\">Riftn APK’yı indirin</a>, Android 8 ve üzeri. Android sorduğunda tarayıcınızdan yüklemeye izin verin.</p>\n<p>Mağazayı mı tercih edersiniz? Riftn <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">Google Play’de</a> de var.</p>"
+    "body": "<p>Mağazalarla uğraşmayın, Riftn’ın en yeni sürümünü doğrudan bizden, buradan alın: mağaza hesabı yok, inceleme kuyruğu beklemek yok.</p>\n<p><a href=\"https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk\">Riftn APK’yı indirin</a>, Android 8 ve üzeri. Android sorduğunda tarayıcınızdan yüklemeye izin verin.</p>\n<p>Mağazayı mı tercih edersiniz? Riftn <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">Google Play’de</a> de var.</p>"
   },
   "/converter": {
     "h1": "Video içe aktarın",

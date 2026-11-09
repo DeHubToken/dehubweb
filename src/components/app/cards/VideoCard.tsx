@@ -1378,7 +1378,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const contentWarning = useContentWarning(video.spoilerText);
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
-  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
+  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated || contentWarning.hidden;
   // A gated post's file is private: once the viewer is through the gate it
   // plays from a signed URL the API hands out. An open post whose file fails
   // is asked about once too, in case its gate was just removed and the file is
@@ -2106,6 +2106,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
 
   const openDedicatedPost = useCallback(() => {
     if (window.matchMedia('(max-width: 639px)').matches) {
+      // A warned video opens its warning here, in the feed. The next tap then
+      // plays it in the Shorts viewer like any other clip, instead of leaving
+      // for the post page and asking again there.
+      if (contentWarning.hidden && shortsEnabled && !postPage) {
+        contentWarning.reveal();
+        return;
+      }
       // Landscape footage keeps the post page, with the player at the top.
       // Tall footage plays in the Shorts viewer, in place.
       if (mediaAspect <= 1 && !isPPVLocked) {
@@ -2122,7 +2129,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     cacheVideoForNavigation(queryClient, video);
     noteProfileFeedOpen(profileFeed, video.id);
     navigate(`/app/post/${video.articleSlug || video.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, video, mediaAspect, isPPVLocked, profileFeed]);
+  }, [navigate, queryClient, video, mediaAspect, isPPVLocked, profileFeed, contentWarning.hidden, contentWarning.reveal, shortsEnabled, postPage]);
   const openPost = useVideoCardOpen({
     mediaRef: containerRef,
     shorts: feedShortsTarget,
@@ -2575,9 +2582,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
         {contentWarning.hidden ? (
-          <div className="flex w-full h-full min-h-[180px] items-center justify-center rounded-lg bg-zinc-900 p-4">
-            <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className="w-full" />
-          </div>
+          <ContentWarningGate
+            preview={thumbnail}
+            onReveal={contentWarning.reveal}
+            className="w-full h-full rounded-lg [&>img]:h-full [&>img]:max-h-none"
+          />
         ) : matureGate.isGated ? (
           <MatureContentGate
             preview={thumbnail}
@@ -2751,6 +2760,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       onMuteChange={setIsMuted}
                       seed={video.id}
                       decodeEnabled={nearViewport}
+                      waveformOnPlay={!postPage}
                       durationHint={video.audioDuration || video.durationSeconds || 0}
                       /* The card's own fullscreen, so the element that goes to
                          the top layer is the media container — the one holding

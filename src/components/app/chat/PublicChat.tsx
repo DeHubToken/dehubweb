@@ -15,6 +15,7 @@ import Search from "@/components/ui/cut-icons/search";
 import X from "@/components/ui/cut-icons/close";
 
 import { LiveChatOnlineCount } from './LiveChatOnlineCount';
+import { ChatTextSizeButton } from './ChatTextSizeButton';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
@@ -388,6 +389,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
         
         <div className="flex shrink-0 items-center gap-2">
           {selectedRoomId && <LiveChatOnlineCount count={onlineCount} />}
+          <ChatTextSizeButton />
           {/* Translate all toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -485,7 +487,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             followLatest.current = el.scrollHeight - el.clientHeight - el.scrollTop < 120;
           }}
           onPointerDown={dismissKeyboard}
-          className="absolute inset-0 overflow-y-auto py-2"
+          className="absolute inset-0 chat-text-zone overflow-y-auto py-2"
         >
           {roomsError ? (
             <AppState

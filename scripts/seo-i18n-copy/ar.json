@@ -10,7 +10,7 @@
   },
   "/apk": {
     "h1": "نزّل ملف Riftn APK",
-    "body": "<p>تجاوز المتاجر واحصل على أحدث إصدار من Riftn من هنا مباشرة: من دون حساب في أي متجر ومن دون انتظار المراجعة.</p>\n<p><a href=\"https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk\">تنزيل ملف Riftn APK</a>, لنظام Android 8 وما بعده. اسمح بالتثبيت من متصفحك عندما يطلب Android ذلك.</p>\n<p>تفضّل المتجر؟ Riftn متوفر أيضًا <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">على Google Play</a>.</p>"
+    "body": "<p>تجاوز المتاجر واحصل على أحدث إصدار من Riftn من هنا مباشرة: من دون حساب في أي متجر ومن دون انتظار المراجعة.</p>\n<p><a href=\"https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk\">تنزيل ملف Riftn APK</a>, لنظام Android 8 وما بعده. اسمح بالتثبيت من متصفحك عندما يطلب Android ذلك.</p>\n<p>تفضّل المتجر؟ Riftn متوفر أيضًا <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">على Google Play</a>.</p>"
   },
   "/arcade": {
     "h1": "أركيد Riftn",

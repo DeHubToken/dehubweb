@@ -4,7 +4,7 @@ The production shop wallet is `0x2226ab7ff45d9a241e8986163ffb0176fabf5613`.
 The checkout at `0xe0263cdb7ed38580a4cd857eda8c73f11d83598b` returns that
 address from `shopWallet()` on BNB Chain.
 
-The audit covered all fetched branches and history of `DeHubToken/dehub-nx`
+The audit covered all fetched branches and history of `Riftn/dehub-nx`
 (main `3b5630885545430cc6f91026bd43bd28f0fa757e`) and the checkout contract
 repository (main `a73a8d733c763bd1bfafd4cea25ef195ef923adc`). The production
 wallet entered the checkout configuration in commit

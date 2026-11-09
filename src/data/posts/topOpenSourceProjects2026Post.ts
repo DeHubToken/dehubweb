@@ -9,7 +9,7 @@ export const topOpenSourceProjects2026Post: BlogPostType = {
   excerpt: 'We measured the GitHub history of 205 of the biggest open source projects and ranked the 50 most active on commits and contributors over the last 90 days. Linux, Chromium and Nixpkgs lead, and AI projects take 12 of the 50 spots.',
   content: `Which open source projects are actually being built the hardest right now? We measured the public GitHub history of 205 of the world's biggest open source projects and ranked the top 50 on two things: **how much code they shipped and how many people shipped it**. Every number below comes straight from each project's own public repository, so anyone can check it.
 
-![Open Source Activity Index 2026: how we ranked 50 open source projects on GitHub activity](/media/fig-oss-method.jpg)
+![Open Source Activity Index 2026: how we ranked 50 open source projects on GitHub activity](/media/fig-oss-method-riftn.jpg)
 
 ## How we ranked the 50 most active open source projects
 
@@ -25,7 +25,7 @@ Data was pulled on 26 October 2026. Activity moves week to week, so treat the ex
 
 ## The top 10 at a glance
 
-![The top 10 most active open source projects in 2026: Linux, Chromium, Nixpkgs, LLVM, Firefox, Zephyr, ClickHouse, vLLM, Home Assistant and IntelliJ IDEA](/media/fig-oss-top10.jpg)
+![The top 10 most active open source projects in 2026: Linux, Chromium, Nixpkgs, LLVM, Firefox, Zephyr, ClickHouse, vLLM, Home Assistant and IntelliJ IDEA](/media/fig-oss-top10-riftn.jpg)
 
 Linux takes the top spot with 3,544 different people landing code in just 90 days, more than any other project we measured. Chromium shipped the most commits of all, 44,269, which works out to almost 500 a day. Between them, the top 50 merged 364,577 commits in three months, and their contributor lists add up to more than 25,000 names.
 
@@ -84,7 +84,7 @@ Linux takes the top spot with 3,544 different people landing code in just 90 day
 
 ## AI is the fastest-moving corner of open source
 
-![12 of the 50 most active open source projects are AI projects, led by vLLM, SGLang and PyTorch](/media/fig-oss-ai.jpg)
+![12 of the 50 most active open source projects are AI projects, led by vLLM, SGLang and PyTorch](/media/fig-oss-ai-riftn.jpg)
 
 Twelve of the top 50 are AI projects, more than any other category. Three stand out.
 
@@ -112,7 +112,7 @@ Some of the busiest projects are companies building their main product in public
 
 ## Where Riftn fits
 
-![Riftn built in public: over 5,400 commits in 90 days from a small team](/media/fig-oss-dehub.jpg)
+![Riftn built in public: over 5,400 commits in 90 days from a small team](/media/fig-oss-dehub-riftn.jpg)
 
 We publish this index, so here is how our own open source code compares. Riftn's web and mobile apps landed **5,436 commits in the same 90 days**, more than PyTorch, TensorFlow or Kubernetes, and enough to place 22nd on commits alone. Riftn is not in the top 50 because the index also rewards the size of the crowd, and our core team is small. What makes up the difference is the community: anyone can file a request on [riftn.com/features](https://riftn.com/features) and watch it get built, often the same day.
 
@@ -144,12 +144,12 @@ Yes. Every project on this list accepts contributions, and most label easy start
 
 - Public commit history on GitHub for all 205 projects measured, pulled on 26 October 2026. Each repository is linked in the list above.
 - [Open Source Initiative list of approved licenses](https://opensource.org/licenses)
-- [Riftn on GitHub](https://github.com/DeHubToken/dehubweb)
+- [Riftn on GitHub](https://github.com/Riftn/riftn-web)
 
 ## Build with us
 
 Riftn is a social and streaming app that is built in public, every day. Open [riftn.com](https://riftn.com), post a feature request on [riftn.com/features](https://riftn.com/features), and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-50-most-active-open-source-projects-2026-banner.png',
+  bannerImage: '/media/top-50-most-active-open-source-projects-2026-banner-riftn.png',
   bannerImageAlt: 'Top 50 most active open source projects 2026, ranked by GitHub activity, by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',

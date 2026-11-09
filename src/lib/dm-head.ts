@@ -28,6 +28,30 @@ export function needsMessageHistoryRecovery(old: MessageHistory, head: MessagePa
     && !head.items.some(message => stored.has(message._id));
 }
 
+/*
+ * Lines this device just sent, by server id. A refresh can be answered from
+ * before the line was saved (the send itself often reconnects the socket,
+ * which reloads the thread), and by then the line already carries its server
+ * id, so "keep anything still temp-" no longer covers it: the reply vanished
+ * until a manual refresh. Kept for two minutes, long past any such race.
+ */
+const recentlySent = new Map<string, number>();
+const RECENT_SEND_MS = 120_000;
+
+export function markRecentlySent(id: string): void {
+  if (!id || id.startsWith('temp-')) return;
+  const now = Date.now();
+  recentlySent.set(id, now);
+  for (const [key, at] of recentlySent) if (now - at > RECENT_SEND_MS) recentlySent.delete(key);
+}
+
+export function isRecentlySent(id: string): boolean {
+  const at = recentlySent.get(id);
+  if (at === undefined) return false;
+  if (Date.now() - at > RECENT_SEND_MS) { recentlySent.delete(id); return false; }
+  return true;
+}
+
 /** Merge a newest-page refresh without replacing loaded history or pending sends. */
 export function mergeMessageHead(old: MessageHistory, head: MessagePage, startedAt: number): MessageHistory {
   if (!old.pages.length) return { pages: [head], pageParams: [0] };
@@ -37,7 +61,7 @@ export function mergeMessageHead(old: MessageHistory, head: MessagePage, started
   const oldest = head.hasMore ? (times.length ? Math.min(...times) : Infinity) : -Infinity;
   const keepMissing = (message: DmMessage) => {
     const time = Date.parse(message.createdAt);
-    return message._id.startsWith('temp-') || !Number.isFinite(time) || time < oldest || time > startedAt;
+    return message._id.startsWith('temp-') || isRecentlySent(message._id) || !Number.isFinite(time) || time < oldest || time > startedAt;
   };
   const fresh = head.items.map(message => {
     const previous = stored.get(message._id);

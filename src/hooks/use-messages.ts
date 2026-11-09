@@ -58,7 +58,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
 import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import { openMediaPlaintext } from '@/lib/dm-e2ee/media-message';
-import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
+import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, markRecentlySent, isRecentlySent, type MessageHistory } from '@/lib/dm-head';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { lockDhbForUsd } from '@/lib/dm-lock-price';
 
@@ -373,8 +373,10 @@ export function useMessages(conversationId: string | null) {
       // mutation receives the persisted server message or reports a failure.
       if (pageParam === 0) {
         const existing = queryClient.getQueryData<any>(messagesKeys.messages(conversationId));
+        // Also keep a line just sent whose save this response predates.
+        const fetchedIds = new Set(result.items.map((m: DmMessage) => m._id));
         const pending = (existing?.pages?.[0]?.items ?? [])
-          .filter((m: DmMessage) => m._id.startsWith('temp-'));
+          .filter((m: DmMessage) => m._id.startsWith('temp-') || (isRecentlySent(m._id) && !fetchedIds.has(m._id)));
         result.items = [...pending, ...result.items];
         const existingReadIds = new Set<string>(
           (existing?.pages?.[0]?.items ?? [])
@@ -1141,6 +1143,7 @@ export function useSendMessage(conversationId: string) {
     onSuccess: (sent, _variables, context) => {
       const key = context?.optimisticId;
       if (key) pendingSends.delete(key);
+      markRecentlySent(sent._id);
       const replacePending = (old: any) => {
         const pages = old?.pages ?? [{ items: [], totalCount: 0, hasMore: false }];
         // Update the pending line in place (it may already carry the server id

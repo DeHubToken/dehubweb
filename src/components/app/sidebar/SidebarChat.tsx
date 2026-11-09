@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import SmilePlus from "@/components/ui/cut-icons/packs";
 import CornerDownRight from "@/components/ui/cut-icons/reply";
@@ -36,7 +37,10 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePublicChatReading } from '@/hooks/use-public-chat-unread';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
+import { useQueryClient } from '@tanstack/react-query';
+import { seedProfileCache } from '@/lib/profile-cache-seed';
+import { preloadRoute } from '@/lib/route-preload';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppState } from '@/components/app/AppState';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
@@ -59,6 +63,7 @@ import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
 import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
 import { LiveChatOnlineCount } from '@/components/app/chat/LiveChatOnlineCount';
+import { ChatTextSizeButton } from '@/components/app/chat/ChatTextSizeButton';
 
 /**
  * A text message in the side panel, with the same cards every other chat
@@ -77,7 +82,7 @@ function SidebarMessageBody({ content }: { content: string }) {
   return (
     <>
       {displayText.trim() && (
-        <TranslatableText text={displayText} className="text-xs text-zinc-300 break-words" as="p" auto="chat" />
+        <TranslatableText text={displayText} className="chat-body text-xs text-zinc-300 break-words" as="p" auto="chat" />
       )}
       <DehubLinkEmbeds links={links} compact />
       <ChatLinkPreviews content={displayText} />
@@ -200,7 +205,8 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     setImagePreview(url);
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
+  const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
@@ -422,7 +428,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     <div data-sidebar-chat className="flex flex-col h-full pl-px">
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
-        <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+        <div ref={scrollContainerRef} className="absolute inset-0 chat-text-zone overflow-y-auto py-2 space-y-2">
           {!isLoading && mergedItems.length > visibleCount && (
             <button type="button" onClick={loadOlder} className="w-full py-2 text-xs text-zinc-400 hover:text-white">
               {_copy("copy.f17671d83db0", { defaultValue: "Load older messages" })}
@@ -447,7 +453,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
           ) : mergedItems.length === 0 ? (
             <AppState icon="messages" title={_copy("copy.f42e0f66017d", { defaultValue: "No messages yet" })} description={_copy("copy.937510f750fd", { defaultValue: "Be the first to say hello." })} size="compact" className="h-full" />
           ) : (
-            visibleItems.map((item) => {
+            visibleItems.map((item, index) => {
               if (item.type === 'buy_alert') {
                 if (buyBotHidden) return null;
                 return (
@@ -508,7 +514,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(assistantView.at)}</span>
                         </span>
-                        <p className="text-xs text-zinc-300 break-words whitespace-pre-wrap">{assistantView.content}</p>
+                        <p className="chat-body text-xs text-zinc-300 break-words whitespace-pre-wrap">{assistantView.content}</p>
                       </div>
                     </div>
                   </div>
@@ -519,12 +525,28 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
               if (item.type !== 'message') return null;
 
               const msg = item.data;
+              // Telegram-style runs: a second line from the same person within
+              // a few minutes drops the repeated face and name, so a back and
+              // forth reads as a conversation instead of a list of cards. The
+              // name stays for screen readers.
+              const prev = index > 0 ? visibleItems[index - 1] : null;
+              const continued = !msg.reply_to
+                && prev?.type === 'message'
+                && !!msg.sender_address
+                && prev.data.sender_address === msg.sender_address
+                && Math.abs(new Date(msg.created_at).getTime() - new Date(prev.data.created_at).getTime()) < 5 * 60_000;
+              const showSendState = !!msg.client_key && msg.send_state === 'failed';
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || _copy("copy.90395d452a30", { defaultValue: "Anon" });
               const handle = msg.sender_username;
-              const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
+              const goToProfile = handle ? () => {
+                // Seed what the row already shows, so the profile opens with
+                // this person's photo and name instead of a blank placeholder.
+                seedProfileCache(queryClient, { address: msg.sender_address || undefined, username: handle, displayName: name, avatarUrl }, walletAddress || undefined);
+                navigate(`/${handle}`);
+              } : undefined;
               return (
-                <div key={msg.client_key ?? msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                <div key={msg.client_key ?? msg.id} data-message-id={msg.id} data-chat-continued={continued || undefined} className={`group relative transition-colors duration-500${continued ? ' -mt-1.5' : ''}`} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   {/* Reply indicator – click to scroll to original */}
                   {msg.reply_to && (
                     <button
@@ -545,11 +567,15 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                     </button>
                   )}
                   <div className="relative flex items-start gap-2">
-                    <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
+                    {continued ? (
+                      <span aria-hidden="true" className="w-6 flex-shrink-0" />
+                    ) : (
+                    <button onClick={goToProfile} onPointerEnter={handle ? () => preloadRoute('/app/profile') : undefined} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
                       <SidebarAvatar src={avatarUrl} address={msg.sender_address} name={name} />
                     </button>
+                    )}
                     <div className="min-w-0 flex-1">
-                      <span className="inline-flex items-baseline gap-1.5">
+                      <span className={continued && !showSendState ? 'sr-only' : 'inline-flex items-baseline gap-1.5'}>
                         <span className="relative inline-flex items-baseline gap-1 shrink min-w-0 pr-3">
                           <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
                           <SidebarChatBadge badgeBalance={msg.sender_badge_balance} badgeLock={msg.sender_badge_lock} username={msg.sender_username} />
@@ -596,7 +622,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                       ) : msg.message_type === 'image' && msg.image_url ? (
                         <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5 cursor-zoom-in" onClick={() => setViewingImage(getMediaUrl(msg.image_url) || msg.image_url)} />
                       ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
-                        <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                        <img src={outsideImage(msg.image_url || msg.content)} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                       ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
                         <div className="mt-1">
                           <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />
@@ -770,7 +796,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
             }}
             onKeyDown={handleKeyDown}
             maxLength={169}
-            className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+            className="chat-text-input min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
             rows={1}
             style={{ fieldSizing: 'content' } as React.CSSProperties}
           />
@@ -785,8 +811,9 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
           />
           <div className="flex items-center justify-end gap-0.5 pt-1">
             {roomId && (
-              <div className="mr-auto flex items-center">
+              <div className="mr-auto flex items-center gap-1.5">
                 <LiveChatOnlineCount count={onlineCount} />
+                <ChatTextSizeButton />
               </div>
             )}
             <Button type="button" data-chat-composer-action variant="ghost" size="icon" disabled={uploadingImage || isSending} aria-label={_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })} title={_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })} onClick={() => {

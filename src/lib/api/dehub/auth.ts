@@ -42,6 +42,8 @@ export class WalletSignupBlockedError extends Error {
  * sign-up options instead of offering the same wallet again.
  */
 export const WALLET_SIGNUP_BLOCKED_EVENT = 'dehub:wallet-signup-blocked';
+/** The wallet's profile moved to a Google/email/phone login; detail.message names it. */
+export const PROFILE_MOVED_EVENT = 'dehub:profile-moved';
 
 export interface Web3AuthMeta {
   typeOfLogin?: string;

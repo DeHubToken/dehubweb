@@ -2068,7 +2068,7 @@ export const lt = {
     q18: 'Koks Riftn veiksmų planas?',
     a18: 'Ekosistemos plėtra, nauji žaidimai, DePIN, AI ir valdymo paleidimas 2026.',
     q19: 'Kaip susisiekti su Riftn komanda?',
-    a19: 'Rašykite tech@dehub.net arba sekite @dehub_official.',
+    a19: 'Rašykite tech@dehub.net arba sekite @riftn_com.',
     q20: 'Ar „Riftn“ žetonai yra investicija?',
     a20: 'Ne, „Riftn“ žetonai yra skirti tik naudingiems tikslams „Riftn“ ekosistemoje, panašiai kaip žaidimo metu ar programėlėje naudojamos skaitmeninės valiutos. Tai nėra investicinės priemonės, o rinkos yra labai nepastovios.',
     q21: 'Kaip veikia turinio moderavimas?',

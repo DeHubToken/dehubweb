@@ -1171,7 +1171,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
       />
       )}
       {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
-      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
+      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-3'}>
         {(isOwnPost || boosted) && (
           <PostHeaderBoostButton
             rowGap={4}
@@ -1352,7 +1352,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
         {contentWarning.hidden ? (
-          <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className={isImmersive ? 'mx-3' : undefined} />
+          <ContentWarningGate preview={images[0]} onReveal={contentWarning.reveal} className={isImmersive ? 'rounded-none' : undefined} />
         ) : matureGate.isGated ? (
           <MatureContentGate preview={images[0]} onReveal={matureGate.reveal} />
         ) : isComboLocked ? (

@@ -982,33 +982,37 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
 
       // Stream ObjectIds cannot be parsed by the numeric NFT endpoint.
       const isStreamId = /^[a-f\d]{24}$/i.test(id!) && !/^\d+$/.test(id!);
+      const loadPost = async (nftId: string): Promise<DeHubNFT> => {
+        const nft = await getNFTInfo(nftId);
+        const normalizedNft = {
+          ...nft,
+          createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
+        };
+
+        // api.dehub.io answers a request carrying an expired token with 200 and
+        // NO viewer fields rather than 401. Replacing the seed wholesale with
+        // such a response is what flipped a liked post to unliked one second
+        // after opening it. Counts still come from the response; only the
+        // per-viewer flags are carried over.
+        const merged = mergeViewerState(normalizedNft, shown);
+
+        // Enrich quote post if quotedPost data is missing
+        if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
+          try {
+            const quoted = await getNFTInfo(String(merged.quotedTokenId));
+            return { ...merged, quotedPost: quoted };
+          } catch {
+            // If we can't fetch the quoted post, still return the main post
+            return merged;
+          }
+        }
+
+        return merged;
+      };
+
       if (!isStreamId) {
         try {
-          const nft = await getNFTInfo(id!);
-          const normalizedNft = {
-            ...nft,
-            createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
-          };
-
-          // api.dehub.io answers a request carrying an expired token with 200 and
-          // NO viewer fields rather than 401. Replacing the seed wholesale with
-          // such a response is what flipped a liked post to unliked one second
-          // after opening it. Counts still come from the response; only the
-          // per-viewer flags are carried over.
-          const merged = mergeViewerState(normalizedNft, shown);
-
-          // Enrich quote post if quotedPost data is missing
-          if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
-            try {
-              const quoted = await getNFTInfo(String(merged.quotedTokenId));
-              return { ...merged, quotedPost: quoted };
-            } catch {
-              // If we can't fetch the quoted post, still return the main post
-              return merged;
-            }
-          }
-
-          return merged;
+          return await loadPost(id!);
         } catch {
           // Older stream links may not have the standard ObjectId shape.
         }
@@ -1017,6 +1021,20 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       const liveRes = await getLiveStream(id!);
       const stream: any = (liveRes as any)?.result || liveRes;
       if (!stream) throw new Error('Post not found');
+
+      // A stream link to a minted live post shows the post. Likes, reactions
+      // and comments are cast on the post, so the stream doc's own `likes`
+      // stays 0 — reading it is why a live opened by its stream link showed no
+      // likes while the same live in feeds and on profiles showed them all.
+      // The stream doc still wins for status and playback: it is the fresher.
+      if (stream.tokenId != null && /^\d+$/.test(String(stream.tokenId))) {
+        try {
+          const post = await loadPost(String(stream.tokenId));
+          return { ...post, stream: { ...(post as any).stream, ...stream } } as DeHubNFT;
+        } catch {
+          // Fall through to the stream-only shape below.
+        }
+      }
 
       // Convert livestream data to DeHubNFT-like shape for unified rendering
       const account = (stream as any).account;
@@ -1066,7 +1084,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     // response that predates it (both counters are written, not just totalVotes).
     select: (data) => {
       if (!data || !id) return data;
-      const cached = getVoteCache(id);
+      // A stream link's votes are cast (and cached) under the post's tokenId.
+      const tokenKey = data.tokenId != null ? String(data.tokenId) : undefined;
+      const cached = getVoteCache(id) ?? (tokenKey && tokenKey !== id ? getVoteCache(tokenKey) : null);
       if (!cached) return data;
       return applyVoteStateToNFT(data, cached);
     },
@@ -1187,12 +1207,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const isFullBleedLive = contentType === 'live' && isMobileView;
   // An image post opens the same way a video post does on phone and tablet:
   // picture first, full width, the app's top chrome out of the way.
-  // Phones: a text, image or audio post opened from outside the home feed (a
-  // notification, a profile, a link) looks like one opened from the feed: logo
-  // bar and pill with Back on top, the same bento card, no floating back
-  // square or options square. Video keeps its own player page.
+  // Phones: every post page looks like the post on the feed: logo bar and pill
+  // with Back on top, the same bento card at the same spot, no floating back
+  // square or options square. Video too: its player sits in the bento like a
+  // feed card instead of running edge to edge under a floating back button.
   const feedLookPhone = isStagePhone && !inOverlay && !detailsOnly && !!post &&
-    post.status !== 'pending' && (isTextPost || isImagePost || isAudioPost);
+    post.status !== 'pending' && (isTextPost || isImagePost || isAudioPost || isVideoPost);
   useLayoutEffect(() => {
     if (!feedLookPhone) return;
     setPostFeedLook(true);
@@ -1200,17 +1220,17 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   }, [feedLookPhone]);
   const isImmersiveImage = !detailsOnly && isImagePost && isMobileView && !feedLookPhone;
   useEffect(() => {
-    const cls = isFullBleedLive ? 'immersive-live-mode' : (isVideoPost || isImmersiveImage) ? 'immersive-video-mode' : null;
+    const cls = isFullBleedLive ? 'immersive-live-mode' : ((isVideoPost && !feedLookPhone) || isImmersiveImage) ? 'immersive-video-mode' : null;
     if (cls) document.body.classList.add(cls);
     return () => {
       document.body.classList.remove('immersive-video-mode');
       document.body.classList.remove('immersive-live-mode');
     };
-  }, [isFullBleedLive, isVideoPost, isImmersiveImage]);
+  }, [isFullBleedLive, isVideoPost, isImmersiveImage, feedLookPhone]);
 
   // On phones/tablets the loaded video owns Back; the nav pill keeps its tabs
   // and feed settings. Desktop keeps the nav pill's back like every other post.
-  const hasMediaBack = isMobileView && isVideoPost && !isAudioPost && !!post && post.status !== 'pending';
+  const hasMediaBack = isMobileView && isVideoPost && !isAudioPost && !!post && post.status !== 'pending' && !feedLookPhone;
   useEffect(() => {
     if (hasMediaBack) document.body.classList.add('post-media-back');
     return () => document.body.classList.remove('post-media-back');
@@ -1230,9 +1250,11 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   // just the pill. On the standalone route that chrome is in normal flow above
   // the content and needs none. Padding rather than an outer offset, so the post
   // scrolls up *under* the pill and gets swallowed at its edge like the feed.
+  // A phone post page drawn like the feed sits where the feed's first card
+  // sits: 8px higher than the 12px this page used to leave under the pill.
   const chromeClearance = inOverlay
     ? 'pt-[5.5rem] pb-24 lg:pt-14 lg:pb-8'
-    : 'pt-3 pb-8 lg:pt-0';
+    : feedLookPhone ? 'pt-1 pb-8 lg:pt-0' : 'pt-3 pb-8 lg:pt-0';
 
   // A video post hides that chrome on mobile instead of clearing it, so the media
   // starts at the very top of the screen and runs the full width — the shape the
@@ -1279,7 +1301,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={openPageComments} />;
+        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView || feedLookPhone ? undefined : goBack} isImmersive={!isAudioPost && !feedLookPhone} onOpenComments={openPageComments} />;
       case 'image':
         return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={openPageComments} />;
       case 'live': {
@@ -1461,7 +1483,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   // Immersive layout for videos - uses fixed positioning to overlay the header area on mobile/tablet
   // Desktop gets standard layout with PageHeader
   // Both include the related videos feed below the main content
-  if (isVideoPost && post) {
+  if (isVideoPost && post && !feedLookPhone) {
     const videoData = toVideoItem(post);
     // This branch returns before the shared SEOHead below — without its own,
     // shared video links get the generic app title and no OG tags.
@@ -1782,7 +1804,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               broadcast has one conversation in one place instead of a chat
               slab under the player that read as the platform's. */}
           {showRelated && isImagePost && id && <NoFocusComment><RelatedImagesFeed currentPostId={id} /></NoFocusComment>}
-          {showRelated && isAudioPost && id && <NoFocusComment><RelatedVideosFeed currentVideoId={id} /></NoFocusComment>}
+          {showRelated && (isAudioPost || isVideoPost) && id && <NoFocusComment><RelatedVideosFeed currentVideoId={id} /></NoFocusComment>}
           {showRelated && !isImagePost && !isVideoPost && !isAudioPost && !isLivePost && id && <NoFocusComment><RelatedPostsFeed currentPostId={id} /></NoFocusComment>}
         </div>
       </div>

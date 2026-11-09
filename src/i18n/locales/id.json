@@ -2100,6 +2100,7 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
+    "unavailable": "Profil tidak tersedia",
     "viewGrid": "Tampilan kisi",
     "viewList": "Tampilan daftar",
     "viewMode": "Lihat",
@@ -11690,6 +11691,19 @@
     "subscriptionTokensValueNote": "Token langganan mempertahankan nilai dolarnya. Jika harga token bergerak sebelum Anda menggunakannya, Anda akan melihat lebih banyak atau lebih sedikit token, tetapi mereka selalu membeli jumlah generasi AI yang sama. Mereka tidak dapat ditarik, dikirim, atau diperdagangkan.",
     "topUpEmptyHint": "Tambahkan token untuk dibuat dengan AI"
   },
+  "accountDeactivation": {
+    "acknowledge": "Saya mengerti profil saya akan disembunyikan dan saya akan keluar dari semua perangkat.",
+    "title": "Nonaktifkan akun",
+    "short": "Sembunyikan profilmu untuk sementara. Masuk lagi untuk memulihkannya",
+    "description": "Istirahat dulu. Profil, postingan, dan komentarmu disembunyikan dan kamu keluar dari semua perangkat. Tidak ada yang dihapus, dan masuk lagi akan mengembalikan semuanya.",
+    "button": "Nonaktifkan",
+    "confirmTitle": "Nonaktifkan akunmu?",
+    "confirmBody": "Profil, postingan, dan komentarmu akan disembunyikan dan kamu akan keluar dari semua perangkat. Masuk lagi kapan saja untuk membatalkannya.",
+    "busy": "Menonaktifkan…",
+    "done": "Akun dinonaktifkan",
+    "receipt": "Profil, postingan, dan komentarmu disembunyikan. Masuk lagi kapan saja untuk mengembalikan semuanya.",
+    "error": "Tidak bisa menonaktifkan akunmu. Coba lagi."
+  },
   "accountDeletion": {
     "title": "Hapus akun",
     "description": "Hapus akun dan data pribadi Anda secara permanen",
@@ -11703,7 +11717,11 @@
     "error": "Tidak dapat mengirimkan permohonan penghapusan Anda. Akun Anda belum dikonfirmasi untuk dihapus. Silakan coba lagi.",
     "back": "Kembali ke Pengaturan",
     "signIn": "Masuk untuk menghapus akun Anda",
-    "acknowledge": "Saya telah menyimpan detail pemulihan dompet saya dan memahami bahwa penghapusan bersifat permanen."
+    "acknowledge": "Saya telah menyimpan detail pemulihan dompet saya dan memahami bahwa penghapusan bersifat permanen.",
+    "signedInAs": "Masuk sebagai",
+    "confirmTitle": "Hapus akunmu selamanya?",
+    "confirmBody": "Akunmu dan semua isinya akan dihapus. Kamu akan keluar dan ini tidak bisa dibatalkan.",
+    "confirmBodyNamed": "{{who}} dan semua isinya akan dihapus. Kamu akan keluar dan ini tidak bisa dibatalkan."
   },
   "miniApps": {
     "badge": {
@@ -16419,7 +16437,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "Ditampilkan di",
     "ee1c1eecf1b6": "Riftn telah ditutupi oleh beberapa publikasi terbesar dan paling dipercaya di dunia. Berikut adalah artikel yang menyoroti misi kami untuk mendemokratisasi media.",
     "6ccae4bbf68d": "Penerbit telah menghapus aslinya; ini membuka capture Wayback Machine.",

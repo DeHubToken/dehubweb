@@ -1,4 +1,4 @@
-import type { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction, NavigateOptions, To } from 'react-router-dom';
 
 /**
  * Client-side navigation for callers that live outside the React tree — today
@@ -25,6 +25,21 @@ let routerNavigate: NavigateFunction | null = null;
 export function setClientNavigate(fn: NavigateFunction | null): void {
   routerNavigate = fn;
 }
+
+/**
+ * The router's navigate as one stable function (see hooks/use-stable-navigate).
+ * Before the router mounts it falls back to a history step or a full load.
+ */
+export const stableNavigate = ((to: To | number, options?: NavigateOptions) => {
+  if (routerNavigate) {
+    if (typeof to === 'number') return routerNavigate(to);
+    return routerNavigate(to, options);
+  }
+  if (typeof to === 'number') { window.history.go(to); return; }
+  const href = typeof to === 'string' ? to : `${to.pathname ?? ''}${to.search ?? ''}${to.hash ?? ''}`;
+  if (options?.replace) window.location.replace(href);
+  else window.location.assign(href);
+}) as NavigateFunction;
 
 export function clientNavigate(path: string): void {
   // Only paths on this site. Callers build these from post text, so a

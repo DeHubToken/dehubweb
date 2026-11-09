@@ -2068,7 +2068,7 @@ export const lv = {
     q18: 'Kāds ir Riftn ceļvedis?',
     a18: 'Ekosistēmas paplašināšana, jaunas spēles, DePIN, AI un pārvaldības palaišana 2026.',
     q19: 'Kā sazināties ar Riftn komandu?',
-    a19: 'Rakstiet tech@dehub.net vai sekojiet @dehub_official.',
+    a19: 'Rakstiet tech@dehub.net vai sekojiet @riftn_com.',
     q20: 'Vai Riftn žetoni ir ieguldījums?',
     a20: 'Nē, Riftn žetoni ir paredzēti tikai lietderības nolūkiem Riftn ekosistēmā, līdzīgi kā digitālās valūtas spēlē vai lietotnē. Tie nav ieguldījumu instrumenti, un tirgi ir ļoti svārstīgi.',
     q21: 'Kā darbojas satura moderēšana?',

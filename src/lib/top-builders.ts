@@ -7,6 +7,8 @@
  *   +2  for each comment on someone else's request (counts up to 20 comments)
  *
  * Team accounts are left out so the board shows the community.
+ * Everyone who has posted a request or commented on someone else's is listed,
+ * even with 0 points for the period, so the full list is always there.
  * "This month" counts ships by the day they shipped, upvotes on requests
  * posted this month, and comments written this month.
  */
@@ -105,10 +107,10 @@ export function rankBuilders(
 
   for (const c of comments) {
     if (!c.wallet_address || isTeamAccount(c.wallet_address, c.username)) continue;
-    if (Date.parse(c.created_at) < since) continue;
     const author = authorOf.get(c.feature_request_id);
     if (!author || author === c.wallet_address.toLowerCase()) continue;
-    get(c.wallet_address, c.username, null).comments += 1;
+    const b = get(c.wallet_address, c.username, null);
+    if (Date.parse(c.created_at) >= since) b.comments += 1;
   }
 
   const out: TopBuilder[] = [];
@@ -117,7 +119,7 @@ export function rankBuilders(
     b.votePoints = b.votes * VOTE_POINTS;
     b.commentPoints = Math.min(b.comments, COMMENT_CAP) * COMMENT_POINTS;
     b.points = b.shippedPoints + b.votePoints + b.commentPoints;
-    if (b.points > 0) out.push(b);
+    out.push(b);
   }
   out.sort((a, b) =>
     b.points - a.points

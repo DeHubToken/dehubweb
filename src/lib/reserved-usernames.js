@@ -42,17 +42,17 @@ export const ROUTE_SEGMENTS = [
   'admin', 'admin-manual', 'affiliate', 'agents', 'apk', 'app', 'apps', 'arcade', 'assistant',
   'auth', 'bounty', 'bridge', 'builder', 'cinema', 'clip', 'communities', 'compare', 'connect', 'converter', 'creator', 'creators',
   'dehub-app', 'delete-account', 'depin', 'desktop-logo-preview', 'developer', 'developers', 'dex', 'docs', 'editor', 'events', 'explore', 'features', 'feedback',
-  'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'live-studio',
+  'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'link', 'live-studio',
   'maintenance', 'mcp', 'mobile-preview', 'music', 'newpost', 'overlay', 'packs', 'posts', 'premium', 'pricing',
   'prompt', 'r',
   'radio', 'raffle', 'requests', 'shorts', 'stage', 'stages', 'stake', 'stats', 'stream', 'top-100',
   'tv',
-  'accounts', 'usernames', 'nfts', 'videos', 'work', 'yt-dlp',
+  'accounts', 'usernames', 'nfts', 'videos', 'images', 'work', 'yt-dlp',
 
   // --- /app children. Not top-level routes, but the worker canonicalises
   // /app/<x> onto /<x>, so they resolve into the same space. Several were
   // already in the worker's list for exactly this reason. ---
-  'ads', 'bookmarks', 'buy', 'command-centre', 'fractions', 'glossary', 'messages',
+  'ads', 'bookmarks', 'buy', 'chat', 'command-centre', 'fractions', 'glossary', 'messages',
   'migrate-youtube', 'notifications', 'planned', 'post', 'profile', 'settings', 'stores', 'superpowers',
   'upload', 'video', 'wallet',
 
