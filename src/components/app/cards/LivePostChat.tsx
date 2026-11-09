@@ -282,13 +282,13 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // resolve, and then nothing is drawn: no number beats a wrong one.
   const watching = useStreamAudience(liveStreamId, !isOffline);
   // Lines already in the chat when it loaded sit still; anything after glides
-  // in, and your own line or gift lands with the soft glow.
+  // in, and your own line or gift lands with its text softly glowing (no ring).
   const settledIdsRef = useRef<Set<string> | null>(null);
   if (settledIdsRef.current === null && !isLoading) settledIdsRef.current = new Set(messages.map((m) => m.id));
   const landClass = (msg: SupabaseLiveChatMessage) => {
     const settled = settledIdsRef.current;
     if (!settled || settled.has(msg.id)) return '';
-    return isMine(msg) ? ' dh-chat-land dh-land-glow' : ' dh-chat-land';
+    return isMine(msg) ? ' dh-chat-land dh-sent-text-glow' : ' dh-chat-land';
   };
   // Tapping the count opens Who's here, the same sheet the phone live page
   // and the app open from their "N here" pill. Fetched only while open.
