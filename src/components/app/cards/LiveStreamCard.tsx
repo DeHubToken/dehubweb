@@ -1888,11 +1888,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
             onComment={() => setShowComments(prev => !prev)}
             className="p-0 mb-2"
           />
-          {!streamEnded && (
-            // "Tuned in" is everyone who has ever opened this live, not the
-            // room right now; the room is the "watching" figure in the chat.
-            <p className="font-semibold text-white text-sm">{_copy("copy.34905eee7328", { defaultValue: "{{value1}} tuned in", value1: stream.viewers })}</p>
-          )}
           <h3 className="text-white text-sm mt-1">{stream.title}</h3>
           <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
         </div>

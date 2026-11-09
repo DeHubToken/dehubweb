@@ -982,33 +982,37 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
 
       // Stream ObjectIds cannot be parsed by the numeric NFT endpoint.
       const isStreamId = /^[a-f\d]{24}$/i.test(id!) && !/^\d+$/.test(id!);
+      const loadPost = async (nftId: string): Promise<DeHubNFT> => {
+        const nft = await getNFTInfo(nftId);
+        const normalizedNft = {
+          ...nft,
+          createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
+        };
+
+        // api.dehub.io answers a request carrying an expired token with 200 and
+        // NO viewer fields rather than 401. Replacing the seed wholesale with
+        // such a response is what flipped a liked post to unliked one second
+        // after opening it. Counts still come from the response; only the
+        // per-viewer flags are carried over.
+        const merged = mergeViewerState(normalizedNft, shown);
+
+        // Enrich quote post if quotedPost data is missing
+        if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
+          try {
+            const quoted = await getNFTInfo(String(merged.quotedTokenId));
+            return { ...merged, quotedPost: quoted };
+          } catch {
+            // If we can't fetch the quoted post, still return the main post
+            return merged;
+          }
+        }
+
+        return merged;
+      };
+
       if (!isStreamId) {
         try {
-          const nft = await getNFTInfo(id!);
-          const normalizedNft = {
-            ...nft,
-            createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
-          };
-
-          // api.dehub.io answers a request carrying an expired token with 200 and
-          // NO viewer fields rather than 401. Replacing the seed wholesale with
-          // such a response is what flipped a liked post to unliked one second
-          // after opening it. Counts still come from the response; only the
-          // per-viewer flags are carried over.
-          const merged = mergeViewerState(normalizedNft, shown);
-
-          // Enrich quote post if quotedPost data is missing
-          if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
-            try {
-              const quoted = await getNFTInfo(String(merged.quotedTokenId));
-              return { ...merged, quotedPost: quoted };
-            } catch {
-              // If we can't fetch the quoted post, still return the main post
-              return merged;
-            }
-          }
-
-          return merged;
+          return await loadPost(id!);
         } catch {
           // Older stream links may not have the standard ObjectId shape.
         }
@@ -1017,6 +1021,20 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       const liveRes = await getLiveStream(id!);
       const stream: any = (liveRes as any)?.result || liveRes;
       if (!stream) throw new Error('Post not found');
+
+      // A stream link to a minted live post shows the post. Likes, reactions
+      // and comments are cast on the post, so the stream doc's own `likes`
+      // stays 0 — reading it is why a live opened by its stream link showed no
+      // likes while the same live in feeds and on profiles showed them all.
+      // The stream doc still wins for status and playback: it is the fresher.
+      if (stream.tokenId != null && /^\d+$/.test(String(stream.tokenId))) {
+        try {
+          const post = await loadPost(String(stream.tokenId));
+          return { ...post, stream: { ...(post as any).stream, ...stream } } as DeHubNFT;
+        } catch {
+          // Fall through to the stream-only shape below.
+        }
+      }
 
       // Convert livestream data to DeHubNFT-like shape for unified rendering
       const account = (stream as any).account;
@@ -1066,7 +1084,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     // response that predates it (both counters are written, not just totalVotes).
     select: (data) => {
       if (!data || !id) return data;
-      const cached = getVoteCache(id);
+      // A stream link's votes are cast (and cached) under the post's tokenId.
+      const tokenKey = data.tokenId != null ? String(data.tokenId) : undefined;
+      const cached = getVoteCache(id) ?? (tokenKey && tokenKey !== id ? getVoteCache(tokenKey) : null);
       if (!cached) return data;
       return applyVoteStateToNFT(data, cached);
     },
