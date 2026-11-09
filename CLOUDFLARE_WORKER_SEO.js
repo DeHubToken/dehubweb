@@ -641,6 +641,14 @@ function absolutize(url) {
   return `${APP_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
+// Feature requests keep a video attachment in the same image_url column as a
+// picture. A .mov/.mp4 handed to the image transform 404s and the card shows
+// blank, so video stays out of og:image and the sitemap's image:image.
+function absolutizeImage(url) {
+  if (!url || /\.(?:mov|mp4|m4v|webm|mkv|avi|3gp)(?:[?#]|$)/i.test(url)) return null;
+  return absolutize(url);
+}
+
 /**
  * A blog post's share card: the post's own banner, made a true 1200x630 JPEG
  * by the image transform and cached at the edge. Every post ships a banner
@@ -4152,7 +4160,7 @@ function buildFeatureRequestHtml(feature) {
     feature.description || 'A community feature request or bug report on the Riftn roadmap board.',
     200,
   );
-  const image = absolutize(feature.image_url) || shareImage('features');
+  const image = absolutizeImage(feature.image_url) || shareImage('features');
   const authorName = feature.author_username
     ? `@${feature.author_username}`
     : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
@@ -5905,7 +5913,7 @@ const ENTITY_SITEMAPS = {
   features: [{
     query: () => 'feature_requests?status=neq.declined&select=id,title,description,status,image_url,updated_at&order=created_at.asc&limit=5000',
     entry: (f) => (f.status !== 'declined' && substantiveLength(`${f.title || ''} ${f.description || ''}`) >= ENTITY_SITEMAP_MIN_TEXT
-      ? { loc: `${APP_URL}/features?feature=${f.id}`, lastmod: f.updated_at, changefreq: 'weekly', priority: '0.4', image: absolutize(f.image_url) }
+      ? { loc: `${APP_URL}/features?feature=${f.id}`, lastmod: f.updated_at, changefreq: 'weekly', priority: '0.4', image: absolutizeImage(f.image_url) }
       : null),
   }],
 };
