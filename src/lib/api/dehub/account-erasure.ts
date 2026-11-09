@@ -9,3 +9,16 @@ export async function eraseAccount() {
   if (!response.status || !response.result) throw new Error('Deletion was not accepted');
   return response.result;
 }
+
+/**
+ * Deactivate: the reversible one. Hides the profile, posts and comments and
+ * signs out every device. Nothing is erased, and signing in again brings it
+ * all back (riftn-backend: account-deletion.service.ts, restoreDeletedAccount).
+ */
+export async function deactivateAccount() {
+  const response = await apiCall<{ status: boolean; result?: { deletedAt: string } }>('/api/account/delete', {
+    method: 'POST', body: { reason: 'self-deactivated' }, requiresAuth: true, timeoutMs: 30000,
+  });
+  if (!response.status) throw new Error('Deactivation was not accepted');
+  return response.result;
+}

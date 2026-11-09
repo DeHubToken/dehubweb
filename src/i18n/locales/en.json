@@ -12489,6 +12489,18 @@
     "subscriptionTokensValueNote": "Subscription tokens hold their dollar value. If the token price moves before you use them you will see more or fewer tokens, but they always buy the same amount of AI generation. They cannot be withdrawn, sent or traded.",
     "topUpEmptyHint": "Add tokens to generate with AI"
   },
+  "accountDeactivation": {
+    "title": "Deactivate account",
+    "short": "Hide your profile for now. Sign back in to restore it",
+    "description": "Take a break instead. Your profile, posts and comments are hidden and you are signed out everywhere. Nothing is deleted, and signing back in brings it all back.",
+    "button": "Deactivate",
+    "confirmTitle": "Deactivate your account?",
+    "confirmBody": "Your profile, posts and comments will be hidden and you will be signed out on every device. Sign back in any time to undo this.",
+    "busy": "Deactivating…",
+    "done": "Account deactivated",
+    "receipt": "Your profile, posts and comments are hidden. Sign in again any time to bring everything back.",
+    "error": "Could not deactivate your account. Please try again."
+  },
   "accountDeletion": {
     "title": "Delete account",
     "description": "Permanently delete your account and personal data",
@@ -12502,7 +12514,11 @@
     "error": "Could not submit your deletion request. Your account has not been confirmed for deletion. Please try again.",
     "back": "Back to Settings",
     "signIn": "Sign in to delete your account",
-    "acknowledge": "I have saved my wallet recovery details and understand that deletion is permanent."
+    "acknowledge": "I have saved my wallet recovery details and understand that deletion is permanent.",
+    "signedInAs": "Signed in as",
+    "confirmTitle": "Delete your account for good?",
+    "confirmBody": "Your account and everything on it will be deleted. You will be signed out and this cannot be undone.",
+    "confirmBodyNamed": "{{who}} and everything on it will be deleted. You will be signed out and this cannot be undone."
   },
   "miniApps": {
     "badge": {
