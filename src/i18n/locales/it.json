@@ -2100,6 +2100,7 @@
     "returnHome": "Torna alla home"
   },
   "profile": {
+    "unavailable": "Profilo non disponibile",
     "viewGrid": "Vista griglia",
     "viewList": "Visualizzazione elenco",
     "viewMode": "Visualizza",
@@ -11688,6 +11689,7 @@
     "topUpEmptyHint": "Aggiungi token da generare con AI"
   },
   "accountDeactivation": {
+    "acknowledge": "Capisco che il mio profilo verrà nascosto e che verrò disconnesso ovunque.",
     "title": "Disattiva account",
     "short": "Nascondi il profilo per ora. Accedi di nuovo per ripristinarlo",
     "description": "Prenditi una pausa. Profilo, post e commenti vengono nascosti e vieni disconnesso ovunque. Non viene eliminato nulla e accedendo di nuovo torna tutto.",

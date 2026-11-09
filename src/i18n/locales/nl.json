@@ -2471,6 +2471,7 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
+    "unavailable": "Profiel niet beschikbaar",
     "viewGrid": "Rasterweergave",
     "viewList": "Lijstweergave",
     "viewMode": "Bekijken",
@@ -12801,6 +12802,7 @@
     "topUpEmptyHint": "Voeg tokens toe om te genereren met AI"
   },
   "accountDeactivation": {
+    "acknowledge": "Ik begrijp dat mijn profiel wordt verborgen en dat ik overal word uitgelogd.",
     "title": "Account deactiveren",
     "short": "Verberg je profiel voorlopig. Log opnieuw in om het te herstellen",
     "description": "Neem even pauze. Je profiel, berichten en reacties worden verborgen en je wordt overal uitgelogd. Er wordt niets verwijderd; opnieuw inloggen brengt alles terug.",

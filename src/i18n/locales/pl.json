@@ -2099,6 +2099,7 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
+    "unavailable": "Profil niedostępny",
     "viewGrid": "Widok siatki",
     "viewList": "Widok listy",
     "viewMode": "Zobacz",
@@ -11753,6 +11754,7 @@
     "topUpEmptyHint": "Dodaj tokeny do wygenerowania za pomocą sztucznej inteligencji"
   },
   "accountDeactivation": {
+    "acknowledge": "Rozumiem, że mój profil zostanie ukryty i zostanę wylogowany wszędzie.",
     "title": "Dezaktywuj konto",
     "short": "Ukryj profil na jakiś czas. Zaloguj się ponownie, aby go przywrócić",
     "description": "Zrób sobie przerwę. Twój profil, posty i komentarze zostaną ukryte, a Ty wylogujesz się wszędzie. Nic nie zostanie usunięte, a po ponownym zalogowaniu wszystko wróci.",

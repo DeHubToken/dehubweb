@@ -2097,6 +2097,7 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
+    "unavailable": "프로필을 볼 수 없습니다",
     "viewGrid": "그리드 보기",
     "viewList": "목록 보기",
     "viewMode": "보기",
@@ -11682,6 +11683,7 @@
     "topUpEmptyHint": "AI로 생성할 토큰 추가"
   },
   "accountDeactivation": {
+    "acknowledge": "프로필이 숨겨지고 모든 기기에서 로그아웃된다는 것을 이해합니다.",
     "title": "계정 비활성화",
     "short": "프로필을 잠시 숨깁니다. 다시 로그인하면 복구됩니다",
     "description": "잠시 쉬어 가세요. 프로필, 게시물, 댓글이 숨겨지고 모든 기기에서 로그아웃됩니다. 아무것도 삭제되지 않으며 다시 로그인하면 모두 돌아옵니다.",

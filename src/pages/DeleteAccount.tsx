@@ -48,6 +48,7 @@ export default function DeleteAccount() {
   const [pauseBusy, setPauseBusy] = useState(false);
   const [paused, setPaused] = useState(false);
   const [pauseError, setPauseError] = useState(false);
+  const [pauseAck, setPauseAck] = useState(false);
 
   const handle = (user as { username?: string | null } | null)?.username;
   const who = handle ? `@${handle}` : walletAddress ? `${walletAddress.slice(0, 6)}…${walletAddress.slice(-4)}` : '';
@@ -68,7 +69,7 @@ export default function DeleteAccount() {
   };
 
   const deactivate = async () => {
-    if (pauseBusy) return;
+    if (pauseBusy || !pauseAck) return;
     setPauseBusy(true);
     setPauseError(false);
     try {
@@ -127,11 +128,15 @@ export default function DeleteAccount() {
                     <p className="text-sm leading-6 text-zinc-400">
                       {t('accountDeactivation.confirmBody', 'Your profile, posts and comments will be hidden and you will be signed out on every device. Sign back in any time to undo this.')}
                     </p>
+                    <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-white">
+                      <input type="checkbox" className="mt-1 size-4 shrink-0" checked={pauseAck} disabled={pauseBusy} onChange={e => setPauseAck(e.target.checked)} />
+                      <span>{t('accountDeactivation.acknowledge', 'I understand my profile will be hidden and I will be signed out everywhere.')}</span>
+                    </label>
                     <div className="flex flex-col-reverse gap-2 sm:flex-row">
-                      <button type="button" disabled={pauseBusy} className={NEUTRAL_BUTTON} onClick={() => { setPauseStep('idle'); setPauseError(false); }}>
+                      <button type="button" disabled={pauseBusy} className={NEUTRAL_BUTTON} onClick={() => { setPauseStep('idle'); setPauseError(false); setPauseAck(false); }}>
                         {t('accountDeletion.cancel')}
                       </button>
-                      <button type="button" data-contrast-solid disabled={pauseBusy} aria-busy={pauseBusy || undefined} className={SOLID_BUTTON} style={SOLID_STYLE} onClick={() => void deactivate()}>
+                      <button type="button" data-contrast-solid disabled={pauseBusy || !pauseAck} aria-busy={pauseBusy || undefined} className={SOLID_BUTTON} style={SOLID_STYLE} onClick={() => void deactivate()}>
                         {t(pauseBusy ? 'accountDeactivation.busy' : 'accountDeactivation.button', pauseBusy ? 'Deactivating…' : 'Deactivate')}
                       </button>
                     </div>

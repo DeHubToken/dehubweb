@@ -23,7 +23,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useState } from 'react';
 import EyeOff from "@/components/ui/cut-icons/hidden";
 
-import { cn } from '@/lib/utils';
+import { NoticeGate } from './NoticeGate';
 import { useMatureContent } from '@/hooks/use-mature-content';
 import type { ContentRating } from '@/lib/api/dehub/types';
 
@@ -62,35 +62,15 @@ export function MatureContentGate({
 }: MatureContentGateProps) {
   const { t: _copy } = _useCopy();
   return (
-    <div data-media-full className={cn('relative rounded-2xl overflow-hidden', className)}>
-      {preview ? (
-        <img
-          src={preview}
-          alt=""
-          aria-hidden="true"
-          className="w-full max-h-[600px] object-cover blur-2xl scale-110"
-          loading="lazy"
-        />
-      ) : (
-        <div className="w-full h-56 bg-zinc-900" />
-      )}
-      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 px-6 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
-          <EyeOff className="h-7 w-7 text-white" />
-        </div>
-        <p className="text-white font-semibold text-sm mb-1">{_copy("copy.9b8b53102e77", { defaultValue: "Mature content" })}</p>
-        <p className="text-white/70 text-xs mb-3 max-w-xs">{description ?? _copy("copy.5ca2fd8dd3f8", { defaultValue: "The creator marked this post as adult or graphic." })}</p>
-        <button
-          type="button"
-          data-no-navigate
-          onClick={(e) => {
-            // Cards navigate on click; revealing must not open the post.
-            e.stopPropagation();
-            onReveal();
-          }}
-          className="px-4 py-1.5 rounded-full text-xs font-medium text-white bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
-        >{_copy("copy.7bc2840ca04d", { defaultValue: "View anyway" })}</button>
-      </div>
-    </div>
+    <NoticeGate
+      preview={preview}
+      tone="rose"
+      icon={<EyeOff className="h-6 w-6" />}
+      label={_copy("copy.9b8b53102e77", { defaultValue: "Mature content" })}
+      description={description ?? _copy("copy.5ca2fd8dd3f8", { defaultValue: "The creator marked this post as adult or graphic." })}
+      action={_copy("copy.7bc2840ca04d", { defaultValue: "View anyway" })}
+      onReveal={onReveal}
+      className={className}
+    />
   );
 }
