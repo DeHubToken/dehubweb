@@ -22,6 +22,7 @@ const base = { summary: 'Like yesterday’s posts', interval_minutes: null, step
 Deno.test('only the pinned owner receives access, never a username or missing wallet', () => {
   assert(agentOwnerAllowed('0x9324840523a5d17dd12a2f11a9472e5a199c1937'));
   assert(agentOwnerAllowed('0x9324840523A5D17DD12A2F11A9472E5A199C1937'));
+  assert(agentOwnerAllowed('0xEC4E2C7417F781B35D830671F013B3B91F29BA64'));
   for (const value of [null, undefined, '', 'maldoteth', '0x0000000000000000000000000000000000000001']) assert(!agentOwnerAllowed(value));
 });
 Deno.test('bulk actions preserve an explicit time window and cannot expand into unsupported actions', () => {
