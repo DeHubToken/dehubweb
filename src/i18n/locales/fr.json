@@ -2280,6 +2280,7 @@
     "returnHome": "Retour à l'accueil"
   },
   "profile": {
+    "unavailable": "Profil indisponible",
     "viewGrid": "Vue grille",
     "viewList": "Vue en liste",
     "viewMode": "Afficher",
@@ -12555,6 +12556,7 @@
     "topUpEmptyHint": "Ajouter des jetons à générer avec l'IA"
   },
   "accountDeactivation": {
+    "acknowledge": "Je comprends que mon profil sera masqué et que je serai déconnecté partout.",
     "title": "Désactiver le compte",
     "short": "Masquez votre profil pour l'instant. Reconnectez-vous pour le restaurer",
     "description": "Faites une pause. Votre profil, vos publications et vos commentaires sont masqués et vous êtes déconnecté partout. Rien n'est supprimé : en vous reconnectant, tout revient.",

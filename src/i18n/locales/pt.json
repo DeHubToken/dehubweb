@@ -2176,6 +2176,7 @@
     "returnHome": "Voltar ao início"
   },
   "profile": {
+    "unavailable": "Perfil indisponível",
     "viewGrid": "Vista de grelha",
     "viewList": "Visualização de lista",
     "viewMode": "Ver",
@@ -12464,6 +12465,7 @@
     "topUpEmptyHint": "Adicione tokens para gerar com IA"
   },
   "accountDeactivation": {
+    "acknowledge": "Entendo que meu perfil ficará oculto e que serei desconectado de todos os dispositivos.",
     "title": "Desativar conta",
     "short": "Oculte seu perfil por enquanto. Entre novamente para restaurá-lo",
     "description": "Faça uma pausa. Seu perfil, posts e comentários ficam ocultos e você sai de todos os dispositivos. Nada é excluído, e ao entrar de novo tudo volta.",

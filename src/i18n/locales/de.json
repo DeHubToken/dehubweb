@@ -2104,6 +2104,7 @@
     "returnHome": "Zur Startseite"
   },
   "profile": {
+    "unavailable": "Profil nicht verfügbar",
     "viewGrid": "Rasteransicht",
     "viewList": "Listenansicht",
     "viewMode": "Anzeigen",
@@ -11693,6 +11694,7 @@
     "topUpEmptyHint": "Tokens zum Generieren mit KI hinzufügen"
   },
   "accountDeactivation": {
+    "acknowledge": "Ich verstehe, dass mein Profil ausgeblendet wird und ich überall abgemeldet werde.",
     "title": "Konto deaktivieren",
     "short": "Profil vorerst ausblenden. Erneut anmelden, um es wiederherzustellen",
     "description": "Mach eine Pause. Dein Profil, deine Beiträge und Kommentare werden ausgeblendet und du wirst überall abgemeldet. Nichts wird gelöscht; mit der nächsten Anmeldung ist alles wieder da.",

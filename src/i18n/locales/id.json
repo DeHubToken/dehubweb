@@ -2100,6 +2100,7 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
+    "unavailable": "Profil tidak tersedia",
     "viewGrid": "Tampilan kisi",
     "viewList": "Tampilan daftar",
     "viewMode": "Lihat",
@@ -11691,6 +11692,7 @@
     "topUpEmptyHint": "Tambahkan token untuk dibuat dengan AI"
   },
   "accountDeactivation": {
+    "acknowledge": "Saya mengerti profil saya akan disembunyikan dan saya akan keluar dari semua perangkat.",
     "title": "Nonaktifkan akun",
     "short": "Sembunyikan profilmu untuk sementara. Masuk lagi untuk memulihkannya",
     "description": "Istirahat dulu. Profil, postingan, dan komentarmu disembunyikan dan kamu keluar dari semua perangkat. Tidak ada yang dihapus, dan masuk lagi akan mengembalikan semuanya.",

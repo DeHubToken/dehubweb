@@ -2280,6 +2280,7 @@
     "returnHome": "Volver al inicio"
   },
   "profile": {
+    "unavailable": "Perfil no disponible",
     "viewGrid": "Vista de cuadrícula",
     "viewList": "Vista de lista",
     "viewMode": "Ver",
@@ -12551,6 +12552,7 @@
     "topUpEmptyHint": "Añadir tokens para generar con IA"
   },
   "accountDeactivation": {
+    "acknowledge": "Entiendo que mi perfil se ocultará y se cerrará mi sesión en todas partes.",
     "title": "Desactivar cuenta",
     "short": "Oculta tu perfil por ahora. Vuelve a iniciar sesión para restaurarlo",
     "description": "Tómate un descanso. Tu perfil, publicaciones y comentarios se ocultan y se cierra tu sesión en todas partes. No se elimina nada y al volver a iniciar sesión todo regresa.",

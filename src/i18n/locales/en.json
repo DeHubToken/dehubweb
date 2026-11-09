@@ -2294,6 +2294,7 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "unavailable": "Profile not available",
     "viewGrid": "Grid view",
     "viewList": "List view",
     "viewMode": "View",
@@ -12490,6 +12491,7 @@
     "topUpEmptyHint": "Add tokens to generate with AI"
   },
   "accountDeactivation": {
+    "acknowledge": "I understand my profile will be hidden and I will be signed out everywhere.",
     "title": "Deactivate account",
     "short": "Hide your profile for now. Sign back in to restore it",
     "description": "Take a break instead. Your profile, posts and comments are hidden and you are signed out everywhere. Nothing is deleted, and signing back in brings it all back.",

@@ -2094,6 +2094,7 @@
     "returnHome": "返回首页"
   },
   "profile": {
+    "unavailable": "个人主页不可用",
     "viewGrid": "网格视图",
     "viewList": "列表视图",
     "viewMode": "查看",
@@ -11688,6 +11689,7 @@
     "topUpEmptyHint": "添加用于 AI 生成的令牌"
   },
   "accountDeactivation": {
+    "acknowledge": "我知道我的主页会被隐藏，并且会在所有设备上退出登录。",
     "title": "停用账号",
     "short": "暂时隐藏你的主页。重新登录即可恢复",
     "description": "先休息一下。你的主页、帖子和评论会被隐藏，并在所有设备上退出登录。不会删除任何内容，重新登录后一切都会恢复。",

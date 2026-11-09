@@ -69,7 +69,8 @@ import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/p
 import { articleReadMinutes, mergeArticleTile, parseArticleTile, type ArticleTileLook } from '@/lib/article-tile';
 import { buildFeedImageUrls as articleTileCover } from '@/lib/media-url';
 import { updateProfile } from '@/lib/api/dehub';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { checkUsernameAvailability } from '@/lib/api/dehub/auth';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos', 'articles'];
@@ -643,9 +644,13 @@ return () => rail.removeEventListener('wheel', onWheel);
           noindex
           noCanonical
         />
-        {showReserve ? (
-          <UsernameReserve username={displayUsername} onTaken={() => data.refetchProfile?.()} />
-        ) : (
+        {/* A name that is taken but resolves to no profile (a deactivated
+            account) must never be offered as free: ask the server first. */}
+        <MissingProfileBody
+          username={isUsernameRoute && (!data.isProfileError || data.isProfileNotFound) ? displayUsername : ''}
+          offerReserve={showReserve}
+          onTaken={() => data.refetchProfile?.()}
+          plain={(
           <>
             <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain opacity-80" />
             <h2 className="text-xl font-bold text-white">{t('profile.notFound')}</h2>
@@ -668,7 +673,8 @@ return () => rail.removeEventListener('wheel', onWheel);
               </Button>
             )}
           </>
-        )}
+          )}
+        />
       </div>
     );
 
@@ -1043,4 +1049,36 @@ return () => rail.removeEventListener('wheel', onWheel);
   );
 
   return profileContent;
+}
+
+/**
+ * Body of the profile-not-found page. When the handle is taken but resolves
+ * to nothing (its owner deactivated), it says "Profile not available" and
+ * never offers the name: deactivating must not cost anyone their username.
+ */
+function MissingProfileBody({ username, offerReserve, onTaken, plain }: {
+  username: string;
+  offerReserve: boolean;
+  onTaken: () => void;
+  plain: React.ReactNode;
+}) {
+  const { t } = useTranslation();
+  const check = useQuery({
+    queryKey: ['username-check', username.toLowerCase()],
+    queryFn: () => checkUsernameAvailability(username),
+    enabled: !!username,
+    staleTime: 30_000,
+    retry: false,
+  });
+  if (username && check.isLoading) return null;
+  if (username && check.data?.status && check.data.available === false) {
+    return (
+      <>
+        <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain opacity-80" />
+        <h2 className="text-xl font-bold text-white">{t('profile.unavailable', 'Profile not available')}</h2>
+      </>
+    );
+  }
+  if (offerReserve && check.data?.available !== false) return <UsernameReserve username={username} onTaken={onTaken} />;
+  return <>{plain}</>;
 }
