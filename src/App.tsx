@@ -215,6 +215,7 @@ const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage
 const ClipPage = React.lazy(() => import("./pages/app/ClipPage"));
 const DuetsPage = React.lazy(() => import("./pages/app/DuetsPage"));
 const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
+const LinkTvPage = React.lazy(() => import("./pages/app/LinkTvPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
@@ -933,6 +934,8 @@ function AppContent() {
             <Route path="/shorts" element={null} />
             <Route path="/music" element={null} />
             <Route path="/tv" element={null} />
+            {/* Where the TV app sends people to sign it in ("or visit riftn.com/link"). */}
+            <Route path="/link" element={<Suspense fallback={<PageLoader />}><LinkTvPage /></Suspense>} />
             <Route path="/bridge" element={null} />
             <Route path="/agents" element={null} />
             <Route path="/assistant" element={null} />

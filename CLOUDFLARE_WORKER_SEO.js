@@ -160,7 +160,7 @@ const GOOGLE_SITE_VERIFICATION = 'fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ';
 // image. Anything absent here still falls back to SHARE_IMAGE, so adding a
 // route without its card is safe.
 const OG_CARD_ROUTES = new Set([
-  'arcade/gods-eye', 'compare',
+  'arcade/gods-eye', 'compare', 'link',
   'home', 'fallback', 'blog', 'docs',
   'docs/overview', 'docs/dapps', 'docs/games', 'docs/token/overview',
   'docs/token/economics', 'docs/token/stake', 'docs/token/utility', 'docs/token/where-to-buy',
@@ -1830,6 +1830,16 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     heading: 'Riftn Launchpad',
     bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on Riftn. Live launches are listed with their activity, and creating one runs from the same page.</p>
 <p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
+  },
+  'link': {
+    // Where the Riftn TV app sends people to sign it in. A utility page, so
+    // noindex like LinkTvPage's own SEOHead, but it still unfurls with a card.
+    noindex: true,
+    title: 'Sign in to Riftn on your TV | Riftn',
+    description: 'Enter the code shown on your TV to sign in to the Riftn TV app with your account. No typing on a remote.',
+    heading: 'Sign in a TV',
+    bodyHtml: `<p>Open Riftn TV on an Android TV, Google TV or Fire TV and choose Sign in. The TV shows an eight-character code. Enter it here while signed in to your Riftn account, check the device name, and approve it. The TV signs in as you, without typing anything on a remote.</p>
+<p>A TV signed in this way can watch, follow, like and save. It never holds a wallet key, so it cannot tip, buy or post. You can sign it out at any time from Settings, Active sessions.</p>`,
   },
   'live-studio': {
     title: 'Live Studio: Stream Alerts, Goals and Overlays | Riftn',
