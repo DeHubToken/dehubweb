@@ -139,7 +139,7 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/'])
   ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
-  :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg) {
+  :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg):not([data-audio-player] *) {
   color: var(--control-ink) !important;
 }
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"])
@@ -148,7 +148,7 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/'])
   ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
-  :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg) {
+  :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg):not([data-audio-player] *) {
   color: var(--control-ink) !important;
 }
 
@@ -311,7 +311,7 @@ html:is([data-theme='war'], [data-theme='osaka'], [data-theme='jungle'])
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/']),
     [data-theme-control-surface]
   ):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):not([data-comment-send]):not([data-keep-white]):not([data-keep-white] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media]):not([data-on-media] *):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
-  :is(span, svg) {
+  :is(span, svg):not([data-audio-player] *) {
   color: var(--theme-control-foreground) !important;
 }
 
