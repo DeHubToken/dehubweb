@@ -2108,6 +2108,7 @@
     "returnHome": "Trở về Trang chủ"
   },
   "profile": {
+    "unavailable": "Hồ sơ không khả dụng",
     "viewGrid": "Chế độ xem lưới",
     "viewList": "Chế độ xem danh sách",
     "viewMode": "Xem",
@@ -11768,6 +11769,7 @@
     "topUpEmptyHint": "Thêm mã thông báo để tạo bằng AI"
   },
   "accountDeactivation": {
+    "acknowledge": "Tôi hiểu hồ sơ của tôi sẽ bị ẩn và tôi sẽ bị đăng xuất khỏi mọi nơi.",
     "title": "Vô hiệu hóa tài khoản",
     "short": "Tạm ẩn hồ sơ của bạn. Đăng nhập lại để khôi phục",
     "description": "Nghỉ ngơi một chút. Hồ sơ, bài đăng và bình luận của bạn sẽ bị ẩn và bạn bị đăng xuất khỏi mọi nơi. Không có gì bị xóa, đăng nhập lại là mọi thứ trở lại.",

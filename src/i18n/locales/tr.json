@@ -2280,6 +2280,7 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
+    "unavailable": "Profil kullanılamıyor",
     "viewGrid": "Izgara görünümü",
     "viewList": "Liste görünümü",
     "viewMode": "Görüntüle",
@@ -12551,6 +12552,7 @@
     "topUpEmptyHint": "Yapay zeka ile oluşturmak için token ekleyin"
   },
   "accountDeactivation": {
+    "acknowledge": "Profilimin gizleneceğini ve her yerde oturumumun kapatılacağını anlıyorum.",
     "title": "Hesabı devre dışı bırak",
     "short": "Profilini şimdilik gizle. Geri getirmek için tekrar giriş yap",
     "description": "Bir ara ver. Profilin, gönderilerin ve yorumların gizlenir ve her yerde oturumun kapatılır. Hiçbir şey silinmez; tekrar giriş yaptığında her şey geri gelir.",
