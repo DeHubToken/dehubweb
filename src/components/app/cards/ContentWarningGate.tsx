@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { NoticeGate } from './NoticeGate';
 
 /** The server's limit (dehub-stream-backend src/nft/content-warning). */
 export const CONTENT_WARNING_MAX = 200;
@@ -19,34 +19,21 @@ export function useContentWarning(spoilerText?: string) {
 }
 
 /**
- * The warning in place of a post: the creator's one line and a button to
- * open it. Covers the body and the media together, the way Mastodon does, so
- * neither gives away what the warning is about.
+ * The warning in place of a post. Covers the body and the media together, the
+ * way Mastodon does, so neither gives away what the warning is about. The
+ * creator's own line stays behind the cover; the notice only says one exists.
  */
-export function ContentWarningGate({ text, onReveal, className }: { text: string; onReveal: () => void; className?: string }) {
+export function ContentWarningGate({ preview, onReveal, className }: { preview?: string; onReveal: () => void; className?: string }) {
   const { t } = useTranslation();
   return (
-    <div
-      data-content-warning
-      className={cn('flex items-center gap-3 rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3', className)}
-    >
-      <AlertTriangle className="h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />
-      <p className="min-w-0 flex-1 text-sm font-medium text-white break-words">
-        <span className="sr-only">{t('contentWarning.label')}: </span>
-        {text}
-      </p>
-      <button
-        type="button"
-        data-no-navigate
-        onClick={(e) => {
-          // Cards navigate on click; opening the warning must not open the post.
-          e.stopPropagation();
-          onReveal();
-        }}
-        className="shrink-0 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white hover:bg-white/20"
-      >
-        {t('contentWarning.show')}
-      </button>
-    </div>
+    <NoticeGate
+      preview={preview}
+      icon={<AlertTriangle className="h-6 w-6" aria-hidden="true" />}
+      label={t('contentWarning.label')}
+      description={t('contentWarning.notice', { defaultValue: 'The creator added a warning' })}
+      action={t('contentWarning.view', { defaultValue: 'View post' })}
+      onReveal={onReveal}
+      className={className}
+    />
   );
 }
