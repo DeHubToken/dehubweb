@@ -391,8 +391,8 @@ export default function ProfilePage() {
   }, [profileKey, data.apiProfile?.customs]);
 
 
-  // Swallow the tab content at the sticky tabs bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
+  // Swallow the tab content at the sticky tabs bento's upper rim, exactly
+  // like the home feed cuts at its nav pill (browser-driven scroll clip).
   const profileHeaderRef = useRef<HTMLDivElement>(null);
   const profileTabsRef = useRef<HTMLDivElement>(null);
   const profileContentRef = useRef<HTMLDivElement>(null);
@@ -910,12 +910,12 @@ return () => rail.removeEventListener('wheel', onWheel);
             />
 
         </StableHeightContainer>
-        </FeedSwallowMotion>
-        </div>
         </div>
         </div>
         </ProfileArticleTileContext.Provider>
         </ProfilePostBgContext.Provider>
+        </FeedSwallowMotion>
+        </div>
         </div>
       </div>
 
