@@ -8,7 +8,6 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import Users from "@/components/ui/cut-icons/communities";
 import Video from "@/components/ui/cut-icons/video";
 
 import { useMemo, useState } from 'react';
@@ -22,7 +21,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { LiveRipple } from '@/components/app/LiveRipple';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStage, useLiveSpaces } from '@/contexts/StageContext';
-import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal, watchingNowOf } from '@/hooks/use-dehub-feed';
+import { formatViews } from '@/lib/feed-utils';
 import { getFollowList } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 
@@ -106,7 +106,7 @@ export function LiveNowBar() {
         wallet: stage.host_wallet_address,
         username: stage.host_username,
         avatar: stage.host_avatar,
-        count: String(size),
+        count: formatViews(size).replace(' views', ''),
         followed: isFollowed(stage.host_wallet_address) || stagesWithFriends.has(stage.id),
         size,
       };
@@ -119,8 +119,7 @@ export function LiveNowBar() {
         const id = String(stream.id);
         if (!stream.isLive || seen.has(id)) return;
         seen.add(id);
-        const counts = raw as { totalViews?: number; peakViewers?: number; viewerCount?: number };
-        const views = Number(counts.totalViews ?? counts.peakViewers ?? counts.viewerCount ?? 0) || 0;
+        const watching = watchingNowOf(raw);
         list.push({
           kind: 'stream',
           id,
@@ -128,9 +127,9 @@ export function LiveNowBar() {
           wallet: String(stream.creatorId ?? ''),
           username: stream.creatorUsername ?? null,
           avatar: stream.avatar || null,
-          count: stream.viewers,
+          count: stream.watching ?? '',
           followed: isFollowed(stream.creatorId),
-          size: views,
+          size: watching ?? 0,
         });
       });
     });
@@ -271,15 +270,19 @@ function handleOf(item: LiveNowItem): string {
   return `@${item.username || item.wallet?.slice(0, 6) || '?'}`;
 }
 
+/** LIVE, then who is in it in words: "8 watching" on a stream, "5 here" on a Stage. */
 function LiveCount({ item }: { item: LiveNowItem }) {
   const { t } = useTranslation();
   return (
     <span className="flex items-center gap-1.5 shrink-0">
       <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wide">{t('stages.liveBadge', { defaultValue: 'LIVE' })}</span>
-      <span className="flex items-center gap-0.5 text-[10px] text-white/40">
-        <Users className="w-3 h-3" />
-        {item.count}
-      </span>
+      {item.count ? (
+        <span className="text-[10px] text-white/50 whitespace-nowrap">
+          {item.kind === 'stage'
+            ? t('liveAudience.hereCount', { formatted: item.count, defaultValue: '{{formatted}} here' })
+            : t('liveAudience.watchingCount', { formatted: item.count, defaultValue: '{{formatted}} watching' })}
+        </span>
+      ) : null}
     </span>
   );
 }

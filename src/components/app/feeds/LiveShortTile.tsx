@@ -74,10 +74,12 @@ export const LiveShortTile = memo(function LiveShortTile({ stream, disabled, onO
           <span className="truncate text-[10px] font-medium leading-[11px] text-white">
             @{stream.creatorUsername || stream.streamer}
           </span>
-          <span className="inline-flex items-center gap-0.5 text-[9px] leading-[10px] text-white/90">
-            <Eye className="h-[9px] w-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
-            {stream.viewers}
-          </span>
+          {stream.watching ? (
+            <span className="inline-flex items-center gap-0.5 text-[9px] leading-[10px] text-white/90">
+              <Eye className="h-[9px] w-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
+              {stream.watching}
+            </span>
+          ) : null}
         </div>
       </div>
     </button>
