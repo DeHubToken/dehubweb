@@ -42,7 +42,7 @@ export const ROUTE_SEGMENTS = [
   'admin', 'admin-manual', 'affiliate', 'agents', 'apk', 'app', 'apps', 'arcade', 'assistant',
   'auth', 'bounty', 'bridge', 'builder', 'cinema', 'clip', 'communities', 'compare', 'connect', 'converter', 'creator', 'creators',
   'dehub-app', 'delete-account', 'depin', 'desktop-logo-preview', 'developer', 'developers', 'dex', 'docs', 'editor', 'events', 'explore', 'features', 'feedback',
-  'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'live-studio',
+  'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'link', 'live-studio',
   'maintenance', 'mcp', 'mobile-preview', 'music', 'newpost', 'overlay', 'packs', 'posts', 'premium', 'pricing',
   'prompt', 'r',
   'radio', 'raffle', 'requests', 'shorts', 'stage', 'stages', 'stake', 'stats', 'stream', 'top-100',
