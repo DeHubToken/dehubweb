@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { AuthContext } from '@/contexts/AuthContext';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { Button } from '@/components/ui/button';
 import Copy from '@/components/ui/cut-icons/copy';
@@ -29,7 +29,8 @@ interface Made { key: string; name: string }
 export interface PersonalKeysPreview { keys: Key[]; made?: Made }
 
 export default function PersonalKeys({ preview }: { preview?: PersonalKeysPreview }) {
-  const { walletAddress } = useAuth();
+  // The state gallery has no AuthProvider, so read the context directly.
+  const walletAddress = useContext(AuthContext)?.walletAddress;
   return <PersonalKeysPanel key={walletAddress || 'signed-out'} preview={preview} />;
 }
 
@@ -51,7 +52,8 @@ function CopyBox({ text, label }: { text: string; label: string }) {
 
 function PersonalKeysPanel({ preview }: { preview?: PersonalKeysPreview }) {
   const { t, i18n } = useTranslation();
-  const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
+  const auth = useContext(AuthContext);
+  const walletAddress = auth?.walletAddress, isAuthenticated = !!auth?.isAuthenticated;
   const [name, setName] = useState('');
   const [scopes, setScopes] = useState<string[]>(['dehub:read', 'dehub:social']);
   const [keys, setKeys] = useState<Key[] | null>(preview?.keys ?? null);
@@ -94,7 +96,7 @@ function PersonalKeysPanel({ preview }: { preview?: PersonalKeysPreview }) {
       <h2 className="text-2xl font-semibold">{t('mcpKeys.title')}</h2>
       <p className="mt-2 text-sm text-white/60">{t('mcpKeys.body')}</p>
       {!signedIn ? (
-        <Button className="mt-4" onClick={() => openLoginModal()}>{t('mcpKeys.signIn')}</Button>
+        <Button className="mt-4" onClick={() => auth?.openLoginModal()}>{t('mcpKeys.signIn')}</Button>
       ) : <>
         {made && (
           <div className="mt-5 rounded-2xl border border-white/20 bg-white/[0.06] p-4" role="status">

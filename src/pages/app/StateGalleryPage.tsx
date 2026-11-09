@@ -1,5 +1,6 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
+import PersonalKeys from '@/components/PersonalKeys';
 import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
 import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/profile/ArticleTile';
 import type { ArticleTileLook } from '@/lib/article-tile';
@@ -187,6 +188,20 @@ function OwnKeysGallery() {
     <section data-own-keys-gallery className="mb-5 grid gap-5 lg:grid-cols-2">
       <OwnAiKeysSetting preview={OWN_KEY_ROWS.filter(row => row.saved)} />
       <OwnAiKeysSetting preview={OWN_KEY_ROWS} previewEditing="fal" previewShowAll />
+    </section>
+  );
+}
+
+const MCP_KEY_ROWS = [
+  { id: 'k1', client_name: 'Posting bot', scopes: ['dehub:read', 'dehub:social', 'dehub:agents'], expires_at: Date.UTC(2026, 11, 9), kind: 'key', hint: '7f3a' },
+  { id: 'k2', client_name: 'Cursor', scopes: ['dehub:read'], expires_at: Date.UTC(2026, 11, 2), kind: 'key', hint: 'c0de' },
+];
+
+function McpKeysGallery() {
+  return (
+    <section data-mcp-keys-gallery className="mb-5 grid gap-5 lg:grid-cols-2">
+      <PersonalKeys preview={{ keys: MCP_KEY_ROWS }} />
+      <PersonalKeys preview={{ keys: [], made: { key: `dhk_${'3f9c'.repeat(16)}`, name: 'Posting bot' } }} />
     </section>
   );
 }
@@ -1427,6 +1442,7 @@ export default function StateGalleryPage() {
         />
 
         <OwnKeysGallery />
+        <McpKeysGallery />
         <ComicGallery />
         <UsernameReserveGallery />
 
