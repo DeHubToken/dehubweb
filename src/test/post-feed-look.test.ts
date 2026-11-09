@@ -13,11 +13,13 @@ describe('post feed look', () => {
     expect(result.current).toBe(false);
   });
 
-  it('keeps the logo bar on posts opened outside the feed, video excluded', () => {
+  it('keeps the logo bar and the feed bento on every phone post page, video included', () => {
     const header = readFileSync('src/components/app/navigation/MobileHeader.tsx', 'utf8');
     expect(header).toContain('(isPostPage && postFeedLook)');
     const page = readFileSync('src/pages/app/SinglePostPage.tsx', 'utf8');
-    expect(page).toContain('(isTextPost || isImagePost || isAudioPost)');
+    expect(page).toContain('(isTextPost || isImagePost || isAudioPost || isVideoPost)');
+    expect(page).toContain('if (isVideoPost && post && !feedLookPhone) {');
+    expect(page).toContain("feedLookPhone ? 'pt-1 pb-8 lg:pt-0'");
     expect(page).toContain("contentType !== 'live' && !feedLookPhone");
   });
 });
