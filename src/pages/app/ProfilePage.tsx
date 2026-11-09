@@ -15,6 +15,7 @@ import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -390,16 +391,17 @@ export default function ProfilePage() {
   }, [profileKey, data.apiProfile?.customs]);
 
 
-  // Swallow the tab content at the sticky tabs bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
+  // Swallow the tab content at the sticky tabs bento's upper rim, exactly
+  // like the home feed cuts at its nav pill (browser-driven scroll clip).
   const profileHeaderRef = useRef<HTMLDivElement>(null);
   const profileTabsRef = useRef<HTMLDivElement>(null);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
     '[data-profile-tabs] > [data-feed-nav]',
-    [!!data.profile, data.isAuthenticated],
-    { allThemes: true, edge: 'bottom' },
+    // holdForReveal: the content mounts only once the reveal hold ends.
+    [!!data.profile, data.isAuthenticated, holdForReveal],
+    { allThemes: true },
   );
 
   // At the top edge, the tabs become the single profile navigation row.
@@ -845,7 +847,9 @@ return () => rail.removeEventListener('wheel', onWheel);
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
+        <div data-feed-swallow-bounds>
         <div ref={profileContentRef} data-profile-content>
+        <FeedSwallowMotion>
         {/* Sort + search, on the four tabs actually backed by this creator's
             content. The other tabs (plans, live, fractions, pinned) come from
             their own endpoints and the toolbar would do nothing there. */}
@@ -911,6 +915,8 @@ return () => rail.removeEventListener('wheel', onWheel);
         </div>
         </ProfileArticleTileContext.Provider>
         </ProfilePostBgContext.Provider>
+        </FeedSwallowMotion>
+        </div>
         </div>
       </div>
 
