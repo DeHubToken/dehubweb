@@ -41,7 +41,7 @@ describe('public platform comparison', () => {
     for (const feature of FEATURES) if (feature.implementation) {
       expect(existsSync(resolve(process.cwd(), feature.implementation.web)), feature.id).toBe(true);
       expect(SOURCES[feature.dehub.source!].url).toContain('/blob/');
-      expect(feature.dehub.relatedSources?.some(source => SOURCES[source]?.url.startsWith('https://github.com/DeHubToken/dehub-mobile/blob/'))).toBe(true);
+      expect(feature.dehub.relatedSources?.some(source => SOURCES[source]?.url.startsWith('https://github.com/Riftn/riftn-mobile/blob/'))).toBe(true);
     }
     const all = comparisonCoverage('all');
     expect(all.total).toBe(FEATURES.length * PLATFORMS.length);

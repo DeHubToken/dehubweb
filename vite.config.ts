@@ -60,7 +60,7 @@ function blogManifestPlugin() {
   };
 }
 
-const GITHUB_REPO = 'https://github.com/DeHubToken/dehubweb';
+const GITHUB_REPO = 'https://github.com/Riftn/riftn-web';
 
 /** `git ...` as a plain string, or '' if git isn't there / this isn't a checkout. */
 function git(args: string[]): string {

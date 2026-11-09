@@ -309,7 +309,7 @@ const getMenuItems = (t: (key: string) => string) => [{
       isImage: true
     }, {
       title: 'GitHub',
-      path: 'https://github.com/dehubtoken',
+      path: 'https://github.com/riftn',
       icon: '/media/b39e5777-ed91-489c-a58a-3639ea5bf3bc.png',
       external: true,
       isImage: true

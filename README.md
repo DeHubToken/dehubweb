@@ -194,7 +194,7 @@ flowchart TD
 ### Installation
 
 ```sh
-git clone https://github.com/DeHubToken/dehubweb.git
+git clone https://github.com/Riftn/riftn-web.git
 cd dehubweb
 npm install --legacy-peer-deps
 ```
