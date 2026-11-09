@@ -160,7 +160,8 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'support', anchor: 'report-bug', label: 'Report a Bug', labelKey: 'settings.reportBug', keywords: 'bug issue feedback support help' },
   { tab: 'support', anchor: 'terms', label: 'Terms of Service', labelKey: 'settings.termsOfService', keywords: 'terms legal' },
   { tab: 'support', anchor: 'privacy-policy', label: 'Privacy Policy', labelKey: 'settings.privacyPolicy', keywords: 'privacy legal' },
-  { tab: 'support', anchor: 'delete-account', label: 'Delete account or data', labelKey: 'settings.deleteAccountData', keywords: 'delete close remove account gdpr' },
+  { tab: 'support', anchor: 'deactivate-account', label: 'Deactivate account', labelKey: 'accountDeactivation.title', keywords: 'deactivate disable pause hide break account' },
+  { tab: 'support', anchor: 'delete-account', label: 'Delete account', labelKey: 'accountDeletion.title', keywords: 'delete close remove account gdpr' },
 ];
 
 export interface SettingsSearchHit extends SettingsSearchEntry {

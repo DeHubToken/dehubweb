@@ -43,6 +43,7 @@ import Ban from "@/components/ui/cut-icons/blocked";
 import Megaphone from "@/components/ui/cut-icons/advertising";
 import Radio from "@/components/ui/cut-icons/live";
 import Trash2 from "@/components/ui/cut-icons/delete";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import SettingsIcon from "@/components/ui/cut-icons/settings";
 import User from "@/components/ui/cut-icons/profile";
@@ -1344,10 +1345,19 @@ function SupportSettings() {
         />
         <SettingsRow
           as="button"
+          anchor="deactivate-account"
+          icon={<Pause />}
+          title={t('accountDeactivation.title', 'Deactivate account')}
+          description={t('accountDeactivation.short', 'Hide your profile for now. Sign back in to restore it')}
+          onClick={() => navigate('/delete-account#deactivate')}
+          action={arrow}
+        />
+        <SettingsRow
+          as="button"
           anchor="delete-account"
-          icon={<Trash2 />}
-          title={t('settings.deleteAccountData', 'Delete account or data')}
-          description={t('settings.deleteAccountDataDesc', 'Request removal of your account or your data')}
+          icon={<Trash2 style={{ color: '#ef4444' }} />}
+          title={t('accountDeletion.title', 'Delete account')}
+          description={t('accountDeletion.description', 'Permanently delete your account and personal data')}
           onClick={() => navigate('/delete-account')}
           action={arrow}
         />
