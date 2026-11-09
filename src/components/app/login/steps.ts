@@ -25,8 +25,9 @@ export type LoginStep =
   // the wallet that already exists. The session is live; only this is asked.
   | 'wallet-secure'
   | 'wallet-unlock'
-  // The profile lives on the wallet from the original sign-in, not the one
-  // saved for this login. Recover that wallet to get in.
+  // The profile the server returned lives on a different wallet from the one
+  // saved for this login, so it was refused. A dead end on purpose: support
+  // moves accounts by hand, and the only action is to use another login.
   | 'wallet-restore'
   // The account exists but has no profile yet — username, display name, and
   // optionally a picture and a reading language. Mandatory: the sheet will not

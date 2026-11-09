@@ -11,7 +11,7 @@ import '@/styles/login-stack.css';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useAccount, useConnect, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
-import { Mail, Phone, Loader2, Fingerprint, ArrowDownToLine, KeyRound } from "lucide-react";
+import { Mail, Phone, Loader2, Fingerprint, KeyRound } from "lucide-react";
 import Wallet from "@/components/ui/cut-icons/wallet";
 
 import X from "@/components/ui/cut-icons/close";
@@ -31,7 +31,6 @@ import { PasskeyCancelledError, PasskeyLoginError, PasskeyUnsupportedError } fro
 import { loginProbesSnapshot, resolveLoginProbes, type LoginProbes } from '@/lib/login-probes';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
 import { LoginBodySkeleton } from './LoginBodySkeleton';
-import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } from '@/lib/wallet-setup-intent';
 import { type LoginStep, isInlineLoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
 import { createLogger } from '@/lib/logger';
@@ -52,10 +51,6 @@ const LoginWalletsStep = React.lazy(() =>
 const WalletCreateStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletCreateStep').then(m => ({ default: m.WalletCreateStep })),
 );
-const SwitchOldAccountPanel = React.lazy(() =>
-  import('@/components/app/settings/WalletRecoveryTools').then(m => ({ default: m.SwitchOldAccountPanel })),
-);
-
 const WalletUnlockStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletUnlockStep').then(m => ({ default: m.WalletUnlockStep })),
 );
@@ -187,19 +182,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   // Set to the app's name ('' when unnamed) after Google was tapped inside a
   // social app's built-in browser, where Google refuses to sign anyone in.
   const [googleBlockedIn, setGoogleBlockedIn] = useState<string | null>(null);
-  // "Migrate account" / "Import keys", chosen before signing in.
-  // Mirrored from sessionStorage so it survives an OAuth redirect and reaches
-  // the wallet step once the identity exists (see lib/wallet-setup-intent).
-  const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => {
-    const intent = getWalletSetupIntent();
-    // An older tab may still carry the former identity-gated import choice.
-    if (intent === 'import') { setWalletSetupIntent(null); return null; }
-    return intent;
-  });
-  const chooseSetupIntent = (intent: WalletSetupIntent | null) => {
-    setWalletSetupIntent(intent);
-    setSetupIntentState(intent);
-  };
   // Set when the server refused to open an account for the wallet just
   // signed with because it has no on-chain history. Shown on the options list
   // so the next tap is one of the ways in that work.
@@ -287,7 +269,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   // doesn't loop back to unlock) and return to the login options, modal open.
   const handleWalletLogout = async () => {
     await disconnect();
-    chooseSetupIntent(null);
     setStep('main');
     setEmail('');
     setEmailCode('');
@@ -614,9 +595,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {!isAuthenticated && (
         <LoginSavedProfiles disabled={isConnecting} onSwitch={handleSwitchProfile} />
       )}
-      {/* The chosen intent stays visible while they pick a sign-in method:
-          any of the options below reaches the wallet step, which then opens
-          straight on Migrate or Import instead of a new account. */}
       {profileMovedNotice}
       {walletSignupBlocked && (
         <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
@@ -638,26 +616,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         </div>
       )}
       {renderGoogleBlockedNotice()}
-      {setupIntent && (
-        <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
-          {setupIntent === 'migrate'
-            ? <ArrowDownToLine className="w-4 h-4 mt-0.5 shrink-0" />
-            : <KeyRound className="w-4 h-4 mt-0.5 shrink-0" />}
-          <p className="flex-1 min-w-0">
-            {setupIntent === 'migrate'
-              ? t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier Riftn account you will bring over its wallet, username and balance.')
-              : t('loginModal.importIntentHint', 'Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.')}
-          </p>
-          <button
-            type="button"
-            onClick={() => chooseSetupIntent(null)}
-            aria-label={t('common.cancel', 'Cancel')}
-            className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
       <div className="space-y-3">
         <Button
           onClick={() => setStep('email')}
@@ -747,30 +705,17 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <span>{t('loginModal.connectWallet')}</span>
       </Button>
 
-      {/* Account migration records an identity intent. Wallet import opens
-          its own key/seed form and authenticates the wallet directly. */}
-      {!setupIntent && (
-        <div className="grid grid-cols-2 gap-3">
-          <Button
-            onClick={() => chooseSetupIntent('migrate')}
-            disabled={isConnecting}
-            variant="outline"
-            className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
-          >
-            <ArrowDownToLine className="w-5 h-5 shrink-0" />
-            <span className="truncate">{t('loginModal.migrateAccount', 'Migrate account')}</span>
-          </Button>
-          <Button
-            onClick={() => { chooseSetupIntent(null); setStep('import-wallet'); }}
-            disabled={isConnecting}
-            variant="outline"
-            className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
-          >
-            <KeyRound className="w-5 h-5 shrink-0" />
-            <span className="truncate">{t('copy.a865110e919b')}</span>
-          </Button>
-        </div>
-      )}
+      {/* Wallet import opens its own key/seed form and authenticates the
+          wallet directly. */}
+      <Button
+        onClick={() => setStep('import-wallet')}
+        disabled={isConnecting}
+        variant="outline"
+        className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10"
+      >
+        <KeyRound className="w-5 h-5 shrink-0" />
+        <span className="truncate">{t('copy.a865110e919b')}</span>
+      </Button>
     </div>
   );
 
@@ -861,7 +806,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             onWalletConnect={handleWalletConnect}
             onDiscoveredWalletConnect={handleDiscoveredWalletConnect}
             onWalletConnectConnect={handleWalletConnectConnect}
-            onImportWallet={layout === 'stack' ? () => { chooseSetupIntent(null); setStep('import-wallet'); } : undefined}
+            onImportWallet={layout === 'stack' ? () => setStep('import-wallet') : undefined}
           />
         </React.Suspense>
   );
@@ -892,22 +837,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         </div>
       )}
       {renderGoogleBlockedNotice()}
-      {setupIntent && (
-        <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
-          <ArrowDownToLine className="w-4 h-4 mt-0.5 shrink-0" />
-          <p className="flex-1 min-w-0">
-            {t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier Riftn account you will bring over its wallet, username and balance.')}
-          </p>
-          <button
-            type="button"
-            onClick={() => chooseSetupIntent(null)}
-            aria-label={t('common.cancel', 'Cancel')}
-            className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
 
       <div className="login-stack-method" data-login-method={step}>
         {(step === 'main' || step === 'email') && (
@@ -1199,11 +1128,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <WalletCreateStep
             userId={supabaseUserId}
-            intent={setupIntent}
-            onComplete={async (key) => {
-              await completeSmartWalletLogin(key);
-              chooseSetupIntent(null);
-            }}
+            onComplete={completeSmartWalletLogin}
           />
         </React.Suspense>
       )}
@@ -1232,18 +1157,19 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} onLogout={handleWalletLogout} />
         </React.Suspense>
       )}
+      {/* The server's profile for this login lives on a different wallet
+          from the one saved for it, and the client refused to adopt it.
+          Nothing here can fix that safely, so nothing is offered but a way
+          out: support moves accounts by hand. */}
       {step === 'wallet-restore' && supabaseUserId && (
-        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
-          <div className="space-y-4">
-            <p className="text-white/70 text-sm leading-relaxed">{t('loginModal.restoreOriginalWallet', 'Your profile is on the wallet from your original sign-in, not the one saved for this login. Sign in the way you first joined Riftn to bring that wallet back. Your profile and funds stay as they are.')}</p>
-            <SwitchOldAccountPanel onDone={closeLoginModal} />
-            <button
-              type="button"
-              onClick={handleWalletLogout}
-              className="w-full text-center text-xs text-white/50 hover:text-white/80 transition-colors border-t border-white/10 pt-3"
-            >{t('loginModal.useAnotherLogin', 'Use a different login')}</button>
-          </div>
-        </React.Suspense>
+        <div className="space-y-4">
+          <p className="text-white/70 text-sm leading-relaxed">{t('loginModal.restoreContactSupport', 'Your profile is on a different wallet from the one saved for this login, so it can’t be opened here. Nothing has been changed. Contact Riftn support to have it moved.')}</p>
+          <button
+            type="button"
+            onClick={handleWalletLogout}
+            className="w-full text-center text-xs text-white/50 hover:text-white/80 transition-colors border-t border-white/10 pt-3"
+          >{t('loginModal.useAnotherLogin', 'Use a different login')}</button>
+        </div>
       )}
       {/* The site preloader carries every gap in the wallet handoff: the
           resume itself, and a wallet step reached a beat before the identity

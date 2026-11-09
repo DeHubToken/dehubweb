@@ -161,17 +161,6 @@ export async function deletePasskeyWrap(userId: string, credentialId: string): P
 }
 
 /**
- * Drop every biometric wrap for this account. Used when the active wallet is
- * replaced (switchActiveWallet): the wraps hold the old seed, so keeping them
- * would mean a passkey that unlocks a wallet the user no longer uses.
- */
-export async function deleteAllPasskeyWraps(userId: string): Promise<void> {
-  const { error } = await db().from("user_wallet_passkeys").delete().eq("user_id", userId);
-  if (error) throw new Error(error.message || _translateCopy("copy.ec0cdd02ce43", { defaultValue: "Failed to reset biometric unlock" }));
-  clearPasskeyCache();
-}
-
-/**
  * Label for the OS passkey sheet — the user's email when the session exposes
  * one, so the credential is recognisable in their password manager later.
  */

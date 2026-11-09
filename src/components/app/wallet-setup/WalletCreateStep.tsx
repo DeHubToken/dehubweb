@@ -1,6 +1,4 @@
-import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Wallet creation flow (embedded in the LoginModal drawer).
  * protect → persist → optional 12-word backup → signed in. The backup is one
@@ -15,15 +13,11 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Either way the seed is encrypted client-side before anything leaves the
  * device. Ported from the Pixcellor CreateWalletDialog.
  */
-import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
-import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine, Fingerprint, KeyRound } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Loader2, Fingerprint, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
-import { generateMnemonic12, deriveFromSecret, isValidMnemonic, isRawPrivateKey } from '@/lib/wallet-core/derive';
+import { generateMnemonic12, deriveFromSecret, isValidMnemonic } from '@/lib/wallet-core/derive';
 import { encryptString } from '@/lib/wallet-core/crypto';
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
 import {
@@ -36,20 +30,9 @@ import {
 import { fetchWallet, saveWallet } from '@/lib/wallet-core/store';
 import { readDeviceSeed, type DeviceSeed } from '@/lib/wallet-core/device-seed';
 import { takePendingPasskeyEnrollment } from '@/lib/passkey-login';
-import { normalisePhoneHint } from '@/lib/wallet-core/phone-hint';
-import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint } from '@/lib/wallet-core/legacy-detect';
-import {
-  legacyAccountForWallet,
-  legacyAccountsForProvider,
-  matchRecoveredLegacyAccount,
-  sharedOldLogin,
-} from '@/lib/wallet-core/legacy-match';
-import { predictSafeAddress } from '@/lib/smart-account-address';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { SeedPhraseBackup } from './SeedPhraseBackup';
 import { markBackedUp } from '@/lib/wallet-core/backup-status';
-import type { WalletSetupIntent } from '@/lib/wallet-setup-intent';
 import { createLogger } from '@/lib/logger';
 
 const signupLog = createLogger('WalletCreateStep');
@@ -59,64 +42,22 @@ interface WalletCreateStepProps {
   /** Called with the derived private key once the wallet is fully persisted. */
   onComplete: (privKeyHex: string) => Promise<void>;
   /**
-   * Chosen on the login sheet before signing in (see lib/wallet-setup-intent).
-   * An explicit intent wins over detection; without one the step migrates
-   * when the backend recognises the login and otherwise sets up a new account.
-   */
-  intent?: WalletSetupIntent | null;
-  /**
    * The first wallet action of a silent sign-up (lib/wallet-secure-flow.ts):
    * the wallet already exists, its words held on this browser
    * (wallet-core/device-seed). Only the password-or-biometrics choice is
-   * shown, for that wallet, with no old-account detection and no recovery
-   * phrase — backing up is the later reminder. onComplete's key is unused.
+   * shown, for that wallet, with no recovery phrase — backing up is the
+   * later reminder. onComplete's key is unused.
    */
   securing?: boolean;
 }
 
-type Mode = 'new' | 'import' | 'migrate';
 /** How the new wallet's seed will be protected. */
 type Protection = 'biometric' | 'password';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
-/** Survives the mobile redirect round-trip so the resumed leg still knows
- * which old login was used (and therefore which legacy account was reached). */
-const MIGRATE_PROVIDER_KEY = 'dehub_legacy_migrate_provider';
-const MIGRATE_PENDING_KEY = 'dehub_legacy_migration_pending';
-
-/** Old logins the migrate step offers, in their default order. */
-const MIGRATE_LOGINS = ['google', 'apple', 'twitter', 'discord', 'sms_passwordless', 'email_passwordless'];
-
-const OLD_LOGIN_LABELS: Record<string, string> = {
-  google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
-  get email() { return _translateCopy("copy.969ccbd3cf63", { defaultValue: "Email" }); },
-  get email_passwordless() { return _translateCopy("copy.969ccbd3cf63", { defaultValue: "Email" }); },
-  get sms() { return _translateCopy("copy.75d6c93885ba", { defaultValue: "Phone (SMS)" }); },
-  get sms_passwordless() { return _translateCopy("copy.75d6c93885ba", { defaultValue: "Phone (SMS)" }); },
-  get phone() { return _translateCopy("copy.75d6c93885ba", { defaultValue: "Phone (SMS)" }); },
-};
-
-/**
- * A legacy migration is mid-round-trip on this browser.
- *
- * Read straight from sessionStorage rather than from state: the two effects
- * that care both run on mount and neither can rely on the other having set a
- * flag yet, so state would be a race by construction. The key is written
- * before the redirect leaves and cleared when the resume finishes.
- */
-function legacyMigrationInFlight(): boolean {
-  try {
-    return !!sessionStorage.getItem(MIGRATE_PENDING_KEY);
-  } catch {
-    return false;
-  }
-}
-
-export function WalletCreateStep({ userId, onComplete, intent = null, securing = false }: WalletCreateStepProps) {
+export function WalletCreateStep({ userId, onComplete, securing = false }: WalletCreateStepProps) {
   const { t: _copy } = _useCopy();
-  const { t } = useTranslation();
-  const [mode, setMode] = useState<Mode>(securing ? 'new' : intent ?? 'new');
   // securing only: the wallet being secured; undefined while it loads.
   const [securingSeed, setSecuringSeed] = useState<DeviceSeed | null | undefined>(undefined);
   useEffect(() => {
@@ -133,49 +74,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
   }, [securing, userId]);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [importPhrase, setImportPhrase] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Key recovered from the old Web3Auth account (one-time migration)
-  const [migratedKey, setMigratedKey] = useState<string | null>(null);
-  // The profile uses its Safe address, while the recovered Web3Auth key first
-  // derives an owner EOA. Resolve the Safe before showing or approving a wallet.
-  const [migratedSafeAddress, setMigratedSafeAddress] = useState<string | null>(null);
-  const [safeAddressChecked, setSafeAddressChecked] = useState(false);
-  // Require an explicit look at the derived address before persisting it —
-  // Migrate retrieves whichever account the login used actually belongs to,
-  // which is NOT always the one the user meant to reach (e.g. someone else's
-  // real account, if a shared login was used). Resets on every new retrieval.
-  const [addressConfirmed, setAddressConfirmed] = useState(false);
-  const [migrateEmail, setMigrateEmail] = useSurfaceDraft("src/components/app/wallet-setup/WalletCreateStep.tsx:migrateEmail", '');
-  const [migratePhone, setMigratePhone] = useSurfaceDraft("src/components/app/wallet-setup/WalletCreateStep.tsx:migratePhone", '');
-  const [migrateBusy, setMigrateBusy] = useState<string | null>(null);
-  // Which OLD login method was actually used for the retrieval in progress.
-  // This — not the derived address — is how we identify which legacy account
-  // was reached: the address we derive here is the EOA behind the Web3Auth
-  // key, while legacy_accounts.eth_address is the account's (smart) wallet
-  // address, so the two legitimately differ for the same person.
-  const [migrateProvider, setMigrateProvider] = useState<string | null>(null);
-  // Address is support/debug detail now, not the identity shown by default.
-  const [showMigratedAddress, setShowMigratedAddress] = useState(false);
-  // The other old logins, folded away while the original one is known.
-  const [showOtherLogins, setShowOtherLogins] = useState(false);
-  // Profile picture for the matched legacy account, pulled from the public
-  // account_info endpoint by username (legacy_accounts itself stores no avatar).
-  const [matchedAvatarUrl, setMatchedAvatarUrl] = useState<string | null>(null);
-  // Returning-user detection: backend email lookup + old Web3Auth storage on
-  // this origin. Only auto-selects the Migrate tab until the user picks a tab
-  // themselves (userChoseModeRef) — never fights an explicit choice.
-  const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
-  const [residueDetected, setResidueDetected] = useState(false);
-  // An intent picked on the login sheet counts as an explicit choice: someone
-  // who pressed "Import keys" is not moved onto Migrate because the
-  // backend happens to recognise their email.
-  const userChoseModeRef = useRef(intent !== null);
-  // A legacy migration has been started or resumed on this mount. A ref, not
-  // state: the backend-hint callback closes over its mount-time render, so any
-  // state it read would be permanently stale.
-  const migrationStartedRef = useRef(false);
   // The mnemonic for a brand-new wallet, generated once per setup attempt.
   //
   // It used to be minted inside resolveSecret(), which runs on every submit —
@@ -211,196 +111,12 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => {
-    // Securing a wallet the account already signed in with: there is no
-    // other account for this step to find.
-    if (securing) return;
-    let cancelled = false;
-    if (hasLegacyBrowserResidue()) {
-      setResidueDetected(true);
-      if (!userChoseModeRef.current) setMode('migrate');
-    }
-    checkLegacyAccount().then((hint) => {
-      if (cancelled) return;
-      setBackendHint(hint);
-      // Storage residue alone routed people to Migrate, and Migrate's legacy
-      // login MINTS a Web3Auth wallet when it has nothing to recover — a
-      // second account, with a generated username, for someone who was only
-      // trying to sign back in. A positive "no old account for this verified
-      // email" outranks the residue guess, so retreat to the New tab.
-      //
-      // …but never out from under a migration that is already in flight. The
-      // redirect leg (below) sets mode='migrate', spends a Web3Auth round trip
-      // retrieving the key, and lands well after this one edge-function call.
-      // Flipping to 'new' in that window unmounts the confirm screen, so
-      // resolveSecret mints a FRESH mnemonic and silently discards the key the
-      // user was just told had been retrieved — the exact outcome this guard
-      // exists to prevent, on the population where exists === false is most
-      // likely to be wrong.
-      //
-      // The ref, not the sessionStorage flag, is what makes this safe.
-      // resumeLegacyMigration clears that flag in its own `finally`, which
-      // runs BEFORE the retrieved key reaches setMigratedKey — so a slow
-      // edge-function call and a fast resume still land in the wrong order.
-      // The ref is set synchronously the moment a migration is started or
-      // resumed and never cleared: once someone is on that path, the
-      // automatic retreat has no business moving them off it. Choosing a tab
-      // by hand still works.
-      if (
-        hint.exists === false &&
-        !userChoseModeRef.current &&
-        !migrationStartedRef.current &&
-        !legacyMigrationInFlight()
-      ) {
-        setMode('new');
-      }
-      if (hint.exists === true && hint.accounts?.length) {
-        if (!userChoseModeRef.current) setMode('migrate');
-        const emailAccount = hint.accounts.find((a) => a.signupMethod === 'email' || a.signupMethod === 'email_passwordless');
-        if (emailAccount && hint.email) {
-          setMigrateEmail((prev) => prev || hint.email!);
-        }
-      }
-    });
-    return () => { cancelled = true; };
-  }, [setMigrateEmail, securing]);
-
-  // Resume the mobile/redirect leg of a legacy migration. Flags are checked
-  // BEFORE importing the legacy module so the ~1 MB Web3Auth chunk only loads
-  // when a migration round-trip is actually in progress.
-  useEffect(() => {
-    if (securing) return;
-    let pending = false;
-    try { pending = !!sessionStorage.getItem(MIGRATE_PENDING_KEY); } catch { /* ignore */ }
-    const url = window.location.hash + window.location.search;
-    const hasParams = url.includes('b64Params') || url.includes('sessionId') || url.includes('sessionNamespace');
-    if (!pending || !hasParams) return;
-
-    migrationStartedRef.current = true;
-    setMode('migrate');
-    setMigrateBusy('resume');
-    let resumedProvider: string | null = null;
-    try { resumedProvider = sessionStorage.getItem(MIGRATE_PROVIDER_KEY); } catch { /* ignore */ }
-    import('@/lib/legacy-web3auth')
-      .then(m => m.resumeLegacyMigration())
-      .then((key) => {
-        if (key) {
-          setAddressConfirmed(false);
-          setMigrateProvider(resumedProvider);
-          setMigratedKey(key);
-          toast.success(_copy("copy.0b88365361e9", { defaultValue: "Old wallet retrieved. Matching it to your profile..." }));
-        }
-      })
-      .catch((e) => {
-        console.error('[Migrate] Redirect resume failed:', e);
-        setError(e instanceof Error ? e.message : _copy("copy.d5d921be4047", { defaultValue: "Migration failed. Please try again." }));
-      })
-      .finally(() => setMigrateBusy(null));
-  }, [securing]);
-
-  useEffect(() => {
-    setMigratedSafeAddress(null);
-    setSafeAddressChecked(false);
-    if (!migratedKey) return;
-
-    let cancelled = false;
-    let ownerAddress: string;
-    try {
-      ownerAddress = deriveFromSecret(migratedKey).ethAddress;
-    } catch {
-      setSafeAddressChecked(true);
-      return;
-    }
-
-    predictSafeAddress(ownerAddress)
-      .then((address) => {
-        if (!cancelled) setMigratedSafeAddress(address);
-      })
-      .finally(() => {
-        if (!cancelled) setSafeAddressChecked(true);
-      });
-    return () => { cancelled = true; };
-  }, [migratedKey]);
-
-  const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless' | 'sms_passwordless') => {
-    setError(null);
-    // Web3Auth has no concept of "recover only": handed an identity it has
-    // never seen, it derives a brand-new key and returns it exactly like a
-    // recovered one. Finishing on that key writes a wallet the backend has
-    // never met, so the signature login registers a SIGNUP — a duplicate
-    // account under a generated username, while the account the user was
-    // trying to reach stays behind on their real address. The backend has
-    // already answered whether this session's verified email has anything to
-    // migrate; when the answer is a definite no, there is nothing this login
-    // can retrieve and every outcome is a duplicate. Refuse before the popup.
-    if (backendHint?.exists === false) {
-      setError(t(
-        'loginModal.migrateNoOldAccount',
-        'There is no earlier Riftn account on this login, so there is nothing to bring over. Set up a new account instead.',
-      ));
-      setMode('new');
-      return;
-    }
-    if (provider === 'email_passwordless' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(migrateEmail)) {
-      setError(_copy("copy.5b1492e510f2", { defaultValue: "Enter the email you used on your old account" }));
-      return;
-    }
-    // SMS identifies the account BY the hint, so a wrong shape silently returns
-    // a different key rather than failing — refuse to send one we had to guess.
-    let phoneHint: string | undefined;
-    if (provider === 'sms_passwordless') {
-      const normalised = normalisePhoneHint(migratePhone);
-      if (!normalised) {
-        setError(_copy("copy.76ad8fdf1b75", { defaultValue: "Enter your number with the country code, e.g. +34 659265340" }));
-        return;
-      }
-      phoneHint = normalised;
-    }
-    migrationStartedRef.current = true;
-    setMigrateBusy(provider);
-    try { sessionStorage.setItem(MIGRATE_PROVIDER_KEY, provider); } catch { /* ignore */ }
-    try {
-      const { startLegacyMigration } = await import('@/lib/legacy-web3auth');
-      const key = await startLegacyMigration(
-        provider,
-        provider === 'email_passwordless' ? migrateEmail : phoneHint,
-      );
-      setAddressConfirmed(false);
-      setMigrateProvider(provider);
-      setMigratedKey(key);
-      toast.success(_copy("copy.0b88365361e9", { defaultValue: "Old wallet retrieved. Matching it to your profile..." }));
-    } catch (e) {
-      console.error('[Migrate] Legacy login failed:', e);
-      setError(e instanceof Error ? e.message : _copy("copy.9ddf89261d94", { defaultValue: "Could not retrieve your old wallet. Please try again." }));
-    } finally {
-      setMigrateBusy(null);
-    }
-  };
-
-  /**
-   * The secret this wallet will be built from, per mode. Returns null and sets
-   * an inline error when the mode's input isn't usable yet.
-   */
+  /** The secret this wallet will be built from. */
   const resolveSecret = (): string | null => {
     // Rendered only once the seed has loaded (see the loader below).
     if (securing) return securingSeed?.secret ?? null;
-    if (mode === 'new') {
-      if (!newWalletSecretRef.current) newWalletSecretRef.current = generateMnemonic12();
-      return newWalletSecretRef.current;
-    }
-    if (mode === 'migrate') {
-      if (!migratedKey) {
-        setError(_copy("copy.a46f39e9cccc", { defaultValue: "Sign in with your old account first" }));
-        return null;
-      }
-      return migratedKey;
-    }
-    const trimmed = importPhrase.trim();
-    if (!isValidMnemonic(trimmed) && !isRawPrivateKey(trimmed)) {
-      setError(_copy("copy.9a9a17963756", { defaultValue: "Invalid recovery phrase or private key" }));
-      return null;
-    }
-    return trimmed;
+    if (!newWalletSecretRef.current) newWalletSecretRef.current = generateMnemonic12();
+    return newWalletSecretRef.current;
   };
 
   const handlePasswordNext = async () => {
@@ -452,25 +168,10 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     }
   };
 
-  const assertRecoveredProfileMatches = async (ownerAddress: string) => {
-    if (mode !== 'migrate' || backendHint?.exists !== true || foundAccounts.length === 0) return;
-    const safeAddress = await predictSafeAddress(ownerAddress);
-    if (!legacyAccountForWallet(foundAccounts, ownerAddress, safeAddress)) {
-      throw new Error(
-        safeAddress
-          ? _copy("copy.7231b14b03fd", { defaultValue: "This login recovered a different wallet from the profile you selected. Nothing was changed." })
-          : _copy("copy.4acc79823766", { defaultValue: "We could not verify this wallet against your Riftn profile. Try the recovery again before continuing." }),
-      );
-    }
-  };
-
-  /**
-   * Only wallets minted here have words the person has never seen. Imported
-   * and migrated wallets came from a phrase or key they already hold.
-   */
+  /** Only a wallet minted here has words the person has never seen. */
   const offerBackup = (derived: { secret: string; ethAddress: string; ethPrivateKey: string }) => {
     // Securing leaves backing up to the later reminder.
-    if (securing || mode !== 'new' || !isValidMnemonic(derived.secret)) return false;
+    if (securing || !isValidMnemonic(derived.secret)) return false;
     setPendingBackup({ phrase: derived.secret, ethAddress: derived.ethAddress, privKey: derived.ethPrivateKey });
     return true;
   };
@@ -496,7 +197,6 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     setError(null);
     try {
       const derived = deriveFromSecret(secret);
-      await assertRecoveredProfileMatches(derived.ethAddress);
       const encrypted = await encryptString(derived.secret, password);
       await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, encrypted);
@@ -528,7 +228,6 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     setBusy(true);
     try {
       const derived = deriveFromSecret(secret);
-      await assertRecoveredProfileMatches(derived.ethAddress);
       // A passkey-only sign-up already holds PRF output from the credential
       // that became the account: wrap under that rather than asking the
       // authenticator for a second passkey.
@@ -571,186 +270,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     setError(null);
   };
 
-  // Providers the backend says old accounts used — highlighted so the user
-  // re-authenticates with a matching method (Web3Auth keys are per-provider).
-  // A person can have MORE than one old account for this email (Supabase
-  // links Google/Email logins with the same verified email into one new
-  // identity, but each was its own separate old account) — highlight ALL of
-  // them, not just one, and preview what's on each before they pick.
-  const foundAccounts = backendHint?.exists === true ? (backendHint.accounts ?? []) : [];
-  const hasMultipleOldAccounts = foundAccounts.length > 1;
-  const oldEmailAccounts = legacyAccountsForProvider(foundAccounts, 'email_passwordless');
-  const hasOldEmailLogin = oldEmailAccounts.length > 0;
-  const knownEmailAccount = oldEmailAccounts.length === 1 ? oldEmailAccounts[0] : undefined;
-  // SMS-era Web3Auth accounts have no email on the old key at all — the number
-  // IS the verifier id. They were unreachable until this button existed, since
-  // every other provider reconstructs a different key.
-  const oldSmsAccounts = legacyAccountsForProvider(foundAccounts, 'sms_passwordless');
-  const hasOldSmsLogin = oldSmsAccounts.length > 0;
-  const knownSmsAccount = oldSmsAccounts.length === 1 ? oldSmsAccounts[0] : undefined;
-  // Web3Auth keys are per login, so when every found profile was made with
-  // the same one, any other option opens a different wallet. People who saw
-  // six equal choices picked the email box they had just signed in with and
-  // went round in circles; show the original login alone, the rest on request.
-  const sharedLogin = sharedOldLogin(foundAccounts);
-  const leadLogin = sharedLogin && MIGRATE_LOGINS.includes(sharedLogin) ? sharedLogin : null;
-  const leadLoginLabel = leadLogin ? OLD_LOGIN_LABELS[leadLogin] : undefined;
-
-  const migrateProviderButton = (
-    provider: 'google' | 'twitter' | 'discord' | 'apple',
-    label: string,
-  ) => {
-    const providerAccounts = legacyAccountsForProvider(foundAccounts, provider);
-    const known = providerAccounts.length === 1 ? providerAccounts[0] : undefined;
-    const isOldLogin = providerAccounts.length > 0;
-    return (
-    <Button
-      key={provider}
-      variant="outline"
-      disabled={!!migrateBusy}
-      onClick={() => handleLegacyLogin(provider)}
-      className={`w-full min-h-11 h-auto py-2.5 rounded-xl ${
-        provider === leadLogin
-          ? 'bg-white hover:opacity-90 text-black font-semibold border-transparent'
-          : `bg-white/10 hover:bg-white/15 text-white border-white/10 ${isOldLogin ? 'ring-1 ring-green-400/50 bg-white/15' : ''}`
-      }`}
-    >
-      {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-      {known?.username ? _copy("copy.61d964ed9f7f", { defaultValue: "{{value1}} for @{{value2}}", value1: label, value2: known.username }) : isOldLogin ? _copy("copy.8e0bf69428e3", { defaultValue: "Continue with {{value1}}", value1: label }) : _copy("copy.1476d70d1ec7", { defaultValue: "Try {{value1}}", value1: label })}
-    </Button>
-    );
-  };
-
-  // Every old login, original first when it is known. Key order is the
-  // default order otherwise.
-  const migrateOptions: Array<[string, ReactNode]> = [
-    ['google', migrateProviderButton('google', 'Google')],
-    ['apple', migrateProviderButton('apple', 'Apple')],
-    ['twitter', migrateProviderButton('twitter', 'X (Twitter)')],
-    ['discord', migrateProviderButton('discord', 'Discord')],
-    ['sms_passwordless', (
-      <div className="space-y-1.5">
-        <p className={`text-xs px-1 ${hasOldSmsLogin ? 'text-green-300' : 'text-white/50'}`}>
-          {knownSmsAccount?.username ? _copy("copy.d9bc7691fa55", { defaultValue: "Phone for @{{value1}}", value1: knownSmsAccount.username }) : _copy("copy.d65a934b6ca6", { defaultValue: "Old account phone" })}
-        </p>
-        <div className="flex gap-2">
-          <Input
-            type="tel"
-            inputMode="tel"
-            placeholder="+34 659265340"
-            value={migratePhone}
-            onChange={(e) => setMigratePhone(e.target.value)}
-            className={`${inputClass} h-11 flex-1 ${hasOldSmsLogin ? 'ring-1 ring-green-400/50' : ''}`}
-          />
-          <Button
-            variant="outline"
-            disabled={!!migrateBusy || !migratePhone}
-            onClick={() => handleLegacyLogin('sms_passwordless')}
-            className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
-          >
-            {migrateBusy === 'sms_passwordless'
-              ? <Loader2 className="w-4 h-4 animate-spin" />
-              : <ArrowDownToLine className="w-4 h-4" />}
-          </Button>
-        </div>
-        {hasOldSmsLogin && (
-          <p className="text-[11px] text-white/40 px-1">{_copy("copy.262ce5ec0785", { defaultValue: "Include the country code. It must be the same number used to create the old profile." })}</p>
-        )}
-      </div>
-    )],
-    ['email_passwordless', (
-      <div className="space-y-1.5">
-        <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
-          {knownEmailAccount?.username ? _copy("copy.2a4c72c809a7", { defaultValue: "Email for @{{value1}}", value1: knownEmailAccount.username }) : _copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
-        </p>
-        <div className="flex gap-2">
-          <Input
-            type="email"
-            placeholder={_copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
-            value={migrateEmail}
-            onChange={(e) => setMigrateEmail(e.target.value)}
-            className={`${inputClass} h-11 flex-1 ${hasOldEmailLogin ? 'ring-1 ring-green-400/50' : ''}`}
-          />
-          <Button
-            variant="outline"
-            disabled={!!migrateBusy || !migrateEmail}
-            onClick={() => handleLegacyLogin('email_passwordless')}
-            className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
-          >
-            {migrateBusy === 'email_passwordless'
-              ? <Loader2 className="w-4 h-4 animate-spin" />
-              : <ArrowDownToLine className="w-4 h-4" />}
-          </Button>
-        </div>
-      </div>
-    )],
-  ];
-  if (leadLogin) migrateOptions.sort(([a], [b]) => Number(b === leadLogin) - Number(a === leadLogin));
-
-  // deriveFromSecret throws on a key it cannot parse, and legacy Web3Auth keys
-  // are not always well-formed (leading zeros stripped to 63 hex chars, or not
-  // a valid secp256k1 scalar). Unguarded, that throw happens DURING RENDER, the
-  // moment setMigratedKey lands — React unmounts the whole subtree to the error
-  // boundary and the login modal vanishes right as the user is told their old
-  // wallet was retrieved. Degrade to an inline error instead.
-  let migratedAddress: string | null = null;
-  let migratedKeyError: string | null = null;
-  if (migratedKey) {
-    try {
-      migratedAddress = deriveFromSecret(migratedKey).ethAddress;
-    } catch (e) {
-      console.error('[WalletCreate] Could not derive an address from the migrated key:', e);
-      migratedKeyError = _copy("copy.1f513876a376", { defaultValue: "We could not read that old wallet key. Please try another login method, or contact support." });
-    }
-  }
-  const matchedAccount = migratedAddress && safeAddressChecked
-    ? matchRecoveredLegacyAccount(foundAccounts, migrateProvider, migratedAddress, migratedSafeAddress)
-    : undefined;
-  const matchedByWallet = migratedAddress && safeAddressChecked
-    ? legacyAccountForWallet(foundAccounts, migratedAddress, migratedSafeAddress)
-    : undefined;
-  const recoveredProfileAddress = matchedAccount?.ethAddress ?? migratedSafeAddress;
-  const profileMatchFailed =
-    safeAddressChecked &&
-    backendHint?.exists === true &&
-    foundAccounts.length > 0 &&
-    !matchedByWallet;
-
-  // Resolve the matched account's profile picture. account_info is public, and
-  // the CDN avatar path is keyed by the account's wallet address — so the
-  // username from legacy_accounts is enough to get the real picture. Best
-  // effort: a miss just leaves the initial fallback in place.
-  const matchedUsername = matchedAccount?.username;
-  const matchedEthAddress = matchedAccount?.ethAddress;
-  useEffect(() => {
-    setMatchedAvatarUrl(null);
-    if (!matchedUsername) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const [{ getAccountByUsername }, { buildAvatarUrl, extractAvatarPath }] = await Promise.all([
-          import('@/lib/api/dehub/users'),
-          import('@/lib/media-url'),
-        ]);
-        const user = await getAccountByUsername(matchedUsername);
-        if (cancelled) return;
-        const address = (user as any)?.address || (user as any)?.wallet_address || matchedEthAddress;
-        if (!address) return;
-        setMatchedAvatarUrl(buildAvatarUrl(address, extractAvatarPath(user as any)) ?? null);
-      } catch {
-        /* keep the initial fallback */
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [matchedUsername, matchedEthAddress]);
-
-  // Never advance to the protection step on a key we could not parse — the
-  // confirmation UI has no address to show and saving would store a wallet the
-  // user never verified.
-  const showProtectionStep =
-    mode !== 'migrate' || (!!migratedKey && !migratedKeyError && addressConfirmed);
-  const showPasswordFields = showProtectionStep && protection === 'password';
-  const showBiometricStep = showProtectionStep && protection === 'biometric';
+  const showPasswordFields = protection === 'password';
+  const showBiometricStep = protection === 'biometric';
 
   if (securing && !securingSeed) {
     return (
@@ -776,324 +297,20 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
 
   return (
     <div className="space-y-4">
-      {/* Returning-user detection banners (hidden once the old key is retrieved) */}
-      {!migratedKey && hasMultipleOldAccounts && (
-        <div className="rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white space-y-2">
-          <div className="flex items-start gap-2">
-            <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-            <p>{_copy("copy.cb75c6f3c889", { defaultValue: "We found " })}<span className="font-semibold">{foundAccounts.length}{_copy("copy.cd0daccd08be", { defaultValue: " older profiles" })}</span>{_copy("copy.f31abdb86129", { defaultValue: " linked to this email. Different sign-ins could create separate profiles before login methods were linked." })}</p>
-          </div>
-          <div className="space-y-1 pl-6">
-            {foundAccounts.map((a, i) => (
-              <div key={a.ethAddress || i} className="flex items-center justify-between gap-3 text-xs text-white/70 bg-black/20 rounded-lg px-2.5 py-2">
-                <span className="min-w-0">
-                  <span className="block truncate font-medium text-white">
-                    {a.username ? `@${a.username}` : _copy("copy.63b6ac6dd6db", { defaultValue: "Older profile {{value1}}", value1: i + 1 })}
-                  </span>
-                  <span className="block text-white/50">
-                    {a.signupMethod
-                      ? _copy("copy.9a63b218711e", { defaultValue: "Original sign-in: {{value1}}", value1: OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod })
-                      : _copy("copy.fd89fc8921b3", { defaultValue: "Original sign-in was not recorded" })}
-                  </span>
-                </span>
-                {typeof a.badgeBalance === 'number' && (
-                  <span className="shrink-0 text-white/50">{a.badgeBalance.toLocaleString()} <DhbCoin /></span>
-                )}
-              </div>
-            ))}
-          </div>
-          <p className="pl-6 text-xs text-white/60">{_copy("copy.2e2371f0178c", { defaultValue: "Use the original sign-in for the profile you want. We verify the recovered wallet before anything changes." })}</p>
-        </div>
-      )}
-      {!migratedKey && !hasMultipleOldAccounts && backendHint?.exists === true && foundAccounts[0] && (
-        <div className="flex items-start gap-2 rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white">
-          <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-          {/* Name the account. "your existing Riftn account" is true of everyone
-              and convinces nobody; the username, and the balance sitting on it,
-              is what makes a returning user press Migrate instead of starting
-              over on a new one. */}
-          {/* The username carries this, not the sentence. "Your existing Riftn
-              account" is true of everyone and convinces nobody; seeing the
-              actual handle — and the balance sitting on it — is what makes a
-              returning user press Migrate instead of starting over.
-              It is data, not copy, so it stays outside the translated string
-              rather than being interpolated into one. */}
-          <div className="space-y-1 min-w-0">
-            {foundAccounts[0].username && (
-              <p className="font-semibold truncate">@{foundAccounts[0].username}</p>
-            )}
-            <p>
-              {foundAccounts[0].signupMethod && OLD_LOGIN_LABELS[foundAccounts[0].signupMethod]
-                ? t(
-                    'loginModal.welcomeBackWithLogin',
-                    'Welcome back — this account is still yours. Sign in with {{login}} below to bring it back, with your posts, followers and balance.',
-                    { login: OLD_LOGIN_LABELS[foundAccounts[0].signupMethod] },
-                  )
-                : t(
-                    'loginModal.welcomeBack',
-                    'Welcome back — this account is still yours. Sign in with your old login below to bring it back, with your posts, followers and balance.',
-                  )}
-            </p>
-            {typeof foundAccounts[0].badgeBalance === 'number' && foundAccounts[0].badgeBalance > 0 && (
-              <p className="text-xs text-white/70 flex items-center gap-1">
-                {foundAccounts[0].badgeBalance.toLocaleString()} <DhbCoin /> {t('loginModal.welcomeBackWaiting', 'waiting on it')}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-      {!migratedKey && backendHint?.exists == null && residueDetected && (
-        <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
-          <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>{_copy("copy.6718e3e6e6a6", { defaultValue: "Looks like this browser has signed in to Riftn before. If that was you, sign in with your old login below so you keep your old wallet and balance." })}</p>
-        </div>
-      )}
-
       {/* Lead with what this protects, not with what it is. Someone who came
           here to post has no reason to care that a wallet is being created, but
           every reason to care that only they can use the account. The mechanics
           stay available underneath for people who do want them. */}
-      {mode === 'migrate' ? (
-        backendHint?.exists === false ? (
-          <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
-            <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-            <p>
-              {t(
-                'loginModal.migrateNoOldAccount',
-                'There is no earlier Riftn account on this login, so there is nothing to bring over. Set up a new account instead.',
-              )}
-            </p>
-          </div>
-        ) : (
-          <p className="text-white/60 text-sm">{_copy("copy.07b6b72fb21a", { defaultValue: "Had a Riftn account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile." })}</p>
-        )
-      ) : (
-        <div className="space-y-1.5">
-          <p className="text-white/60 text-sm">{_copy("copy.296ee8873ba8", { defaultValue: "To ensure only you can post or transact in the app using this account, set a password or biometrics." })}</p>
-          <p className="text-white/40 text-xs">
-            {protection === 'biometric'
-              ? _copy("copy.e37273e12fd4", { defaultValue: "Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can back up your wallet any time from Settings." })
-              : _copy("copy.ef33c9296dc4", { defaultValue: "Encrypted on this device before anything leaves it. You can back up your wallet any time from Settings." })}
-          </p>
-        </div>
-      )}
-
-      {/* No New / Import / Migrate picker. The step decides: a recognised old
-          account (or an intent chosen on the login sheet) lands on Migrate,
-          an import intent on Import, and everyone else goes straight to
-          securing a new account. The links below are the only way to
-          overrule that, and each is shown only where overruling makes sense. */}
-      {mode !== 'migrate' && !migratedKey && (backendHint?.exists === true || (backendHint?.exists == null && residueDetected)) && (
-        <button
-          type="button"
-          onClick={() => { userChoseModeRef.current = true; setMode('migrate'); setError(null); }}
-          className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors"
-        >
-          <span className="underline">{t('loginModal.migrateInstead', 'Bring over the old account instead')}</span> →
-        </button>
-      )}
-
-      {mode === 'migrate' && !migratedKey && backendHint?.exists === false && (
-        <Button
-          onClick={() => { userChoseModeRef.current = true; setMode('new'); setError(null); }}
-          className="w-full h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-        >
-          {t('loginModal.setUpNewAccount', 'Set up a new account')}
-        </Button>
-      )}
-
-      {mode === 'import' && (
-        <Textarea
-          value={importPhrase}
-          onChange={(e) => setImportPhrase(e.target.value)}
-          rows={3}
-          placeholder={_copy("copy.0dce083ca6f1", { defaultValue: "Recovery phrase (12/24 words) or 0x private key" })}
-          className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
-        />
-      )}
-      {mode === 'import' && (
-        <button
-          type="button"
-          onClick={() => { userChoseModeRef.current = true; setMode('new'); setImportPhrase(''); setError(null); }}
-          className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors"
-        >
-          <span className="underline">{t('loginModal.createNewInstead', 'Create a new account instead')}</span> →
-        </button>
-      )}
-
-      {mode === 'migrate' && !migratedKey && backendHint?.exists !== false && (
-        <div className="space-y-2">
-          {migrateBusy === 'resume' ? (
-            <p className="text-white/60 text-sm flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ee42456bfe81", { defaultValue: " Retrieving your old wallet…" })}</p>
-          ) : (
-            <>
-              {migrateOptions
-                .filter(([key]) => key === leadLogin || !leadLogin || showOtherLogins)
-                .map(([key, option]) => <Fragment key={key}>{option}</Fragment>)}
-              {leadLogin && !showOtherLogins && (
-                <button
-                  type="button"
-                  disabled={!!migrateBusy}
-                  onClick={() => setShowOtherLogins(true)}
-                  className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors disabled:opacity-50"
-                >
-                  <span className="underline">{_copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}</span> →
-                </button>
-              )}
-              <p className="text-white/40 text-xs">{_copy("copy.9d632ebc6307", { defaultValue: "A one-time sign-in retrieves your wallet key securely in this browser — it never touches our servers." })}</p>
-              <button
-                type="button"
-                disabled={!!migrateBusy}
-                onClick={() => { userChoseModeRef.current = true; setMode('new'); setError(null); }}
-                className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors disabled:opacity-50"
-              >
-                <span className="underline">{t('loginModal.createNewInstead', 'Create a new account instead')}</span> →
-              </button>
-            </>
-          )}
-        </div>
-      )}
-
-      {mode === 'migrate' && migratedKey && migratedKeyError && (
-        <div className="space-y-3">
-          <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
-            <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
-            <p>{migratedKeyError}</p>
-          </div>
-          <Button
-            variant="ghost"
-            onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); }}
-            className="w-full"
-          >{_copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}</Button>
-        </div>
-      )}
-
-      {mode === 'migrate' && migratedKey && !migratedKeyError && (!safeAddressChecked || backendHint === null) && (
-        <p className="text-white/60 text-sm flex items-center gap-2">
-          <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your Riftn profile..." })}</p>
-      )}
-
-      {mode === 'migrate' && migratedKey && safeAddressChecked && backendHint !== null && !addressConfirmed && migratedAddress && (() => {
-        const matched = profileMatchFailed ? undefined : matchedAccount;
-        const looksLikeDuplicate = !matched && backendHint?.exists === false;
-        const cannotVerifyProfile = profileMatchFailed;
-        const isBlockingMismatch = looksLikeDuplicate || cannotVerifyProfile;
-        return (
-          <div className="space-y-3">
-            <div
-              className={`flex items-start gap-2 rounded-xl border p-3 text-sm text-white ${
-                isBlockingMismatch ? 'border-red-400/40 bg-red-400/10' : 'border-amber-400/40 bg-amber-400/10'
-              }`}
-            >
-              <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${isBlockingMismatch ? 'text-red-400' : 'text-amber-400'}`} />
-              <p>
-                {cannotVerifyProfile && leadLoginLabel
-                  ? t(
-                    'loginModal.migrateWrongLogin',
-                    'That sign-in opened a different wallet, so nothing changed. Your old profile was made with {{login}}. Use that to bring it back.',
-                    { login: leadLoginLabel },
-                  )
-                  : cannotVerifyProfile
-                  ? _copy("copy.b687690d1c4a", { defaultValue: "This login recovered a different wallet from the profiles shown above. Nothing changed. Try the original sign-in for the profile you want." })
-                  : looksLikeDuplicate
-                    ? t(
-                      'loginModal.migrateUnmatchedWarning',
-                      'This login has no Riftn account on record. Continuing does not recover anything — it creates a SECOND account with a new username, and leaves the one you already have behind.',
-                    )
-                    : _copy("copy.3f3cb527b96b", { defaultValue: "We matched this wallet to your Riftn profile. Confirm the username before continuing." })}
-              </p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white space-y-2">
-              {matched ? (
-                <div className="flex items-center gap-3">
-                  <Avatar className="w-10 h-10 shrink-0 rounded-xl ring-1 ring-white/[0.06]">
-                    <AvatarImage src={matchedAvatarUrl || undefined} className="object-cover" />
-                    <AvatarFallback className="bg-white/[0.06] text-white/50 text-sm rounded-xl">
-                      {(matched.username || 'U').charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0">
-                    <p className="truncate font-semibold">
-                      {matched.username ? `@${matched.username}` : _copy("copy.e42dc55613ae", { defaultValue: "Your old Riftn account" })}
-                    </p>
-                    <p className="text-xs text-white/50">
-                      {matched.signupMethod && OLD_LOGIN_LABELS[matched.signupMethod]
-                        ? _copy("copy.9a63b218711e", { defaultValue: "Original sign-in: {{value1}}", value1: OLD_LOGIN_LABELS[matched.signupMethod] })
-                        : _copy("copy.fd89fc8921b3", { defaultValue: "Original sign-in was not recorded" })}
-                      {typeof matched.badgeBalance === 'number' && (
-                        <>, <DhbAmount amount={matched.badgeBalance.toLocaleString()} iconClassName="h-3 w-3" /></>
-                      )}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-white/70 text-xs">
-                  {looksLikeDuplicate
-                    ? t(
-                        'loginModal.migrateUnmatchedDetail',
-                        'No profile exists at this wallet address. If you were signing back in, go back and use the login you signed up with instead.',
-                      )
-                    : _copy("copy.f613dc3d03bf", { defaultValue: "We could not match this wallet to a profile on record. Nothing has been changed." })}
-                </p>
-              )}
-              {matched && recoveredProfileAddress ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setShowMigratedAddress((v) => !v)}
-                    className="text-[11px] text-white/40 hover:text-white/70 transition-colors"
-                  >
-                    {showMigratedAddress ? _copy("copy.aeaabbc3753b", { defaultValue: "Hide Riftn wallet" }) : _copy("copy.9b93cfb9c8d2", { defaultValue: "Show Riftn wallet" })}
-                  </button>
-                  {showMigratedAddress && (
-                    <p className="break-all text-[11px] text-white/50">{recoveredProfileAddress}</p>
-                  )}
-                </>
-              ) : null}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); setShowOtherLogins(false); if (looksLikeDuplicate) setMode('new'); }}
-                className={
-                  looksLikeDuplicate
-                    ? 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
-                    : 'flex-1 h-11 text-white/60 hover:text-white rounded-xl bg-transparent hover:bg-white/10'
-                }
-              >
-                {looksLikeDuplicate
-                  ? t('loginModal.migrateGoBack', 'Go back')
-                  : _copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}
-              </Button>
-              {!cannotVerifyProfile && (
-                <Button
-                  onClick={() => setAddressConfirmed(true)}
-                  className={
-                    looksLikeDuplicate
-                      ? 'flex-1 h-11 text-white/50 hover:text-white/80 rounded-xl bg-transparent hover:bg-white/10'
-                      : 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
-                  }
-                >
-                  {looksLikeDuplicate
-                    ? t('loginModal.migrateContinueAnyway', 'Create a new account anyway')
-                    : _copy("copy.a3c7b46af7a9", { defaultValue: "Yes, recover this profile" })}
-                </Button>
-              )}
-            </div>
-          </div>
-        );
-      })()}
-
-      {mode === 'migrate' && migratedKey && addressConfirmed && (
-        <p className="text-sm text-green-400 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
+      <div className="space-y-1.5">
+        <p className="text-white/60 text-sm">{_copy("copy.296ee8873ba8", { defaultValue: "To ensure only you can post or transact in the app using this account, set a password or biometrics." })}</p>
+        <p className="text-white/40 text-xs">
           {protection === 'biometric'
-            ? _copy("copy.d8e07d0ce739", { defaultValue: "Confirmed. Finish with your fingerprint or face." })
-            : _copy("copy.4d6edf480a9b", { defaultValue: "Confirmed. Set a password to finish the migration." })}
+            ? _copy("copy.e37273e12fd4", { defaultValue: "Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can back up your wallet any time from Settings." })
+            : _copy("copy.ef33c9296dc4", { defaultValue: "Encrypted on this device before anything leaves it. You can back up your wallet any time from Settings." })}
         </p>
-      )}
+      </div>
 
-      {showProtectionStep && biometricAvailable === null && (
+      {biometricAvailable === null && (
         <p className="text-white/50 text-sm flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin shrink-0" />{_copy("copy.4ee11d195b8e", { defaultValue: " Checking what this device supports…" })}</p>
       )}
@@ -1117,7 +334,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
-              autoFocus={mode !== 'migrate'}
+              autoFocus
             />
             <PasswordStrengthMeter password={password} />
           </div>
@@ -1135,7 +352,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       {showBiometricStep && (
         <Button
           onClick={handleBiometricCreate}
-          disabled={busy || (mode === 'import' && !importPhrase.trim()) || (mode === 'migrate' && !migratedKey)}
+          disabled={busy}
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
@@ -1143,7 +360,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
             : (
               <span className="flex items-center gap-2">
                 <Fingerprint className="w-4 h-4" />
-                {mode === 'new' ? _copy("copy.4b1d0adb1163", { defaultValue: "Secure account" }) : mode === 'migrate' ? _copy("copy.448808ea2e57", { defaultValue: "Finish migration" }) : _copy("copy.a865110e919b", { defaultValue: "Import wallet" })}
+                {_copy("copy.4b1d0adb1163", { defaultValue: "Secure account" })}
               </span>
             )}
         </Button>
@@ -1152,23 +369,19 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       {showPasswordFields && (
         <Button
           onClick={handlePasswordNext}
-          disabled={
-            busy || !password || !confirm ||
-            (mode === 'import' && !importPhrase.trim()) ||
-            (mode === 'migrate' && !migratedKey)
-          }
+          disabled={busy || !password || !confirm}
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
             ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.b403bf9c1175", { defaultValue: " Signing you in…" })}</span>
-            : mode === 'new' ? _copy("copy.4b1d0adb1163", { defaultValue: "Secure account" }) : mode === 'migrate' ? _copy("copy.448808ea2e57", { defaultValue: "Finish migration" }) : _copy("copy.a865110e919b", { defaultValue: "Import wallet" })}
+            : _copy("copy.4b1d0adb1163", { defaultValue: "Secure account" })}
         </Button>
       )}
 
       {/* Either choice stays reachable: biometrics is the default where it
           works, a password is always an option, and it's the only option where
           PRF is unavailable. */}
-      {showProtectionStep && biometricAvailable && (
+      {biometricAvailable && (
         <button
           type="button"
           disabled={busy}

@@ -36,7 +36,6 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
 import { type LoginStep, resumingStep, isInlineLoginStep } from '@/components/app/login/steps';
-import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import riftnWordmark from '@/assets/riftn-wordmark-flat-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
@@ -256,9 +255,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // other way out, and it clears the flag itself.
     if (requiresUsername) return;
     flowLog.trace?.('flow-dismissed', { screen: step, surface: 'login-sheet' });
-    // Closing by hand abandons a "Migrate account" / "Import keys"
-    // choice too; a completed login clears it itself.
-    setWalletSetupIntent(null);
     onOpenChange(false);
   }, [onOpenChange, requiresUsername, step]);
 
@@ -280,14 +276,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // first encounter with the wallet, and leading with crypto vocabulary puts
     // off users who came for the app. What the step actually does — make the
     // account only usable by them — is also the more accurate description.
-    : step === 'wallet-create' ? (
-        getWalletSetupIntent() === 'migrate' ? t('loginModal.migrateAccount', 'Migrate account')
-        : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import')
-        : t('loginModal.secureAccount', 'Secure account')
-      )
-    : step === 'wallet-secure' ? t('loginModal.secureAccount', 'Secure account')
+    : step === 'wallet-create' || step === 'wallet-secure' ? t('loginModal.secureAccount', 'Secure account')
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
-    : step === 'wallet-restore' ? t('loginModal.restoreWalletTitle', 'Bring back your wallet')
+    : step === 'wallet-restore' ? t('loginModal.walletMismatchTitle', 'Can’t open this profile here')
     : step === 'profile' ? t('settings.profile')
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
