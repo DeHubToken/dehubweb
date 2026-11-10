@@ -304,8 +304,9 @@ const ORG_JSONLD = {
 };
 // Browser SPA <title> in index.html — bot HTML must carry the same string so
 // the two variants never diverge (cloaking-suspicion surface).
-const HOME_TITLE = 'Riftn | Open Source, User Owned Social Media';
+const HOME_TITLE = 'Riftn';
 const HOME_TITLE_LEGACY = 'Riftn | Open Source, User Owned & Censorship Resistant Media';
+const HOME_TITLE_PREVIOUS = 'Riftn | Open Source, User Owned Social Media';
 // What the deployed fn still writes: old name, long dash, either escaping.
 const FN_HOME_TITLE = /(?:DeHub|Riftn) (?:—|&mdash;) Open Source, User Owned (?:&amp;|&) Censorship Resistant Media/g;
 // Browser SPA <meta name="description"> in index.html, for the same reason.
@@ -7955,6 +7956,7 @@ async function handleRequest(request, env, ctx) {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replace(FN_HOME_TITLE, HOME_TITLE);
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
+      html = html.replaceAll(HOME_TITLE_PREVIOUS, HOME_TITLE);
       // …and the description: the fn's is a different sentence from the one
       // in index.html, so the two variants disagreed on what Riftn is.
       html = html.replace(
