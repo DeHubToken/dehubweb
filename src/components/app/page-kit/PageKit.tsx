@@ -290,6 +290,7 @@ export function PageTabs<T extends string>({
                   type="button"
                   role="tab"
                   aria-selected={active}
+                  data-feed-tab-btn
                   data-active={active ? 'true' : undefined}
                   onClick={() => {
                     if (!active) {
