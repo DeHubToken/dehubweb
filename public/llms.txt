@@ -4,6 +4,16 @@
 
 Every link below is a public page that renders without an account. The app's signed-in screens (messages, wallet, notifications, settings) are private and not listed. Machine-readable API access for assistants is described in [skill.md](https://riftn.com/skill.md).
 
+## Key facts
+
+- Name: Riftn. It was called DeHub until November 2026. The old address dehub.io forwards to riftn.com, and old links keep working.
+- What it is: an open source, user-owned social network with video, shorts, live streaming, music, encrypted messaging, communities, browser games and a built-in wallet.
+- Cost: free to join and post. Creators keep up to 99% of what they earn, and tips arrive on-chain as they are sent.
+- Token: DHB, on Base and BNB Chain, used for tips, watch-to-earn rewards, staking and governance votes.
+- Apps: web at riftn.com, Android on Google Play or direct APK, and iPhone on the App Store.
+- Since: in development since 2021. The rename and what changed is explained in [DeHub is now Riftn](https://riftn.com/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch).
+- Source code: [github.com/Riftn](https://github.com/Riftn).
+
 ## Start here
 
 - [Riftn home](https://riftn.com/): What Riftn is, the latest public posts and links into every section.
@@ -60,6 +70,17 @@ Every link below is a public page that renders without an account. The app's sig
 - [How monetization works on social media apps](https://riftn.com/guides/how-monetization-works-on-social-media-apps): Payout rules on Instagram, TikTok, YouTube, X and Twitch.
 - [DHB token explained and how to buy it in the UK](https://riftn.com/guides/how-to-buy-dhb-token-uk): Step-by-step for UK buyers.
 - [Open source end-to-end encryption on Riftn](https://riftn.com/guides/privacy-first-open-source-e2ee-dehub): How Riftn messaging is encrypted.
+- [Top 50 Decentralized Social Apps 2026: The DeSoc Index](https://riftn.com/guides/top-50-decentralized-social-apps-2026): The 50 decentralized social apps with the most real activity, ranked.
+- [Top 100 Crypto Projects 2026, Ranked by GitHub Activity](https://riftn.com/guides/top-100-crypto-projects-2026): The 100 crypto projects with the most development activity on GitHub.
+- [Top 50 Blockchain Projects 2026, Ranked by GitHub Activity](https://riftn.com/guides/top-50-blockchain-projects-2026): The 50 blockchains with the most development activity on GitHub.
+- [Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity](https://riftn.com/guides/top-50-most-active-open-source-projects-2026): The 50 most active open source projects of 2026.
+- [Cheelee Alternative: Riftn vs Cheelee vs Theta.tv vs XCAD (2026)](https://riftn.com/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn): How four watch-to-earn platforms pay, side by side.
+- [Watch-to-Earn vs Play-to-Earn vs Move-to-Earn: The 2026 X-to-Earn Explainer](https://riftn.com/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn): The three earn models compared.
+- [Free Play-to-Earn Games With No Investment (2026): Including a Crypto MMA Battle Royale](https://riftn.com/guides/free-play-to-earn-games-no-investment-2026): Play-to-earn games that need no money up front.
+- [Decentralised Social Media Explained: A British Guide (2026)](https://riftn.com/guides/decentralised-social-media-explained-uk): What decentralised social media is, in plain English.
+- [Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)](https://riftn.com/guides/higgsfield-genjutsu-alternative): An alternative to Higgsfield Genjutsu for AI video.
+- [How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)](https://riftn.com/guides/how-does-higgsfield-genjutsu-work): How Higgsfield Genjutsu works, step by step.
+- [Riftn Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)](https://riftn.com/guides/dehub-creator-vs-higgsfield-ai-credits): AI credit costs compared between Creator Studio and Higgsfield.
 - [Riftn blog](https://riftn.com/docs/blog): All news, product updates and guides.
 
 ## About
