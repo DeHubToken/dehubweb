@@ -79,6 +79,8 @@ import { useSpotifyPlayer } from '@/lib/spotify-player';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
 import { NonFollowerOfferSheet, type NonFollowerOfferStage } from '@/components/app/NonFollowerOfferSheet';
+import { FollowBackAllButton, FollowBackAllSheet, type FollowBackAllStage } from '@/components/app/profile/FollowBackAllSheet';
+import { playFollowBackChime } from '@/lib/follow-back-chime';
 import { PostStatsSheet } from '@/components/app/post-stats/PostStatsSheet';
 import { PostStatsPanel } from '@/components/app/post-stats/PostStatsPanel';
 import { SAMPLE_BEST_TIMES, SAMPLE_POST_STATS } from '@/components/app/post-stats/sample-stats';
@@ -1393,6 +1395,91 @@ function NonFollowerOfferGallery({ initialStage }: { initialStage: NonFollowerOf
   );
 }
 
+/**
+ * "Follow back all": the button arriving (shake + chime), the phone confirm
+ * sheet in every stage, and the desktop toast. Nothing is followed.
+ */
+function FollowBackAllGallery({ initialStage }: { initialStage: FollowBackAllStage | 'button' | null }) {
+  const [stage, setStage] = useState<FollowBackAllStage | null>(initialStage && initialStage !== 'button' ? initialStage : null);
+  const [completed, setCompleted] = useState(stage === 'working' ? 14 : 0);
+  const [nudge, setNudge] = useState(false);
+  const { t } = useTranslation();
+  const total = 23;
+  const confirm = () => {
+    setStage('working');
+    setCompleted(0);
+    let n = 0;
+    const tick = window.setInterval(() => {
+      n = Math.min(total, n + 4);
+      setCompleted(n);
+      if (n >= total) { window.clearInterval(tick); setStage('done'); }
+    }, 350);
+  };
+  const arrive = () => { setNudge(true); playFollowBackChime(); };
+  if (!initialStage) {
+    return (
+      <section data-follow-back-gallery className="mb-5">
+        <a className="text-sm underline" href="?sheet=follow-back&stage=button">Follow back all</a>
+      </section>
+    );
+  }
+  return (
+    <section data-follow-back-gallery className="mb-5 space-y-3">
+      <div className="relative mx-auto h-[560px] max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-black/30 backdrop-blur-2xl">
+        <div className="px-4 pt-5 pb-3 text-lg font-semibold text-white">Followers (128)</div>
+        <div className="px-4 pb-3">
+          <FollowBackAllButton
+            onClick={() => setStage('confirm')}
+            finding={false}
+            working={stage === 'working'}
+            completed={completed}
+            total={total}
+            nudge={nudge}
+            onNudgeEnd={() => setNudge(false)}
+          />
+        </div>
+        <div className="space-y-2 px-4">
+          {['ana', 'kofi', 'lena', 'mika', 'sol'].map((name) => (
+            <div key={name} className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
+              <div className="h-12 w-12 rounded-xl bg-white/10" />
+              <div className="flex-1 text-sm text-white">@{name}</div>
+              <div className="h-8 w-24 rounded-lg bg-white/10" />
+            </div>
+          ))}
+        </div>
+        {stage && (
+          <FollowBackAllSheet
+            stage={stage}
+            count={total}
+            completed={completed}
+            followed={total}
+            failed={0}
+            onConfirm={confirm}
+            onClose={() => setStage(null)}
+          />
+        )}
+      </div>
+      <div className="flex flex-wrap justify-center gap-2">
+        <Button size="sm" variant="glass" onClick={arrive}>Replay arrival</Button>
+        <Button
+          size="sm"
+          variant="glass"
+          data-follow-back-desktop-toast
+          onClick={() => toast(t('follow.followBackConfirmTitle', { count: total }), {
+            id: 'follow-back-all',
+            description: t('follow.followBackConfirmBody'),
+            duration: 12000,
+            action: { label: t('follow.followBackConfirm'), onClick: () => toast.success(t('follow.followedBackCount', { count: total }), { id: 'follow-back-all' }) },
+            cancel: { label: t('follow.followBackNotNow'), onClick: () => {} },
+          })}
+        >
+          Desktop toast
+        </Button>
+      </div>
+    </section>
+  );
+}
+
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -1458,6 +1545,12 @@ export default function StateGalleryPage() {
         <NonFollowerOfferGallery
           initialStage={params.get('sheet') === 'non-followers'
             ? ((['offer', 'confirm', 'working', 'done', 'error'] as const).find((s) => s === params.get('stage')) ?? 'offer')
+            : null}
+        />
+
+        <FollowBackAllGallery
+          initialStage={params.get('sheet') === 'follow-back'
+            ? ((['button', 'confirm', 'working', 'done'] as const).find((s) => s === params.get('stage')) ?? 'button')
             : null}
         />
 

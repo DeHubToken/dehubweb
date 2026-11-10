@@ -175,6 +175,16 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        /* "Follow back all" arriving: a short, decaying side-to-side nudge,
+           once. Twin of the Reanimated sequence in the app's FollowListScreen. */
+        "follow-back-nudge": {
+          "0%, 100%": { transform: "translateX(0) rotate(0)" },
+          "14%": { transform: "translateX(-5px) rotate(-1.2deg)" },
+          "30%": { transform: "translateX(4px) rotate(1deg)" },
+          "46%": { transform: "translateX(-3px) rotate(-0.6deg)" },
+          "62%": { transform: "translateX(2px) rotate(0.3deg)" },
+          "78%": { transform: "translateX(-1px)" },
+        },
         /* Reply-orb dust. Kept in lockstep with the Reanimated port in
            dehub-mobile (components/DM/ReplyOrb.tsx).
 
@@ -213,6 +223,7 @@ export default {
         "lava-flow": "lava-flow 4s ease infinite",
         "float-up": "float-up 2s ease-out forwards",
         "marquee": "marquee 4s linear infinite",
+        "follow-back-nudge": "follow-back-nudge 0.62s cubic-bezier(0.36, 0.07, 0.19, 0.97) both",
       },
     },
   },

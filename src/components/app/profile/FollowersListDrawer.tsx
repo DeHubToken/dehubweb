@@ -31,6 +31,9 @@ import { useFollowGroups, MAX_GROUPS, MAX_GROUP_NAME } from '@/hooks/use-follow-
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { AppState } from '@/components/app/AppState';
+import { FollowBackAllButton, FollowBackAllSheet, type FollowBackAllStage } from '@/components/app/profile/FollowBackAllSheet';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { playFollowBackChime } from '@/lib/follow-back-chime';
 import { BadgedName } from '@/components/app/BadgedName';
 
 const MAX_PAGES = 3;
@@ -278,6 +281,18 @@ export function FollowersListDrawer({
   const [showFollowBackAll, setShowFollowBackAll] = useState(false);
   const [isFollowingBackAll, setIsFollowingBackAll] = useState(false);
   const [bulkFollowProgress, setBulkFollowProgress] = useState({ completed: 0, total: 0 });
+  const [isFindingFollowBacks, setIsFindingFollowBacks] = useState(false);
+  // Phone confirm sheet. Desktop asks with a toast instead.
+  const [followBackSheet, setFollowBackSheet] = useState<{
+    stage: FollowBackAllStage;
+    candidates: UserListItem[];
+    followed: number;
+    failed: number;
+  } | null>(null);
+  // The nudge + chime play once when the button first shows, not per render.
+  const [followBackNudge, setFollowBackNudge] = useState(false);
+  const followBackAnnouncedRef = useRef(false);
+  const isMobile = useIsMobile();
   
 
   // Pagination state
@@ -530,6 +545,10 @@ export function FollowersListDrawer({
       followBackStreakRef.current = 0;
       setShowFollowBackAll(false);
       setIsFollowingBackAll(false);
+      setIsFindingFollowBacks(false);
+      setFollowBackSheet(null);
+      setFollowBackNudge(false);
+      followBackAnnouncedRef.current = false;
       setBulkFollowProgress({ completed: 0, total: 0 });
       followingSetRef.current = null;
     }
@@ -694,44 +713,42 @@ export function FollowersListDrawer({
     return items;
   }, [currentUserAddress]);
 
-  const handleFollowBackAll = useCallback(async () => {
-    if (!canFollowBackAll || !currentUserAddress || isFollowingBackAll) return;
+  /** Everyone who follows you that you don't follow (or haven't asked to) yet. */
+  const findFollowBackCandidates = useCallback(async () => {
+    const [allFollowers, allFollowing] = await Promise.all([
+      getEveryFollowListItem('followers'),
+      getEveryFollowListItem('following'),
+    ]);
+    const followingAddresses = new Set(allFollowing.map(user => user.address.toLowerCase()));
+    followingSetRef.current?.forEach(address => followingAddresses.add(address));
+    followOverrides.forEach((isFollowing, address) => {
+      if (isFollowing) followingAddresses.add(address);
+    });
+    const pendingAddresses = new Set(
+      users.filter(user => user.isPending).map(user => user.address.toLowerCase()),
+    );
+    const candidates = Array.from(
+      new Map(
+        allFollowers
+          .filter(user =>
+            !isCurrentUser(user.address) &&
+            !followingAddresses.has(user.address.toLowerCase()) &&
+            !pendingAddresses.has(user.address.toLowerCase())
+          )
+          .map(user => [user.address.toLowerCase(), user]),
+      ).values(),
+    );
+    followingSetRef.current ??= followingAddresses;
+    return candidates;
+  }, [followOverrides, getEveryFollowListItem, isCurrentUser, users]);
 
+  /** Follow every candidate back; resolves with how many worked and failed. */
+  const runFollowBackAll = useCallback(async (candidates: UserListItem[]) => {
+    if (isFollowingBackAll) return null;
     setIsFollowingBackAll(true);
-    setBulkFollowProgress({ completed: 0, total: 0 });
+    setBulkFollowProgress({ completed: 0, total: candidates.length });
 
     try {
-      const [allFollowers, allFollowing] = await Promise.all([
-        getEveryFollowListItem('followers'),
-        getEveryFollowListItem('following'),
-      ]);
-      const followingAddresses = new Set(allFollowing.map(user => user.address.toLowerCase()));
-      followingSetRef.current?.forEach(address => followingAddresses.add(address));
-      followOverrides.forEach((isFollowing, address) => {
-        if (isFollowing) followingAddresses.add(address);
-      });
-      const pendingAddresses = new Set(
-        users.filter(user => user.isPending).map(user => user.address.toLowerCase()),
-      );
-      const candidates = Array.from(
-        new Map(
-          allFollowers
-            .filter(user =>
-              !isCurrentUser(user.address) &&
-              !followingAddresses.has(user.address.toLowerCase()) &&
-              !pendingAddresses.has(user.address.toLowerCase())
-            )
-            .map(user => [user.address.toLowerCase(), user]),
-        ).values(),
-      );
-      followingSetRef.current ??= followingAddresses;
-
-      setBulkFollowProgress({ completed: 0, total: candidates.length });
-      if (candidates.length === 0) {
-        toast.info(t('follow.everyoneFollowedBack', 'You already follow back everyone'));
-        return;
-      }
-
       let nextIndex = 0;
       let completed = 0;
       let failed = 0;
@@ -816,24 +833,107 @@ export function FollowersListDrawer({
         Array.from({ length: Math.min(BULK_FOLLOW_CONCURRENCY, candidates.length) }, () => worker()),
       );
 
-      const followed = candidates.length - failed;
-      if (failed === 0) {
-        toast.success(t('follow.followedBackAll', 'Followed back everyone'));
-      } else if (followed > 0) {
-        toast.warning(t('follow.followedBackSome', {
-          defaultValue: 'Followed back {{followed}} people; {{failed}} failed',
-          followed,
-          failed,
-        }));
-      } else {
-        toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'));
-      }
+      return { followed: candidates.length - failed, failed };
     } catch (error) {
       handleApiError(error, t('follow.followBackAllFailed', 'Could not follow everyone back'));
+      return null;
     } finally {
       setIsFollowingBackAll(false);
     }
-  }, [canFollowBackAll, currentUserAddress, followOverrides, getEveryFollowListItem, handleApiError, isCurrentUser, isFollowingBackAll, queryClient, t, users]);
+  }, [handleApiError, isFollowingBackAll, queryClient, t]);
+
+  /** Desktop's answer once it's done: one toast with the count. */
+  const toastFollowBackResult = useCallback((result: { followed: number; failed: number }) => {
+    const { followed, failed } = result;
+    if (failed === 0) {
+      toast.success(t('follow.followedBackCount', { count: followed, defaultValue: 'Followed back {{count}} people' }), { id: 'follow-back-all' });
+    } else if (followed > 0) {
+      toast.warning(t('follow.followedBackSome', {
+        defaultValue: 'Followed back {{followed}} people; {{failed}} failed',
+        followed,
+        failed,
+      }), { id: 'follow-back-all' });
+    } else {
+      toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'), { id: 'follow-back-all' });
+    }
+  }, [t]);
+
+  const confirmFollowBackOnPhone = useCallback(async (candidates: UserListItem[]) => {
+    setFollowBackSheet({ stage: 'working', candidates, followed: 0, failed: 0 });
+    const result = await runFollowBackAll(candidates);
+    if (!result) {
+      setFollowBackSheet(null);
+      return;
+    }
+    if (result.followed === 0) {
+      setFollowBackSheet(null);
+      toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'));
+      return;
+    }
+    setFollowBackSheet({ stage: 'done', candidates, ...result });
+  }, [runFollowBackAll, t]);
+
+  /**
+   * Tap: count who's left, then ask. A small sheet on phones, a toast with a
+   * Follow back button on desktop. Nothing is followed until that second tap.
+   */
+  const handleFollowBackAll = useCallback(async () => {
+    if (!canFollowBackAll || !currentUserAddress || isFollowingBackAll || isFindingFollowBacks) return;
+
+    setIsFindingFollowBacks(true);
+    let candidates: UserListItem[];
+    try {
+      candidates = await findFollowBackCandidates();
+    } catch (error) {
+      handleApiError(error, t('follow.followBackAllFailed', 'Could not follow everyone back'));
+      return;
+    } finally {
+      setIsFindingFollowBacks(false);
+    }
+
+    if (candidates.length === 0) {
+      toast.info(t('follow.everyoneFollowedBack', 'You already follow back everyone'));
+      return;
+    }
+
+    if (isMobile) {
+      setFollowBackSheet({ stage: 'confirm', candidates, followed: 0, failed: 0 });
+      return;
+    }
+
+    toast(t('follow.followBackConfirmTitle', { count: candidates.length, defaultValue: 'Follow back {{count}} people?' }), {
+      id: 'follow-back-all',
+      description: t('follow.followBackConfirmBody', 'They already follow you. Private accounts get a follow request.'),
+      duration: 12000,
+      action: {
+        label: t('follow.followBackConfirm', 'Follow back'),
+        onClick: () => {
+          void runFollowBackAll(candidates).then(result => {
+            if (result) toastFollowBackResult(result);
+          });
+        },
+      },
+      cancel: {
+        label: t('follow.followBackNotNow', 'Not now'),
+        onClick: () => {},
+      },
+    });
+  }, [canFollowBackAll, currentUserAddress, findFollowBackCandidates, handleApiError, isFindingFollowBacks, isFollowingBackAll, isMobile, runFollowBackAll, t, toastFollowBackResult]);
+
+  const closeFollowBackSheet = useCallback(() => {
+    setFollowBackSheet(current => (current?.stage === 'working' ? current : null));
+  }, []);
+
+  const followBackButtonVisible = canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || hasMore || isFollowingBackAll || isFindingFollowBacks);
+
+  // First time the button shows in this drawer: a small shake and a soft chime.
+  // Reduced motion skips the shake (motion-safe) but keeps the sound.
+  useEffect(() => {
+    if (!followBackButtonVisible || followBackAnnouncedRef.current) return;
+    followBackAnnouncedRef.current = true;
+    setFollowBackNudge(true);
+    playFollowBackChime();
+  }, [followBackButtonVisible]);
 
   const heading = listType === 'followers' ? t('follow.followers') : t('follow.following');
   const titleWithCount = totalCount !== null && totalCount > 0
@@ -882,31 +982,17 @@ export function FollowersListDrawer({
           </Button>
         </div>
 
-        {canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || hasMore || isFollowingBackAll) && (
+        {followBackButtonVisible && (
           <div className="px-4 pb-3">
-            <Button
+            <FollowBackAllButton
               onClick={handleFollowBackAll}
-              disabled={isFollowingBackAll}
-              className="w-full h-10 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 disabled:bg-white/15 disabled:text-zinc-400"
-            >
-              {isFollowingBackAll ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {bulkFollowProgress.total > 0
-                    ? t('follow.followingBackProgress', {
-                        defaultValue: 'Following back {{completed}} of {{total}}',
-                        completed: bulkFollowProgress.completed,
-                        total: bulkFollowProgress.total,
-                      })
-                    : t('follow.findingFollowers', 'Finding followers...')}
-                </>
-              ) : (
-                <>
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  {t('follow.followBackAll', 'Follow back all')}
-                </>
-              )}
-            </Button>
+              finding={isFindingFollowBacks}
+              working={isFollowingBackAll}
+              completed={bulkFollowProgress.completed}
+              total={bulkFollowProgress.total}
+              nudge={followBackNudge}
+              onNudgeEnd={() => setFollowBackNudge(false)}
+            />
           </div>
         )}
 
@@ -1046,6 +1132,17 @@ export function FollowersListDrawer({
             </div>
           )}
         </div>
+        {followBackSheet && (
+          <FollowBackAllSheet
+            stage={followBackSheet.stage}
+            count={followBackSheet.candidates.length}
+            completed={bulkFollowProgress.completed}
+            followed={followBackSheet.followed}
+            failed={followBackSheet.failed}
+            onConfirm={() => void confirmFollowBackOnPhone(followBackSheet.candidates)}
+            onClose={closeFollowBackSheet}
+          />
+        )}
       </DrawerContent>
     </Drawer>
   );
