@@ -11,6 +11,9 @@ import '@/styles/login-stack.css';
 
 type ClipName = typeof LOGIN_CLIP_IDS[number];
 
+/** Any of these counts as the tap that lets a blocked clip start. */
+const GESTURES = ['pointerdown', 'touchend', 'keydown'] as const;
+
 /**
  * Loads and plays only while on screen. A tile builds no <video> at all (no
  * element, no clip, no poster) until it is actually in view, so opening the
@@ -19,6 +22,12 @@ type ClipName = typeof LOGIN_CLIP_IDS[number];
  * one ~100 elements of built-in controls to style, and 16 of them in the
  * opening frame were most of the delay between tap and sheet. Until its first
  * frame is ready the tile stays plain; the clip then fades in over it. Once built, a clip stays so drifting back does not refetch.
+ *
+ * Clips play for everyone. Reduced motion only stops the lanes drifting
+ * (login-stack.css): it used to swap every clip for its still frame, which is
+ * what people with Reduce Motion or Windows' "Animation effects" off saw.
+ * When the browser refuses to start a clip on its own (iPhone Low Power Mode),
+ * the first tap or key press anywhere starts it.
  */
 function Clip({ name }: { name: ClipName }) {
   const tileRef = useRef<HTMLDivElement>(null);
@@ -26,12 +35,10 @@ function Clip({ name }: { name: ClipName }) {
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
   const [ready, setReady] = useState(false);
-  const [still] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+  const visibleRef = useRef(false);
   useEffect(() => {
     const tile = tileRef.current;
     if (!tile) return;
-    // Reduced motion: still frames only, shown as they are.
-    if (still) { setLoaded(true); return; }
     // Older engines (and jsdom) have no observer: treat every tile as visible.
     if (typeof IntersectionObserver === 'undefined') { setLoaded(true); setVisible(true); return; }
     const io = new IntersectionObserver(([entry]) => {
@@ -40,18 +47,33 @@ function Clip({ name }: { name: ClipName }) {
     });
     io.observe(tile);
     return () => io.disconnect();
-  }, [still]);
+  }, []);
   useEffect(() => {
+    visibleRef.current = visible;
     const video = ref.current;
     if (!video || !loaded) return;
     // React does not reflect `muted` as an attribute, and Safari refuses to
     // autoplay a video it cannot see is muted.
     video.muted = true;
-    if (still) return;
+    if (!visible) { video.pause(); return; }
+    let cancelled = false;
+    let retry: (() => void) | null = null;
+    const stopRetry = () => {
+      if (!retry) return;
+      for (const type of GESTURES) document.removeEventListener(type, retry, true);
+      retry = null;
+    };
     // Older engines (and jsdom) return nothing from play() rather than a promise.
-    if (visible) void video.play()?.catch?.(() => {});
-    else video.pause();
-  }, [loaded, visible, still]);
+    video.play()?.catch?.((error: unknown) => {
+      if (cancelled || (error as { name?: string })?.name !== 'NotAllowedError') return;
+      retry = () => {
+        stopRetry();
+        if (visibleRef.current) void video.play()?.catch?.(() => {});
+      };
+      for (const type of GESTURES) document.addEventListener(type, retry, { capture: true, passive: true });
+    });
+    return () => { cancelled = true; stopRetry(); };
+  }, [loaded, visible]);
   return (
     <div ref={tileRef} className="login-stack__tile">
       {loaded && (
@@ -66,7 +88,7 @@ function Clip({ name }: { name: ClipName }) {
           preload="metadata"
           aria-hidden="true"
           tabIndex={-1}
-          className={ready || still ? 'login-stack__video is-ready' : 'login-stack__video'}
+          className={ready ? 'login-stack__video is-ready' : 'login-stack__video'}
         />
       )}
     </div>

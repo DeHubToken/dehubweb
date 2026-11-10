@@ -9,6 +9,7 @@ import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
 import { handleDomainHandoff } from './server/domain-handoff.js';
+import { isMediaPath, serveMediaWithRanges } from './server/media-range.js';
 import { profileFieldLinks, verifiedGithubUrl } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
 import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
@@ -6133,6 +6134,10 @@ async function handleRequest(request, env, ctx) {
   const pathname = url.pathname;
   const handoff = handleDomainHandoff(url);
   if (handoff) return handoff;
+  // Video and audio files need byte ranges or Safari will not play them.
+  if ((request.method === 'GET' || request.method === 'HEAD') && isMediaPath(pathname)) {
+    return serveMediaWithRanges(request, env, pathname);
+  }
   if (pathname.startsWith('/locale-pages/')) {
     const asset = await serveLocaleAsset(request, env);
     if (asset) return asset;
