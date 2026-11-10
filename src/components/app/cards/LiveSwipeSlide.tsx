@@ -81,10 +81,12 @@ export const LiveSwipeSlide = memo(function LiveSwipeSlide({ stream, isActive, o
         <span className="rounded-md bg-red-600 px-1.5 py-1 text-xs font-extrabold leading-none tracking-wide text-white">
           {t('liveStudio.vertical.live')}
         </span>
-        <span className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-black/45 px-2 py-1 text-xs text-white backdrop-blur">
-          <Eye className="h-3 w-3" aria-hidden="true" />
-          {stream.viewers}
-        </span>
+        {stream.watching ? (
+          <span className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-black/45 px-2 py-1 text-xs text-white backdrop-blur">
+            <Eye className="h-3 w-3" aria-hidden="true" />
+            {stream.watching}
+          </span>
+        ) : null}
       </div>
       <p className="absolute bottom-8 left-4 right-4 truncate text-[15px] font-bold text-white [text-shadow:0_1px_3px_rgba(0,0,0,.8)]">
         @{stream.creatorUsername || stream.streamer}

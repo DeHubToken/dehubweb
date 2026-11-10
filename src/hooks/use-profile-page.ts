@@ -140,8 +140,15 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       else if (userId && !routeUsername) {
         navigate(`/${cleanHandle}`, { replace: true });
       }
+      // Old handle after a rename (/d → /riftn): the API answered with whoever
+      // wore it last. Wait for the real answer, never a cached placeholder from
+      // the previous page, and leave ENS names (mal.eth) alone.
+      else if (routeUsername && !isProfileFromCache && !routeUsername.includes('.')
+        && cleanHandle.toLowerCase() !== routeUsername.replace(/^@/, '').toLowerCase()) {
+        navigate(`/${cleanHandle}`, { replace: true });
+      }
     }
-  }, [routeUsername, userId, apiProfile?.handle, navigate]);
+  }, [routeUsername, userId, apiProfile?.handle, isProfileFromCache, navigate]);
 
   // If the URL lookup key is already a wallet address, we can start fetching content
   // immediately without waiting for the profile query to resolve first.

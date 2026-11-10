@@ -645,6 +645,18 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
 }
 
 /**
+ * How many are watching a live right now, from a /live list row, or null when
+ * the row does not say. Never `totalViews` (every join) or `peakViewers`
+ * (only ever climbs).
+ */
+export function watchingNowOf(row: { viewerCount?: unknown } | null | undefined): number | null {
+  const raw = row?.viewerCount;
+  if (raw == null || raw === '') return null;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : null;
+}
+
+/**
  * Map API LiveStream to local LiveStream format
  */
 export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): LiveStream {
@@ -679,6 +691,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   const id = (stream as any)._id || stream.streamId || String(index);
   const category = Array.isArray((stream as any).categories) ? (stream as any).categories[0] : stream.category;
   const viewerCount = (stream as any).totalViews ?? (stream as any).peakViewers ?? stream.viewerCount ?? 0;
+  const watchingNow = watchingNowOf(stream);
   const likeCount = (stream as any).likes ?? stream.likeCount ?? 0;
   const liveStreamInfo = (stream as any).streamInfo as
     | import('@/lib/api/dehub').StreamInfo
@@ -692,6 +705,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     title: stream.title,
     game: category || 'Just Chatting',
     viewers: formatViews(viewerCount).replace(' views', ''),
+    watching: watchingNow == null ? '' : formatViews(watchingNow).replace(' views', ''),
     thumbnail,
     tags: [],
     isLive: isStreamLive(stream),

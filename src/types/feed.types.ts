@@ -413,7 +413,14 @@ export interface LiveStream extends BaseFeedItem {
   avatar: string;
   title: string;
   game: string;
+  /** All-time joins ("tuned in"), never the room right now. */
   viewers: string;
+  /**
+   * How many are watching right now, ready to show ("8"), or empty when the
+   * live list did not say. This is the number for anything beside LIVE:
+   * `viewers` counts every join, so a room of 8 read 32 there.
+   */
+  watching?: string;
   thumbnail: string;
   tags: string[];
   isLive: boolean;

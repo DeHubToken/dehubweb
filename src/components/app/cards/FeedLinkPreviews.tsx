@@ -18,6 +18,8 @@ import { LinkPreviewContent } from './LinkPreviewContent';
 import { parsePredictionLink } from '@/lib/predictions';
 import { parseRichLink } from '@/lib/rich-links';
 import { RichLinkCard } from './RichLinkCardLazy';
+import { SpotifyCard } from './SpotifyCard';
+import { parseSpotifyLink } from '@/lib/spotify';
 
 interface FeedLinkPreviewsProps {
   text: string;
@@ -90,6 +92,8 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
       <AnimatePresence mode="popLayout">
         {visiblePreviews.map((preview) => {
           if (preview.rich) return <RichLinkCard key={preview.url} preview={{ ...preview, rich: preview.rich }} />;
+          const spotify = parseSpotifyLink(preview.url);
+          if (spotify) return <SpotifyCard key={preview.url} preview={preview} link={spotify} />;
           const domain = new URL(preview.url).hostname.replace('www.', '');
           if (app && new URL(preview.url).hostname.toLowerCase() === app.domain) {
             const open = (e: { stopPropagation: () => void }) => {
