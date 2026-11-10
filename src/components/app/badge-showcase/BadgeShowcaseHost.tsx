@@ -5,20 +5,24 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * inside each badge keeps the showcase out of the card it was opened from,
  * so clicks inside it never bubble into a post or profile row.
  */
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import {
+  badgeShowcaseJustOpened,
   closeBadgeShowcase,
   preloadBadgeShowcase,
+  loadedBadgeShowcase,
+  loadedStreamerShowcase,
+  setBadgeShowcaseHandoff,
   preloadStreamerShowcase,
   useBadgeShowcaseRequest,
 } from '@/lib/badge-showcase';
 
-const BadgeShowcase = lazyWithRetry(preloadBadgeShowcase);
-const StreamerShowcase = lazyWithRetry(preloadStreamerShowcase);
+const LazyBadgeShowcase = lazyWithRetry(preloadBadgeShowcase);
+const LazyStreamerShowcase = lazyWithRetry(preloadStreamerShowcase);
 
 /**
  * Shown the moment a badge is tapped, until the showcase chunk arrives. On a
@@ -33,6 +37,12 @@ function ShowcasePending({ anchor }: { anchor: HTMLElement | null }) {
     const frame = requestAnimationFrame(() => setShown(true));
     return () => cancelAnimationFrame(frame);
   }, []);
+  // The showcase takes over from here: it keeps the page dimmed and flies the
+  // badge on from where this copy stood, so the two read as one opening.
+  const artRef = useRef<HTMLImageElement>(null);
+  useLayoutEffect(() => {
+    setBadgeShowcaseHandoff(artRef.current);
+  });
   const art = anchor?.querySelector<HTMLImageElement>('img[data-badge-icon]')?.currentSrc
     || (anchor instanceof HTMLImageElement ? anchor.currentSrc : null);
   return createPortal(
@@ -42,7 +52,7 @@ function ShowcasePending({ anchor }: { anchor: HTMLElement | null }) {
       aria-modal="true"
       aria-busy="true"
       className="fixed inset-0 z-[120] grid place-items-center"
-      onClick={closeBadgeShowcase}
+      onClick={() => { if (!badgeShowcaseJustOpened()) closeBadgeShowcase(); }}
     >
       <div
         aria-hidden
@@ -51,6 +61,7 @@ function ShowcasePending({ anchor }: { anchor: HTMLElement | null }) {
       />
       {art && (
         <img
+          ref={artRef}
           src={art}
           alt=""
           aria-hidden
@@ -67,7 +78,25 @@ function ShowcasePending({ anchor }: { anchor: HTMLElement | null }) {
 export function BadgeShowcaseHost() {
   const { t: _copy } = _useCopy();
   const request = useBadgeShowcaseRequest();
+  // Fetch the showcase once the page has settled, so the first tap opens it
+  // straight away. Only the code is fetched: nothing is drawn until a tap.
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    if (connection?.saveData || /2g/.test(connection?.effectiveType ?? '')) return;
+    let idle = 0;
+    const fetchNow = () => { void preloadBadgeShowcase().catch(() => {}); };
+    const timer = window.setTimeout(() => {
+      if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(fetchNow, { timeout: 4000 });
+      else fetchNow();
+    }, 5000);
+    return () => {
+      window.clearTimeout(timer);
+      if (idle) window.cancelIdleCallback?.(idle);
+    };
+  }, []);
   if (!request) return null;
+  const BadgeShowcase = loadedBadgeShowcase() ?? LazyBadgeShowcase;
+  const StreamerShowcase = loadedStreamerShowcase() ?? LazyStreamerShowcase;
   return (
     // A failure here costs a badge its showcase, never the page around it.
     <ErrorBoundary label={_copy("copy.2d1896e3b281", { defaultValue: "BadgeShowcase" })} fallback={null} resetKey={request.id} onError={closeBadgeShowcase}>
