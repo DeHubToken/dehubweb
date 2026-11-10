@@ -250,20 +250,26 @@ export function PageTabs<T extends string>({
 }) {
   const inPill = useContext(PillContext);
   const layoutId = useId();
-  const { layerRef, setRef, rect } = useTabIndicator(value, inPill, undefined, 5);
+  const { layerRef, setRef, rect, onScroll } = useTabIndicator(value, inPill, undefined, 5);
   const [glide, setGlide] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [overflow, setOverflow] = useState(false);
   useEffect(() => {
     const el = scrollRef.current;
     if (!inPill || !el) return;
-    const check = () => setOverflow(el.scrollWidth - el.clientWidth > 2 && el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+    const check = () => {
+      setOverflow(el.scrollWidth - el.clientWidth > 2 && el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+      // The glass tile sits outside the scrolling row, so it is re-placed when
+      // the row scrolls or first gets its size (a page that mounts before its
+      // row can be measured otherwise never shows the tile).
+      onScroll();
+    };
     check();
     const ro = new ResizeObserver(check);
     ro.observe(el);
     el.addEventListener('scroll', check, { passive: true });
     return () => { ro.disconnect(); el.removeEventListener('scroll', check); };
-  }, [inPill, tabs.length]);
+  }, [inPill, tabs.length, onScroll]);
   if (inPill) {
     return (
       <div className="flex min-w-0 items-center">
