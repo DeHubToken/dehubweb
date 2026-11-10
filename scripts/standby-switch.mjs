@@ -6,7 +6,7 @@ const STANDBY_IP = '138.68.188.224';
 const HOSTS = ['riftn.com', 'www.riftn.com'];
 const WORKER = 'dehub-migration';
 const mode = process.argv[2];
-if (!['check', 'backup', 'cloudflare'].includes(mode)) throw new Error('Mode must be check, backup or cloudflare.');
+if (!['check', 'backup', 'cloudflare', 'token'].includes(mode)) throw new Error('Mode must be check, backup, cloudflare or token.');
 
 const { token, account } = normalizeCredentials(process.env.CLOUDFLARE_APITOKEN, process.env.CLOUDFLARE_ID);
 console.log(`::add-mask::${token}`);
@@ -25,6 +25,25 @@ async function cf(method, path, body) {
     throw new Error(`${method} ${path.replace(account, '<account>')} failed (HTTP ${response.status}): ${errors || 'no detail'}`);
   }
   return result.result;
+}
+
+if (mode === 'token') {
+  // Names the token this repo deploys with, so it can be found in the dashboard.
+  for (const [label, base] of [['user', '/user/tokens'], ['account', `/accounts/${account}/tokens`]]) {
+    try {
+      const { id, status } = await cf('GET', `${base}/verify`);
+      console.log(`${label} token id ${id} (${status})`);
+      try {
+        const t = await cf('GET', `${base}/${id}`);
+        console.log(`Name: "${t.name}"`);
+        for (const p of t.policies ?? []) console.log(` - ${p.effect}: ${(p.permission_groups ?? []).map(g => g.name).join(', ')} on ${Object.keys(p.resources ?? {}).join(', ')}`);
+      } catch (e) { console.log(`Details not readable: ${e.message}`); }
+      console.log(label === 'user'
+        ? 'Edit at https://dash.cloudflare.com/profile/api-tokens'
+        : `Edit at https://dash.cloudflare.com/${account}/api-tokens`);
+    } catch (e) { console.log(`Not a ${label} token (${e.message.slice(0, 80)})`); }
+  }
+  process.exit(0);
 }
 
 const [zone] = await cf('GET', '/zones?name=riftn.com');
