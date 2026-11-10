@@ -83,6 +83,7 @@ import {
   SETTINGS_HEADING_CLASS,
   SETTINGS_LABEL_CLASS,
 } from '@/components/app/settings/SettingsRow';
+import { TwoFactorSettings } from '@/components/app/two-factor/TwoFactorSettings';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import Search from "@/components/ui/cut-icons/search";
@@ -2047,15 +2048,7 @@ function PrivacySettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.accountSecurity')}</h3>
         <div className="space-y-4">
-          <SettingsRow
-            icon={<Shield />}
-            anchor="two-factor"
-            title={t('settings.twoFactorAuth')}
-            description={t('settings.twoFactorAuthDesc')}
-            action={<Button type="button" variant="outline" size="sm" className={SETTINGS_CONTROL_CLASS} onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
-              {t('settings.enable')}
-            </Button>}
-          />
+          <TwoFactorSettings />
           <SettingsRow
             icon={<Shield />}
             anchor="wallet-unlock"
