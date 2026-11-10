@@ -270,6 +270,14 @@ export function PageTabs<T extends string>({
     el.addEventListener('scroll', check, { passive: true });
     return () => { ro.disconnect(); el.removeEventListener('scroll', check); };
   }, [inPill, tabs.length, onScroll]);
+  // A row first laid out while the page is still hidden (boot, fonts) measures
+  // as nothing and no resize follows, so keep trying briefly until it lands.
+  useEffect(() => {
+    if (!inPill || rect.ready) return;
+    const id = window.setInterval(onScroll, 200);
+    const stop = window.setTimeout(() => window.clearInterval(id), 6000);
+    return () => { window.clearInterval(id); window.clearTimeout(stop); };
+  }, [inPill, rect.ready, onScroll]);
   if (inPill) {
     return (
       <div className="flex min-w-0 items-center">
