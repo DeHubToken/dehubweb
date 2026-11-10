@@ -23,6 +23,7 @@ import { MetalStage } from './metal-stage';
 import { acquireMetalStage } from './metal-warmup';
 import { ThemeStage } from './theme-stage';
 import { badgeWorld } from '@/lib/badge-world';
+import { badgeShowcaseHandoff, badgeShowcaseJustOpened } from '@/lib/badge-showcase';
 
 export interface ShowcaseEntry {
   key: string;
@@ -96,6 +97,15 @@ interface Box {
   size: number;
 }
 
+/** Where the badge sits on screen, or null when it is gone or scrolled away. */
+function boxOf(anchor: HTMLElement | null): Box | null {
+  if (!anchor || !anchor.isConnected) return null;
+  const r = anchor.getBoundingClientRect();
+  if (r.width === 0 && r.height === 0) return null;
+  if (r.bottom < 0 || r.top > window.innerHeight) return null;
+  return { x: r.left, y: r.top, size: Math.max(r.width, r.height) };
+}
+
 export function ShowcaseShell({
   entries,
   originIndex,
@@ -123,7 +133,14 @@ export function ShowcaseShell({
   // A promotion holds on the badge just earned rather than playing on.
   const [playing, setPlaying] = useState(!reduceMotion && !intro);
   const [phase, setPhase] = useState<'enter' | 'open' | 'exit'>('enter');
-  const [shown, setShown] = useState(false);
+  // Set when the loading stand-in already dimmed the page for this opening:
+  // the dim stays up and the badge carries on from where that copy stood.
+  const [handoff] = useState(() => badgeShowcaseHandoff());
+  const [shown, setShown] = useState(!!handoff);
+  // A themed or metal stage takes a moment to draw its first frame. Until it
+  // does, the loading copy of the badge stays exactly where it was, so the
+  // badge never blinks out between the two.
+  const [standIn, setStandIn] = useState(() => cinematic && !intro && !!handoff?.box && !!handoff.art);
   const [landed, setLanded] = useState(false);
   const [stickerReady, setStickerReady] = useState(false);
   const [stickerOn, setStickerOn] = useState(false);
@@ -163,13 +180,9 @@ export function ShowcaseShell({
     return { x: r.left + art.x, y: r.top + art.y, size: art.size };
   }, []);
 
-  const anchorBox = useCallback((): Box | null => {
-    if (!anchor || !anchor.isConnected) return null;
-    const r = anchor.getBoundingClientRect();
-    if (r.width === 0 && r.height === 0) return null;
-    if (r.bottom < 0 || r.top > window.innerHeight) return null;
-    return { x: r.left, y: r.top, size: Math.max(r.width, r.height) };
-  }, [anchor]);
+  const anchorBox = useCallback((): Box | null => boxOf(anchor), [anchor]);
+  /** Where the opening starts: the loading copy if there was one, else the badge. */
+  const originBox = useCallback((): Box | null => handoff?.box ?? boxOf(anchor), [handoff, anchor]);
 
   const placeFlyer = (box: Box, rotate = 0) => {
     const el = flyerRef.current;
@@ -206,14 +219,13 @@ export function ShowcaseShell({
   useLayoutEffect(() => {
     if (cinematic) {
       const previous = anchor?.style.visibility ?? '';
-      if (!metallic) {
-        if (anchor) anchor.style.visibility = 'hidden';
-        setShown(true);
-      }
+      if (anchor && !metallic) anchor.style.visibility = 'hidden';
+      // The page dims on the tap itself, not when the stage is ready to draw.
+      setShown(true);
       return () => { if (anchor) anchor.style.visibility = previous; };
     }
     const hero = heroBox();
-    const from = anchorBox();
+    const from = originBox();
     if (anchor) anchor.style.visibility = 'hidden';
     if (hero) placeFlyer(from && !reduceMotion ? from : hero, from && !reduceMotion ? -18 : restTilt);
     const promote = !!intro && !!hero && !reduceMotion;
@@ -301,6 +313,10 @@ export function ShowcaseShell({
     };
     let stage: StickerStage | MetalStage | ThemeStage | undefined;
     const start = async () => {
+    // Building a renderer blocks for a moment. Let the dimmed page and the
+    // flying badge reach the screen first, so the tap is answered at once.
+    await new Promise<void>(resolve => requestAnimationFrame(() => window.setTimeout(resolve, 0)));
+    if (!live) return;
     try {
       const handlersForStage = {
         onTap: () => handlers.current.next(),
@@ -335,14 +351,15 @@ export function ShowcaseShell({
       setStickerReady(true);
       if ((activeStage instanceof MetalStage || activeStage instanceof ThemeStage)) {
         setStickerOn(true);
-        void activeStage.open({ from: anchorBox(), fromArt: intro?.fromArt, promote: !!intro,
+        void activeStage.open({ from: originBox(), fromArt: intro?.fromArt, promote: !!intro,
           ...(activeStage instanceof MetalStage ? { onStarted: () => {
             if (!live || closingRef.current) return;
             if (anchor) anchor.style.visibility = 'hidden';
             setShown(true);
+            setStandIn(false);
           } } : {}),
           onLanded: () => { if (live && !closingRef.current) setLanded(true); },
-        }).catch(fail);
+        }).then(() => { if (live) setStandIn(false); }).catch(fail);
       }
     }).catch(fail);
     };
@@ -433,7 +450,14 @@ export function ShowcaseShell({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, finish, cinematic, glFailed]);
 
-  handlers.current = { next: () => goTo(index + 1), close: requestClose, interact: pause };
+  // A tap on the empty stage or the backdrop closes, except straight after
+  // the tap that opened it: that one is a double tap, not a change of mind.
+  const tapAway = useCallback(() => {
+    if (!closingRef.current && badgeShowcaseJustOpened()) return;
+    requestClose();
+  }, [requestClose]);
+
+  handlers.current = { next: () => goTo(index + 1), close: tapAway, interact: pause };
 
   // The how-to line is for the first look only, then the sticker stands alone.
   useEffect(() => {
@@ -645,7 +669,7 @@ export function ShowcaseShell({
       <div
         aria-hidden
         data-keep-dark={keepDark}
-        onClick={requestClose}
+        onClick={tapAway}
         className="absolute inset-0 bg-black/85 backdrop-blur-md transition-opacity duration-500 ease-out"
         style={{ opacity: open ? 1 : 0 }}
       />
@@ -740,6 +764,17 @@ export function ShowcaseShell({
           <div className="mx-auto w-full max-w-[480px]">{footer(api)}</div>
         </div>
       ) : null}
+
+      {standIn && handoff?.box && handoff.art && phase !== 'exit' && !glFailed && (
+        <img
+          src={handoff.art}
+          alt=""
+          aria-hidden
+          data-badge-stand-in
+          className="pointer-events-none fixed z-20 object-contain"
+          style={{ left: handoff.box.x, top: handoff.box.y, width: handoff.box.size, height: handoff.box.size }}
+        />
+      )}
 
       {/* The badge in flight, and the stand-in if WebGL is unavailable. */}
       <img
