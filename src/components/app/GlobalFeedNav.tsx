@@ -17,7 +17,7 @@ import { isHomePath } from '@/lib/home-path';
 import Settings2 from "@/components/ui/cut-icons/settings";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
-import { FEED_TAB_ICON_SCALE, feedTabsFor } from '@/constants/app.constants';
+import { FEED_TAB_ICON_SCALE, feedTabIconTransform, feedTabsFor } from '@/constants/app.constants';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
@@ -361,7 +361,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
                     isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                   )}
                 >
-                  <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className="relative z-10 w-4 h-4 origin-center" style={{ transform: `scale(${FEED_TAB_ICON_SCALE[tab.value] ?? 1})` }} />
+                  <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className="relative z-10 w-4 h-4 origin-center" style={{ transform: feedTabIconTransform(tab.value) }} />
                 </button>
               );
             })}

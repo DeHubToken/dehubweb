@@ -154,11 +154,23 @@ export const FEED_TAB_ICON_SCALE: Record<string, number> = {
   shorts: 1,
   images: 1.16,
   videos: 1.08,
-  text: 1,
   music: 1.09,
   live: 1,
   settings: 1.18,
 };
+
+// Quote marks sit short and wide, so an even scale big enough to reach the
+// row's height would make them the widest glyph. Stretch them taller instead.
+// Keep in sync with mobile's FEED_NAV_ICON_STRETCH.
+const FEED_TAB_ICON_STRETCH: Record<string, readonly [number, number]> = {
+  text: [1.22, 1.49],
+};
+
+/** CSS transform that sizes a home-tab glyph to match its neighbours. */
+export function feedTabIconTransform(tab: string): string {
+  const stretch = FEED_TAB_ICON_STRETCH[tab];
+  return stretch ? `scale(${stretch[0]}, ${stretch[1]})` : `scale(${FEED_TAB_ICON_SCALE[tab] ?? 1})`;
+}
 
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, get label() { return _translateCopy("copy.3a78695388b3", { defaultValue: "Home" }); }, value: 'home' },

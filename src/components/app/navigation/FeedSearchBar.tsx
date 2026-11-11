@@ -18,7 +18,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import Settings2 from '@/components/ui/cut-icons/settings';
 import X from '@/components/ui/cut-icons/close';
 import { cn } from '@/lib/utils';
-import { FEED_TABS, FEED_TAB_ICON_SCALE } from '@/constants/app.constants';
+import { FEED_TABS, FEED_TAB_ICON_SCALE, feedTabIconTransform } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { FEED_SEARCH_TABS, closeFeedSearch, setFeedSearchQuery, useFeedSearch, type FeedSearchTab } from '@/lib/feed-search';
 
@@ -179,7 +179,7 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
         aria-expanded={picking}
         className={cn('relative flex h-[29px] w-10 shrink-0 select-none items-center justify-center rounded-[10px] text-white [-webkit-touch-callout:none]', GLASS)}
       >
-        {Icon && <Icon className="h-4 w-4" style={{ transform: `scale(${FEED_TAB_ICON_SCALE[tab] ?? 1})` }} />}
+        {Icon && <Icon className="h-4 w-4" style={{ transform: feedTabIconTransform(tab) }} />}
       </button>
       <button
         type="button"
