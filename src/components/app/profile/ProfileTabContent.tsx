@@ -1142,7 +1142,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           username: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
           verified: false, avatar,
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
-          imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
+          imageUrls: buildFeedImageUrls(post.imageUrls, undefined, (post as { imageSizes?: unknown }).imageSizes) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
           caption: post.description || '', likes: post.totalVotes?.for || 0,
           dislikes: post.totalVotes?.against || 0,
           comments: post.commentCount || 0, views: formatViews(resolveViewCount(post)).replace(' views', ''),

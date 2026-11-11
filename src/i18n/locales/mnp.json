@@ -400,6 +400,7 @@
     "gasSponsorshipFailed": "這筆交易个費用擔袂起。請小等閣試。"
   },
   "nav": {
+    "launchpad": "发射台",
     "reorderHint": "按住并拖动任意图标进行重新排列",
     "reorderReset": "重置",
     "reorderResetLong": "重置選單順序",
@@ -2038,6 +2039,21 @@
     "returnHome": "回首页"
   },
   "profile": {
+    "gridCard": {
+      "liveStage": "现场舞台",
+      "poll": "投票",
+      "community": "社區",
+      "profile": "个人资料",
+      "film": "电影",
+      "comic": "连环画",
+      "earn": "賺錢",
+      "listens_one": "{{value}} 听",
+      "listens_other": "{{value}} 听",
+      "votes_one": "{{value}} 投票",
+      "votes_other": "{{value}} 票",
+      "members_one": "{{value}} 成員",
+      "members_other": "{{value}} 會員"
+    },
     "viewGrid": "网格视图",
     "viewList": "列表视图",
     "viewMode": "看",
@@ -3205,6 +3221,7 @@
     "pendingSubmitted": "{{amount}} 粒代币已提交。正在检查确认。请勿重复发送。"
   },
   "communities": {
+    "sortTop": "热门",
     "shareLink": "分享链接",
     "pinnedMore": "更多",
     "showFirst": "先展示",

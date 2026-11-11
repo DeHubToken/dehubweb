@@ -91,7 +91,8 @@ export function SocialConnectControl({
         return;
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t('settings.socialConnectFailed', { platform: label }));
+      console.warn('[multipost] connect failed', platform, err);
+      toast.error(t('settings.socialConnectFailed', { platform: label }));
     }
     setBusy(false);
   };

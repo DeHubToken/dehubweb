@@ -32,6 +32,8 @@ import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
 // first frame is already the sheet people see. Clips are built only once a
 // tile is on screen (see Clip), so this costs nothing in the tap.
 import { LoginShortsStack } from '@/components/app/login/LoginShortsStack';
+import { useTwoFactorPrompt } from '@/lib/two-factor-login';
+import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
@@ -71,6 +73,11 @@ const LoginModalBody = preloadable(() =>
 // cold. Its own chunk so it does not drag the wallet body in behind it.
 const LoginProfileStep = React.lazy(() =>
   import('@/components/app/login/LoginProfileStep').then(m => ({ default: m.LoginProfileStep })),
+);
+
+// Only accounts with two-step sign-in ever see it, so it stays off first paint.
+const TwoFactorLoginStep = React.lazy(() =>
+  import('@/components/app/two-factor/TwoFactorLoginStep').then(m => ({ default: m.TwoFactorLoginStep })),
 );
 
 /**
@@ -184,9 +191,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // "Continue with Google / email / phone" sheet before the mirror below could
   // swap it — the flash that reads as "it failed, sign in again" at the exact
   // moment the user is waiting to be let in.
-  const [step, setStep] = useState<LoginStep>(
+  const [baseStep, setStep] = useState<LoginStep>(
     () => resumingStep(walletPhase, isProcessingRedirect) ?? 'main',
   );
+  // A login the server paused for a two-step code shows the code step over
+  // whatever step it came from, and hands back to that step once it clears.
+  const twoFactor = useTwoFactorPrompt();
+  const step: LoginStep = twoFactor ? 'two-factor' : baseStep;
   const wasOpen = useRef(open);
   // A sheet that mounts already open (a sign-in resuming after a redirect) is
   // filled straight away; every tap-opened sheet fills after its first frame.
@@ -280,6 +291,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
     : step === 'wallet-restore' ? t('loginModal.walletMismatchTitle', 'Can’t open this profile here')
     : step === 'profile' ? t('settings.profile')
+    : step === 'two-factor' ? t('twoFactor.loginTitle', 'Enter your sign-in code')
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
 
@@ -292,7 +304,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // Share the email-first hero across screen sizes while retaining the
   // desktop's existing middle-column drawer and the phone's full-screen sheet.
   const stackSheet = isMobile && loginIntent !== 'add-profile';
-  const stackLayout = loginIntent !== 'add-profile' && isInlineLoginStep(step);
+  // The sign-in code step lives on the same clip wall as the sign-in options:
+  // it is the last beat of signing in, not a separate screen.
+  const stackLayout = loginIntent !== 'add-profile' && (isInlineLoginStep(step) || step === 'two-factor');
 
   // Only the sign-in options hold their space; it stays blank (the real list
   // replaces it). Every other step is a wait or a form the user has already
@@ -319,11 +333,28 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className={`login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 ${stackSheet ? 'pb-2' : 'pb-4'}`}>
-        <LoginShortsStack />
+        <LoginShortsStack
+          headline={step === 'two-factor' ? {
+            top: t('twoFactor.stackTop', 'One more step'),
+            accent: t('twoFactor.stackAccent', 'Enter your app code.'),
+          } : undefined}
+        />
         <div className="login-stack-form mt-5">
           <AfterSheetFrame immediate={mountedOpen} fallback={fallback}>
             <Suspense fallback={fallback}>
-              <LoginModalBody open={open} step={step} setStep={setStep} layout="stack" />
+              {step === 'two-factor' && twoFactor
+                ? <TwoFactorLoginStep
+                    account={{
+                      username: twoFactor.account.username,
+                      displayName: twoFactor.account.displayName,
+                      avatarUrl: twoFactor.account.address
+                        ? buildAvatarCdnFallbackUrl(twoFactor.account.address, twoFactor.account.avatarImageUrl, 96)
+                        : null,
+                    }}
+                    onSubmit={twoFactor.submit}
+                    onCancel={() => { twoFactor.cancel(); setStep('main'); }}
+                  />
+                : <LoginModalBody open={open} step={step} setStep={setStep} layout="stack" />}
             </Suspense>
           </AfterSheetFrame>
         </div>

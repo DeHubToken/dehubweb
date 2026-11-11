@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
   },
   "nav": {
+    "launchpad": "ላውንችፓድ",
     "reorderHint": "የተሰጠው አይኮን ይጠየቀው እና ይምረጡ",
     "reorderReset": "ዳግም አስጀምር",
     "reorderResetLong": "ምናሌ ትዕዛዝ ዳግም አስጀምር",
@@ -2093,6 +2094,33 @@
     "returnHome": "ወደ መነሻ ተመለስ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "መድረክ",
+      "liveStage": "የቀጥታ መድረክ",
+      "event": "ክስተት",
+      "poll": "ምርጫ",
+      "quote": "ጥቅስ",
+      "shared": "የተጋራ",
+      "link": "አገናኝ",
+      "community": "ማህበረሰብ",
+      "shop": "ሱቅ",
+      "profile": "መገለጫ",
+      "film": "ፊልም",
+      "bounty": "ሽልማት",
+      "app": "መተግበሪያ",
+      "proposal": "ሀሳብ",
+      "short": "አጭር",
+      "comic": "ኮሚክ",
+      "earn": "ያግኙ",
+      "listening_one": "{{value}} በማዳመጥ ላይ",
+      "listening_other": "{{value}} በማዳመጥ ላይ",
+      "listens_one": "{{value}} ያዳምጡ",
+      "listens_other": "{{value}} ያዳምጣሉ",
+      "votes_one": "{{value}} ድምጽ",
+      "votes_other": "{{value}} ድምጾች",
+      "members_one": "{{value}} አባል",
+      "members_other": "{{value}} አባላት"
+    },
     "viewGrid": "የፍርግርግ እይታ",
     "viewList": "የዝርዝር እይታ",
     "viewMode": "ይመልከቱ",
@@ -3324,6 +3352,7 @@
     "statsLoadFailed": "ስታኪንግ ስታቲስቲክስ ማስጫን አልተቻለም"
   },
   "communities": {
+    "sortTop": "ከፍተኛ",
     "shareLink": "አገናኝ ያጋሩ",
     "pinnedMore": "ተጨማሪ",
     "showFirst": "መጀመሪያ አሳይ",

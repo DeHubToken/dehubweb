@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Transaksi ini tidak dapat ditaja. Sila cuba lagi sebentar lagi."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Tahan dan seret sebarang ikon untuk menyusun semula",
     "reorderReset": "Tetapkan semula",
     "reorderResetLong": "Tetapkan semula pesanan menu",
@@ -2350,6 +2351,33 @@
     "returnHome": "Kembali ke Laman Utama"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Pentas",
+      "liveStage": "Pentas langsung",
+      "event": "Acara",
+      "poll": "Tinjauan",
+      "quote": "Petikan",
+      "shared": "Dikongsi",
+      "link": "Pautan",
+      "community": "Komuniti",
+      "shop": "Kedai",
+      "profile": "Profil",
+      "film": "Filem",
+      "bounty": "Ganjaran",
+      "app": "Aplikasi",
+      "proposal": "Cadangan",
+      "short": "Pendek",
+      "comic": "Komik",
+      "earn": "Peroleh",
+      "listening_one": "{{value}} sedang mendengar",
+      "listening_other": "{{value}} sedang mendengar",
+      "listens_one": "{{value}} mendengar",
+      "listens_other": "{{value}} mendengar",
+      "votes_one": "{{value}} undi",
+      "votes_other": "{{value}} undi",
+      "members_one": "{{value}} ahli",
+      "members_other": "{{value}} ahli"
+    },
     "viewGrid": "Paparan grid",
     "viewList": "Paparan senarai",
     "viewMode": "Lihat",
@@ -3553,6 +3581,7 @@
     "statsLoadFailed": "Tidak dapat memuat staking statistik"
   },
   "communities": {
+    "sortTop": "Teratas",
     "shareLink": "Kongsi pautan",
     "pinnedMore": "Lagi",
     "showFirst": "Tunjukkan dahulu",

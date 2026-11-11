@@ -425,6 +425,7 @@
     "gasSponsorshipFailed": "ଏହି କାରବାରର ଖର୍ଚ୍ଚ ବହନ କରାଯାଇପାରିଲା ନାହିଁ। ଦୟାକରି କିଛି ସମୟ ପରେ ଚେଷ୍ଟା କରନ୍ତୁ।"
   },
   "nav": {
+    "launchpad": "ଲଞ୍ଚପ୍ୟାଡ",
     "reorderHint": "ଯେକୌଣସି ଚିତ୍ରସଙ୍କେତକୁ ପୁନଃଯୋଜନା କରିବା ପାଇଁ ଧାରଣ କରନ୍ତୁ ଏବଂ ଟାଣନ୍ତୁ",
     "reorderReset": "ପୁନଃ ସେଟ କରନ୍ତୁ",
     "reorderResetLong": "ମେନୁ କ୍ରମକୁ ପୁନଃସ୍ଥାପନ କରନ୍ତୁ",
@@ -2058,6 +2059,33 @@
     "returnHome": "ହୋମକୁ ଫେରନ୍ତୁ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "ଷ୍ଟେଜ୍",
+      "liveStage": "ଲାଇଭ୍ ଷ୍ଟେଜ୍",
+      "event": "ଇଭେଣ୍ଟ",
+      "poll": "ପୋଲ୍",
+      "quote": "ଉଦ୍ଧୃତି",
+      "shared": "ସେୟାର୍ କରାଯାଇଛି",
+      "link": "ଲିଙ୍କ୍",
+      "community": "କମ୍ୟୁନିଟି",
+      "shop": "ଶପ୍",
+      "profile": "ପ୍ରୋଫାଇଲ୍",
+      "film": "ଫିଲ୍ମ",
+      "bounty": "ବାଉଣ୍ଟି",
+      "app": "ଆପ୍",
+      "proposal": "ପ୍ରସ୍ତାବ",
+      "short": "ଶର୍ଟ୍",
+      "comic": "କମିକ୍",
+      "earn": "ଆୟ କରନ୍ତୁ",
+      "listening_one": "{{value}} ଶୁଣୁଛନ୍ତି",
+      "listening_other": "{{value}} ଶୁଣୁଛନ୍ତି",
+      "listens_one": "{{value}} ଶୁଣନ୍ତୁ",
+      "listens_other": "{{value}} ଶୁଣୁଛନ୍ତି",
+      "votes_one": "{{value}} ଭୋଟ୍",
+      "votes_other": "{{value}} ଭୋଟ୍",
+      "members_one": "{{value}} ସଦସ୍ୟ",
+      "members_other": "{{value}} ସଦସ୍ୟ"
+    },
     "viewGrid": "ନାଲି ଦ୍ରୁଶ୍ଯ",
     "viewList": "ତାଲିକା ଦ୍ରୁଶ୍ଯ",
     "viewMode": "ଦ୍ରୁଶ୍ଯ",
@@ -3252,6 +3280,7 @@
     "statsLoadFailed": "ଷ୍ଟକିଂ ପରିସଂଖ୍ୟାନ ଧାରଣ କରିପାରିଲା ନାହିଁ"
   },
   "communities": {
+    "sortTop": "ଶୀର୍ଷ",
     "shareLink": "ସଂଯୋଗ ସହଭାଗ କରନ୍ତୁ",
     "pinnedMore": "ଅଧିକ",
     "showFirst": "ପ୍ରଥମେ ଦେଖାନ୍ତୁ",

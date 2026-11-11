@@ -437,6 +437,7 @@
     "gasSponsorshipFailed": "ಈ ವಹಿವಾಟಿನ ವೆಚ್ಚ ಭರಿಸಲಾಗಲಿಲ್ಲ. ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
   },
   "nav": {
+    "launchpad": "ಲಾಂಚ್‌ಪ್ಯಾಡ್",
     "reorderHint": "ಮರುಹೊಂದಿಸಲು ಯಾವುದೇ ಐಕಾನ್ ಅನ್ನು ಹಿಡಿದು ಎಳೆಯಿರಿ",
     "reorderReset": "ಮರುಹೊಂದಿಸಿ",
     "reorderResetLong": "ಮೆನು ಆರ್ಡರ್ ಅನ್ನು ಮರುಹೊಂದಿಸಿ",
@@ -2079,6 +2080,33 @@
     "returnHome": "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "ವೇದಿಕೆ",
+      "liveStage": "ಲೈವ್ ಸ್ಟೇಜ್",
+      "event": "ಕಾರ್ಯಕ್ರಮ",
+      "poll": "ಸಮೀಕ್ಷೆ",
+      "quote": "ಉಲ್ಲೇಖ",
+      "shared": "ಹಂಚಿಕೊಳ್ಳಲಾಗಿದೆ",
+      "link": "ಲಿಂಕ್",
+      "community": "ಸಮುದಾಯ",
+      "shop": "ಅಂಗಡಿ",
+      "profile": "ವೈಯಕ್ತಿಕ ವಿವರಗಳು",
+      "film": "ಚಿತ್ರ",
+      "bounty": "ಬೌಂಟಿ",
+      "app": "ಆ್ಯಪ್",
+      "proposal": "ಪ್ರಸ್ತಾವನೆ",
+      "short": "ಚಿಕ್ಕದು",
+      "comic": "ಕಾಮಿಕ್",
+      "earn": "ಗಳಿಸಿ",
+      "listening_one": "{{value}} ಆಲಿಸುತ್ತಿದ್ದೇನೆ",
+      "listening_other": "{{value}} ಆಲಿಸುತ್ತಿದ್ದೇನೆ",
+      "listens_one": "{{value}} ಕೇಳು",
+      "listens_other": "{{value}} ಆಲಿಸುತ್ತಿದ್ದಾರೆ",
+      "votes_one": "{{value}} ಮತ",
+      "votes_other": "{{value}} ಮತಗಳು",
+      "members_one": "{{value}} ಸದಸ್ಯ",
+      "members_other": "{{value}} ಸದಸ್ಯರು"
+    },
     "viewGrid": "ಗ್ರಿಡ್ ವೀಕ್ಷಣೆ",
     "viewList": "ಪಟ್ಟಿ ವೀಕ್ಷಣೆ",
     "viewMode": "ನೋಟ",
@@ -3280,6 +3308,7 @@
     "statsLoadFailed": "ಸ್ಟೇಕಿಂಗ್ ಸ್ಟ್ಯಾಟ್ಸ್ ಲೋಡ್ ಆಗಲಿಲ್ಲ"
   },
   "communities": {
+    "sortTop": "ಅಗ್ರ",
     "shareLink": "ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಿ",
     "pinnedMore": "ಇನ್ನಷ್ಟು",
     "showFirst": "ಮೊದಲು ತೋರಿಸಿ",

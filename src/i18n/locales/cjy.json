@@ -434,6 +434,7 @@
     "gasSponsorshipFailed": "箇笔交易垫勿了。过歇再试试。"
   },
   "nav": {
+    "launchpad": "发射台",
     "reorderHint": "按住并拖动任意图标进行重新排列",
     "reorderReset": "重置",
     "reorderResetLong": "重置菜单顺序",
@@ -2074,6 +2075,30 @@
     "returnHome": "回首页"
   },
   "profile": {
+    "gridCard": {
+      "stage": "舞台",
+      "liveStage": "现场舞台",
+      "event": "活动",
+      "poll": "民调",
+      "community": "社區",
+      "shop": "商店",
+      "profile": "简历",
+      "film": "电影",
+      "bounty": "獎金",
+      "app": "应用",
+      "proposal": "提案",
+      "short": "短",
+      "comic": "漫畫",
+      "earn": "赚钱",
+      "listening_one": "{{value}} 聽聽",
+      "listening_other": "{{value}} 聽聽",
+      "listens_one": "{{value}} 听着",
+      "listens_other": "{{value}} 听着",
+      "votes_one": "{{value}} 投票",
+      "votes_other": "{{value}} 张票数",
+      "members_one": "{{value}} 成员",
+      "members_other": "{{value}} 成员"
+    },
     "viewGrid": "网格视图",
     "viewList": "列表视图",
     "viewMode": "查看",
@@ -3273,6 +3298,7 @@
     "statsLoadFailed": "无法加载质押统计"
   },
   "communities": {
+    "sortTop": "热门",
     "shareLink": "分享链接",
     "pinnedMore": "更多",
     "showFirst": "先显示",

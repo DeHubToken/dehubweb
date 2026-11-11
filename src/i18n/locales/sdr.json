@@ -428,6 +428,7 @@
     "gasSponsorshipFailed": "نەکرا خەرجی ئەم مامەڵەیە بدرێت. تکایە پاش ماوەیەک هەوڵ بدەرەوە."
   },
   "nav": {
+    "launchpad": "لانسپد",
     "reorderHint": "किसी भी आइकन को दबाकर रखें और खींचकर क्रम बदलें",
     "reorderReset": "assistant",
     "reorderResetLong": "بازنشانی ترتیب منوی اصلی",
@@ -2069,6 +2070,33 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "मंच",
+      "liveStage": "लाइव मंच",
+      "event": "कार्यक्रम",
+      "poll": "पोल",
+      "quote": "कोट्स",
+      "shared": "साझा करल",
+      "link": "लिंक",
+      "community": "समुदाय",
+      "shop": "दुकान",
+      "profile": "प्रोफाइल",
+      "film": "फिल्म",
+      "bounty": "इनाम",
+      "app": "ऐप",
+      "proposal": "प्रस्ताव",
+      "short": "शॉर्ट",
+      "comic": "कॉमिक",
+      "earn": "कमाव",
+      "listening_one": "{{value}} सुनत आही",
+      "listening_other": "{{value}} सुनत आही",
+      "listens_one": "{{value}} सुन",
+      "listens_other": "{{value}} सुनत आही",
+      "votes_one": "{{value}} वोट",
+      "votes_other": "{{value}} वोट",
+      "members_one": "{{value}} सदस्य",
+      "members_other": "{{value}} सदस्य"
+    },
     "viewGrid": "ग्रिड व्यू",
     "viewList": "सूची दृश्य",
     "viewMode": "بینید",
@@ -3248,6 +3276,7 @@
     "statsLoadFailed": "स्टेकिंग आंकड़े लोड नहीं कर सके"
   },
   "communities": {
+    "sortTop": "اوپر",
     "shareLink": "लिंक शेअर करा",
     "pinnedMore": "अधिक",
     "showFirst": "पहिले देखाव",

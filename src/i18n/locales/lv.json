@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
   },
   "nav": {
+    "launchpad": "Palaišanas panelis",
     "reorderHint": "Turiet un velciet jebkuru ikonu, lai pārkārtotu",
     "reorderReset": "Atiestatīt",
     "reorderResetLong": "Atiestati ēdienkartes secību",
@@ -2095,6 +2096,33 @@
     "returnHome": "Atgriezties sākumā"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Skatuve",
+      "liveStage": "Tiešraides skatuve",
+      "event": "Pasākums",
+      "poll": "Aptauja",
+      "quote": "Citāts",
+      "shared": "Kopīgots",
+      "link": "Saite",
+      "community": "Kopiena",
+      "shop": "Veikals",
+      "profile": "Profils",
+      "film": "Filma",
+      "bounty": "Atlīdzība",
+      "app": "Lietotne",
+      "proposal": "Priekšlikums",
+      "short": "Īsais video",
+      "comic": "Komikss",
+      "earn": "Nopelnīt",
+      "listening_one": "{{value}} klausās",
+      "listening_other": "{{value}} klausās",
+      "listens_one": "{{value}} klausīties",
+      "listens_other": "{{value}} klausījumi",
+      "votes_one": "{{value}} balss",
+      "votes_other": "{{value}} balsis",
+      "members_one": "{{value}} dalībnieks",
+      "members_other": "{{value}} dalībnieki"
+    },
     "viewGrid": "Režģa skats",
     "viewList": "Saraksta skats",
     "viewMode": "Skatīt",
@@ -3299,6 +3327,7 @@
     "statsLoadFailed": "Nespēja izgūt stākšanas dati"
   },
   "communities": {
+    "sortTop": "Populārākās",
     "shareLink": "Nosūtīt saiti",
     "pinnedMore": "Vairāk",
     "showFirst": "Rādīt pirmo",

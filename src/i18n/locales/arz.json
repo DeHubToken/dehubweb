@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "ماقدرناش نغطى المعامله دى. جرب تانى بعد شويه."
   },
   "nav": {
+    "launchpad": "منصة الإطلاق",
     "reorderHint": "احتفظ و اسحب أي أيكون لتغيير ترتيبها",
     "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
@@ -2092,6 +2093,32 @@
     "returnHome": "ارجع للرئيسية"
   },
   "profile": {
+    "gridCard": {
+      "stage": "ستيدج",
+      "event": "حدث",
+      "poll": "استطلاع رأي",
+      "quote": "اقتباس",
+      "shared": "مشترك",
+      "link": "الرابط",
+      "community": "المجتمع",
+      "shop": "المتجر",
+      "profile": "الملف الشخصي",
+      "film": "السينما",
+      "bounty": "الجائزة",
+      "app": "التطبيق",
+      "proposal": "الاقتراح",
+      "short": "قصير",
+      "comic": "كوميكس",
+      "earn": "اكسب",
+      "listening_one": "{{value}} بيسمع",
+      "listening_other": "{{value}} بيسمع",
+      "listens_one": "{{value}} اسمع",
+      "listens_other": "{{value}} بيسمع",
+      "votes_one": "{{value}} تصويت",
+      "votes_other": "{{value}} أصوات",
+      "members_one": "{{value}} عضو",
+      "members_other": "{{value}} أعضاء"
+    },
     "viewGrid": "طريقة عرض الشبكة",
     "viewList": "عرض القائمة",
     "viewMode": "عرض",
@@ -3295,6 +3322,7 @@
     "statsLoadFailed": "تعذّر تحميل إحصائيات الرهن"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "مشاركة الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه الأول",

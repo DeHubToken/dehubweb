@@ -413,6 +413,7 @@
     "gasSponsorshipFailed": "จ่ายค่าธรรมเนียมธุรกรรมนี้บ่ได้ ลองใหม่อีกเทื่อในบ่ดนนี้"
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "กดค้างแล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
     "reorderReset": "รีเซ็ต",
     "reorderResetLong": "รีเซ็ตลำดับเมนู",
@@ -2041,6 +2042,28 @@
     "returnHome": "กลับหน้าหลัก"
   },
   "profile": {
+    "gridCard": {
+      "stage": "สเตจ",
+      "liveStage": "เวทีสด",
+      "event": "งาน",
+      "quote": "คำคม",
+      "community": "ชุมชน",
+      "shop": "ร้านขายของ",
+      "profile": "โปรไฟล์",
+      "film": "หนัง",
+      "bounty": "ค่าหัว",
+      "proposal": "ข้อเสนอ",
+      "comic": "การ์ตูน",
+      "earn": "หาเงิน",
+      "listening_one": "{{value}} กำลังฟังอยู่",
+      "listening_other": "{{value}} กำลังฟังอยู่",
+      "listens_one": "{{value}} ฟังเด้อ",
+      "listens_other": "{{value}} ฟังอยู่",
+      "votes_one": "{{value}} โหวต",
+      "votes_other": "{{value}} ใบเสียง",
+      "members_one": "{{value}} สมาชิก",
+      "members_other": "{{value}}"
+    },
     "viewGrid": "มุมมองกริด",
     "viewList": "รายการมุมมอง",
     "viewMode": "มอง",
@@ -3231,6 +3254,7 @@
     "statsLoadFailed": "ไม่สามารถโหลดสถิติเริ่มต้นได้"
   },
   "communities": {
+    "sortTop": "เทิงสุด",
     "shareLink": "แชร์ลิงก์",
     "pinnedMore": "เพิ่มเติม",
     "showFirst": "สำแดงก่อน",

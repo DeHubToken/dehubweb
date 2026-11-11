@@ -493,7 +493,7 @@ export function ImagesFeed({
 
   
   // Get wallet address for authenticated requests
-  const { walletAddress, isAuthenticated } = useAuth();
+  const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
 
   // Determine if we need the unified feed API (premium filters or following mode)
   const isPremiumFilterActive = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
@@ -503,14 +503,14 @@ export function ImagesFeed({
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
+      openLoginModal();
       return;
     }
     // Re-tapping the active chip changes nothing, so it must not flash a loader.
     if (option.value === selectedSort.value) return;
     beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition, _copy]);
+  }, [isAuthenticated, openLoginModal, selectedSort.value, setSelectedSort, beginFilterTransition, _copy]);
 
   // Every other chip row goes through these, so each one arms the loader.
   const selectUploadDate = useCallback((value: DateFilterOption) => {

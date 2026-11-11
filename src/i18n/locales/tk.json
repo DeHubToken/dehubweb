@@ -433,6 +433,7 @@
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Her bir simgony saklaň we gaýtargylaň",
     "reorderReset": "Gaýd Et",
     "reorderResetLong": "Menü düzgüni gaýd et",
@@ -2071,6 +2072,33 @@
     "returnHome": "Baş sahypa gaýdyp barmak"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Sazana",
+      "liveStage": "Göni sazana",
+      "event": "Çäre",
+      "poll": "Ses berme",
+      "quote": "Sitata",
+      "shared": "Paýlaşyldy",
+      "link": "Baglanyşyk",
+      "community": "Jemgyýet",
+      "shop": "Dükan",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Sylag",
+      "app": "Goýma",
+      "proposal": "Teklip",
+      "short": "Gysga",
+      "comic": "Komiks",
+      "earn": "Gazanç",
+      "listening_one": "{{value}} diňleýär",
+      "listening_other": "{{value}} diňleýär",
+      "listens_one": "{{value}} diňle",
+      "listens_other": "{{value}} diňleýär",
+      "votes_one": "{{value}} ses",
+      "votes_other": "{{value}} ses",
+      "members_one": "{{value}} agza",
+      "members_other": "{{value}} agza"
+    },
     "viewGrid": "Şekil Görnüşi",
     "viewList": "Sarygyň görünüşi",
     "viewMode": "Görnüş",
@@ -3267,6 +3295,7 @@
     "statsLoadFailed": "Staking stats-i ýükläp bolmady"
   },
   "communities": {
+    "sortTop": "Ýokary",
     "shareLink": "Baglaýyş paýla",
     "pinnedMore": "Mundan artyk",
     "showFirst": "Ilki bilen görkez",

@@ -431,6 +431,7 @@
     "gasSponsorshipFailed": "ບໍ່ສາມາດຮັບຜິດຊອບຄ່າທຸລະກຳນີ້ໄດ້. ກະລຸນາລອງໃໝ່ໃນອີກບຶດໜຶ່ງ."
   },
   "nav": {
+    "launchpad": "ແພລດຟອມເປີດຕົວ",
     "reorderHint": "ຖືແລະລາກໄອຄອນໃດໜຶ່ງເພື່ອຈັດລຽງຄືນ",
     "reorderReset": "ຕັ້ງຄ່າໃໝ່",
     "reorderResetLong": "ຕັ້ງຄຳສັ່ງເມນູໃໝ່",
@@ -2074,6 +2075,33 @@
     "returnHome": "ກັບໜ້າຫຼັກ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "ເວທີ",
+      "liveStage": "ເວທີສົດ",
+      "event": "ເຫດການ",
+      "poll": "ແບບສຳຫຼວດ",
+      "quote": "ຄຳຄົມ",
+      "shared": "ແບ່ງປັນແລ້ວ",
+      "link": "ລິ້ງ",
+      "community": "ຊຸມຊົນ",
+      "shop": "ຮ້ານຄ້າ",
+      "profile": "ໂປຣໄຟລ໌",
+      "film": "ຮູບເງົາ",
+      "bounty": "ລາງວັນ",
+      "app": "ແອັບ",
+      "proposal": "ຂໍ້ສະເໜີ",
+      "short": "ວິດີໂອສັ້ນ",
+      "comic": "ກາຕູນ",
+      "earn": "ຫາລາຍໄດ້",
+      "listening_one": "{{value}} ຄົນກຳລັງຟັງ",
+      "listening_other": "{{value}} ຄົນກຳລັງຟັງ",
+      "listens_one": "{{value}} ຄົນຟັງ",
+      "listens_other": "{{value}} ຄົນຟັງ",
+      "votes_one": "{{value}} ຄະແນນສຽງ",
+      "votes_other": "{{value}} ຄະແນນສຽງ",
+      "members_one": "{{value}} ສະມາຊິກ",
+      "members_other": "{{value}} ສະມາຊິກ"
+    },
     "viewGrid": "ການເບິ່ງຕາຕະລາງ",
     "viewList": "ເບິ່ງລາຍການ",
     "viewMode": "ເບິ່ງ",
@@ -3271,6 +3299,7 @@
     "statsLoadFailed": "ບໍ່ສາມາດໂຫຼດສະຖິຕິ staking ໄດ້"
   },
   "communities": {
+    "sortTop": "ອັນດັບຕົ້ນ",
     "shareLink": "ແບ່ງປັນລິ້ງ",
     "pinnedMore": "ເພີ່ມເຕີມ",
     "showFirst": "ສະແດງກ່ອນ",

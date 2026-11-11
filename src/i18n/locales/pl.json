@@ -437,6 +437,7 @@
     "gasSponsorshipFailed": "Nie udało się pokryć tej transakcji. Spróbuj ponownie za chwilę."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Przytrzymaj i przeciągnij dowolną ikonę, aby zmienić kolejność",
     "reorderReset": "Zresetuj",
     "reorderResetLong": "Resetuj kolejność menu",
@@ -2099,6 +2100,33 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Scena",
+      "liveStage": "Scena na żywo",
+      "event": "Wydarzenie",
+      "poll": "Ankieta",
+      "quote": "Cytat",
+      "shared": "Udostępniono",
+      "link": "Link",
+      "community": "Społeczność",
+      "shop": "Sklep",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Nagroda",
+      "app": "Aplikacja",
+      "proposal": "Propozycja",
+      "short": "Krótki film",
+      "comic": "Komiks",
+      "earn": "Zarabiaj",
+      "listening_one": "{{value}} słucha",
+      "listening_other": "{{value}} słucha",
+      "listens_one": "{{value}} słuchaj",
+      "listens_other": "{{value}} słucha",
+      "votes_one": "{{value}} głos",
+      "votes_other": "{{value}} głosy",
+      "members_one": "{{value}} członek",
+      "members_other": "{{value}} członków"
+    },
     "unavailable": "Profil niedostępny",
     "viewGrid": "Widok siatki",
     "viewList": "Widok listy",
@@ -3309,6 +3337,7 @@
     "statsLoadFailed": "Nie udało się załadować statystyk stakingu"
   },
   "communities": {
+    "sortTop": "Najlepsze",
     "shareLink": "Udostępnij link",
     "pinnedMore": "Więcej",
     "showFirst": "Pokaż jako pierwszą",

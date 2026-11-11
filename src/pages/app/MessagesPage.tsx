@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
-import { PageIsland } from '@/components/app/page-kit/PageKit';
+import { IslandAction, PageIsland, usePhonePill } from '@/components/app/page-kit/PageKit';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -261,6 +261,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   const { data: myMemberships } = useUserCommunities();
   
   const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/MessagesPage.tsx:searchQuery", '');
+  const phonePill = usePhonePill();
   // Both search-backed queries key on the query string — passing the raw
   // input fired 2 network requests per KEYSTROKE (each prefix a fresh cache
   // key). Debounce to one request pair per pause in typing.
@@ -760,6 +761,12 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                   <ExitFullscreen className="h-[18px] w-[18px]" />
                 </button>
               </>
+            ) : phonePill ? (
+              // Phones: search waits in the drawer behind the pill's search
+              // button, so starting a chat lives on the pill itself.
+              <IslandAction label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })} onClick={openNewMessage}>
+                <Plus />
+              </IslandAction>
             ) : undefined}
           >
             <div className="relative flex items-center">
@@ -785,16 +792,18 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 >
                   <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
                 </button>
-                <button
-                  type="button"
-                  data-messages-search-action
-                  onClick={openNewMessage}
-                  aria-label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
-                  title={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
-                  className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
+                {!(phonePill && !fullscreen) && (
+                  <button
+                    type="button"
+                    data-messages-search-action
+                    onClick={openNewMessage}
+                    aria-label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
+                    title={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
+                    className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                )}
                 {!fullscreen && (
                   <button
                     type="button"

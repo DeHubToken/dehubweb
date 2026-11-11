@@ -435,6 +435,7 @@
     "gasSponsorshipFailed": "اس لین دین کا خرچ نہیں اٹھایا جا سکا۔ براہ کرم تھوڑی دیر بعد کوشش کریں۔"
   },
   "nav": {
+    "launchpad": "لانچ پیڈ",
     "reorderHint": "دوبارہ ترتیب دینے کے لیے کسی بھی آئیکن کو ہولڈ اور ڈریگ کریں",
     "reorderReset": "ری سیٹ کریں",
     "reorderResetLong": "مینیو آرڈر ری سیٹ کریں",
@@ -2090,6 +2091,33 @@
     "returnHome": "ہوم پر واپس جائیں"
   },
   "profile": {
+    "gridCard": {
+      "stage": "مُحِطہ",
+      "liveStage": "ٹھیک ہے",
+      "event": "مُحفلہ",
+      "poll": "آپشن",
+      "quote": "قُوت",
+      "shared": "شَریک کیا گیا",
+      "link": "لینک",
+      "community": "مُجتمِعہ",
+      "shop": "دُکان",
+      "profile": "پروفائل",
+      "film": "فلم",
+      "bounty": "باؤنٹی",
+      "app": "اپ",
+      "proposal": "پروپوزل",
+      "short": "کُتھی",
+      "comic": "کامک",
+      "earn": "کمائی",
+      "listening_one": "{{value}} سن رہا ہے",
+      "listening_other": "{{value}} سن رہا ہے",
+      "listens_one": "{{value}} سن",
+      "listens_other": "{{value}} سنتا ہے",
+      "votes_one": "{{value}} ووٹ دے",
+      "votes_other": "{{value}} ووٹ دیتے ہیں",
+      "members_one": "{{value}} رکن",
+      "members_other": "{{value}} رکنیں"
+    },
     "viewGrid": "گرڈ کا منظر",
     "viewList": "فہرست کا منظر",
     "viewMode": "دیکھیں",
@@ -3297,6 +3325,7 @@
     "statsLoadFailed": "اسٹیکنگ کی Statistics نہیں لوڈ ہوسکے"
   },
   "communities": {
+    "sortTop": "سرفہرست",
     "shareLink": "لنک شیئر کریں",
     "pinnedMore": "مزید",
     "showFirst": "پہلے دکھائیں",

@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { armAfterSignIn, noteSignedOut } from '@/lib/after-sign-in';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Auth Provider (heavy implementation — loaded via the WalletProviders chunk)
@@ -639,6 +640,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
      * against the allowance.
      */
     forProfileId?: string;
+    then?: () => void;
+    path?: string;
   }) => {
     connectionAbortedRef.current = false;
     // Read off storage, not state: this callback closes over the first render's
@@ -687,6 +690,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       addProfilePrevIdRef.current = liveId;
     } else {
       snapshotCurrentSession();
+      // Whatever they tapped carries on once they are signed in.
+      armAfterSignIn({ run: options?.then, path: options?.path, fromAddress: sheetOpenedWithAddressRef.current });
     }
     setLoginIntent(options?.intent === 'add-profile' ? 'add-profile' : 'login');
     setIsLoginModalOpen(true);
@@ -3239,6 +3244,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const disconnect = async (options?: { forgetProfile?: boolean }) => {
+    // An account page left open behind a sign-out goes home quietly rather
+    // than asking them to sign straight back in.
+    noteSignedOut();
     // Best-effort server-side token revocation (fire-and-forget)
     logoutFromServer().catch(() => {});
     // Belongs to the identity signing out — the next one must not inherit it.

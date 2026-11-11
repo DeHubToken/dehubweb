@@ -433,6 +433,7 @@
     "gasSponsorshipFailed": "د دې لیږد لګښت نه شو ورکول کیدی. مهرباني وکړئ لږ وروسته بیا هڅه وکړئ."
   },
   "nav": {
+    "launchpad": "د لانچ پیډ",
     "reorderHint": "د بیا تنظیم کولو لپاره هر ډول آیکون وساتئ او ډراپ کړئ",
     "reorderReset": "د بیا رغونې",
     "reorderResetLong": "د مینو ترتیب بیا تنظیم کړئ",
@@ -2068,6 +2069,28 @@
     "returnHome": "کور ته بیرته لاړ شئ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "سټېج",
+      "liveStage": "ژوندی سټېج",
+      "event": "پېښه",
+      "poll": "پوښتنه (رایه اچونه)",
+      "quote": "اقتباس",
+      "shared": "شیر شو",
+      "link": "لینک",
+      "community": "ټولنه",
+      "shop": "دوکان",
+      "profile": "پروفایل",
+      "film": "فلم",
+      "bounty": "انعام",
+      "app": "اپلیکېشن",
+      "proposal": "وړاندیز",
+      "short": "په لنډه توګه",
+      "comic": "کمیک",
+      "earn": "ګټه ترلاسه کول",
+      "listens_one": "{{value}} واوره",
+      "listens_other": "{{value}} اوري",
+      "members_one": "{{value}} غړی"
+    },
     "viewGrid": "منظره سرخ منظره",
     "viewList": "منظره منظره",
     "viewMode": "منظره",
@@ -3258,6 +3281,7 @@
     "statsLoadFailed": "نه شو کولای چې د ولايتي شورا ګانو د"
   },
   "communities": {
+    "sortTop": "لوړ",
     "shareLink": "لینک شریک کړئ",
     "pinnedMore": "نور ډیر څه",
     "showFirst": "لومړی یې وښیه",

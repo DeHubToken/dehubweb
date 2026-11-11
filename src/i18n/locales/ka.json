@@ -437,6 +437,7 @@
     "gasSponsorshipFailed": "ამ ტრანზაქციის დაფინანსება ვერ მოხერხდა. სცადეთ ცოტა ხანში."
   },
   "nav": {
+    "launchpad": "გაშვების პლატფორმა",
     "reorderHint": "დაიჭირეთ და გადაიტანეთ ნებისმიერი ხატულა გადასაადგილებლად",
     "reorderReset": "გადაყენება",
     "reorderResetLong": "მენიუს მოწესრიგების გადაყენება",
@@ -2109,6 +2110,32 @@
     "returnHome": "მთავარზე დაბრუნება"
   },
   "profile": {
+    "gridCard": {
+      "stage": "სცენა",
+      "liveStage": "ცოცხალი სცენა",
+      "event": "ღონისძიება",
+      "poll": "გამოკითხვა",
+      "quote": "ციტატა",
+      "shared": "საზიარო",
+      "link": "ბმული",
+      "community": "საზოგადოება",
+      "shop": "მაღაზია",
+      "profile": "პროფილი",
+      "film": "ფილმი",
+      "bounty": "ხარჯი",
+      "app": "აპი",
+      "proposal": "შეთავაზება",
+      "short": "მოკლე",
+      "comic": "კომიქსი",
+      "earn": "გამომუშავება",
+      "listening_one": "{{value}} უსმენს",
+      "listening_other": "{{value}} უსმენს",
+      "listens_one": "{{value}} მომისმინე",
+      "listens_other": "{{value}} უსმენს",
+      "votes_one": "{{value}} ხმის მიცემა",
+      "members_one": "{{value}} წევრი",
+      "members_other": "{{value}} წევრები"
+    },
     "viewGrid": "ბადის ხედი",
     "viewList": "სიის ხედი",
     "viewMode": "მონახება",
@@ -3309,6 +3336,7 @@
     "statsLoadFailed": "ფსონების სტატისტიკის ჩატვირთვა ვერ მოხერხდა"
   },
   "communities": {
+    "sortTop": "საუკეთესო",
     "shareLink": "ბმულის გაზიარება",
     "pinnedMore": "მეტი",
     "showFirst": "პირველად ჩვენება",

@@ -277,6 +277,8 @@ export interface VideoItem extends BaseFeedItem {
   categories?: string[];
   /** Whether this video card actually represents a live post */
   isLivePost?: boolean;
+  /** Posted as a short (vertical, Shorts feed) rather than a long video. */
+  isShort?: boolean;
   /** Cached live status from feed navigation */
   liveStatus?: string;
   /** Cached stream active flag from feed navigation */

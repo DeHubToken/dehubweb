@@ -12,7 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import Plus from "@/components/ui/cut-icons/add";
 import Search from "@/components/ui/cut-icons/search";
 
-import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
+import { IslandAction, PageBody, PageIsland, PageTabs, usePhonePill } from '@/components/app/page-kit/PageKit';
+import { CleanWords } from '@/components/app/clean/CleanKit';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserCommunities, useDiscoverCommunities, useCommunityActivityScores } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
@@ -39,6 +40,8 @@ export default function CommunitiesPage() {
   const [sortMode, setSortMode] = useState<'top' | 'new' | 'hot'>('top');
 
   const [tab, setTab] = useState<'communities' | 'activity'>('communities');
+  // Phones sort with words under the pill; desktop keeps its two buttons.
+  const phone = usePhonePill();
 
   // Activity and unread badges are views of the main notification system — the
   // same rows the bell reads, fetched once. This page used to query
@@ -183,15 +186,32 @@ export default function CommunitiesPage() {
                 className="w-full h-10 pl-10 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
               />
             </div>
+            {!phone && (<>
             <IslandAction label={_copy("copy.18fdd549b2ed", { defaultValue: "New" })} active={sortMode === 'new'} onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}>
               <span className="text-base leading-none">💎</span>
             </IslandAction>
             <IslandAction label={_copy("copy.0ec53894d032", { defaultValue: "Hot" })} active={sortMode === 'hot'} onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}>
               <span className="text-base leading-none">🔥</span>
             </IslandAction>
+            </>)}
           </div>
         ) : null}
       </PageIsland>
+
+      {phone && tab === 'communities' && (
+        <div className="px-3">
+          <CleanWords<'top' | 'new' | 'hot'>
+            layoutId="communities-sort"
+            value={sortMode}
+            onChange={setSortMode}
+            items={[
+              { id: 'top', label: t('communities.sortTop', { defaultValue: 'Top' }) },
+              { id: 'new', label: _copy('copy.18fdd549b2ed', { defaultValue: 'New' }) },
+              { id: 'hot', label: t('explorePage.trending', { defaultValue: 'Trending' }) },
+            ]}
+          />
+        </div>
+      )}
 
       {/* Content */}
       <PageBody measure className="mx-auto">

@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Den här transaktionen kunde inte bekostas. Försök igen om en stund."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Håll och dra valfri ikon för att ordna om",
     "reorderReset": "Återställ",
     "reorderResetLong": "Återställ menyordning",
@@ -2094,6 +2095,33 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Scen",
+      "liveStage": "Live-scen",
+      "event": "Evenemang",
+      "poll": "Omröstning",
+      "quote": "Citat",
+      "shared": "Delad",
+      "link": "Länk",
+      "community": "Community",
+      "shop": "Butik",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Bounty",
+      "app": "App",
+      "proposal": "Förslag",
+      "short": "Kort",
+      "comic": "Serie",
+      "earn": "Tjäna",
+      "listening_one": "{{value}} lyssnar",
+      "listening_other": "{{value}} lyssnar",
+      "listens_one": "{{value}} lyssna",
+      "listens_other": "{{value}} lyssnar",
+      "votes_one": "{{value}} röst",
+      "votes_other": "{{value}} röster",
+      "members_one": "{{value}} medlem",
+      "members_other": "{{value}} medlemmar"
+    },
     "viewGrid": "Rutnätsvy",
     "viewList": "Listvy",
     "viewMode": "Visa",
@@ -3301,6 +3329,7 @@
     "statsLoadFailed": "Kunde inte ladda staking-statistik"
   },
   "communities": {
+    "sortTop": "Topp",
     "shareLink": "Dela länk",
     "pinnedMore": "Mer",
     "showFirst": "Visa först",

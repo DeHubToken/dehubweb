@@ -434,6 +434,7 @@
     "gasSponsorshipFailed": "بۇ مامىلىنىڭ خىراجىتىنى كۆتۈرەلمىدۇق. بىردەمدىن كېيىن قايتا سىناڭ."
   },
   "nav": {
+    "launchpad": "Lansman platformi",
     "reorderHint": "ھەرقانداق بەلگىنى تۇتۇپ قايتىدىن ئورۇنلاشتۇرۇش ئۈچۈن يۆتكەش",
     "reorderReset": "ئەسلىگە كەلتۈرۈش",
     "reorderResetLong": "تىزىملىكنى قايتىدىن تەڭشەش",
@@ -2077,6 +2078,33 @@
     "returnHome": "باش بەتكە قايتىش"
   },
   "profile": {
+    "gridCard": {
+      "stage": "سەھنە",
+      "liveStage": "جانلىق سەھنە",
+      "event": "پائالىيەت",
+      "poll": "راي سىناش",
+      "quote": "نەقىل",
+      "shared": "ھەمبەھىرلەندى",
+      "link": "ئۇلانما",
+      "community": "جەمئىيەت",
+      "shop": "دۇكان",
+      "profile": "شەخسىي ئارخىپ",
+      "film": "فىلىم",
+      "bounty": "مۇكاپات",
+      "app": "ئەپ",
+      "proposal": "تەكلىپ",
+      "short": "قىسقا فىلىم",
+      "comic": "كومىكس",
+      "earn": "تاپشۇرۇۋېلىش",
+      "listening_one": "{{value}} ئادەم ئاڭلاۋاتىدۇ",
+      "listening_other": "{{value}} ئادەم ئاڭلاۋاتىدۇ",
+      "listens_one": "{{value}} ئادەم ئاڭلىدى",
+      "listens_other": "{{value}} ئادەم ئاڭلىدى",
+      "votes_one": "{{value}} ئاۋاز",
+      "votes_other": "{{value}} ئاۋاز",
+      "members_one": "{{value}} ئەزا",
+      "members_other": "{{value}} ئەزا"
+    },
     "viewGrid": "تور كۆرگۈ",
     "viewList": "تىزىملىك كۆرۈنۈشى",
     "viewMode": "كۆرۈنۈش",
@@ -3275,6 +3303,7 @@
     "statsLoadFailed": "Sakkizlash statistikasi yuklanmadi"
   },
   "communities": {
+    "sortTop": "يۇقىرى",
     "shareLink": "ئۇلىنىشنى ھەمبەھىرلەش",
     "pinnedMore": "تېخىمۇ كۆپ",
     "showFirst": "ئالدى بىلەن كۆرسەت",

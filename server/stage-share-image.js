@@ -3,7 +3,7 @@ import { resvgReady } from './resvg.js';
 import { STAGE_CARD_VERSION, renderStageCardSvg, stageCardAssetPaths, stageCardSource } from './stage-share-card.js';
 
 const SHARE_IMAGE = 'https://riftn.com/og/riftn-share.png';
-const FONTS = ['/brand-kit/font/exo-500.ttf', '/brand-kit/font/exo-700.ttf', '/brand-kit/font/mono.ttf'];
+const FONTS = ['/brand-kit/font/manrope-500.ttf', '/brand-kit/font/manrope-700.ttf', '/brand-kit/font/mono.ttf'];
 let fonts;
 
 const TYPES = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
@@ -38,7 +38,7 @@ function loadFonts(env) {
 }
 
 /**
- * /_og/stage/v5/<id>.png — the generated Chrome Mic banner for a stage with no cover.
+ * /_og/stage/v6/<id>.png — the generated Chrome Mic banner for a stage with no cover.
  * Rendered from the live row, so a stage going live or ending changes its
  * card; cached under a fingerprint of the fields the card reads.
  */
@@ -62,7 +62,7 @@ export async function handleStageShareImage(request, env, ctx, id, lookup) {
       return hit;
     }
     const [, fontBuffers, pictures] = await Promise.all([resvgReady(), loadFonts(env), loadImages(env, stage)]);
-    const renderer = new Resvg(renderStageCardSvg(stage, pictures), { font: { fontBuffers, defaultFontFamily: 'Exo' } });
+    const renderer = new Resvg(renderStageCardSvg(stage, pictures), { font: { fontBuffers, defaultFontFamily: 'Manrope' } });
     let png;
     try { const rendered = renderer.render(); png = rendered.asPng(); rendered.free(); }
     finally { renderer.free(); }

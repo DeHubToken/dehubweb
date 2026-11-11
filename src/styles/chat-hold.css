@@ -28,6 +28,11 @@
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
 }
 [data-chat-holding=''] [data-chat-row]:not([data-chat-held]) { opacity: 0.35 !important; }
+/* A short list slides up as one box (ChatHoldSheet), so its newest line clears the sheet. */
+[data-chat-hold-box] {
+  transform: translateY(var(--chat-hold-box-lift, 0px));
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 [data-chat-hold-sheet][data-chat-hold-sheet] {
   color: var(--stage-ink, #f4f4f5);
   background: color-mix(in srgb, var(--stage-solid, #1b1b1e) 74%, transparent);

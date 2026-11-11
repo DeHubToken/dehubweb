@@ -1,5 +1,5 @@
 {
-  "version": "4bb86c8a13bdc6a8",
+  "version": "778930bdd205bb4a",
   "routes": {
     "/": [
       "ar",
@@ -1030,6 +1030,13 @@
       "nl",
       "tr"
     ],
+    "/guides/is-riftn-the-same-as-dehub": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
     "/guides/is-watch-to-earn-legit": [
       "ar",
       "es",
@@ -1619,13 +1626,6 @@
       "tr"
     ],
     "/stats": [
-      "ar",
-      "es",
-      "fr",
-      "nl",
-      "tr"
-    ],
-    "/stores": [
       "ar",
       "es",
       "fr",

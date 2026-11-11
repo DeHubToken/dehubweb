@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Denne transaktion kunne ikke betales for dig. Prøv igen om et øjeblik."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Hold og træk et ikon for at omarrangere",
     "reorderReset": "Nulstil",
     "reorderResetLong": "Nulstil menurækkefølge",
@@ -2096,6 +2097,33 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Scene",
+      "liveStage": "Live scene",
+      "event": "Begivenhed",
+      "poll": "Afstemning",
+      "quote": "Citat",
+      "shared": "Delt",
+      "link": "Link",
+      "community": "Fællesskab",
+      "shop": "Butik",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Dusør",
+      "app": "App",
+      "proposal": "Forslag",
+      "short": "Kort",
+      "comic": "Tegneserie",
+      "earn": "Tjen",
+      "listening_one": "{{value}} lytter",
+      "listening_other": "{{value}} lytter",
+      "listens_one": "{{value}} lyt",
+      "listens_other": "{{value}} lytter",
+      "votes_one": "{{value}} stemme",
+      "votes_other": "{{value}} stemmer",
+      "members_one": "{{value}} medlem",
+      "members_other": "{{value}} medlemmer"
+    },
     "viewGrid": "Gittervisning",
     "viewList": "Listevisning",
     "viewMode": "Vis",
@@ -3304,6 +3332,7 @@
     "statsLoadFailed": "Kunne ikke hente stakings-statistik"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Del link",
     "pinnedMore": "Mere",
     "showFirst": "Vis først",

@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "Δεν ήταν δυνατή η κάλυψη αυτής της συναλλαγής. Δοκιμάστε ξανά σε λίγο."
   },
   "nav": {
+    "launchpad": "Πλαίσιο εκτόξευσης",
     "reorderHint": "Κρατήστε και σύρετε οποιοδήποτε εικονίδιο για να το αναδιατάξετε",
     "reorderReset": "Επαναφορά",
     "reorderResetLong": "Επαναφορά παραγγελίας μενού",
@@ -2091,6 +2092,33 @@
     "returnHome": "Επιστροφή στην Αρχική"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Στάδιο",
+      "liveStage": "Ζωντανή σκηνή",
+      "event": "Εκδήλωση",
+      "poll": "Δημοσκόπηση",
+      "quote": "Παράθεση",
+      "shared": "Κοινόχρηστη",
+      "link": "Σύνδεσμος",
+      "community": "Κοινότητα",
+      "shop": "Καταστημα",
+      "profile": "Προφίλ",
+      "film": "Ταινία",
+      "bounty": "Βραβείο",
+      "app": "Εφαρμογή",
+      "proposal": "Πρόταση",
+      "short": "Μικρός",
+      "comic": "Κωμωδία",
+      "earn": "Κέρδισε",
+      "listening_one": "{{value}} ακούω",
+      "listening_other": "{{value}} ακούω",
+      "listens_one": "{{value}} άκου",
+      "listens_other": "{{value}} ακούει",
+      "votes_one": "{{value}} ψήφος",
+      "votes_other": "{{value}} ψήφοι",
+      "members_one": "{{value}} μέλος",
+      "members_other": "{{value}} μέλη"
+    },
     "viewGrid": "Προβολή πλέγματος",
     "viewList": "Προβολή λίστας",
     "viewMode": "Προβολή",
@@ -3323,6 +3351,7 @@
     "statsLoadFailed": "Δεν μπορέσαμε να φορτώσουμε τα στατιστικά στοιχεία στούντου"
   },
   "communities": {
+    "sortTop": "Κορυφαία",
     "shareLink": "Κοινοποίηση συνδέσμου",
     "pinnedMore": "Περισσότερα",
     "showFirst": "Εμφάνιση πρώτα",

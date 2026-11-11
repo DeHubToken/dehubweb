@@ -435,6 +435,7 @@
     "gasSponsorshipFailed": "Le ntengiselwano ayikwazanga ukukhokhelwa. Sicela uzame futhi ngomzuzwana."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Bamba bese uhudula noma iyiphi i-ayikhoni ukuze uhlele kabusha",
     "reorderReset": "Setha kabusha",
     "reorderResetLong": "Setha kabusha ukulandelana kwemenyu",
@@ -2090,6 +2091,33 @@
     "returnHome": "Buyela Ekhaya"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Isigcawu",
+      "liveStage": "Isigcawu esibukhoma",
+      "event": "Umcimbi",
+      "poll": "Inhlolovo",
+      "quote": "Isisho",
+      "shared": "Kabelwe",
+      "link": "Isixhumanisi",
+      "community": "Umphakathi",
+      "shop": "Isitolo",
+      "profile": "Iphrofayili",
+      "film": "Ifilimu",
+      "bounty": "Umvuzo",
+      "app": "Uhlelo",
+      "proposal": "Isiphakamiso",
+      "short": "Mfushane",
+      "comic": "Ikomikhi",
+      "earn": "Thola",
+      "listening_one": "{{value}} ilalele",
+      "listening_other": "{{value}} ilalele",
+      "listens_one": "{{value}} lalela",
+      "listens_other": "{{value}} ulalela",
+      "votes_one": "{{value}} vota",
+      "votes_other": "{{value}} uvota",
+      "members_one": "{{value}} ilungu",
+      "members_other": "{{value}} amalungu"
+    },
     "viewGrid": "Ukubuka igridi",
     "viewList": "Ukubukwa kohlu",
     "viewMode": "Buka",
@@ -3322,6 +3350,7 @@
     "statsLoadFailed": "Ayikwazanga ukuloada izibalo zokugcina"
   },
   "communities": {
+    "sortTop": "Okuphezulu",
     "shareLink": "Yabelana ngesixhumanisi",
     "pinnedMore": "Okwengeziwe",
     "showFirst": "Bonisa kuqala",

@@ -433,6 +433,7 @@
     "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"
   },
   "nav": {
+    "launchpad": "መእተዊ",
     "reorderHint": "ንምልዋጥ ዝኾነ ኣዶ ሒዝካ ስዓቦ",
     "reorderReset": "ዳግም ምትካል",
     "reorderResetLong": "ናይ ምናሌ ቅደም ተከተል ዳግም ኣዳሉ",
@@ -2061,6 +2062,33 @@
     "returnHome": "ናብ ገዛ ተመለስ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "መድረኽ",
+      "liveStage": "ቀጥታ መድረኽ",
+      "event": "ኩነት",
+      "poll": "ድምጺ",
+      "quote": "ጥቅሲ",
+      "shared": "ዝተኻፈለ",
+      "link": "መላግቦ",
+      "community": "ማሕበረሰብ",
+      "shop": "ዱኳን",
+      "profile": "መገለጺ",
+      "film": "ፊልም",
+      "bounty": "ሽልማት",
+      "app": "መተግበሪ",
+      "proposal": "ናይ መረበታዊ ሓሳብ",
+      "short": "ሓጺር",
+      "comic": "ኮሚክ",
+      "earn": "ምኽፋል",
+      "listening_one": "{{value}} ሰማዒ",
+      "listening_other": "{{value}} ሰማዕቲ",
+      "listens_one": "{{value}} ስማዕ",
+      "listens_other": "{{value}} ይሰምዑ",
+      "votes_one": "{{value}} ድምጺ",
+      "votes_other": "{{value}} ድምጽታት",
+      "members_one": "{{value}} ኣባል",
+      "members_other": "{{value}} ኣባላት"
+    },
     "viewGrid": "ናይ ምስሊ መግለጺ",
     "viewList": "ናይ ምርኣይ ዝርዝር",
     "viewMode": "ርኣዮ",
@@ -3260,6 +3288,7 @@
     "statsLoadFailed": "ስታኪንግ ስታቲስቲክስ ምጽዓት ኣይከኣለን"
   },
   "communities": {
+    "sortTop": "ላዕለዋይ",
     "shareLink": "ርክባት ምዝርጋሕ",
     "pinnedMore": "ዝያዳ",
     "showFirst": "ቀዳማይ ኣርኢ",

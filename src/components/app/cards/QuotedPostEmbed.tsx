@@ -52,7 +52,7 @@ export function resolveQuotedPostMedia(post: DeHubNFT) {
   );
 
   // For images: resolve feed-image URLs properly via buildFeedImageUrls
-  const resolvedImageUrls = buildFeedImageUrls(post.imageUrls);
+  const resolvedImageUrls = buildFeedImageUrls(post.imageUrls, undefined, (post as { imageSizes?: unknown }).imageSizes);
   const firstImageUrl = (post.articleImageUrl ? buildFeedImageUrls([post.articleImageUrl])?.[0] : undefined) || resolvedImageUrls?.[0] || (post.imageUrl ? buildImageUrl(post.tokenId, post.imageUrl) : undefined);
   const hasImage = !hasVideo && (post.postType === 'image' || !!firstImageUrl);
   const thumbnailUrl = hasVideo

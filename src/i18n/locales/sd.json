@@ -425,6 +425,7 @@
     "gasSponsorshipFailed": "هن وهڪڙي جو خرچ نه کڻي سگهياسين. مهرباني ڪري ٿوري دير کان پوءِ ڪوشش ڪريو."
   },
   "nav": {
+    "launchpad": "لانچ پيڊ",
     "reorderHint": "ڪنهن به آئڪن کي ٻيهر ترتيب ڏيڻ لاءِ رکو ۽ ڇڪيو",
     "reorderReset": "ري سيٽ ڪريو",
     "reorderResetLong": "مينيو آرڊر ري سيٽ ڪريو",
@@ -2069,6 +2070,30 @@
     "returnHome": "گھر واپس وڃو"
   },
   "profile": {
+    "gridCard": {
+      "stage": "اسٽيج",
+      "liveStage": "لائيو اسٽيج",
+      "event": "تقريب",
+      "poll": "پول",
+      "quote": "قول",
+      "shared": "شيئر ڪيو ويو",
+      "link": "لنڪ",
+      "community": "ڪميونٽي",
+      "profile": "پروفائل",
+      "film": "فلم",
+      "bounty": "بانسري",
+      "app": "ايپ",
+      "proposal": "تجويز",
+      "short": "مختصر",
+      "comic": "ڪامڪ",
+      "earn": "ڪمايو",
+      "listens_one": "{{value}} ٻڌو",
+      "listens_other": "{{value}} ٻڌي ٿو",
+      "votes_one": "{{value}} ووٽ",
+      "votes_other": "{{value}} ووٽن",
+      "members_one": "{{value}} رڪن",
+      "members_other": "{{value}} رڪن"
+    },
     "viewGrid": "گرڊ ڏيک",
     "viewList": "لسٽ ڏيک",
     "viewMode": "ڏيک",
@@ -3270,6 +3295,7 @@
     "statsLoadFailed": "اسٽيٽنگ اسٽيٽس لوڊ نه ٿو ڪري سگھجي"
   },
   "communities": {
+    "sortTop": "مٿيون",
     "shareLink": "حصيداري ڪريو لنڪ",
     "pinnedMore": "وڌيڪ",
     "showFirst": "پهرين ڏيکاريو",

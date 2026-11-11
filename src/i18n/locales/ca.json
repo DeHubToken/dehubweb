@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "No s'ha pogut patrocinar aquesta transacció. Torna-ho a provar d'aquí a un moment."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Mantingues i arrossega qualsevol icona per reorganitzar",
     "reorderReset": "Reset",
     "reorderResetLong": "Restableix l'ordre del menú",
@@ -2096,6 +2097,33 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Escenari",
+      "liveStage": "Escenari en directe",
+      "event": "Esdeveniment",
+      "poll": "Enquesta",
+      "quote": "Cita",
+      "shared": "Compartit",
+      "link": "Enllaç",
+      "community": "Comunitat",
+      "shop": "Botiga",
+      "profile": "Perfil",
+      "film": "Pel·lícula",
+      "bounty": "Recompensa",
+      "app": "Aplicació",
+      "proposal": "Proposta",
+      "short": "Breu",
+      "comic": "Còmic",
+      "earn": "Guanyar",
+      "listening_one": "{{value}} escoltant",
+      "listening_other": "{{value}} escoltant",
+      "listens_one": "{{value}} escolta",
+      "listens_other": "{{value}} escolten",
+      "votes_one": "{{value}} vot",
+      "votes_other": "{{value}} vots",
+      "members_one": "{{value}} membre",
+      "members_other": "{{value}} membres"
+    },
     "viewGrid": "Vista de graella",
     "viewList": "Visualització de la llista",
     "viewMode": "Visualitza",
@@ -3300,6 +3328,7 @@
     "statsLoadFailed": "No s'han pogut carregar les estadístiques de *staking*"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Comparteix l'enllaç",
     "pinnedMore": "Més",
     "showFirst": "Mostra primer",

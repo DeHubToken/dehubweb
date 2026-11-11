@@ -25,7 +25,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/mobile/MobileWhoToFollowCarousel
  */
 
-import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
+import { Suspense, lazy, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -33,6 +33,7 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { FollowCoverCard, suggestionName } from '@/components/app/FollowCoverCard';
+const SuggestionRows = lazy(() => import('@/components/app/explore/SuggestionRows'));
 import { AuthenticationError, getSuggestedAccounts, getRankedSuggestions, type SuggestedAccount } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -54,12 +55,13 @@ type CardPhase = 'following' | 'leaving';
 interface MobileWhoToFollowCarouselProps {
   /** Explore lists it among its sections: no empty state there, no "See all" back to Explore. */
   surface?: 'feed' | 'explore';
+  rows?: boolean;
 }
 
-export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollowCarouselProps = {}) {
+export function MobileWhoToFollowCarousel({ surface = 'feed', rows }: MobileWhoToFollowCarouselProps = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
   const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();
   const followOverrides = useFollowOverrides();
@@ -171,7 +173,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
 
   const handleFollow = useCallback((user: SuggestedAccount) => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.404bd6545a07", { defaultValue: "Please log in to follow users" }));
+      openLoginModal();
       return;
     }
 
@@ -209,7 +211,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
         });
       },
     });
-  }, [isAuthenticated, followedUsers, followOverrides, phases, setPhase, leave, clearTimer, queryClient, unmarkFollowed, handleApiError, _copy]);
+  }, [isAuthenticated, openLoginModal, followedUsers, followOverrides, phases, setPhase, leave, clearTimer, queryClient, unmarkFollowed, handleApiError, _copy]);
   const retryRef = useRef(handleFollow);
   retryRef.current = handleFollow;
 
@@ -242,6 +244,12 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
       </div>
     );
   }
+
+  if (rows) return (
+    <Suspense fallback={null}>
+      <SuggestionRows users={filteredSuggestions} phases={phases} onOpen={handleUserClick} onFollow={handleFollow} />
+    </Suspense>
+  );
 
   return (
     // No data-discovery-section here: glass dresses that as a bento, and the

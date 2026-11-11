@@ -86,13 +86,11 @@ describe('canonical rules match the worker', () => {
     expect(canonicalPath('/app/communities/dehub-wave')).toBe('/app/communities/dehub-wave');
     // Invite links are not a community page; the worker leaves them alone.
     expect(canonicalPath('/communities/join/abc123')).toBe('/communities/join/abc123');
-    expect(canonicalPath('/app/stores/abc')).toBe('/stores/abc');
     expect(canonicalPath('/cinema/film/tt123')).toBe('/cinema');
     expect(canonicalPath('/cinema/series/abc-def')).toBe('/cinema');
   });
 
   it('agrees with the entity canonicals the worker builds', () => {
-    expect(WORKER).toContain('const canonicalUrl = `${APP_URL}/stores/${store.id}`;');
     expect(WORKER).toContain('ssrPath = `/app/post/${shortPostPath[1]}`;');
     expect(WORKER).toContain('ssrPath = `/app/communities/${bareCommunity[1]}`;');
     expect(WORKER).toMatch(/canonicalize onto \/cinema/);

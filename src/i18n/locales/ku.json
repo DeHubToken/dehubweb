@@ -437,6 +437,7 @@
     "gasSponsorshipFailed": "Ev danûstandin nehat sponsorkirin. Ji kerema xwe piştî kêliyekê dîsa biceribîne."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Hildin û derêjin herîkoka ku we li serê xwe de ye bo ku bi rêza xwe re bi kar bînin.",
     "reorderReset": "Vegerîne",
     "reorderResetLong": "Rêza menuyê vegerîne",
@@ -2085,6 +2086,33 @@
     "returnHome": "Vegere destpêkê"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Dikê",
+      "liveStage": "Dikeya zindî",
+      "event": "Bûyer",
+      "poll": "Anket",
+      "quote": "Gotin",
+      "shared": "Hat parvekirin",
+      "link": "Lînk",
+      "community": "Civak",
+      "shop": "Firoşgeh",
+      "profile": "Profîl",
+      "film": "Fîlm",
+      "bounty": "Xelat",
+      "app": "Sepan",
+      "proposal": "Pêşniyar",
+      "short": "Kurte",
+      "comic": "Komîk",
+      "earn": "Destkeftî",
+      "listening_one": "{{value}} guhdarî dike",
+      "listening_other": "{{value}} guhdarî dikin",
+      "listens_one": "{{value}} guhdarî bike",
+      "listens_other": "{{value}} guhdarî dikin",
+      "votes_one": "{{value}} deng",
+      "votes_other": "{{value}} deng",
+      "members_one": "{{value}} endam",
+      "members_other": "{{value}} endam"
+    },
     "viewGrid": "Dîtina torê",
     "viewList": "Dîtina lîsteyê",
     "viewMode": "View",
@@ -3290,6 +3318,7 @@
     "statsLoadFailed": "Statîstîkên staking nehatin barkirin"
   },
   "communities": {
+    "sortTop": "Herî baş",
     "shareLink": "Girêdanê parve bike",
     "pinnedMore": "Zêdetir",
     "showFirst": "Pêşî nîşan bide",

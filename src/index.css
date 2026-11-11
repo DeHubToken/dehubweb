@@ -427,6 +427,13 @@ All colors MUST be HSL.
     100% { opacity: .5; transform: translateY(-340px); }
   }
 
+  /* Two-step sign-in: a wrong code nudges the boxes sideways */
+  @keyframes two-factor-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
   /* Marquee auto-scroll */
   .trending-marquee {
     animation: trending-scroll 40s linear infinite;
@@ -6691,6 +6698,7 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
   .dehub-intro .dehub-intro-plate,
   .dehub-intro .dehub-intro-sub,
   .dehub-intro .dehub-intro-foot { display: none; }
+  .dehub-intro .dehub-intro-tail { display: block; margin-top: 0; }
   .dehub-intro .dehub-intro-hero {
     top: 54px; left: 50%; right: auto; width: 120px; height: 118px; opacity: 1;
     transform: translateX(-50%);
@@ -7065,10 +7073,60 @@ html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]:not(#_):
   [data-boost-lit] svg { animation: none; filter: drop-shadow(0 0 5px color-mix(in srgb, currentColor 50%, transparent)); }
 }
 
-/* Bell drawer (phones): the glass sheet already sits behind the pill, so the
-   page-gap strip above it would only read as a dark band under the handle. */
+/* Bell drawer (phones): the sheet itself carries no backdrop blur; its
+   overlay blurs the page behind instead (NotificationsDrawer). In Chrome a
+   blur inside a scrolling list that sits in a blurred sheet sees none of the
+   list, so the rows stayed sharp behind the pill and the strip below. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* Liquid glass on every theme: the page behind blurred hard under a thin
+   theme tint (the theme's own float glass, made lighter), no paper texture
+   or solid theme slab. The themes' own overlay dims (paper wash, Osaka's
+   near-solid scrim) are replaced so the page reads through as frost. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-drawer][data-notifications-drawer] {
+  background-color: color-mix(in srgb, var(--float-glass) 78%, transparent) !important;
+  background-image: none !important;
+}
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-overlay]:has(+ [data-notifications-drawer]) {
+  background-color: rgb(0 0 0 / 0.15) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.6) !important;
+  backdrop-filter: blur(24px) saturate(1.6) !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-overlay]:has(+ [data-notifications-drawer]) {
+  background-color: rgb(255 255 255 / 0.12) !important;
+}
+/* Dragged up to fill the screen: the pill clears the status bar and the
+   rounded corners square off against the screen edge. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-drawer][data-notifications-drawer][data-expanded] {
+  padding-top: env(safe-area-inset-top, 0px);
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+/* No handle, so the pill's sticky strip is the top of the sheet. Rows
+   scrolling up past the pill blur out there instead of showing sharp in the
+   gap above it and beside it, fading off just under the pill. Behind the
+   pill (z-index -1 inside its sticky wrapper). */
 html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] [data-feed-nav-outer]::before {
-  display: none !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: calc(100% + 6px) !important;
+  background: rgb(9 9 11 / 0.3) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent) !important;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent) !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] [data-feed-nav-outer]::before {
+  background: rgb(249 248 244 / 0.6) !important;
 }
 
 /* Drawer handle on the paper sheets: the white bar vanishes on pale frost. */

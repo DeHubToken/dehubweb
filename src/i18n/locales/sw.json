@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Muamala huu haukuweza kugharimiwa. Tafadhali jaribu tena baada ya muda mfupi."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Shikilia na buruta ikoni yoyote ili kupanga upya",
     "reorderReset": "Weka upya",
     "reorderResetLong": "Weka upya mpangilio wa menyu",
@@ -2096,6 +2097,33 @@
     "returnHome": "Rudi Nyumbani"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Jukwaa",
+      "liveStage": "Jukwaa la moja kwa moja",
+      "event": "Tukio",
+      "poll": "Kura",
+      "quote": "Nukuu",
+      "shared": "Imeshirikiwa",
+      "link": "Kiungo",
+      "community": "Jumuiya",
+      "shop": "Duka",
+      "profile": "Wasifu",
+      "film": "Filamu",
+      "bounty": "Zawadi",
+      "app": "Programu",
+      "proposal": "Pendekezo",
+      "short": "Fupi",
+      "comic": "Katuni",
+      "earn": "Jipatie",
+      "listening_one": "{{value}} anasikiliza",
+      "listening_other": "{{value}} wanasikiliza",
+      "listens_one": "{{value}} sikiliza",
+      "listens_other": "{{value}} wanasikiliza",
+      "votes_one": "{{value}} kura",
+      "votes_other": "{{value}} kura",
+      "members_one": "{{value}} mwanachama",
+      "members_other": "{{value}} wanachama"
+    },
     "viewGrid": "Mwonekano wa gridi",
     "viewList": "Mwonekano wa tangazo",
     "viewMode": "Mvuto",
@@ -3299,6 +3327,7 @@
     "statsLoadFailed": "Haikupatikana kurekodi maoni ya staking"
   },
   "communities": {
+    "sortTop": "Bora",
     "shareLink": "Shiriki kiunganishi",
     "pinnedMore": "Zaidi",
     "showFirst": "Onyesha kwanza",

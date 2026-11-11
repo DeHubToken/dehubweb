@@ -435,6 +435,7 @@
     "gasSponsorshipFailed": "ఈ లావాదేవీ ఖర్చును భరించలేకపోయాం. దయచేసి కొద్దిసేపటి తర్వాత ప్రయత్నించండి."
   },
   "nav": {
+    "launchpad": "లాంచ్ ‌ ప్యాడ్",
     "reorderHint": "పునర్వ్యవస్థీకరించడానికి ఏదైనా ఐకాన్ ‌ ను పట్టుకుని లాగండి",
     "reorderReset": "రీసెట్ చేయండి",
     "reorderResetLong": "మెనూ ఆర్డర్ ‌ ను రీసెట్ చేయండి",
@@ -2085,6 +2086,33 @@
     "returnHome": "హోమ్‌కు తిరిగి వెళ్ళు"
   },
   "profile": {
+    "gridCard": {
+      "stage": "స్టేజ్",
+      "liveStage": "లైవ్ స్టేజ్",
+      "event": "ఈవెంట్",
+      "poll": "పోల్",
+      "quote": "కోట్",
+      "shared": "షేర్ చేయబడింది",
+      "link": "లింక్",
+      "community": "కమ్యూనిటీ",
+      "shop": "షాప్",
+      "profile": "ప్రొఫైల్",
+      "film": "ఫిల్మ్",
+      "bounty": "బౌంటీ",
+      "app": "యాప్",
+      "proposal": "ప్రతిపాదన",
+      "short": "షార్ట్",
+      "comic": "కామిక్",
+      "earn": "సంపాదించండి",
+      "listening_one": "{{value}} వింటున్నారు",
+      "listening_other": "{{value}} వింటున్నారు",
+      "listens_one": "{{value}} వినండి",
+      "listens_other": "{{value}} వింటారు",
+      "votes_one": "{{value}} ఓటు",
+      "votes_other": "{{value}} ఓట్లు",
+      "members_one": "{{value}} సభ్యుడు",
+      "members_other": "{{value}} సభ్యులు"
+    },
     "viewGrid": "గ్రిడ్ వీక్షణ",
     "viewList": "జాబితా వీక్షణ",
     "viewMode": "చూడండి",
@@ -3293,6 +3321,7 @@
     "statsLoadFailed": "స్టేకింగ్ గణాంకాలను లోడ్ చేయలేకపోయాను"
   },
   "communities": {
+    "sortTop": "అగ్రస్థానం",
     "shareLink": "లింక్ ‌ ను షేర్ చేయండి",
     "pinnedMore": "మరిన్ని",
     "showFirst": "ముందుగా చూపించు",

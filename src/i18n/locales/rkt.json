@@ -409,6 +409,7 @@
     "gasSponsorshipFailed": "এই লেনদেনের খরচ দেওয়া গেল না। অল্প পরে আবার চেষ্টা করেন।"
   },
   "nav": {
+    "launchpad": "লঞ্চপ্যাড",
     "reorderHint": "হোল্ড করিয়া কোনো আইকন ড্রাগ করিয়া পুনঃসংস্থাপন করো।",
     "reorderReset": "রিসেট",
     "reorderResetLong": "মেনুর ক্রম রিসেট করুন",
@@ -2177,6 +2178,33 @@
     "goHome": "ঘরে যাও"
   },
   "profile": {
+    "gridCard": {
+      "stage": "মঞ্চ",
+      "liveStage": "লাইভ মঞ্চ",
+      "event": "ইভেন্ট",
+      "poll": "পোল",
+      "quote": "উদ্ধৃতি",
+      "shared": "শেয়ার করা",
+      "link": "লিঙ্ক",
+      "community": "কমিউনিটি",
+      "shop": "দোকান",
+      "profile": "প্রোফাইল",
+      "film": "ফিল্ম",
+      "bounty": "বাউন্টি",
+      "app": "অ্যাপ",
+      "proposal": "প্রস্তাব",
+      "short": "শর্ট",
+      "comic": "কমিক",
+      "earn": "উপার্জন",
+      "listening_one": "{{value}} জন শুনছে",
+      "listening_other": "{{value}} জন শুনছে",
+      "listens_one": "{{value}} জন শুনুন",
+      "listens_other": "{{value}} জন শুনছে",
+      "votes_one": "{{value}} ভোট",
+      "votes_other": "{{value}} ভোট",
+      "members_one": "{{value}} সদস্য",
+      "members_other": "{{value}} সদস্য"
+    },
     "viewGrid": "গ্রিড ভিউ",
     "viewList": "লিস্ট ভিউ",
     "viewMode": "দৃশ্য",
@@ -3420,6 +3448,7 @@
     "statsLoadFailed": "স্টেকিং স্ট্যাটস লোড করা যায়নি"
   },
   "communities": {
+    "sortTop": "শীর্ষ",
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরো",
     "showFirst": "আগোত দেখাও",

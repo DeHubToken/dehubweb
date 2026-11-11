@@ -43,6 +43,11 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Glossary: 'glossary', 'Compare Riftn': 'glossary', Stats: 'stats', 'Buy Tokens': 'buy', Bridge: 'bridge',
   Wallet: 'buy', Affiliate: 'subscriptions', Converter: 'videos', Migrate: 'bridge',
   Guide: 'pinned', Docs: 'posts', Blog: 'email',
+  // Search-only rows (nav-search.ts): only shown once something is typed.
+  Videos: 'videos', Shorts: 'videos', Music: 'audio', 'Top 100': 'trophy', 'AI Agents': 'assistant',
+  'My Bounties': 'bounties', Premium: 'superpowers', Pricing: 'buy', Creators: 'subscriptions',
+  'Connect AI': 'command', Packs: 'images', 'Public Chat': 'messages', Planned: 'events',
+  'Live Studio': 'live', Launchpad: 'buy',
 };
 
 interface TileShellProps {

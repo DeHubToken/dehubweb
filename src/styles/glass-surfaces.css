@@ -500,3 +500,13 @@ html[data-theme] [data-glass-menu]:not(html[data-theme='osaka'] [data-inline-pop
 
 /* Top builders score bars: light themes draw "Shipped" in ink, not grey. */
 html[data-theme='light'] { --top-builders-shipped: rgb(24 24 27); }
+
+/* Page search drawer (phones): it pulls out from under a page's pill in the
+   new-posts drawer's material, full width. It is the search pill itself, so
+   the search field inside drops its own recess and a press does not flash
+   the whole drawer. */
+[data-kit-search-slot] [data-feed-new-posts-chip]:active { filter: none; }
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-kit-search-drawer] :is([data-search-surface], input[type='search']) {
+  background: transparent !important;
+  box-shadow: none !important;
+}

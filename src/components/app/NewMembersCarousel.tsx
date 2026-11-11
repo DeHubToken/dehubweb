@@ -18,13 +18,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/NewMembersCarousel
  */
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useQueryClient } from '@tanstack/react-query';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+const NewMemberRows = lazy(() => import('@/components/app/explore/NewMemberRows'));
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -36,10 +37,11 @@ import type { SuggestedAccount } from '@/lib/api/dehub';
 interface NewMembersCarouselProps {
   /** Explore lists it among its sections: bigger title, no "See all" back to Explore. */
   surface?: 'feed' | 'explore';
+  rows?: boolean;
 }
 
 /** The roster row in the shape the cover card draws. */
-function toAccount(member: NewMember): SuggestedAccount {
+export function toAccount(member: NewMember): SuggestedAccount {
   return {
     address: member.address,
     username: member.username ?? undefined,
@@ -50,7 +52,7 @@ function toAccount(member: NewMember): SuggestedAccount {
   };
 }
 
-export function NewMembersCarousel({ surface = 'feed' }: NewMembersCarouselProps = {}) {
+export function NewMembersCarousel({ surface = 'feed', rows }: NewMembersCarouselProps = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -126,6 +128,12 @@ export function NewMembersCarousel({ surface = 'feed' }: NewMembersCarouselProps
   // "New members" while the newest of them actually is new; otherwise this is
   // simply the latest people to join.
   const title = isWithinNewWindow(members[0].joinedAt) ? _copy("copy.928d40b02992", { defaultValue: "New members" }) : _copy("copy.335e4a96e2dd", { defaultValue: "Latest members" });
+
+  if (rows) return (
+    <Suspense fallback={null}>
+      <NewMemberRows title={title} members={members} isFollowed={isFollowed} isRequested={isRequested} onOpen={openProfile} onFollow={handleFollow} onLoadMore={hasNextPage ? fetchNextPage : undefined} loadingMore={isFetchingNextPage} />
+    </Suspense>
+  );
 
   return (
     <section

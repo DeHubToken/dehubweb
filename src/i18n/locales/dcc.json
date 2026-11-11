@@ -422,6 +422,7 @@
     "gasSponsorshipFailed": "اس لین دین کا خرچ نہیں اٹھایا جا سکا۔ تھوڑی دیر بعد کوشش کریں۔"
   },
   "nav": {
+    "launchpad": "لانچ پیڈ",
     "reorderHint": "کوئی بھی آئیکن پکڑ کر گھسیٹ کر ترتیب دیں",
     "reorderReset": "रीसेट",
     "reorderResetLong": "مینو کی ترتیب ری سیٹ کریں",
@@ -2033,6 +2034,33 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "ٹیٹر",
+      "liveStage": "ٹیٹر پر لائیو",
+      "event": "ایونٹ",
+      "poll": "پال",
+      "quote": "کوئٹ",
+      "shared": "شئیر",
+      "link": "لینک",
+      "community": "کامونٹی",
+      "shop": "شاپ",
+      "profile": "پروفائل",
+      "film": "فلم",
+      "bounty": "بونٹی",
+      "app": "اپ",
+      "proposal": "پروپوزل",
+      "short": "شاٹ",
+      "comic": "کامک",
+      "earn": "ارن",
+      "listening_one": "{{value}} سننے والا",
+      "listening_other": "{{value}} سننے والا",
+      "listens_one": "{{value}} سننے والا",
+      "listens_other": "{{value}} سننے والے",
+      "votes_one": "{{value}} ووٹ",
+      "votes_other": "{{value}} ووٹ",
+      "members_one": "{{value}} ممبر",
+      "members_other": "{{value}} ممبر"
+    },
     "viewGrid": "گرڈ ویو",
     "viewList": "فہرست کا منظر",
     "viewMode": "دیکھو",
@@ -3222,6 +3250,7 @@
     "statsLoadFailed": "ہارڈ ڈرائیو میں ڈیٹا کے لاجواب ہونے کی وجہ سے اسٹیکنگ کی Stat کھولنے میں کامیابی نہیں ہوئی"
   },
   "communities": {
+    "sortTop": "اوپر",
     "shareLink": "لنک شیئر کریں",
     "pinnedMore": "مزید",
     "showFirst": "پہلے دکھاؤ",

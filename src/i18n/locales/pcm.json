@@ -401,6 +401,7 @@
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Abeg try again small time."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Hold and drag any icon wey you like so you can rearrange dem.",
     "reorderReset": "Reset",
     "reorderResetLong": "Reset menu order",
@@ -1986,6 +1987,29 @@
     "returnHome": "Go back Home"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Stadi",
+      "liveStage": "Stage wey dey live",
+      "event": "E vent",
+      "poll": "Poll",
+      "quote": "Quote",
+      "shared": "Don share am",
+      "link": "Link",
+      "community": "Gburugburu",
+      "profile": "Profile",
+      "film": "Fim",
+      "bounty": "Bounty",
+      "app": "App",
+      "proposal": "Proposo",
+      "short": "Short",
+      "comic": "Kọmik",
+      "earn": "Make money",
+      "listening_one": "{{value}} dey listen",
+      "listening_other": "{{value}} dey listen",
+      "listens_one": "{{value}} hear word",
+      "votes_other": "{{value}} votes",
+      "members_other": "{{value}} members"
+    },
     "viewGrid": "Grid view",
     "viewList": "List view",
     "back": "Go back",
@@ -3129,6 +3153,7 @@
     "statsLoadFailed": "Couldn't load staking stats"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Share link",
     "pinnedMore": "More",
     "showFirst": "Show am first",

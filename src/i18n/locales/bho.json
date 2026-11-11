@@ -430,6 +430,7 @@
     "gasSponsorshipFailed": "ई लेनदेन के खरचा ना उठावल जा सकल। थोड़ी देर बाद कोसिस करीं।"
   },
   "nav": {
+    "launchpad": "लॉन्चपैड",
     "reorderHint": "Hold aur drag karke koi bhi icon ke rearrange kariं",
     "reorderReset": "रीसेट करीं",
     "reorderResetLong": "मेनू ऑर्डर समायोजित करें",
@@ -2044,6 +2045,33 @@
     "returnHome": "घरे लौटीं"
   },
   "profile": {
+    "gridCard": {
+      "stage": "स्टेज",
+      "liveStage": "लाइव स्टेज",
+      "event": "इवेंट",
+      "poll": "पोल",
+      "quote": "प्रसिद्धि",
+      "shared": "साझा",
+      "link": "लिंक",
+      "community": "समुदाय",
+      "shop": "स्टोर",
+      "profile": "प्रोफाइल",
+      "film": "फिल्म",
+      "bounty": "बाउंटी",
+      "app": "एप्लिकेशन",
+      "proposal": "प्रस्ताव",
+      "short": "छोटा",
+      "comic": "कॉमिक",
+      "earn": "कमाएं",
+      "listening_one": "{{value}} सुन रहा है",
+      "listening_other": "{{value}} सुन रहा है",
+      "listens_one": "{{value}} सुन",
+      "listens_other": "{{value}} सुन रहे हैं",
+      "votes_one": "{{value}} वोट",
+      "votes_other": "{{value}} वोट",
+      "members_one": "{{value}} सदस्य",
+      "members_other": "{{value}} सदस्य"
+    },
     "viewGrid": "लाल देखने वाला",
     "viewList": "सूची देखने के बिंदु",
     "viewMode": "देखने वाला",
@@ -3232,6 +3260,7 @@
     "statsLoadFailed": "स्टेकिंग स्टैट्स लोड नहीं हो पा रहे"
   },
   "communities": {
+    "sortTop": "शीर्ष",
     "shareLink": "लिंक साझा कइल जाय",
     "pinnedMore": "अउरी बात करीं",
     "showFirst": "पहिले देखाईं",

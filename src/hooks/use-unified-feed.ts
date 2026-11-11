@@ -364,6 +364,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     forKids: item.forKids,
     duetOf: duetOfPost(item as any),
     isLivePost: item.postType === 'live',
+    isShort: (item.postType as string) === 'short',
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
     livePlaybackId: item.stream?.playbackId,
@@ -394,7 +395,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
 function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
-  const imageUrls = buildFeedImageUrls(item.imageUrls);
+  const imageUrls = buildFeedImageUrls(item.imageUrls, undefined, (item as { imageSizes?: unknown }).imageSizes);
   const image = imageUrls?.[0] || buildImageUrl(item.tokenId, item.imageUrl);
   
   const rawAvatarPath = extractAvatarPath(item);

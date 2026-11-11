@@ -6,7 +6,7 @@
         "appIDs": ["J8BTYL3PDK.io.dehub.mobile", "FU4BL8RC2L.io.dehub.mobile"],
         "components": [
           { "/": "/app", "comment": "App home" },
-          { "/": "/app/*", "comment": "Posts, communities, stores, events, messages, notifications, leaderboard" },
+          { "/": "/app/*", "comment": "Posts, communities, events, messages, notifications, leaderboard" },
           { "/": "/newpost/*", "comment": "Off-chain post slug" },
           { "/": "/stage/*", "comment": "Stage invite by uuid" },
           { "/": "/stages", "comment": "Stages hub" },
@@ -39,7 +39,6 @@
           { "/": "/posts/*", "comment": "One post, short form, and its author thread" },
           { "/": "/bounty/*", "comment": "One bounty" },
           { "/": "/communities/*", "comment": "One community, or a community invite" },
-          { "/": "/stores/*", "comment": "One store or listing" },
           { "/": "/events/*", "comment": "One event" },
           { "/": "/r/*", "comment": "Invite link" }
         ]

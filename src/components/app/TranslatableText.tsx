@@ -650,7 +650,7 @@ function queueAutoTranslate(run: () => Promise<unknown>): () => void {
 }
 
 // One observer for every auto-translating element. The margin starts the
-// request a screen or so ahead, so the translation is usually in place by the
+// request about two phone screens ahead, so the translation is in place by the
 // time the post scrolls into view.
 const nearScreenCallbacks = new WeakMap<Element, () => void>();
 let nearScreenObserver: IntersectionObserver | null = null;
@@ -667,7 +667,7 @@ function observeNearScreen(el: Element, onNear: () => void): () => void {
       nearScreenCallbacks.get(entry.target)?.();
       nearScreenCallbacks.delete(entry.target);
     }
-  }, { rootMargin: '600px 0px' });
+  }, { rootMargin: '1400px 0px' });
   nearScreenCallbacks.set(el, onNear);
   nearScreenObserver.observe(el);
   return () => {

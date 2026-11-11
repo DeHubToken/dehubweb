@@ -27,7 +27,7 @@ export const BARE_CANONICAL_KEYS: ReadonlySet<string> = new Set([
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100', 'dao',
   'music', 'radio', 'tv', 'bridge', 'agents', 'assistant', 'creators', 'jobs',
   'usernames', 'nfts', 'arcade', 'accounts', 'converter', 'events', 'launchpad', 'stats',
-  'migrate-youtube', 'stores', 'fractions', 'superpowers', 'glossary', 'ads', 'buy',
+  'migrate-youtube', 'fractions', 'superpowers', 'glossary', 'ads', 'buy',
   // MARKETING_PAGES not already listed
   'dex', 'builder', 'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'apps', 'apps/dev', 'arcade/gods-eye', 'arcade/kings-gambit',
@@ -45,7 +45,6 @@ export const BARE_CANONICAL_KEYS: ReadonlySet<string> = new Set([
  *   /app/post/:id, the form the post pages and the post sitemap use;
  * - /communities/:slug collapses onto /app/communities/:slug (invite links at
  *   /communities/join/:code are left alone, as the worker leaves them);
- * - /stores/:id is canonical bare, so /app/stores/:id collapses onto it;
  * - a single cinema title canonicalises onto /cinema (the worker has no
  *   per-title metadata, so it serves the /cinema card for every title).
  */
@@ -60,9 +59,6 @@ export function canonicalPath(pathname: string): string {
 
   const community = noApp.match(/^\/communities\/([^/]+)$/i);
   if (community && community[1].toLowerCase() !== 'join') return `/app/communities/${community[1]}`;
-
-  const store = p.match(/^\/app\/stores\/([^/]+)$/i);
-  if (store) return `/stores/${store[1]}`;
 
   if (/^\/cinema\/(?:film|series|movie|show)\/[^/]+$/i.test(noApp)) return '/cinema';
 

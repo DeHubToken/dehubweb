@@ -435,6 +435,7 @@
     "gasSponsorshipFailed": "Kharashka macaamilkan lama bixin karin. Fadlan wax yar ka dib isku day."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Qabso oo jiido icon kasta si ay dib u abaabulaan",
     "reorderReset": "Dib u deji",
     "reorderResetLong": "Dib u deji amarka menu",
@@ -2083,6 +2084,33 @@
     "returnHome": "Ku Noqo Guriga"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Masraxa",
+      "liveStage": "Masraxa tooska ah",
+      "event": "Dhacdo",
+      "poll": "Codbixin",
+      "quote": "Oraah",
+      "shared": "La wadaagay",
+      "link": "Xiriiriye",
+      "community": "Bulsho",
+      "shop": "Dukaan",
+      "profile": "Astaanta isticmaalaha",
+      "film": "Filim",
+      "bounty": "Abaalmarin",
+      "app": "Barnaamij",
+      "proposal": "Soo jeedin",
+      "short": "Gaaban",
+      "comic": "Qiso sawir leh",
+      "earn": "Kasbasho",
+      "listening_one": "{{value}} oo dhageysanaya",
+      "listening_other": "{{value}} oo dhageysanaya",
+      "listens_one": "{{value}} dhageyso",
+      "listens_other": "{{value}} dhageysi",
+      "votes_one": "{{value}} cod",
+      "votes_other": "{{value}} codad",
+      "members_one": "{{value}} xubin",
+      "members_other": "{{value}} xubnood"
+    },
     "viewGrid": "Muuqaalka Grid",
     "viewList": "Muuqaalka Liiska",
     "viewMode": "Eeg",
@@ -3277,6 +3305,7 @@
     "statsLoadFailed": "Suurtagal ma aha in la soo dejiyo tirakoobka."
   },
   "communities": {
+    "sortTop": "Sare",
     "shareLink": "La wadaag xiriirka",
     "pinnedMore": "Dheeraad ah",
     "showFirst": "Marka hore tus",

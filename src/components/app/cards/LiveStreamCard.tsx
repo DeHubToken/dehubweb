@@ -1207,7 +1207,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
 
   const handleSendGift = useCallback(() => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.c0f1b8e87d81", { defaultValue: "Sign in to send gifts" }));
+      openLoginModal();
       return;
     }
     if (streamEnded) {
@@ -1250,7 +1250,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     void fundTipFromSource(giftPayWith, amount, walletAddress, t)
       .then(ready => { if (ready) return sendGiftTip(amount); })
       .finally(() => setFundingGift(false));
-  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, giftDirect, walletAddress, t, _copy]);
+  }, [isAuthenticated, openLoginModal, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, giftDirect, walletAddress, t, _copy]);
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;

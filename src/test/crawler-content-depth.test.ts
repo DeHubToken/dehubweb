@@ -158,7 +158,7 @@ describe('the streaming guide', () => {
     const html = await (await crawl('https://riftn.com/guides/best-decentralized-streaming-apps')).text();
     const ld = ldOf(html);
     expect(ld['@type']).toBe('Article');
-    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=3');
+    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=4');
     expect(ld.datePublished).toBe('2026-09-13');
     expect(ld.dateModified).toBe('2026-09-29');
     expect(ld.author).toEqual({ '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' });
@@ -509,8 +509,8 @@ describe('thin and test entities', () => {
     expect(api.entityLooksThin(entity)).toBe(false);
   });
 
-  it('is wired into the store, listing and event pages', () => {
-    for (const sig of ['function buildStoreHtml(store) {', 'function buildListingHtml(listing) {', 'function buildEventHtml(event) {']) {
+  it('is wired into the event pages', () => {
+    for (const sig of ['function buildEventHtml(event) {']) {
       const start = WORKER.indexOf(sig);
       expect(WORKER.slice(start, WORKER.indexOf('\n}\n', start)), sig).toMatch(/noindex: [^\n]*entityLooksThin\(/);
     }

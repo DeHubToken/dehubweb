@@ -435,6 +435,7 @@
     "gasSponsorshipFailed": "यो कारोबारको खर्च बेहोर्न सकिएन। कृपया केही बेरपछि प्रयास गर्नुहोस्।"
   },
   "nav": {
+    "launchpad": "लन्चप्याड",
     "reorderHint": "पुन: व्यवस्थित गर्न कुनै पनि आइकन समात्नुहोस् र तान्नुहोस्",
     "reorderReset": "रिसेट गर्नुहोस्",
     "reorderResetLong": "मेनु अर्डर रिसेट गर्नुहोस्",
@@ -2105,6 +2106,33 @@
     "returnHome": "गृहपृष्ठमा फर्कनुहोस्"
   },
   "profile": {
+    "gridCard": {
+      "stage": "स्टेज",
+      "liveStage": "लाइभ स्टेज",
+      "event": "कार्यक्रम",
+      "poll": "पोल",
+      "quote": "उद्धरण",
+      "shared": "सेयर गरिएको",
+      "link": "लिंक",
+      "community": "समुदाय",
+      "shop": "पसल",
+      "profile": "प्रोफाइल",
+      "film": "चलचित्र",
+      "bounty": "बाउन्टी",
+      "app": "एप",
+      "proposal": "प्रस्ताव",
+      "short": "सर्ट",
+      "comic": "कमिक",
+      "earn": "कमाउनुहोस्",
+      "listening_one": "{{value}} सुन्दै",
+      "listening_other": "{{value}} सुन्दै",
+      "listens_one": "{{value}} सुन्नुहोस्",
+      "listens_other": "{{value}} सुन्छन्",
+      "votes_one": "{{value}} भोट",
+      "votes_other": "{{value}} भोटहरू",
+      "members_one": "{{value}} सदस्य",
+      "members_other": "{{value}} सदस्यहरू"
+    },
     "viewGrid": "ग्रिड दृश्य",
     "viewList": "सूची दृश्य",
     "viewMode": "हेर्नुहोस्",
@@ -3309,6 +3337,7 @@
     "statsLoadFailed": "स्टेकिङ्ग सङ्ख्या लोड गर्न नसक्यो"
   },
   "communities": {
+    "sortTop": "शीर्ष",
     "shareLink": "लिङ्क सेयर गर्नुहोस्",
     "pinnedMore": "थप",
     "showFirst": "पहिले देखाउनुहोस्",

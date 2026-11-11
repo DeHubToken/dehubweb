@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Ovu transakciju nije bilo moguće pokriti. Pokušajte ponovno za trenutak."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Držite i povucite bilo koju ikonu za promjenu rasporeda",
     "reorderReset": "Resetiraj",
     "reorderResetLong": "Resetiraj redoslijed izbornika",
@@ -2096,6 +2097,33 @@
     "returnHome": "Povratak na početnu"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Pozornica",
+      "liveStage": "Pozornica uživo",
+      "event": "Događaj",
+      "poll": "Anketa",
+      "quote": "Citati",
+      "shared": "Dijeljeno",
+      "link": "Poveznica",
+      "community": "Zajednica",
+      "shop": "Trgovina",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Nagrada",
+      "app": "Aplikacija",
+      "proposal": "Prijedlog",
+      "short": "Kratak",
+      "comic": "Komičar",
+      "earn": "Prihvaćaj",
+      "listening_one": "{{value}} slušam",
+      "listening_other": "{{value}} slušam",
+      "listens_one": "{{value}} slušaj",
+      "listens_other": "{{value}} sluša",
+      "votes_one": "{{value}} glas",
+      "votes_other": "{{value}} glasova",
+      "members_one": "{{value}} član",
+      "members_other": "{{value}} članovi"
+    },
     "viewGrid": "Prikaz rešetke",
     "viewList": "Prikaz popisa",
     "viewMode": "Prikaži",
@@ -3300,6 +3328,7 @@
     "statsLoadFailed": "Nije uspjelo učitati statistike stakinga"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Podijeli poveznicu",
     "pinnedMore": "Više",
     "showFirst": "Prikaži prvo",

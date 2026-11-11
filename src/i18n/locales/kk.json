@@ -432,6 +432,7 @@
     "gasSponsorshipFailed": "Бұл транзакцияны қаржыландыру мүмкін болмады. Сәлден соң қайталап көріңіз."
   },
   "nav": {
+    "launchpad": "Іске қосу панелі",
     "reorderHint": "Қайта реттеу үшін кез келген белгішені ұстап, сүйреңіз",
     "reorderReset": "Қалпына келтіру",
     "reorderResetLong": "Мәзір тәртібін қалпына келтіру",
@@ -2103,6 +2104,33 @@
     "returnHome": "Басты бетке қайту"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Сахна",
+      "liveStage": "Тікелей эфир сахнасы",
+      "event": "Оқиға",
+      "poll": "Сауалнама",
+      "quote": "Дәйексөз",
+      "shared": "Бөлісілді",
+      "link": "Сілтеме",
+      "community": "Қоғамдастық",
+      "shop": "Дүкен",
+      "profile": "Профиль",
+      "film": "Фильм",
+      "bounty": "Сыйақы",
+      "app": "Қолданба",
+      "proposal": "Ұсыныс",
+      "short": "Қысқаша",
+      "comic": "Комикс",
+      "earn": "Табу",
+      "listening_one": "{{value}} тыңдап жатыр",
+      "listening_other": "{{value}} тыңдап жатыр",
+      "listens_one": "{{value}} тыңдау",
+      "listens_other": "{{value}} тыңдалым",
+      "votes_one": "{{value}} дауыс",
+      "votes_other": "{{value}} дауыс",
+      "members_one": "{{value}} мүше",
+      "members_other": "{{value}} мүше"
+    },
     "viewGrid": "Тор көрінісі",
     "viewList": "Тізім көрінісі",
     "viewMode": "Көру",
@@ -3307,6 +3335,7 @@
     "statsLoadFailed": "Ставка статистикасын жүктеу мүмкін емес"
   },
   "communities": {
+    "sortTop": "Үздік",
     "shareLink": "Сілтемені бөлісу",
     "pinnedMore": "Толығырақ",
     "showFirst": "Бірінші көрсету",

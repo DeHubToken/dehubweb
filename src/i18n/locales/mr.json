@@ -437,6 +437,7 @@
     "gasSponsorshipFailed": "या व्यवहाराचा खर्च उचलता आला नाही. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा."
   },
   "nav": {
+    "launchpad": "लॉन्चपॅड",
     "reorderHint": "पुनर्रचना करीता कोणतेही चिन्ह धरून ठेवा व ओढा",
     "reorderReset": "रीसेट करा",
     "reorderResetLong": "मेनू ऑर्डर रीसेट करा",
@@ -2090,6 +2091,33 @@
     "returnHome": "मुख्यपृष्ठावर परत जा"
   },
   "profile": {
+    "gridCard": {
+      "stage": "स्टेज",
+      "liveStage": "लाईव्ह स्टेज",
+      "event": "इव्हेंट",
+      "poll": "पोल",
+      "quote": "कोट",
+      "shared": "शेअर केलेले",
+      "link": "लिंक",
+      "community": "कम्युनिटी",
+      "shop": "शॉप",
+      "profile": "प्रोफाईल",
+      "film": "फिल्म",
+      "bounty": "बाउंटी",
+      "app": "ॲप",
+      "proposal": "प्रपोजल",
+      "short": "शॉर्ट",
+      "comic": "कॉमिक",
+      "earn": "कमावा",
+      "listening_one": "{{value}} ऐकत आहेत",
+      "listening_other": "{{value}} ऐकत आहेत",
+      "listens_one": "{{value}} ऐका",
+      "listens_other": "{{value}} ऐकतात",
+      "votes_one": "{{value}} मत",
+      "votes_other": "{{value}} मते",
+      "members_one": "{{value}} सदस्य",
+      "members_other": "{{value}} सदस्य"
+    },
     "viewGrid": "ग्रीड दृश्य",
     "viewList": "सूची दृश्य",
     "viewMode": "पहा",
@@ -3294,6 +3322,7 @@
     "statsLoadFailed": "स्टॅकिंग आकडेवारी लोड करू शकलो नाही"
   },
   "communities": {
+    "sortTop": "अव्वल",
     "shareLink": "लिंक शेअर करा",
     "pinnedMore": "अधिक",
     "showFirst": "प्रथम दाखवा",

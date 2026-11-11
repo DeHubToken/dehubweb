@@ -202,7 +202,6 @@ describe('entity misses', () => {
     '/events/99999999',
     '/stages/9999999',
     '/stage/0123456789abcdef0123',
-    '/stores/0123456789abcdef',
     '/creator/flow/abcdef12',
     '/governance/0123456789abcdef',
     '/packs/no-such-pack',

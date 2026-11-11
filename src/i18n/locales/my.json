@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "ဤငွေလွှဲမှုအတွက် ကုန်ကျစရိတ်ကို မကျခံနိုင်ပါ။ ခဏနေ ထပ်စမ်းကြည့်ပါ။"
   },
   "nav": {
+    "launchpad": "လွှင့်တင်ရာနေရာ",
     "reorderHint": "ပြန်လည်စီစဉ်ရန် မည်သည့်အိုင်ကွန်ကိုမဆို ကိုင် ၍ ဆွဲပါ",
     "reorderReset": "ပြန်သတ်မှတ်မည်",
     "reorderResetLong": "မီနူးအော်ဒါကို ပြန်သတ်မှတ်ပါ",
@@ -2092,6 +2093,33 @@
     "returnHome": "ပင်မသို့ပြန်ရန်"
   },
   "profile": {
+    "gridCard": {
+      "stage": "စင်မြင့်",
+      "liveStage": "တိုက်ရိုက်စင်မြင့်",
+      "event": "ပွဲစဉ်",
+      "poll": "မဲပေးခြင်း",
+      "quote": "ကိုးကားချက်",
+      "shared": "မျှဝေထားသည်",
+      "link": "လင့်ခ်",
+      "community": "အသိုင်းအဝိုင်း",
+      "shop": "ဆိုင်",
+      "profile": "ပရိုဖိုင်",
+      "film": "ရုပ်ရှင်",
+      "bounty": "ဆုကြေး",
+      "app": "အက်ပ်",
+      "proposal": "အဆိုပြုချက်",
+      "short": "အတိုအထွာ",
+      "comic": "ရုပ်ပြ",
+      "earn": "ငွေရှာရန်",
+      "listening_one": "{{value}} ဦး နားထောင်နေသည်",
+      "listening_other": "{{value}} ဦး နားထောင်နေသည်",
+      "listens_one": "{{value}} ဦး နားထောင်ရန်",
+      "listens_other": "{{value}} ဦး နားထောင်သည်",
+      "votes_one": "{{value}} မဲ",
+      "votes_other": "{{value}} မဲ",
+      "members_one": "{{value}} ဦး အဖွဲ့ဝင်",
+      "members_other": "{{value}} ဦး အဖွဲ့ဝင်များ"
+    },
     "viewGrid": "Grid မြင်ကွင်း",
     "viewList": "စာရင်းမြင်ကွင်း",
     "viewMode": "ကြည့်ရန်",
@@ -3295,6 +3323,7 @@
     "statsLoadFailed": "စတေကင်ကဏ္ဍ စာရင်းအင်း ဖွင့်၍မရပါ"
   },
   "communities": {
+    "sortTop": "ထိပ်တန်း",
     "shareLink": "ဝေမျှရန်လင့်ခ်",
     "pinnedMore": "ပိုများသော",
     "showFirst": "ပထမဆုံး ပြပါ",

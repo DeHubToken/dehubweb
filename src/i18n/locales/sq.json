@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Ky transaksion nuk mund të mbulohej. Ju lutemi provoni sërish pas pak."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Mbaj dhe tërhiq çdo ikonë për të riorganizuar",
     "reorderReset": "Rivendos",
     "reorderResetLong": "Rivendos rendin e menusë",
@@ -2096,6 +2097,33 @@
     "returnHome": "Kthehu në Kryefaqe"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Skenë",
+      "liveStage": "Skenë live",
+      "event": "Ngjarje",
+      "poll": "Sondazh",
+      "quote": "Citim",
+      "shared": "E shpërndarë",
+      "link": "Lidhje",
+      "community": "Komunitet",
+      "shop": "Dyqan",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Shpërblim",
+      "app": "Aplikacion",
+      "proposal": "Propozim",
+      "short": "Shkurt",
+      "comic": "Strip",
+      "earn": "Fito",
+      "listening_one": "{{value}} duke dëgjuar",
+      "listening_other": "{{value}} duke dëgjuar",
+      "listens_one": "{{value}} dëgjo",
+      "listens_other": "{{value}} dëgjime",
+      "votes_one": "{{value}} votë",
+      "votes_other": "{{value}} vota",
+      "members_one": "{{value}} anëtar",
+      "members_other": "{{value}} anëtarë"
+    },
     "viewGrid": "Pamja e rrjetit",
     "viewList": "Pamja e listës",
     "viewMode": "Shfaq",
@@ -3300,6 +3328,7 @@
     "statsLoadFailed": "Nuk mund të ngarkohen statistikat e staking"
   },
   "communities": {
+    "sortTop": "Kryesoret",
     "shareLink": "Ndaj linkun",
     "pinnedMore": "Më shumë",
     "showFirst": "Shfaq të parën",

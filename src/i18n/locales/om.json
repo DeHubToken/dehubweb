@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "Baasii daldala kanaa kaffaluu hin dandeenye. Yeroo gabaabaa booda yaalaa."
   },
   "nav": {
+    "launchpad": "Launchpad jedhamu",
     "reorderHint": "Irra deebi'ii qindeessuuf mallattoo kamiyyuu qabadhuu harkisi",
     "reorderReset": "Reset gochuu",
     "reorderResetLong": "Tartiiba menu irra deebi'ii saagi",
@@ -2093,6 +2094,33 @@
     "returnHome": "Manatti deebi'i"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Sadarkaa",
+      "liveStage": "Sadarkaa jiraa",
+      "event": "Taatee",
+      "poll": "Filannoo",
+      "quote": "Caqasa",
+      "shared": "Qoodame",
+      "link": "Liinkii",
+      "community": "Hawaasa",
+      "shop": "Suuqii",
+      "profile": "Pirofaayilii",
+      "film": "Fiilmii",
+      "bounty": "Badhaasa",
+      "app": "Appii",
+      "proposal": "Dhiyeessii",
+      "short": "Gabaabaa",
+      "comic": "Koomikii",
+      "earn": "Argachuu",
+      "listening_one": "{{value}} dhaggeeffachaa jiru",
+      "listening_other": "{{value}} dhaggeeffachaa jiru",
+      "listens_one": "{{value}} dhaggeeffadhu",
+      "listens_other": "{{value}} dhaggeeffata",
+      "votes_one": "{{value}} sagalee kenni",
+      "votes_other": "{{value}} sagalee kenne",
+      "members_one": "{{value}} miseensa",
+      "members_other": "{{value}} miseensota"
+    },
     "viewGrid": "Mul'ata giiridii",
     "viewList": "Mul'ata tarree",
     "viewMode": "Ilaaluu",
@@ -3297,6 +3325,7 @@
     "statsLoadFailed": "Staking stats fe&#39;uu hin dandeenye"
   },
   "communities": {
+    "sortTop": "Ol'aanaa",
     "shareLink": "Qunnamtii irratti dabsi",
     "pinnedMore": "Caalaa",
     "showFirst": "Dursi jalqabaa",

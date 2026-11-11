@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Бул транзакцияны каржылоо мүмкүн болгон жок. Бир аздан кийин аракет кылыңыз."
   },
   "nav": {
+    "launchpad": "Ишке киргизүү аянтчасы",
     "reorderHint": "Кайра уюштуруу үчүн ар кандай сөлөкөттү кармоо жана сүйрөө",
     "reorderReset": "Баштапкы абалга келтирүү",
     "reorderResetLong": "Меню тартибин калыбына келтирүү",
@@ -2086,6 +2087,32 @@
     "returnHome": "Башкы бетке кайтуу"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Этап",
+      "liveStage": "Түз эфирдеги сахна",
+      "event": "Иш-чара",
+      "poll": "Сурамжылоо",
+      "quote": "Цитата",
+      "shared": "Бөлүшүлдү",
+      "link": "Шилтеме",
+      "community": "Коомчулук",
+      "shop": "Дүкөн",
+      "profile": "Профиль",
+      "film": "Фильм",
+      "bounty": "Сыйлык",
+      "app": "Тиркеме",
+      "proposal": "Сунуш",
+      "short": "Кыска.",
+      "comic": "Комикс",
+      "earn": "Тап",
+      "listening_one": "{{value}} угуу",
+      "listening_other": "{{value}} угуу",
+      "listens_one": "{{value}} ук",
+      "listens_other": "{{value}} угат",
+      "votes_one": "{{value}} добуш берүү",
+      "members_one": "{{value}} мүчөсү",
+      "members_other": "{{value}} мүчө"
+    },
     "viewGrid": "Тордун көрүнүшү",
     "viewList": "Тизме көрүнүшү",
     "viewMode": "Көрүнүш",
@@ -3290,6 +3317,7 @@
     "statsLoadFailed": "Стейкинг статистикасын жүктөө мүмкүн болбоду"
   },
   "communities": {
+    "sortTop": "Мыкты",
     "shareLink": "Шилтемени бөлүшүү",
     "pinnedMore": "Көбүрөөк",
     "showFirst": "Биринчи көрсөтүү",

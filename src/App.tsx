@@ -36,7 +36,9 @@ import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-
 import { AppLayout } from "./components/app/AppLayout";
 import { QuickActionsHost } from "./components/app/QuickActionsHost";
 import { LoginModal, scheduleLoginPrefetch } from "@/components/app/LoginModal";
-import React, { Suspense, useEffect, useState, type ReactNode } from "react";
+import { AfterSignIn } from "@/components/app/AfterSignIn";
+import { getTwoFactorPrompt, useTwoFactorPrompt } from "@/lib/two-factor-login";
+import React, { Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
@@ -224,7 +226,6 @@ const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
-const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
 const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
 const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreatePage"));
 const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
@@ -427,6 +428,7 @@ if (typeof window !== "undefined") {
 function LoginSheetHost() {
   const { isLoginModalOpen } = useLoginSheet();
   const { closeLoginModal, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const twoFactor = useTwoFactorPrompt();
 
   // The login flow is "active" from the modal opening until any
   // connect/redirect it started has finished, which is a little past the sheet
@@ -438,14 +440,14 @@ function LoginSheetHost() {
   // everything has gone quiet the resume is deferred past the sheet's exit
   // animation (see scheduleBackgroundResume).
   useEffect(() => {
-    const active = isLoginModalOpen || isConnecting || isProcessingRedirect || requiresUsername;
+    const active = isLoginModalOpen || isConnecting || isProcessingRedirect || requiresUsername || !!twoFactor;
     document.documentElement.toggleAttribute('data-login-active', active);
     if (active) {
       setBackgroundPaused(true);
     } else {
       scheduleBackgroundResume();
     }
-  }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername]);
+  }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername, twoFactor]);
 
   // Always mounted, and closed it costs nothing: ui/drawer keeps vaul's Root
   // out of the tree until a sheet first opens, so this renders no DOM and
@@ -458,7 +460,15 @@ function LoginSheetHost() {
   // signing up on the sheet's profile step, which used to be a separate
   // centred dialog on top of the whole viewport. The sheet refuses to close
   // while that flag is set.
-  return <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />;
+  //
+  // A sign-in waiting on its two-step code holds it open as well (wallet and
+  // redirect logins can reach that point with the sheet already closed);
+  // closing it there cancels that sign-in.
+  const onOpenChange = useCallback((next: boolean) => {
+    if (!next) getTwoFactorPrompt()?.cancel();
+    closeLoginModal();
+  }, [closeLoginModal]);
+  return <LoginModal open={isLoginModalOpen || requiresUsername || !!twoFactor} onOpenChange={onOpenChange} />;
 }
 
 /**
@@ -518,6 +528,7 @@ function AppContent() {
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       <LoginSheetHost />
+      <AfterSignIn />
       {isAuthenticated && <Suspense fallback={null}><DmUnreadBridge /></Suspense>}
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
@@ -651,6 +662,9 @@ function AppContent() {
           <Route path="/requests" element={<Navigate to="/features" replace />} />
           {/* Renamed to /converter — kept as a redirect for anyone with the old link. */}
           <Route path="/yt-dlp" element={<Navigate to="/converter" replace />} />
+          {/* The app's sign-in help link points here; without it the address fell
+              to the username catch-all and showed a missing profile. */}
+          <Route path="/support" element={<Navigate to="/docs/contact" replace />} />
 
           {/* Direct APK download lander. Standalone (no AppLayout) — it is a
               single non-scrolling screen that owns the viewport, and it is
@@ -781,8 +795,8 @@ function AppContent() {
               <Route path="events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
               <Route path="communities" element={null} />
               <Route path="fractions" element={null} />
-              <Route path="stores" element={null} />
-              <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
+              {/* Stores closed; old shop links land on Home. */}
+              <Route path="stores/*" element={<Navigate to="/app" replace />} />
               <Route path="usernames" element={null} />
               <Route path="nfts" element={<NftsRedirect />} />
               <Route path="accounts" element={null} />
@@ -845,7 +859,7 @@ function AppContent() {
                 time, each after someone noticed a shared dehub.io/<x> link
                 landing on the /:username catch-all and rendering the empty
                 profile of a user who does not exist. These are the ones that
-                had not had that moment yet — /stores, /fractions and
+                had not had that moment yet — /fractions and
                 /superpowers are public pages people link at, and the private
                 ones are what a support answer or a bookmark gets typed as.
                 All of these names are reserved in reserved-usernames.js, so
@@ -854,8 +868,7 @@ function AppContent() {
                 `/wallet` is deliberately absent: a real account registered
                 that handle in Feb 2026, and routing the bare path would take
                 their profile away. /app/wallet still works. */}
-            <Route path="/stores" element={null} />
-            <Route path="/stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
+            <Route path="/stores/*" element={<Navigate to="/app" replace />} />
             <Route path="/fractions" element={null} />
             <Route path="/planned" element={null} />
             <Route path="/superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />

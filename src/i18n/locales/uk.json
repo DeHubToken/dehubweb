@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "Цю транзакцію не вдалося оплатити. Спробуйте ще раз за хвилину."
   },
   "nav": {
+    "launchpad": "Панель запуску",
     "reorderHint": "Утримуйте та перетягуйте будь-який значок, щоб змінити порядок",
     "reorderReset": "Скинути",
     "reorderResetLong": "Скинути порядок меню",
@@ -2455,6 +2456,31 @@
     "returnHome": "Повернутися додому"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Сцена",
+      "liveStage": "Живий сценарій",
+      "event": "Подія",
+      "poll": "Опитування",
+      "quote": "Цитата",
+      "shared": "Поділено",
+      "link": "Посилання",
+      "community": "Спільнота",
+      "shop": "Магазин",
+      "profile": "Профіль",
+      "film": "Фільм",
+      "bounty": "Баунті",
+      "app": "Додаток",
+      "proposal": "Пропозиція",
+      "short": "Короткий",
+      "comic": "Комікс",
+      "earn": "Заробляйте",
+      "listens_one": "{{value}} слухайте",
+      "listens_other": "{{value}} слухає",
+      "votes_one": "Голос: {{value}}",
+      "votes_other": "{{value}} голосів",
+      "members_one": "Член {{value}}",
+      "members_other": "{{value}} учасники"
+    },
     "unavailable": "Профіль недоступний",
     "viewGrid": "Перегляд сітки",
     "viewList": "Перегляд списку",
@@ -3664,6 +3690,7 @@
     "statsLoadFailed": "Не вдалося завантажити статистику стейкінгу"
   },
   "communities": {
+    "sortTop": "Топ",
     "shareLink": "Поділитися посиланням",
     "pinnedMore": "Більше",
     "showFirst": "Показувати першою",

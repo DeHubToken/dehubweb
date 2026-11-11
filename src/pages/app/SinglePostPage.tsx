@@ -252,7 +252,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   
   // Canonical image resolution (matches feed normalization)
   const primaryImage = buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg';
-  const feedImages = buildFeedImageUrls(nft.imageUrls);
+  const feedImages = buildFeedImageUrls(nft.imageUrls, undefined, (nft as { imageSizes?: unknown }).imageSizes);
   const imageUrls = feedImages && feedImages.length > 0 ? feedImages : [primaryImage];
   
   const title = nft.title || nft.name;

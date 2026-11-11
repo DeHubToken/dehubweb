@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Ezt a tranzakciót nem sikerült átvállalni. Próbáld újra egy pillanat múlva."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Tartsa lenyomva és húzza bármelyik ikont az átrendezéshez",
     "reorderReset": "Visszaállítás",
     "reorderResetLong": "Menüsorrend visszaállítása",
@@ -2096,6 +2097,30 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Színpad",
+      "liveStage": "Élő színpad",
+      "event": "Esemény",
+      "poll": "Szavazás",
+      "quote": "Árajánlat",
+      "shared": "Megosztott",
+      "link": "Link",
+      "community": "Közösség",
+      "shop": "Áruház",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Fejpénz",
+      "app": "Alkalmazás",
+      "proposal": "Javaslat",
+      "short": "Rövid",
+      "comic": "Képregény",
+      "earn": "Keress",
+      "listening_one": "{{value}} odafigyelés",
+      "listening_other": "{{value}} odafigyelés",
+      "listens_other": "{{value}} figyel",
+      "votes_one": "{{value}} szavazat",
+      "votes_other": "{{value}} szavazat"
+    },
     "viewGrid": "Rácsnézet",
     "viewList": "Lista nézet",
     "viewMode": "Megtekintés",
@@ -3304,6 +3329,7 @@
     "statsLoadFailed": "Nem sikerült betölteni a staking statisztikákat"
   },
   "communities": {
+    "sortTop": "Legjobb",
     "shareLink": "Link megosztása",
     "pinnedMore": "Több",
     "showFirst": "Megjelenítés elsőként",

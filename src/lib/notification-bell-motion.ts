@@ -17,6 +17,6 @@ export function notificationBellMotion(count: number) {
 
 /** Follow the flared sides of CutAlerts, in its original 32-unit viewBox. */
 export const BELL_SIDE_RIPPLE_PATHS = [
-  'M10.4 7.1Q7.9 8.7 7.2 12.3L3.5 23.3',
-  'M21.6 7.1Q24.1 8.7 24.8 12.3L28.5 23.3',
+  'M10.4 7.6Q7.9 9.2 7.2 12.8L3.5 23.8',
+  'M21.6 7.6Q24.1 9.2 24.8 12.8L28.5 23.8',
 ] as const;

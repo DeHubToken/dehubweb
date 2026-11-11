@@ -19,6 +19,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { Fragment, createContext, useContext, useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Search, X } from 'lucide-react';
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,7 +41,7 @@ function subscribePhone(cb: () => void) {
   mql.addEventListener('change', cb);
   return () => mql.removeEventListener('change', cb);
 }
-function usePhonePill() {
+export function usePhonePill() {
   return useSyncExternalStore(
     subscribePhone,
     () => window.matchMedia(PHONE_QUERY).matches,
@@ -66,10 +68,25 @@ export interface PageIslandProps {
   actions?: ReactNode;
   /** A row under the title, usually <PageTabs>. */
   tabs?: ReactNode;
-  /** Anything else inside the island under the tabs (search, filters). */
+  /** Anything else inside the island under the tabs (search, filters). On
+   *  phones it waits behind a search button in the pill and slides out as a
+   *  full-width drawer attached under it. */
   children?: ReactNode;
+  /** Phones: the pill's one line, in place of the title or tabs (Explore puts
+   *  its search field here). */
+  pillLine?: ReactNode;
+  /** Phones: the page opens and shuts the drawer itself (no search button is
+   *  added; the page puts its own toggle in the pill). */
+  drawerOpen?: boolean;
   className?: string;
 }
+
+/** How far the search drawer's top runs up under the pill (the slot clips it). */
+const DRAWER_TUCK = 12;
+/** How far the open drawer reaches up behind the pill: past the pill's 12px
+ *  bottom corners, so its top corners hide under the pill's curve instead of
+ *  showing a notch where the two meet. */
+const DRAWER_BEHIND = 14;
 
 export function PageIsland({
   title,
@@ -81,11 +98,34 @@ export function PageIsland({
   actions,
   tabs,
   children,
+  pillLine,
+  drawerOpen: drawerOpenProp,
   className,
 }: PageIslandProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
+  const [drawerOpenState, setDrawerOpen] = useState(false);
+  const drawerControlled = drawerOpenProp !== undefined;
+  const drawerOpen = drawerControlled ? drawerOpenProp : drawerOpenState;
+  const [drawerFilled, setDrawerFilled] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!drawerOpen || drawerControlled) return;
+    const id = window.setTimeout(() => drawerRef.current?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true }), 60);
+    return () => window.clearTimeout(id);
+  }, [drawerOpen, drawerControlled]);
+  const toggleDrawer = () => {
+    if (drawerOpen) {
+      // A search left typed in keeps the button lit, so a filtered list
+      // never looks unfiltered.
+      setDrawerFilled(!!drawerRef.current?.querySelector<HTMLInputElement>('input')?.value);
+      setDrawerOpen(false);
+    } else {
+      setDrawerOpen(true);
+    }
+  };
 
   const handleBack = () => {
     if (onBack) return onBack();
@@ -100,7 +140,7 @@ export function PageIsland({
         <div
           data-feed-nav
           data-kit-pill
-          className="relative flex flex-col rounded-xl bg-zinc-900"
+          className="relative z-10 flex flex-col rounded-xl bg-zinc-900"
           style={{ overflowX: 'clip', overflowClipMargin: '8px' }}
         >
           <span data-nav-glass-backdrop aria-hidden="true" />
@@ -126,7 +166,12 @@ export function PageIsland({
                   )}
                 </span>
               ) : null}
-              {tabs ? (
+              {pillLine ? (
+                <>
+                  <h1 className="sr-only">{title}</h1>
+                  <div data-kit-pill-line className="flex min-w-0 flex-1 items-center">{pillLine}</div>
+                </>
+              ) : tabs ? (
                 <>
                   <h1 className="sr-only">{title}</h1>
                   <div data-kit-pill-tabs-slot className="min-w-0 flex-1">{tabs}</div>
@@ -134,11 +179,59 @@ export function PageIsland({
               ) : (
                 <h1 data-kit-title className="min-w-0 flex-1 truncate px-1.5 text-[15px] font-semibold leading-tight text-white">{title}</h1>
               )}
-              {actions ? <div data-kit-pill-actions className="flex shrink-0 items-center">{actions}</div> : null}
+              {actions || (children && !drawerControlled) ? (
+                <div data-kit-pill-actions className="flex shrink-0 items-center">
+                  {actions}
+                  {children && !drawerControlled ? (
+                    <IslandAction
+                      label={drawerOpen ? _copy('search.close', { defaultValue: 'Close search' }) : _copy('search.open', { defaultValue: 'Search' })}
+                      active={drawerOpen || drawerFilled}
+                      onClick={toggleDrawer}
+                    >
+                      {drawerOpen ? <X /> : <Search />}
+                    </IslandAction>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </PillContext.Provider>
         </div>
-        {children ? <div data-kit-pill-extra className="mt-2 space-y-2">{children}</div> : null}
+        {children ? (
+          // The search slides out from under the pill as one full-width
+          // drawer in the pill's glass, like Home's new-posts drawer. Its top
+          // runs up behind the pill past the pill's rounded corners, so the
+          // two meet cleanly. Kept mounted while shut so a typed search
+          // survives closing it.
+          <motion.div
+            data-kit-search-slot
+            initial={false}
+            animate={{ height: drawerOpen ? 'auto' : 0, marginTop: drawerOpen ? -DRAWER_BEHIND : 0 }}
+            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 36, mass: 0.8 }}
+            className="relative z-0 -mx-12 overflow-hidden px-12"
+            aria-hidden={!drawerOpen}
+            ref={(el: HTMLDivElement | null) => { if (el) el.toggleAttribute('inert', !drawerOpen); }}
+          >
+            <motion.div
+              initial={false}
+              animate={{ y: drawerOpen ? 0 : '-100%' }}
+              transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 32, mass: 0.8 }}
+            >
+              <div
+                ref={drawerRef}
+                data-feed-new-posts-chip
+                data-kit-search-drawer
+                className="relative px-2 pb-2"
+                style={{ marginTop: -DRAWER_TUCK, paddingTop: DRAWER_TUCK + DRAWER_BEHIND + 8 }}
+              >
+                <span data-nav-glass-backdrop aria-hidden="true" />
+                <span data-feed-new-posts-shade aria-hidden="true" style={{ top: DRAWER_TUCK + DRAWER_BEHIND }} />
+                <PillContext.Provider value>
+                  <div className="relative z-10 space-y-2">{children}</div>
+                </PillContext.Provider>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
       </div>
     );
   }

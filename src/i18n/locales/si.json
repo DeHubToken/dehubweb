@@ -432,6 +432,7 @@
     "gasSponsorshipFailed": "මෙම ගනුදෙනුවේ පිරිවැය දැරීමට නොහැකි විය. කරුණාකර ටික වේලාවකින් උත්සාහ කරන්න."
   },
   "nav": {
+    "launchpad": "ලෝන්ච්පෑඩ්",
     "reorderHint": "නැවත සැකසීමට ඕනෑම අයිකනයක් රඳවාගෙන අදින්න",
     "reorderReset": "යළි සකසන්න",
     "reorderResetLong": "මෙනු ඇණවුම යළි සකසන්න",
@@ -2073,6 +2074,33 @@
     "returnHome": "මුල් පිටුවට ආපසු"
   },
   "profile": {
+    "gridCard": {
+      "stage": "වේදිකාව",
+      "liveStage": "සජීවී වේදිකාව",
+      "event": "උත්සවය",
+      "poll": "මත විමසුම",
+      "quote": "උපුටා දැක්වීම",
+      "shared": "බෙදාගන්නා ලදී",
+      "link": "සබැඳිය",
+      "community": "ප්‍රජාව",
+      "shop": "සාප්පුව",
+      "profile": "පැතිකඩ",
+      "film": "චිත්‍රපටය",
+      "bounty": "ත්‍යාගය",
+      "app": "යෙදුම",
+      "proposal": "යෝජනාව",
+      "short": "කෙටි",
+      "comic": "කාටූන්",
+      "earn": "උපයන්න",
+      "listening_one": "{{value}} ක් සවන් දෙයි",
+      "listening_other": "{{value}} ක් සවන් දෙයි",
+      "listens_one": "{{value}} ක් සවන් දෙන්න",
+      "listens_other": "{{value}} ක් සවන් දෙයි",
+      "votes_one": "{{value}} ක් ඡන්දය දෙයි",
+      "votes_other": "{{value}} ක් ඡන්දය දෙයි",
+      "members_one": "{{value}} ක් සාමාජිකයෙකි",
+      "members_other": "{{value}} ක් සාමාජිකයෝ"
+    },
     "viewGrid": "ජාල දසුන",
     "viewList": "ලැයිස්තු දසුන",
     "viewMode": "බලන්න",
@@ -3271,6 +3299,7 @@
     "statsLoadFailed": "පිරිනැමීම් සංඛ්‍යා නවත්ත නොහැක"
   },
   "communities": {
+    "sortTop": "ඉහළම",
     "shareLink": "සබැඳිය බෙදා ගන්න",
     "pinnedMore": "තවත්",
     "showFirst": "මුලින්ම පෙන්වන්න",

@@ -4753,84 +4753,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/fractions"/>
   </url>
   <url>
-    <loc>https://riftn.com/stores</loc>
-    <lastmod>2026-09-01T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/stores?hl=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/stores"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/stores?hl=es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/stores?hl=fr"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/stores?hl=nl"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/stores?hl=tr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/stores"/>
-  </url>
-  <url>
-    <loc>https://riftn.com/stores?hl=ar</loc>
-    <lastmod>2026-09-01T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/stores?hl=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/stores"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/stores?hl=es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/stores?hl=fr"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/stores?hl=nl"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/stores?hl=tr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/stores"/>
-  </url>
-  <url>
-    <loc>https://riftn.com/stores?hl=es</loc>
-    <lastmod>2026-09-01T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/stores?hl=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/stores"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/stores?hl=es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/stores?hl=fr"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/stores?hl=nl"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/stores?hl=tr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/stores"/>
-  </url>
-  <url>
-    <loc>https://riftn.com/stores?hl=fr</loc>
-    <lastmod>2026-09-01T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/stores?hl=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/stores"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/stores?hl=es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/stores?hl=fr"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/stores?hl=nl"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/stores?hl=tr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/stores"/>
-  </url>
-  <url>
-    <loc>https://riftn.com/stores?hl=nl</loc>
-    <lastmod>2026-09-01T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/stores?hl=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/stores"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/stores?hl=es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/stores?hl=fr"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/stores?hl=nl"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/stores?hl=tr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/stores"/>
-  </url>
-  <url>
-    <loc>https://riftn.com/stores?hl=tr</loc>
-    <lastmod>2026-09-01T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/stores?hl=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/stores"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/stores?hl=es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/stores?hl=fr"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/stores?hl=nl"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/stores?hl=tr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/stores"/>
-  </url>
-  <url>
     <loc>https://riftn.com/packs</loc>
     <lastmod>2026-09-27T00:00:00.000Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -5765,6 +5687,84 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/admin-manual?hl=nl"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/admin-manual?hl=tr"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/admin-manual"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/is-riftn-the-same-as-dehub</loc>
+    <lastmod>2026-11-11T06:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar</loc>
+    <lastmod>2026-11-11T06:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es</loc>
+    <lastmod>2026-11-11T06:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr</loc>
+    <lastmod>2026-11-11T06:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl</loc>
+    <lastmod>2026-11-11T06:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+  </url>
+  <url>
+    <loc>https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr</loc>
+    <lastmod>2026-11-11T06:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://riftn.com/guides/is-riftn-the-same-as-dehub?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/guides/is-riftn-the-same-as-dehub"/>
   </url>
   <url>
     <loc>https://riftn.com/guides/you-will-own-everything-and-be-happy</loc>

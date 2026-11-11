@@ -408,6 +408,7 @@
     "gasSponsorshipFailed": "ایں لین دین دا خرچ نہ چایا ونڄ سڳیا۔ تھوڑی دیر بعد کوشش کرو۔"
   },
   "nav": {
+    "launchpad": "لانچ پيڊ",
     "reorderHint": "ہول اور ڈرگ کریں کسی بھی آئیکن کو دوبارہ آرینج کرنے کے لئے",
     "reorderReset": "ٹھیک کر",
     "reorderResetLong": "مینو دی ترتیب ری سیٹ کرو",
@@ -2025,6 +2026,33 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "اسٹیج",
+      "liveStage": "لائیو اسٹیج",
+      "event": "تقریب",
+      "poll": "پول",
+      "quote": "اقتباس",
+      "shared": "شیئر کیتا گیا",
+      "link": "لنک",
+      "community": "کمیونٹی",
+      "shop": "شاپ",
+      "profile": "پروفائل",
+      "film": "فلم",
+      "bounty": "بونٹی",
+      "app": "ایپ",
+      "proposal": "تجویز",
+      "short": "شارٹ",
+      "comic": "کومک",
+      "earn": "کمائی",
+      "listening_one": "{{value}} سنیندے پئین",
+      "listening_other": "{{value}} سنیندے پئین",
+      "listens_one": "{{value}} سݨو",
+      "listens_other": "{{value}} سݨدے ہن",
+      "votes_one": "{{value}} ووٹ",
+      "votes_other": "{{value}} ووٹ",
+      "members_one": "{{value}} ممبر",
+      "members_other": "{{value}} ممبرز"
+    },
     "viewGrid": "گرڈ ویو",
     "viewList": "فہرست نظارہ",
     "viewMode": "دیکھ",
@@ -3213,6 +3241,7 @@
     "statsLoadFailed": "چلنا سٹیکنگ کے آمار لود نہ کئے"
   },
   "communities": {
+    "sortTop": "اُتلا",
     "shareLink": "لنک شیئر کرو",
     "pinnedMore": "ہور",
     "showFirst": "پہلے ڈکھاؤ",

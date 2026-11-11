@@ -408,6 +408,7 @@
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول مرة أخرى بعد قليل."
   },
   "nav": {
+    "launchpad": "منصة الإطلاق",
     "reorderHint": "احفظ و اسحب أي أيكون ليغير ترتيبها",
     "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
@@ -2058,6 +2059,25 @@
     "returnHome": "ارجع للبيت"
   },
   "profile": {
+    "gridCard": {
+      "stage": "المسرح",
+      "liveStage": "المسرح الحية",
+      "event": "حوادث",
+      "poll": "استطلاع",
+      "quote": "المقال",
+      "community": "مجتمع",
+      "shop": "المتجر",
+      "profile": "الملف الشخصي",
+      "film": "السينما",
+      "app": "تطبيق",
+      "proposal": "مخطوطة",
+      "short": "قصير",
+      "comic": "الكوميديا",
+      "earn": "تأتي",
+      "votes_one": "{{value}} تصويت",
+      "votes_other": "{{value}} تصويت",
+      "members_one": "عضو {{value}}"
+    },
     "viewGrid": "عرض الشبكة",
     "viewList": "قائمة العرض",
     "viewMode": "شوف",
@@ -3248,6 +3268,7 @@
     "statsLoadFailed": "مش قادر تحمّل إحصائيات الستاكينغ"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه أول",

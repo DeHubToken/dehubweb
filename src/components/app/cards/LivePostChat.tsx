@@ -14,7 +14,9 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { Loader2, RotateCcw, Pin, CornerDownRight } from "lucide-react";
+import { Loader2, RotateCcw, Pin, CornerDownRight, SmilePlus } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { MoreReactionsButton } from "@/components/app/chat/MoreReactionsButton";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Languages from "@/components/ui/cut-icons/language";
 import Pencil from "@/components/ui/cut-icons/edit";
@@ -219,7 +221,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
   // Pinned message state — prefer server-side is_pinned, fallback to local
   const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
@@ -436,7 +438,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.e00e9d5ec2e0", { defaultValue: "Sign in to send voice notes" }));
+      openLoginModal();
       return;
     }
     const toastId = 'livechat-voice-upload';
@@ -449,11 +451,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       console.error('[LiveChat] Voice upload failed:', err);
       toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
-  }, [isAuthenticated, send, _copy]);
+  }, [isAuthenticated, openLoginModal, send, _copy]);
 
   const handleSend = async () => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.048ff525a56b", { defaultValue: "Sign in to chat" }));
+      openLoginModal();
       return;
     }
     // Empty the box the moment the line goes into the chat. Waiting for the
@@ -491,11 +493,16 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     }
   };
 
+  // Desktop: Reply and React sit on the line on hover, as in the public chat.
+  // A mouse has no hold, and right-click only opened for the host, your own
+  // lines or another language, so everyone else could not reply or react.
+  const [reactFor, setReactFor] = useState<string | null>(null);
+  const canReply = isAuthenticated && !isOffline && !bannedHere && !muted;
   const heldMsg = held?.msg;
   const heldTranslate = heldMsg ? translateHandles.current.get(heldMsg.id) : undefined;
   const holdActions: ChatHoldAction[] = [];
   if (heldMsg) {
-    if (isAuthenticated && !isOffline && !bannedHere && !muted) holdActions.push({
+    if (canReply) holdActions.push({
       key: 'reply', prime: true, icon: <Reply />, label: _copy('copy.c253f451bdd5', { defaultValue: 'Reply' }),
       // Inside the tap, so the phone raises the keyboard.
       onSelect: () => { setReplyTo(heldMsg); textareaRef.current?.focus(); },
@@ -777,6 +784,56 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                       </div>
                     )}
                   </div>
+                  {/* Reply and React on hover (desktop; a phone holds the line instead) */}
+                  {editingId !== msg.id && isAuthenticated && (
+                    <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 has-[[data-state=open]]:opacity-100 [@media(pointer:coarse)]:hidden">
+                      {canReply && (
+                        <button
+                          type="button"
+                          onClick={() => { setReplyTo(msg); textareaRef.current?.focus(); }}
+                          className="mt-0.5 text-zinc-500 transition-colors hover:text-white"
+                          title={_copy('copy.c253f451bdd5', { defaultValue: 'Reply' })}
+                          aria-label={_copy('copy.c253f451bdd5', { defaultValue: 'Reply' })}
+                        >
+                          <Reply className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                      <Popover open={reactFor === msg.id} onOpenChange={(open) => setReactFor(open ? msg.id : null)}>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="mt-0.5 text-zinc-500 transition-colors hover:text-white"
+                            title={_copy('copy.01fad993ff61', { defaultValue: 'React' })}
+                            aria-label={_copy('copy.01fad993ff61', { defaultValue: 'React' })}
+                          >
+                            <SmilePlus className="h-3.5 w-3.5" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent side="top" align="end" className="w-auto rounded-xl border-zinc-700 bg-zinc-800 p-1.5">
+                          <div className="flex gap-0.5">
+                            {QUICK_CHAT_REACTIONS.map((emoji) => (
+                              <button
+                                key={emoji}
+                                type="button"
+                                onClick={() => { toggleReaction(msg, emoji); setReactFor(null); }}
+                                className={cn(
+                                  'flex h-8 w-8 items-center justify-center rounded-lg text-lg transition-colors',
+                                  reactedBy(msg).includes(emoji) ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700',
+                                )}
+                              >
+                                {emoji}
+                              </button>
+                            ))}
+                            <MoreReactionsButton
+                              onPick={(emoji) => { toggleReaction(msg, emoji); setReactFor(null); }}
+                              reactions={msg.reactions}
+                              viewerAddress={viewer}
+                            />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  )}
                   {/* Your own line — edit and remove, on hover like the host's pin */}
                   {isMine(msg) && editingId !== msg.id && (
                     <>
@@ -911,7 +968,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
           <Reply className="h-3.5 w-3.5 shrink-0 text-white" />
           <div className="min-w-0 flex-1 text-[11px] leading-tight">
             <span className="font-semibold text-white">{replyTo.sender_display_name || replyTo.sender_username || replyTo.sender_address.slice(0, 8)}</span>
-            <p className="truncate text-zinc-400">{replyTo.content || _copy('copy.d357175cfe89', { defaultValue: 'Media' })}</p>
+            <p className="truncate text-zinc-400">{(!replyTo.message_type || replyTo.message_type === 'text') && replyTo.content ? replyTo.content : _copy('copy.d357175cfe89', { defaultValue: 'Media' })}</p>
           </div>
           <button type="button" onClick={() => setReplyTo(null)} aria-label={_copy('copy.19766ed6ccb2', { defaultValue: 'Cancel' })} className="shrink-0 p-0.5 text-zinc-400 hover:text-white">
             <X className="h-3.5 w-3.5" />

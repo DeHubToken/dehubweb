@@ -7,7 +7,6 @@
  */
 
 
-export { DevelopmentNoticeModal } from './DevelopmentNoticeModal';
 export { ReportModal } from './ReportModal';
 export { GoLiveModal } from './GoLiveModal';
 export { EditPostModal } from './EditPostModal';

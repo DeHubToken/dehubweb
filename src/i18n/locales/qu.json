@@ -439,6 +439,7 @@
     "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
   },
   "nav": {
+    "launchpad": "Launchpad nisqa",
     "reorderHint": "Ima iconotapas hap’ispa aysay mosoqmanta churanaykipaq",
     "reorderReset": "Reset nisqa",
     "reorderResetLong": "Menú ordenta kutichiy",
@@ -2088,6 +2089,33 @@
     "returnHome": "Qallariyman kutiy"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Pukllay",
+      "liveStage": "Kawsay pukllay",
+      "event": "Raymi",
+      "poll": "Akllay",
+      "quote": "Rimay",
+      "shared": "Rakishqa",
+      "link": "Tinkiy",
+      "community": "Ayllu",
+      "shop": "Khatu",
+      "profile": "Pila",
+      "film": "Siwi",
+      "bounty": "Qullqi",
+      "app": "App",
+      "proposal": "Munay",
+      "short": "Pisi",
+      "comic": "Kuyuy rikch'a",
+      "earn": "Ganay",
+      "listening_one": "{{value}} uyariykachkan",
+      "listening_other": "{{value}} uyariykachkan",
+      "listens_one": "{{value}} uyarimuy",
+      "listens_other": "{{value}} uyarin",
+      "votes_one": "{{value}} akllay",
+      "votes_other": "{{value}} akllaykuna",
+      "members_one": "{{value}} wankurishqa",
+      "members_other": "{{value}} wankurishqakuna"
+    },
     "viewGrid": "Rejilla qhaway",
     "viewList": "Lista qhaway",
     "viewMode": "Qaway",
@@ -3322,6 +3350,7 @@
     "statsLoadFailed": "Staking stats-ta cargana mana atiychu"
   },
   "communities": {
+    "sortTop": "Hanaq",
     "shareLink": "Linkta apay",
     "pinnedMore": "Aswan",
     "showFirst": "Ñawpaqta rikuchiy",

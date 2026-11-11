@@ -431,6 +431,7 @@
     "gasSponsorshipFailed": "ई लेनदेन के खरचा ना उठावल जा सकल। थोड़ी देर बाद कोसिस करूँ।"
   },
   "nav": {
+    "launchpad": "लॉन्चपैड",
     "reorderHint": "कोई भी आइकन को सेट करे और फिर से सेट करे",
     "reorderReset": "फिर से सेट करे",
     "reorderResetLong": "मेनू ऑर्डर कैलक्यूलेटर",
@@ -2067,6 +2068,33 @@
     "returnHome": "घर वापस जाओ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "मंच",
+      "liveStage": "लाइव मंच",
+      "event": "कार्यक्रम",
+      "poll": "पोल",
+      "quote": "उद्धरण",
+      "shared": "साझा कइल गइल",
+      "link": "लिंक",
+      "community": "समुदाय",
+      "shop": "दुकान",
+      "profile": "प्रोफ़ाइल",
+      "film": "फिल्म",
+      "bounty": "इनाम",
+      "app": "ऐप",
+      "proposal": "प्रस्ताव",
+      "short": "शॉर्ट",
+      "comic": "कॉमिक",
+      "earn": "कमाई",
+      "listening_one": "{{value}} सुन रहल बाड़न",
+      "listening_other": "{{value}} सुन रहल बाड़न",
+      "listens_one": "{{value}} सुनल",
+      "listens_other": "{{value}} सुनलें",
+      "votes_one": "{{value}} वोट",
+      "votes_other": "{{value}} वोट",
+      "members_one": "{{value}} सदस्य",
+      "members_other": "{{value}} सदस्य"
+    },
     "viewGrid": "रेडियल दृश्य",
     "viewList": "कैलक्यूलेटर",
     "viewMode": "देख रहलूँ हल ।",
@@ -3258,6 +3286,7 @@
     "statsLoadFailed": "नइ निकलि सकलइ"
   },
   "communities": {
+    "sortTop": "शीर्ष",
     "shareLink": "कड़ी जोड़ल गेल",
     "pinnedMore": "देखीलऽ अधिकई बतिया",
     "showFirst": "पहिले देखावऽ",

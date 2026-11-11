@@ -429,6 +429,7 @@
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang",
     "reorderReset": "Reset",
     "reorderResetLong": "Kembalikan urutan menu",
@@ -2065,6 +2066,33 @@
     "returnHome": "Bali menyang Beranda"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Panggung",
+      "liveStage": "Panggung langsung",
+      "event": "Acara",
+      "poll": "Jajak pendapat",
+      "quote": "Kutipan",
+      "shared": "Dibagikan",
+      "link": "Tautan",
+      "community": "Komunitas",
+      "shop": "Toko",
+      "profile": "Profil",
+      "film": "Film",
+      "bounty": "Hadiah",
+      "app": "Aplikasi",
+      "proposal": "Proposal",
+      "short": "Cekak",
+      "comic": "Komik",
+      "earn": "Entuk",
+      "listening_one": "{{value}} ngrungokake",
+      "listening_other": "{{value}} ngrungokake",
+      "listens_one": "{{value}} ngrungokake",
+      "listens_other": "{{value}} ngrungokake",
+      "votes_one": "{{value}} milih",
+      "votes_other": "{{value}} milih",
+      "members_one": "{{value}} anggota",
+      "members_other": "{{value}} anggota"
+    },
     "viewGrid": "Tampilan kisi",
     "viewList": "Tampilan dhaptar",
     "viewMode": "Kelihatan",
@@ -3263,6 +3291,7 @@
     "statsLoadFailed": "Gak bisa nge-load stats staking"
   },
   "communities": {
+    "sortTop": "Ndhuwur",
     "shareLink": "Bagikan tautan",
     "pinnedMore": "Luwih akeh",
     "showFirst": "Tampilake dhisik",

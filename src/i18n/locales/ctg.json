@@ -420,6 +420,7 @@
     "gasSponsorshipFailed": "ইয়ান লেনদেনর খরচ দিত ন পারি। এক্কেনা পরে আবার চেষ্টা গরন।"
   },
   "nav": {
+    "launchpad": "লঞ্চপ্যাড",
     "reorderHint": "কোনো আইকন ধরে টেনে এনে পুনর্বিন্যাস করুন",
     "reorderReset": "রিসেট",
     "reorderResetLong": "মেনুর ক্রম রিসেট করুন",
@@ -2116,6 +2117,33 @@
     "returnHome": "হোমে ফিরো"
   },
   "profile": {
+    "gridCard": {
+      "stage": "স্টেজ",
+      "liveStage": "লাইভ স্টেজ",
+      "event": "ইভেন্ট",
+      "poll": "ভোট",
+      "quote": "উদ্ধৃতি",
+      "shared": "শেয়ার করা",
+      "link": "লিংক",
+      "community": "কমিউনিটি",
+      "shop": "শপ",
+      "profile": "প্রোফাইল",
+      "film": "চলচ্চিত্র",
+      "bounty": "বাউন্টি",
+      "app": "অ্যাপ",
+      "proposal": "প্রস্তাব",
+      "short": "ছোট",
+      "comic": "কমিক",
+      "earn": "উপার্জন করুন",
+      "listening_one": "{{value}} শুনছেন",
+      "listening_other": "{{value}} শুনছেন",
+      "listens_one": "{{value}} শুনুন",
+      "listens_other": "{{value}} শুনছে",
+      "votes_one": "{{value}} ভোট দিন",
+      "votes_other": "{{value}} ভোট দিচ্ছে",
+      "members_one": "{{value}} সদস্য",
+      "members_other": "{{value}} সদস্য"
+    },
     "viewGrid": "গ্রিড ভিউ",
     "viewList": "লিস্ট ভিউ",
     "viewMode": "দেখা",
@@ -3326,6 +3354,7 @@
     "pendingSubmitted": "{{amount}} টোকেন সাবমিট করিয়ি আছে। কনফার্মেশন চেক করিয়ি আছে। আবার পাঠাইবা না।"
   },
   "communities": {
+    "sortTop": "শীর্ষ",
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরও",
     "showFirst": "আগে দেহাও",

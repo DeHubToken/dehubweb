@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { traceMetalOutline } from './metal-outline';
+import { METAL_OUTLINE_GRID, smoothMetalOutline, traceMetalOutline } from './metal-outline';
 import { flightClock } from './flight-clock';
 
 /** The same renderer runs in the web showcase and the bundled mobile WebView. */
@@ -19,7 +19,7 @@ export class MetalStage {
     const fc=fx.getContext('2d');
     if(!fc) throw new Error('Badge effects canvas unavailable');
     renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.outputColorSpace=THREE.SRGBColorSpace;
     renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
     scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(33,1,.1,100);camera.position.z=5.6;
@@ -46,7 +46,7 @@ export class MetalStage {
         await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{image.src='';reject(new Error('Badge artwork timed out'));},8000);image.onload=()=>{clearTimeout(timer);resolve();};image.onerror=()=>{clearTimeout(timer);reject(new Error('Badge artwork unavailable'));};image.src=item.src;});
         if(disposed)return false;
         const c=document.createElement('canvas');c.width=c.height=256;const ctx=c.getContext('2d');ctx.drawImage(image,0,0,256,256);
-        const small=document.createElement('canvas');small.width=small.height=96;const sc=small.getContext('2d');sc.drawImage(image,0,0,96,96);outlines[index]=traceMetalOutline(sc.getImageData(0,0,96,96).data,96);
+        const G=METAL_OUTLINE_GRID,small=document.createElement('canvas');small.width=small.height=G;const sc=small.getContext('2d');sc.imageSmoothingEnabled=true;sc.imageSmoothingQuality='high';sc.drawImage(image,0,0,G,G);outlines[index]=smoothMetalOutline(traceMetalOutline(sc.getImageData(0,0,G,G).data,G,G/96),G);
         const pixels=ctx.getImageData(0,0,256,256);for(let i=0;i<pixels.data.length;i+=4){const l=pixels.data[i]*.3+pixels.data[i+1]*.59+pixels.data[i+2]*.11;pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=l;}ctx.putImageData(pixels,0,0);
         const gray=new THREE.CanvasTexture(c);gray.colorSpace=THREE.SRGBColorSpace;
         const color=new THREE.Texture(image);color.colorSpace=THREE.SRGBColorSpace;color.needsUpdate=true;textures[index]={gray,color};
@@ -56,7 +56,7 @@ export class MetalStage {
       })().catch(()=>false).finally(()=>loads.delete(index));loads.set(index,pending);return pending;
     }
 function makeBadge(index){const result=new THREE.Group();result.userData.src=items[index].src;
-const b=items[index],tex=textures[index],shape=new THREE.Shape(),smooth=outlines[index].map((p,i,a)=>{let x=0,y=0;for(let k=-3;k<=3;k++){const q=a[(i+k+a.length)%a.length];x+=q[0];y+=q[1];}return [x/7,y/7];}),points=smooth.filter((_,i)=>i%2===0).map(p=>new THREE.Vector2((p[0]/96-.5)*2.4,(.5-p[1]/96)*2.4));shape.setFromPoints(points);
+const b=items[index],tex=textures[index],shape=new THREE.Shape(),points=outlines[index].map(p=>new THREE.Vector2((p[0]/METAL_OUTLINE_GRID-.5)*2.4,(.5-p[1]/METAL_OUTLINE_GRID)*2.4));shape.setFromPoints(points);
 // Blend the artwork's alpha over the metal. Transparent WebP pixels retain
 // stray RGB colours that must never become an opaque part of the face.
 const gold=state.finish==='Gold';const color=gold?0xd8b96f:0xc8d0d6;

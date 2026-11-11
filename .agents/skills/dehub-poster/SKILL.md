@@ -40,7 +40,7 @@ Everything here is what the renderer already does. Describe it accurately when b
 
 **The lattice is dots, not graph paper.** Dotted runs with a slightly brighter dot at each node, very faint (~.115 alpha on the runs, ~.22 on the nodes). Solid 1px rules read as an engineering drawing laid over the art. And it must never tile flat — it is masked with a radial fade so it rakes across the canvas, strongest at the top-left catch, gone by the lower-right where the hero sits. A uniform-strength overlay is the giveaway that something was generated rather than composed.
 
-**Headline.** Exo 700 UPPERCASE, tracking ~-0.022em, line-height ~0.92, ~0.185–0.215 × canvas height.
+**Headline.** Manrope 700 UPPERCASE (the site font; share cards moved off Exo on 2026-11-11), tracking ~-0.022em, line-height ~0.92, ~0.185–0.215 × canvas height.
 - The gradient is a **horizontal sweep**, not vertical: mid-grey at the left ramping to pure white ~65–70% across, easing to light grey at the right. The brightest type sits nearest the hero's light.
 - **The sweep carries ALPHA as well as tone** — the leading glyphs are semi-transparent (~.34 rising to 1.0 by ~62%) so the silk and light shafts read straight *through* the letters before they go opaque. That transparency is what seats the type inside the image instead of on top of it.
 - Grain is textured onto the glyphs themselves, not just the canvas.
@@ -49,7 +49,7 @@ Everything here is what the renderer already does. Describe it accurately when b
 - **Multi-line headlines share ONE sweep across the whole block.** In SVG that means `userSpaceOnUse`, not `objectBoundingBox` — per-line bounding boxes restart the ramp, so a 3-letter line and a 7-letter line each run the full grey→white→grey sweep and the two lines read as different tones.
 
 **Alignment — the thing most often got wrong.**
-- ONE left gutter (~5.2% of width landscape, ~7.5% portrait) shared by the pill, the headline and the sub row. The headline needs a ~-.085em left nudge and the sub ~-.03em to cancel Exo's left side bearing; without it the type looks indented against the pill and reads as sloppy.
+- ONE left gutter (~5.2% of width landscape, ~7.5% portrait) shared by the pill, the headline and the sub row. The headline needs a ~-.091em left nudge and the sub ~-.03em to cancel Manrope's left side bearing; without it the type looks indented against the pill and reads as sloppy.
 - ONE bottom baseline (~10.4% of height up from the bottom) whose **centre line** is shared by the wordmark pill, the `//dehub.io` box and the QR. Centre, not bottom — their heights differ.
 - Top tag box and QR share a right gutter (~4.2%).
 

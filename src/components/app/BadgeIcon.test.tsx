@@ -47,12 +47,22 @@ describe('badge hover playback', () => {
     expect(screen.getByRole('button').style.verticalAlign).toBe('baseline');
   });
 
+  it('offers the small still per screen density and keeps the full one as the source', () => {
+    badgeTier = 'Crab';
+    render(<BadgeIcon />);
+    const image = screen.getByRole('img');
+    expect(image.getAttribute('src')).toBe(badgeHoverArt('Crab')?.poster);
+    const set = image.getAttribute('srcset') ?? '';
+    expect(set.split(',').map(entry => entry.trim().split(' ')[1])).toEqual(['1x', '2x', '3x']);
+    expect(set).toContain('crab');
+    expect(image.getAttribute('loading')).toBeNull();
+  });
   it('sizes the idle image from its own transparent bounds', () => {
     badgeTier = 'Crab';
     render(<BadgeIcon />);
     expect(screen.getByRole('img').getAttribute('style')).toContain(String(128 / 96));
     fireEvent.pointerEnter(screen.getByRole('button'));
-    expect(document.querySelector('[data-badge-animation]')?.getAttribute('style')).toContain(String(128 / 109));
+    expect(document.querySelector('[data-badge-animation]')?.getAttribute('style')).toContain(String(128 / 96));
   });
   it('keeps the poster until decoding completes and starts fresh on the next hover', async () => {
     render(<BadgeIcon />);
@@ -105,6 +115,17 @@ describe('badge hover playback', () => {
     fireEvent.pointerLeave(badge);
     expect(screen.getByRole('img').getAttribute('src')).toBe(art.poster);
     expect(screen.getByRole('img').className).not.toContain('drop-shadow');
+  });
+
+  it('draws the animation in the same box as the still so hover never resizes the badge', () => {
+    render(<BadgeIcon badgeBalance={500000} />);
+    const still = screen.getByRole('img').getAttribute('style');
+    fireEvent.pointerEnter(screen.getByRole('button'));
+    const motion = document.querySelector('[data-badge-animation]')!.getAttribute('style')!;
+    for (const prop of ['width', 'height', 'left', 'top']) {
+      const read = (css: string) => css.match(new RegExp(`(?:^|;\\s*)${prop}:\\s*([^;]+)`))?.[1];
+      expect(read(motion)).toBe(read(still!));
+    }
   });
 
   it('keeps the still image without a glow when reduced motion is enabled', () => {

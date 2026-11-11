@@ -432,6 +432,7 @@
     "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Jide ma dọrọ aịkọn ọ bụla ka ị hazie ọzọ",
     "reorderReset": "Tọgharịa",
     "reorderResetLong": "Tọgharịa usoro menu",
@@ -2076,6 +2077,30 @@
     "returnHome": "Laghachi Ụlọ"
   },
   "profile": {
+    "gridCard": {
+      "stage": "Ọkwa",
+      "liveStage": "Ebe a na-eme ihe nkiri ndụ",
+      "event": "Emume",
+      "poll": "Pọtụfoliyo",
+      "shared": "Shared",
+      "link": "Banye",
+      "community": "Ụmụmụba",
+      "profile": "Nkọwa",
+      "film": "Igwe onye na ihe nkiri",
+      "bounty": "Onye na onyinye",
+      "app": "Ọganiwụ",
+      "proposal": "Atụmatụ",
+      "short": "Nkenke",
+      "earn": "Nweta",
+      "listening_one": "{{value}} na-ege ntị",
+      "listening_other": "{{value}} na-ege ntị",
+      "listens_one": "{{value}} gee ntị",
+      "listens_other": "{{value}} na-ege ntị",
+      "votes_one": "{{value}} votu",
+      "votes_other": "{{value}} votu",
+      "members_one": "{{value}} onye otu",
+      "members_other": "{{value}} ndị otu"
+    },
     "viewGrid": "Ngosi grid",
     "viewList": "Ngosi ndesịta",
     "viewMode": "Ngosi",
@@ -3279,6 +3304,7 @@
     "statsLoadFailed": "Enweghị ike ibu ọnụ ọgụgụ staking"
   },
   "communities": {
+    "sortTop": "Kacha elu",
     "shareLink": "Share njikọ",
     "pinnedMore": "Ọzọ",
     "showFirst": "Gosi nke mbụ",

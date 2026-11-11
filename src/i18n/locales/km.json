@@ -431,6 +431,7 @@
     "gasSponsorshipFailed": "មិនអាចឧបត្ថម្ភប្រតិបត្តិការនេះបានទេ។ សូមព្យាយាមម្តងទៀតបន្តិចទៀត។"
   },
   "nav": {
+    "launchpad": "វេទិកាបើកដំណើរការ",
     "reorderHint": "សង្កត់ហើយអូសអាយខន់ណាមួយដើម្បីរៀបចំឡើងវិញ",
     "reorderReset": "កំណត់ឡើងវិញ",
     "reorderResetLong": "កំណត់លំដាប់ម៉ឺនុយឡើងវិញ",
@@ -2088,6 +2089,33 @@
     "returnHome": "ត្រឡប់ទៅទំព័រដើម"
   },
   "profile": {
+    "gridCard": {
+      "stage": "ឆាក",
+      "liveStage": "ឆាកតន្ត្រីផ្ទាល់",
+      "event": "ព្រឹត្តិការណ៍",
+      "poll": "ការស្ទង់មតិ",
+      "quote": "សម្រង់សម្តី",
+      "shared": "បានចែករំលែក",
+      "link": "តំណភ្ជាប់",
+      "community": "សហគមន៍",
+      "shop": "ហាង",
+      "profile": "ប្រវត្តិរូប",
+      "film": "ភាពយន្ត",
+      "bounty": "រង្វាន់",
+      "app": "កម្មវិធី",
+      "proposal": "សំណើ",
+      "short": "ខ្លី",
+      "comic": "រឿងកំប្លែង",
+      "earn": "រកប្រាក់ចំណូល",
+      "listening_one": "{{value}} កំពុងស្តាប់",
+      "listening_other": "{{value}} កំពុងស្តាប់",
+      "listens_one": "{{value}} ស្ដាប់",
+      "listens_other": "{{value}} កំពុងស្ដាប់",
+      "votes_one": "{{value}} បោះឆ្នោត",
+      "votes_other": "{{value}} បោះឆ្នោត",
+      "members_one": "{{value}} សមាជិក",
+      "members_other": "{{value}} សមាជិក"
+    },
     "viewGrid": "ទិដ្ឋភាព ក្រឡាចត្រង្គ",
     "viewList": "ទិដ្ឋភាពបញ្ជី",
     "viewMode": "មើល",
@@ -3285,6 +3313,7 @@
     "statsLoadFailed": "មិនអាចផ្ទុកស្ថិតិការភ្នាល់បានទេ"
   },
   "communities": {
+    "sortTop": "កំពូល",
     "shareLink": "ចែករំលែកតំណ",
     "pinnedMore": "ច្រើនទៀត",
     "showFirst": "បង្ហាញមុនគេ",
