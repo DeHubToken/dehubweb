@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { AppState } from '@/components/app/AppState';
+import MessagesIcon from '@/components/ui/cut-icons/messages';
 import { cn } from '@/lib/utils';
 
 /**
@@ -53,12 +53,14 @@ export function FullScreenChatShell({
       >
         {chat ?? (
           <div data-chat-wallpaper className="flex h-full items-center justify-center">
-            <AppState
-              icon="messages"
-              title={_copy('fullscreenChat.pickTitle', { defaultValue: 'Pick a chat' })}
-              description={_copy('fullscreenChat.pickBody', { defaultValue: 'Choose a conversation on the left, or start a new one.' })}
-              size="section"
-            />
+            {/* The 2D line icon, like the rest of the full-screen chat. */}
+            <div data-fsc-empty className="flex max-w-xs flex-col items-center text-center">
+              <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.06] text-zinc-300">
+                <MessagesIcon className="h-7 w-7" />
+              </span>
+              <p className="text-[17px] font-semibold text-white">{_copy('fullscreenChat.pickTitle', { defaultValue: 'Pick a chat' })}</p>
+              <p className="mt-1 text-sm text-zinc-400">{_copy('fullscreenChat.pickBody', { defaultValue: 'Choose a conversation on the left, or start a new one.' })}</p>
+            </div>
           </div>
         )}
       </section>

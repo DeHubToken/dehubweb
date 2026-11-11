@@ -1,8 +1,7 @@
-import { useContext, type ReactNode } from 'react';
+import { useContext, useState, type ReactNode } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@/contexts/AuthContext';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -10,6 +9,9 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
 import Search from '@/components/ui/cut-icons/search';
 import ExitFullscreen from '@/components/ui/cut-icons/exit-fullscreen';
+import HomeIcon from '@/components/ui/cut-icons/home';
+import ProfileIcon from '@/components/ui/cut-icons/profile';
+import SettingsIcon from '@/components/ui/cut-icons/settings-cog';
 
 /*
  * The two corners of riftn.com/chat on computers. Phones keep the page pill.
@@ -80,11 +82,13 @@ export function ChatListTop({
   );
 }
 
-export function ChatMeDock() {
+/** `onOpenSettings` shows settings inside the chat page instead of leaving it. */
+export function ChatMeDock({ onOpenSettings }: { onOpenSettings?: () => void } = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   // useContext, not useAuth: the state gallery renders this without a provider.
   const user = useContext(AuthContext)?.user;
+  const [menuOpen, setMenuOpen] = useState(false);
   const name = user?.displayName || user?.username || '';
   const avatarSrc = user?.address && user?.avatarImageUrl ? buildAvatarUrl(user.address, user.avatarImageUrl) : undefined;
   const homeLabel = _copy('fullscreenChat.home', { defaultValue: 'Riftn home' });
@@ -92,9 +96,9 @@ export function ChatMeDock() {
   const settingsLabel = _copy('fullscreenChat.settings', { defaultValue: 'Settings' });
   const exitLabel = _copy('fullscreenChat.exit', { defaultValue: 'Leave full screen' });
   const menu = [
-    { key: 'profile', label: profileLabel, icon: <ThemedIcon icon="profile" alt="" className="h-5 w-5 object-contain" />, to: '/app/profile' },
-    { key: 'settings', label: settingsLabel, icon: <ThemedIcon icon="settings" alt="" className="h-5 w-5 object-contain" />, to: '/app/settings' },
-    { key: 'exit', label: exitLabel, icon: <ExitFullscreen className="h-[18px] w-[18px] text-zinc-300" />, to: '/app/messages' },
+    { key: 'profile', label: profileLabel, icon: <ProfileIcon className="h-[18px] w-[18px] text-zinc-300" />, onSelect: () => navigate('/app/profile') },
+    { key: 'settings', label: settingsLabel, icon: <SettingsIcon className="h-[18px] w-[18px] text-zinc-300" />, onSelect: () => (onOpenSettings ? onOpenSettings() : navigate('/app/settings?tab=messages')) },
+    { key: 'exit', label: exitLabel, icon: <ExitFullscreen className="h-[18px] w-[18px] text-zinc-300" />, onSelect: () => navigate('/app/messages') },
   ];
 
   return (
@@ -113,12 +117,12 @@ export function ChatMeDock() {
           title={homeLabel}
           className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.07] transition-colors hover:bg-white/15"
         >
-          <ThemedIcon icon="home" alt="" className="h-6 w-6 object-contain" />
+          <HomeIcon className="h-[19px] w-[19px] text-zinc-200" />
         </button>
         {user ? (
           <>
             <span aria-hidden="true" className="relative z-10 mx-1 h-6 w-px bg-white/10" />
-            <Popover>
+            <Popover open={menuOpen} onOpenChange={setMenuOpen}>
               <PopoverTrigger asChild>
                 <button
                   type="button"
@@ -148,7 +152,7 @@ export function ChatMeDock() {
                   <button
                     key={row.key}
                     type="button"
-                    onClick={() => navigate(row.to)}
+                    onClick={() => { setMenuOpen(false); row.onSelect(); }}
                     className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left text-[14px] text-white transition-colors hover:bg-white/10"
                   >
                     <span className="flex h-5 w-5 items-center justify-center">{row.icon}</span>

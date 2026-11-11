@@ -4,7 +4,8 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { IslandAction, PageIsland, usePhonePill } from '@/components/app/page-kit/PageKit';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
+import CloseIcon from '@/components/ui/cut-icons/close';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
@@ -233,6 +234,9 @@ export function ConversationItem({
  * the list and the open chat side by side on a computer, and the cozy thread
  * layout (grouped bubbles, day pills, wallpaper). See FullScreenChatShell.
  */
+// Settings open inside the full-screen chat (computers) rather than leaving it.
+const EmbeddedSettings = lazy(() => import('@/pages/app/SettingsPage'));
+
 export default function MessagesPage({ fullscreen = false }: { fullscreen?: boolean } = {}) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -384,6 +388,11 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   const clearHistory = useClearChatHistory();
   const { byId: chatPrefs, update: updateChatPref } = useChatPrefs();
   const [showArchived, setShowArchived] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  // Opening any chat puts settings away.
+  useEffect(() => {
+    if (selectedConversation || showPublicChat) setShowSettings(false);
+  }, [selectedConversation, showPublicChat]);
   const [clearTarget, setClearTarget] = useState<DeHubConversation | null>(null);
   const lastActivity = (c: DeHubConversation) => c.lastMessage?.createdAt || c.updatedAt;
   const archivedConversations = richList
@@ -761,6 +770,21 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       />
   );
 
+  const settingsPane = fullscreen && !phonePill && showSettings ? (
+    <div data-fsc-settings className="h-full overflow-y-auto">
+      <div className="sticky top-0 z-[60] flex justify-end px-4 pt-3">
+        <ChatIconButton label={_copy('fullscreenChat.closeSettings', { defaultValue: 'Close settings' })} onClick={() => setShowSettings(false)} data-fsc-settings-close="">
+          <CloseIcon />
+        </ChatIconButton>
+      </div>
+      <div className="mx-auto -mt-11 w-full max-w-[47.5rem] px-4">
+        <Suspense fallback={null}>
+          <EmbeddedSettings initialTab="messages" />
+        </Suspense>
+      </div>
+    </div>
+  ) : null;
+
   const dmPane = fullscreen && selectedConversation && !showPublicChat ? (
     <DirectMessageChat
       key={conversationIdentity(selectedConversation)}
@@ -1089,7 +1113,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.3084651a3386", { defaultValue: "Searching users..." })}</div>
             )}
           </div>
-          {fullscreen && !phonePill && <ChatMeDock />}
+          {fullscreen && !phonePill && <ChatMeDock onOpenSettings={() => setShowSettings(true)} />}
         </div>
       </div>
   );
@@ -1140,7 +1164,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       <FullScreenChatShell
         style={shellKeyboardStyle}
         chatOpen={chatOpen}
-        chat={publicChatPane ?? dmPane}
+        chat={settingsPane ?? publicChatPane ?? dmPane}
         list={<>{chatSeo}{listColumn}{dialogs}</>}
       />
     );
