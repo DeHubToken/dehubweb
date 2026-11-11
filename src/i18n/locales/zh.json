@@ -3397,6 +3397,7 @@
     "statsLoadFailed": "無法載入抵押資訊"
   },
   "communities": {
+    "sortTop": "热门",
     "shareLink": "分享链接",
     "pinnedMore": "更多",
     "showFirst": "优先显示",

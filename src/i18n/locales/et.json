@@ -3327,6 +3327,7 @@
     "statsLoadFailed": "Panustamisstatistikat ei saanud laadida"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Jaga linki",
     "pinnedMore": "Veel",
     "showFirst": "Näita esimesena",

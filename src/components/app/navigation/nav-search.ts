@@ -329,7 +329,6 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   ],
   Affiliate: ['referral', 'referrals', 'refer', 'invite', 'invite friends', 'referral link', 'ref link', 'promo code', 'commission', 'partner', 'ambassador', 'share link', 'earn'],
   Careers: ['jobs', 'job', 'career', 'hiring', 'vacancies', 'work with us', 'work at riftn', 'join the team', 'team', 'apply', 'recruitment', 'roles', 'cv', 'resume'],
-  Stores: ['shop', 'shops', 'store', 'storefront', 'marketplace', 'merch', 'buy', 'sell', 'products', 'goods', 'shopping', 'ecommerce', 'orders', 'checkout'],
   // Nobody types "fractions" — they type what they are trying to do with them.
   // "shares" and "ownership" are how the docs and the marketing copy describe
   // the same thing, so both have to land here.
@@ -419,7 +418,7 @@ export const NAV_FIND_WORDS: Record<string, string> = {
   Events: 'events', Stages: 'stages', 'Feature Requests': 'featureRequests', Feedback: 'feedback',
   Staking: 'staking', SuperPowers: 'superpowers', Governance: 'governance', DAO: 'dao',
   Bounties: 'bounties', 'My Bounties': 'myBounties', Affiliate: 'affiliate', Careers: 'careers',
-  Stores: 'stores', Fractions: 'fractions', Usernames: 'usernames', Accounts: 'accounts', Apps: 'apps',
+  Fractions: 'fractions', Usernames: 'usernames', Accounts: 'accounts', Apps: 'apps',
   Arcade: 'arcade', Glossary: 'glossary', 'Compare Riftn': 'compare', Guide: 'guide', Stats: 'stats',
   Docs: 'docs', Blog: 'blog', Videos: 'videos', Shorts: 'shorts', Music: 'music', 'Live TV': 'liveTv',
   'Buy Tokens': 'buyTokens', Bridge: 'bridge', 'Top 100': 'top100', 'AI Agents': 'agents',

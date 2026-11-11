@@ -1,29 +1,25 @@
 /**
- * Clean list kit (phone concepts)
- * ===============================
- * The pieces Explore's clean list is made of, for other phone pages to try the
- * same look: word tabs with an underline, titled sections on one gutter split
+ * Clean list kit (phones)
+ * =======================
+ * The pieces Explore's clean list is made of, for other phone pages to share
+ * the look: word tabs with an underline, titled sections on one gutter split
  * by a hairline, and plain rows (lead, two lines, trail). No boxes.
  *
- * Concepts only: a page shows its clean version on phones when the address
- * carries ?concept=clean. Desktop never changes.
+ * Phones only (useCleanPhone). Desktop never changes.
  *
  * @module components/app/clean/CleanKit
  */
 import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
 import { usePhonePill } from '@/components/app/page-kit/PageKit';
 import { ExploreListSection } from '@/components/app/explore/ExploreListSection';
 import { cn } from '@/lib/utils';
 
 export const CleanSection = ExploreListSection;
 
-/** True on phones when the address asks for the clean concept. */
-export function useCleanConcept(): boolean {
-  const phone = usePhonePill();
-  const [params] = useSearchParams();
-  return phone && params.get('concept') === 'clean';
+/** True on phones, where pages draw their clean list. */
+export function useCleanPhone(): boolean {
+  return usePhonePill();
 }
 
 export interface CleanWord<T extends string> {

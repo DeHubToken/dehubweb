@@ -9,7 +9,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
 import { AppState } from '@/components/app/AppState';
 import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
-import { CleanWords, useCleanConcept } from '@/components/app/clean/CleanKit';
+import { useCleanPhone } from '@/components/app/clean/CleanKit';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
 import microsoftLogoImg from '@/assets/logo-microsoft.png';
@@ -207,11 +207,9 @@ export default function Top100CryptosPage() {
     return unified;
   }, [assets, coins]);
 
-  const clean = useCleanConcept();
-  const [kind, setKind] = useState<'all' | 'coin' | 'asset'>('all');
-  const listed = clean && kind !== 'all' ? allAssets.filter((a) => a.id.startsWith(kind + '-')) : allAssets;
-  const hasMore = listed.length > visibleCount;
-  const visibleAssets = listed.slice(0, visibleCount);
+  const clean = useCleanPhone();
+  const hasMore = allAssets.length > visibleCount;
+  const visibleAssets = allAssets.slice(0, visibleCount);
 
   const loadMore = useCallback(() => {
     if (hasMore) {
@@ -266,19 +264,6 @@ export default function Top100CryptosPage() {
           kind={cryptoError || assetsError ? 'error' : 'empty'}
           size="page"
           primaryAction={{ label: _copy("copy.942087cc2d41", { defaultValue: "Retry" }), onClick: () => { refetchCrypto(); refetchAssets(); } }}
-        />
-      )}
-
-      {clean && (
-        <CleanWords<'all' | 'coin' | 'asset'>
-          layoutId="top-assets-clean-kind"
-          value={kind}
-          onChange={setKind}
-          items={[
-            { id: 'all', label: _copy('filters.all', { defaultValue: 'All' }) },
-            { id: 'coin', label: _copy('explorePage.crypto', { defaultValue: 'Crypto' }) },
-            { id: 'asset', label: _copy('clean.stocksMetals', { defaultValue: 'Stocks & metals' }) },
-          ]}
         />
       )}
 

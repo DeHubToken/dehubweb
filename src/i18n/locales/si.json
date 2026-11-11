@@ -3299,6 +3299,7 @@
     "statsLoadFailed": "පිරිනැමීම් සංඛ්‍යා නවත්ත නොහැක"
   },
   "communities": {
+    "sortTop": "ඉහළම",
     "shareLink": "සබැඳිය බෙදා ගන්න",
     "pinnedMore": "තවත්",
     "showFirst": "මුලින්ම පෙන්වන්න",

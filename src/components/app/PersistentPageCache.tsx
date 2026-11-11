@@ -65,7 +65,6 @@ const BridgePage = lazyWithRetry(() => import('@/pages/app/BridgePage'));
 const Top100CryptosPage = lazyWithRetry(() => import('@/pages/app/Top100CryptosPage'));
 const CommunitiesPage = lazyWithRetry(() => import('@/pages/app/CommunitiesPage'));
 const EventsPage = lazyWithRetry(() => import('@/pages/app/EventsPage'));
-const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 const FractionsPage = lazyWithRetry(() => import('@/pages/app/FractionsPage'));
 const UsernamesPage = lazyWithRetry(() => import('@/pages/app/UsernamesPage'));
 const AccountsPage = lazyWithRetry(() => import('@/pages/app/AccountsPage'));
@@ -122,7 +121,6 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'top-100', path: ['/app/top-100', '/top-100'], component: Top100CryptosPage, skeleton: LeaderboardSkeleton },
   { key: 'communities', path: ['/app/communities', '/communities'], component: CommunitiesPage, skeleton: GenericPageSkeleton },
   { key: 'events', path: ['/app/events', '/events'], component: EventsPage, skeleton: GenericPageSkeleton },
-  { key: 'stores', path: ['/app/stores', '/stores'], component: StoresPage, skeleton: GenericPageSkeleton },
   { key: 'fractions', path: ['/app/fractions', '/fractions'], component: FractionsPage, skeleton: GridSkeleton },
   { key: 'usernames', path: ['/app/usernames', '/usernames'], component: UsernamesPage, skeleton: GridSkeleton },
   { key: 'accounts', path: ['/app/accounts', '/accounts'], component: AccountsPage, skeleton: GridSkeleton },

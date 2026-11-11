@@ -3322,6 +3322,7 @@
     "statsLoadFailed": "تعذّر تحميل إحصائيات الرهن"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "مشاركة الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه الأول",

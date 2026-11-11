@@ -36,7 +36,7 @@ import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
-import { CleanRow, CleanSection, useCleanConcept } from '@/components/app/clean/CleanKit';
+import { CleanRow, CleanSection, useCleanPhone } from '@/components/app/clean/CleanKit';
 import { badgeImage } from '@/lib/staking-badges';
 import {
   useCancelBoost,
@@ -87,7 +87,7 @@ export default function SuperPowersPage() {
   const [teamUpOpen, setTeamUpOpen] = useState(false);
   const [buyOpen, setBuyOpen] = useState(false);
 
-  const clean = useCleanConcept();
+  const clean = useCleanPhone();
   const historyBookings = historyPower
     ? (status?.bookings.filter(booking => booking.power === historyPower.key) ?? [])
     : [];

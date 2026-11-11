@@ -3407,6 +3407,7 @@
     "statsLoadFailed": "स्टेकिंग स्टैट्स लोड करने में असमर्थ"
   },
   "communities": {
+    "sortTop": "शीर्ष",
     "shareLink": "लिंक शेयर करें",
     "pinnedMore": "और",
     "showFirst": "पहले दिखाएँ",

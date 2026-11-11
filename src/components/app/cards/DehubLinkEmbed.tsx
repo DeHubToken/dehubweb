@@ -25,7 +25,6 @@ import type { DehubLinkMatch } from '@/lib/dehub-links';
 import { MAX_EMBEDS_PER_MESSAGE } from '@/lib/dehub-links';
 import { CommunityLinkEmbed } from '@/components/app/communities/CommunityLinkEmbed';
 import { CommunityInviteEmbed } from '@/components/app/communities/CommunityInviteEmbed';
-import { StoreLinkEmbed } from '@/components/app/stores/StoreLinkEmbed';
 import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
 import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
@@ -68,8 +67,6 @@ export function DehubLinkFallback({ link }: { link: DehubLinkMatch }) {
       case 'profile': return _copy("copy.d4788f256f73", { defaultValue: "View profile" });
       case 'community': return _copy("copy.1b46d5d1250d", { defaultValue: "View community" });
       case 'communityInvite': return _copy("copy.d9a48368402a", { defaultValue: "View community invite" });
-      case 'store': return _copy("copy.8ebcf526fab5", { defaultValue: "View store" });
-      case 'listing': return _copy("copy.89e22d40460e", { defaultValue: "View item" });
       case 'event': return _copy("copy.691f700a56d1", { defaultValue: "View event" });
       case 'stage': return _copy("copy.2074fadab822", { defaultValue: "View stage" });
       case 'film': return _copy("copy.c9916d206fc0", { defaultValue: "View title" });
@@ -216,16 +213,6 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
       return <CommunityLinkEmbed slug={link.slug!} fallback={fallback} />;
     case 'communityInvite':
       return <CommunityInviteEmbed code={link.code!} fallback={fallback} />;
-    case 'store':
-      return <StoreLinkEmbed storeId={link.storeId!} listingId={null} fallback={fallback} />;
-    case 'listing':
-      return (
-        <StoreLinkEmbed
-          storeId={link.storeId!}
-          listingId={link.listingId!}
-          fallback={fallback}
-        />
-      );
     case 'event':
       return <EventLinkEmbed eventNumber={link.eventNumber!} fallback={fallback} />;
     case 'stage':

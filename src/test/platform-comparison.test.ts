@@ -67,7 +67,7 @@ describe('public platform comparison', () => {
     }
     for (const rule of RESEARCH_RULES) for (const id of rule.ids.split(' ')) expect(FEATURES.some(feature => feature.id === id), id).toBe(true);
     expect(researchedEntry('future-capability', 'Future', 'Video editing', 'youtube')).toBeUndefined();
-    expect(comparisonCoverage('all').reviewed).toBe(534 * 11);
+    expect(comparisonCoverage('all').reviewed).toBe(531 * 11);
   });
   it('builds the rival-first inventory without double counting or guessing', () => {
     expect(RIVAL_ROWS.length).toBeGreaterThan(250);

@@ -3217,6 +3217,7 @@
     "statsLoadFailed": "Couldn't load staking stats"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Share di link",
     "pinnedMore": "More",
     "showFirst": "Show am fus",

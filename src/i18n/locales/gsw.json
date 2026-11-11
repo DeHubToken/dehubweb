@@ -3331,6 +3331,7 @@
     "statsLoadFailed": "Köönnte Staking-Statistike nid läde"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Link teile",
     "pinnedMore": "Meh",
     "showFirst": "Zerscht zeige",

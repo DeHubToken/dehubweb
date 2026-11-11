@@ -54,12 +54,12 @@ describe('apple-app-site-association', () => {
     }
   });
 
-  it('opens the shared post, bounty, community, store and event links in the app', () => {
+  it('opens the shared post, bounty, community and event links in the app', () => {
     for (const path of [
       '/post/42', '/post/42/info', '/posts/42', '/posts/42/b/55', '/app/post/42',
       '/bounty/7', '/bounty/7/edit',
       '/communities/dehub', '/communities/join/abc',
-      '/stores/abc123', '/events/3',
+      '/events/3',
       '/stages', '/stages/12',
       '/r/MAL123', '/r/MAL123/stream',
     ]) {

@@ -3274,6 +3274,7 @@
     "statsLoadFailed": "مشيت تحميل إحصائيات الاستيكينج"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه أول",

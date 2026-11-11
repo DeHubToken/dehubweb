@@ -3352,6 +3352,7 @@
     "statsLoadFailed": "ไม่สามารถโหลดสถิติการทำสเตกได้"
   },
   "communities": {
+    "sortTop": "ยอดนิยม",
     "shareLink": "แชร์ลิงค์",
     "pinnedMore": "เพิ่มเติม",
     "showFirst": "แสดงเป็นอันดับแรก",

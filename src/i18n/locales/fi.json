@@ -3326,6 +3326,7 @@
     "statsLoadFailed": "Ei voitu ladata staking -tilastoja"
   },
   "communities": {
+    "sortTop": "Kärki",
     "shareLink": "Jaa linkki",
     "pinnedMore": "Lisää",
     "showFirst": "Näytä ensin",

@@ -3354,6 +3354,7 @@
     "pendingSubmitted": "{{amount}} টোকেন সাবমিট করিয়ি আছে। কনফার্মেশন চেক করিয়ি আছে। আবার পাঠাইবা না।"
   },
   "communities": {
+    "sortTop": "শীর্ষ",
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরও",
     "showFirst": "আগে দেহাও",

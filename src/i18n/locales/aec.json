@@ -3248,6 +3248,7 @@
     "statsLoadFailed": "لا يمكن تحميل إحصائيات الاستكشاف"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "شارك اللينك",
     "pinnedMore": "أكتر",
     "showFirst": "اعرضه الأول",

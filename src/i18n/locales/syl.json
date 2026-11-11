@@ -3393,6 +3393,7 @@
     "statsLoadFailed": "স্টেকিং স্ট্যাটস লোড করতে পারিনা"
   },
   "communities": {
+    "sortTop": "শীর্ষ",
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরও",
     "showFirst": "আগে দেখাও",

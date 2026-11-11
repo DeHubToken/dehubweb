@@ -3257,6 +3257,7 @@
     "statsLoadFailed": "無法載入鎖定統計"
   },
   "communities": {
+    "sortTop": "热门",
     "shareLink": "分享链接",
     "pinnedMore": "更多",
     "showFirst": "先显示",

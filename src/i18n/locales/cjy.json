@@ -3298,6 +3298,7 @@
     "statsLoadFailed": "无法加载质押统计"
   },
   "communities": {
+    "sortTop": "热门",
     "shareLink": "分享链接",
     "pinnedMore": "更多",
     "showFirst": "先显示",

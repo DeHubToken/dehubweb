@@ -3328,6 +3328,7 @@
     "statsLoadFailed": "Neįmanoma įkelti staklingų duomenų"
   },
   "communities": {
+    "sortTop": "Populiariausi",
     "shareLink": "Dalytis nuoroda",
     "pinnedMore": "Daugiau",
     "showFirst": "Rodyti pirmą",

@@ -3273,6 +3273,7 @@
     "pendingSubmitted": "{{amount}} टोकन जमा किए गए। पुष्टि अभी भी जाँची जा रही है। इसे फिर से न भेजें।"
   },
   "communities": {
+    "sortTop": "उच्चतमम्",
     "shareLink": "लिङ्कम् बाँट्यताम्",
     "pinnedMore": "अधिकम्",
     "showFirst": "प्रथमं दर्शय",

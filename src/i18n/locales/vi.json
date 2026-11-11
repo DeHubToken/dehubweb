@@ -3408,6 +3408,7 @@
     "statsLoadFailed": "Không thể tải thống kê staking"
   },
   "communities": {
+    "sortTop": "Hàng đầu",
     "shareLink": "Chia sẻ liên kết",
     "pinnedMore": "Thêm",
     "showFirst": "Hiển thị đầu tiên",

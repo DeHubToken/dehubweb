@@ -3330,6 +3330,7 @@
     "statsLoadFailed": "Не можаха да се заредят данните за стейкинг"
   },
   "communities": {
+    "sortTop": "Топ",
     "shareLink": "Споделяне на връзка",
     "pinnedMore": "Още",
     "showFirst": "Показвай първа",

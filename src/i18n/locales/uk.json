@@ -3690,6 +3690,7 @@
     "statsLoadFailed": "Не вдалося завантажити статистику стейкінгу"
   },
   "communities": {
+    "sortTop": "Топ",
     "shareLink": "Поділитися посиланням",
     "pinnedMore": "Більше",
     "showFirst": "Показувати першою",

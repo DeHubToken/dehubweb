@@ -3401,6 +3401,7 @@
     "statsLoadFailed": "Не удалось загрузить статистику стейкинга"
   },
   "communities": {
+    "sortTop": "Топ",
     "shareLink": "Поделиться ссылкой",
     "pinnedMore": "Еще",
     "showFirst": "Показывать первым",

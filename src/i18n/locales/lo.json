@@ -3299,6 +3299,7 @@
     "statsLoadFailed": "ບໍ່ສາມາດໂຫຼດສະຖິຕິ staking ໄດ້"
   },
   "communities": {
+    "sortTop": "ອັນດັບຕົ້ນ",
     "shareLink": "ແບ່ງປັນລິ້ງ",
     "pinnedMore": "ເພີ່ມເຕີມ",
     "showFirst": "ສະແດງກ່ອນ",

@@ -7,8 +7,7 @@
  * - No SoftwareApplication / WebApplication / MobileApplication anywhere: the
  *   Software App result requires a rating or review, none of these pages has
  *   one, and without it Search Console lists each as an invalid item.
- * - Stores are OnlineStore (Store is a LocalBusiness and needs an address),
- *   events carry a location and a real organizer, profiles are ProfilePage,
+ * - Events carry a location and a real organizer, profiles are ProfilePage,
  *   posts SocialMediaPosting, communities never an Organization, and the
  *   homepage drops the retired SearchAction.
  * - Declared og:image sizes are true: pictures go through the image transform
@@ -301,25 +300,6 @@ describe('entity pages', () => {
     network({});
     const { res } = await crawl('/app/post/999999/duets');
     expect(res.status).toBe(404);
-  });
-
-  it('marks a store as an OnlineStore with a declared 1200x630 card', async () => {
-    network({
-      'https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/stores': json([
-        { id: 'abcdef12-3456', name: 'Shop', description: 'Things', banner_url: `${STORAGE}/store-media/abc/banner.png` },
-      ]),
-    });
-    const { body } = await crawl('/stores/abcdef12-3456');
-    expect(types(body)).toContain('OnlineStore');
-    expect(types(body)).not.toContain('Store');
-    expect(meta(body, 'og:image')).toBe(
-      'https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io/_og/storage/store-media/abc/banner.png',
-    );
-    expect(meta(body, 'og:image:width')).toBe('1200');
-    expect(meta(body, 'og:image:height')).toBe('630');
-    expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expectValidTrail(body, 'https://riftn.com/stores/abcdef12-3456');
-    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Stores', 'Shop']);
   });
 
   it('gives an online event a VirtualLocation, its creator as organizer and a status', async () => {

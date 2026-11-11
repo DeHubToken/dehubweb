@@ -3325,6 +3325,7 @@
     "statsLoadFailed": "לא ניתן לטעון סטטיסטיקות של תרמיל"
   },
   "communities": {
+    "sortTop": "מוביל",
     "shareLink": "שיתוף הקישור",
     "pinnedMore": "עוד",
     "showFirst": "הצג ראשון",

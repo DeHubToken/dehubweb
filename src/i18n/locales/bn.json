@@ -3323,6 +3323,7 @@
     "statsLoadFailed": "স্ট্যাকিং পরিসংখ্যান লোড করা যায়নি"
   },
   "communities": {
+    "sortTop": "শীর্ষ",
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরও",
     "showFirst": "প্রথমে দেখান",

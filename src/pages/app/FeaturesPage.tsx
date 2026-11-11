@@ -1,6 +1,4 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
-import { CleanRow, CleanWords, useCleanConcept } from '@/components/app/clean/CleanKit';
-import { PageIsland, IslandAction } from '@/components/app/page-kit/PageKit';
 import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useTranslation as _useCopy } from 'react-i18next';
 import i18n from '@/i18n';
@@ -1148,8 +1146,6 @@ export default function FeaturesPage() {
 
   // Swallow the feature-request list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
-  const clean = useCleanConcept();
-  const [composerOpen, setComposerOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
@@ -1163,48 +1159,6 @@ export default function FeaturesPage() {
           three tabs, category pills and sort tabs — `data-nav-return-top`
           keeps it hidden until the page reaches the top instead of covering a
           request after any small upward correction. */}
-      {clean ? (
-        <>
-          <PageIsland
-            icon="features"
-            title={t('features.promptPageTitle', 'Requests')}
-            actions={
-              <IslandAction label={t('features.promptNew', 'New prompt')} onClick={() => { setComposerOpen(true); handleSubmitClick(); }}>
-                <Plus className="h-[18px] w-[18px]" />
-              </IslandAction>
-            }
-          />
-          <div className="px-3">
-            <CleanWords<PageTab>
-              layoutId="requests-clean-tab"
-              value={activeTab}
-              onChange={(id) => openTab(id)}
-              items={[
-                { id: 'requests', label: t('features.prompts', 'Prompts'), count: remainingCount || undefined },
-                { id: 'shipping', label: t('features.queued', 'Queued'), count: inProgressCount || undefined },
-                { id: 'shipped', label: t('features.shipped'), count: shippedCount || undefined },
-              ]}
-            />
-            {activeTab === 'requests' && (
-              <CleanWords<FeatureSort>
-                size="sm"
-                className="mt-1"
-                layoutId="requests-clean-sort"
-                value={sort}
-                onChange={setSort}
-                items={SORTS.map((x) => ({ id: x.id, label: t(x.labelKey) }))}
-              />
-            )}
-            <CleanWords<CategoryChip>
-              size="sm"
-              layoutId="requests-clean-category"
-              value={category}
-              onChange={setCategory}
-              items={CATEGORIES.map((c) => ({ id: c.id as CategoryChip, label: t(c.labelKey) }))}
-            />
-          </div>
-        </>
-      ) : (
       <div data-feed-nav-outer data-nav-hide-desktop data-nav-return-top className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
@@ -1382,25 +1336,13 @@ export default function FeaturesPage() {
         </div>
         </div>
       </div>
-      )}
 
       {/* Content */}
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
 <FeedSwallowMotion>
       <div hidden={activeTab !== 'requests' || showNotFeasible}>
-        {clean && !composerOpen ? (
-          <div className="border-b border-zinc-800/60 px-1">
-            <CleanRow
-              onClick={() => setComposerOpen(true)}
-              lead={<span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-800"><Plus className="h-4 w-4 text-zinc-300" /></span>}
-              title={t('features.promptHeading', 'What should we build next?')}
-              sub={t('features.promptPlaceholder', { defaultValue: 'Describe an idea, improvement, or bug…' })}
-            />
-          </div>
-        ) : (
-          <PromptComposer initialCategory={initialCategory} focusRequest={composerFocus} onPosted={() => { setCategory('all'); setSearchInput(''); setSort('newest'); }} />
-        )}
+        <PromptComposer initialCategory={initialCategory} focusRequest={composerFocus} onPosted={() => { setCategory('all'); setSearchInput(''); setSort('newest'); }} />
         {!isFiltering && <TopBuildersCard compact />}
       </div>
       {/* The request a notification pointed at, above whichever tab is open. */}
