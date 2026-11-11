@@ -1,4 +1,4 @@
-import { agentOwnerAllowed, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema } from './task-plan.ts';
+import { agentOwnerAllowed, agentTeamOwner, singleTargetPlan, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema } from './task-plan.ts';
 const assert = (value: unknown, message = 'Assertion failed') => { if (!value) throw new Error(message); };
 Deno.test('filtered dislike windows preserve exact scope and reject contradictory reactions', () => {
   const command = 'Every post from 2026-10-01T00:00:00Z to 2026-10-02T00:00:00Z\nActions: dislike\nAuthor: @maldoteth\nCategory: Music';
@@ -19,11 +19,18 @@ Deno.test('filtered dislike windows preserve exact scope and reject contradictor
 });
 const base = { summary: 'Like yesterday’s posts', interval_minutes: null, steps: [{ tool: 'dehub_vote', arguments: { vote_type: 'like' }, audience: 'posts', from: '2026-10-10T00:00:00Z', to: '2026-10-11T00:00:00Z', topic: null }] };
 
-Deno.test('only the pinned owner receives access, never a username or missing wallet', () => {
+Deno.test('any wallet may own agents, never a username or missing wallet', () => {
   assert(agentOwnerAllowed('0x9324840523a5d17dd12a2f11a9472e5a199c1937'));
-  assert(agentOwnerAllowed('0x9324840523A5D17DD12A2F11A9472E5A199C1937'));
   assert(agentOwnerAllowed('0xEC4E2C7417F781B35D830671F013B3B91F29BA64'));
-  for (const value of [null, undefined, '', 'maldoteth', '0x0000000000000000000000000000000000000001']) assert(!agentOwnerAllowed(value));
+  assert(agentOwnerAllowed('0x0000000000000000000000000000000000000001'));
+  for (const value of [null, undefined, '', 'maldoteth', '0x123', '0x00000000000000000000000000000000000000zz']) assert(!agentOwnerAllowed(value));
+});
+Deno.test('group and every-post runs stay with the team account', () => {
+  assert(agentTeamOwner('0xEC4E2C7417F781B35D830671F013B3B91F29BA64'));
+  assert(agentTeamOwner('0x9324840523a5d17dd12a2f11a9472e5a199c1937'));
+  assert(!agentTeamOwner('0x0000000000000000000000000000000000000001'));
+  assert(singleTargetPlan({ steps: [{ audience: 'single' }, { audience: 'selected_posts' }] }));
+  for (const audience of ['posts', 'all_users', 'post_authors']) assert(!singleTargetPlan({ steps: [{ audience: 'single' }, { audience }] }));
 });
 Deno.test('bulk actions preserve an explicit time window and cannot expand into unsupported actions', () => {
   assert(taskPlanSchema.safeParse(base).success);

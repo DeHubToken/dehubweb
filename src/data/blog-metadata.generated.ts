@@ -2988,6 +2988,32 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "you-will-own-everything-and-be-happy",
+    "slug": "you-will-own-everything-and-be-happy",
+    "title": "You Will Own Everything and Be Happy",
+    "excerpt": "The internet already runs on \"you'll own nothing and be happy\". We put the opposite on our front door. Here is what our tagline means and why it is ours.",
+    "content": "",
+    "bannerImage": "/media/you-will-own-everything-banner-riftn.png",
+    "bannerImageAlt": "You will own everything, and be happy, the Riftn tagline",
+    "author": {
+      "name": "Riftn Team"
+    },
+    "publishedAt": "2026-11-11T04:00:00.000Z",
+    "tags": [
+      "Riftn",
+      "Ownership economy",
+      "Digital ownership",
+      "Creator economy",
+      "$RIFT",
+      "Open source"
+    ],
+    "readingTime": 6,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "You Will Own Everything and Be Happy: What Riftn's Tagline Means",
+    "seoDescription": "The internet promised you'd own nothing and be happy. Riftn flips it: your posts, audience, earnings and account belong to you, on-chain. Here's what that means."
+  },
+  {
     "id": "open-appeal-binance-recover-876-bnb-pioneer-burn",
     "slug": "open-appeal-binance-recover-876-bnb-pioneer-burn",
     "title": "Dear Binance: Our Open Appeal to Recover 876 BNB",
@@ -3650,30 +3676,30 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "open-appeal-binance-recover-876-bnb-pioneer-burn",
-  "slug": "open-appeal-binance-recover-876-bnb-pioneer-burn",
-  "title": "Dear Binance: Our Open Appeal to Recover 876 BNB",
-  "excerpt": "Thousands of retail holders have 876 BNB, worth over $600,000, stuck in a bugged contract. It meets every criterion of the Binance Pioneer Burn Program. This is our public appeal.",
+  "id": "you-will-own-everything-and-be-happy",
+  "slug": "you-will-own-everything-and-be-happy",
+  "title": "You Will Own Everything and Be Happy",
+  "excerpt": "The internet already runs on \"you'll own nothing and be happy\". We put the opposite on our front door. Here is what our tagline means and why it is ours.",
   "content": "",
-  "bannerImage": "/media/open-appeal-binance-876-bnb-banner-riftn.png",
-  "bannerImageAlt": "Dear Binance, an open appeal from Riftn to recover 876 BNB through the Pioneer Burn",
+  "bannerImage": "/media/you-will-own-everything-banner-riftn.png",
+  "bannerImageAlt": "You will own everything, and be happy, the Riftn tagline",
   "author": {
     "name": "Riftn Team"
   },
-  "publishedAt": "2026-11-06T19:26:20.000Z",
+  "publishedAt": "2026-11-11T04:00:00.000Z",
   "tags": [
     "Riftn",
-    "BNB",
-    "Binance",
-    "Pioneer Burn",
-    "BNB Chain",
-    "Community"
+    "Ownership economy",
+    "Digital ownership",
+    "Creator economy",
+    "$RIFT",
+    "Open source"
   ],
-  "readingTime": 3,
+  "readingTime": 6,
   "featured": true,
   "status": "published",
-  "seoTitle": "Dear Binance: Open Appeal to Recover 876 BNB | Riftn",
-  "seoDescription": "876 BNB, worth over $600,000, is stuck in a bugged contract that meets every Binance Pioneer Burn criterion. Read the Riftn community's open appeal."
+  "seoTitle": "You Will Own Everything and Be Happy: What Riftn's Tagline Means",
+  "seoDescription": "The internet promised you'd own nothing and be happy. Riftn flips it: your posts, audience, earnings and account belong to you, on-chain. Here's what that means."
 };
 
 export const excludedTitles: string[] = [

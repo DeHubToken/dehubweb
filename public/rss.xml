@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 Riftn</copyright>
     <managingEditor>team@dehub.io (Riftn Team)</managingEditor>
     <webMaster>team@dehub.io (Riftn Team)</webMaster>
-    <lastBuildDate>Fri, 06 Nov 2026 19:26:20 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 11 Nov 2026 04:00:00 GMT</lastBuildDate>
+    <item>
+      <title>You Will Own Everything and Be Happy</title>
+      <description>The internet promised you'd own nothing and be happy. Riftn flips it: your posts, audience, earnings and account belong to you, on-chain. Here's what that means.</description>
+      <link>https://riftn.com/guides/you-will-own-everything-and-be-happy</link>
+      <guid>https://riftn.com/guides/you-will-own-everything-and-be-happy</guid>
+      <pubDate>Wed, 11 Nov 2026 04:00:00 GMT</pubDate>
+      <dc:creator>Riftn Team</dc:creator>
+    </item>
     <item>
       <title>Dear Binance: Our Open Appeal to Recover 876 BNB</title>
       <description>876 BNB, worth over $600,000, is stuck in a bugged contract that meets every Binance Pioneer Burn criterion. Read the Riftn community's open appeal.</description>
@@ -160,14 +168,6 @@
       <link>https://riftn.com/guides/creators-guide-leaving-tiktok</link>
       <guid>https://riftn.com/guides/creators-guide-leaving-tiktok</guid>
       <pubDate>Thu, 27 Aug 2026 11:00:00 GMT</pubDate>
-      <dc:creator>Riftn Team</dc:creator>
-    </item>
-    <item>
-      <title>Q3 Development Overview</title>
-      <description>Every distinct thing Riftn shipped in Q3 across web, mobile and the streaming backend, stages, AI, ten themes, the arcade, self-custody wallets and the economy, with commit links throughout.</description>
-      <link>https://riftn.com/guides/q3-development-overview</link>
-      <guid>https://riftn.com/guides/q3-development-overview</guid>
-      <pubDate>Sat, 22 Aug 2026 12:00:00 GMT</pubDate>
       <dc:creator>Riftn Team</dc:creator>
     </item>
   </channel>

@@ -10,6 +10,7 @@ on:
       - 'supabase/migrations/20261022050000_agent_lives.sql'
       - 'supabase/migrations/20261023120000_agent_workspace.sql'
       - 'supabase/migrations/20261025020000_paced_agent_swarms.sql'
+      - 'supabase/migrations/20261111040000_agents_open_to_all.sql'
       - 'tests/sql/agent-tasks.sql'
       - '.github/workflows/agent-tasks.yml'
 jobs:
