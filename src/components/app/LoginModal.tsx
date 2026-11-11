@@ -32,7 +32,6 @@ import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
 // first frame is already the sheet people see. Clips are built only once a
 // tile is on screen (see Clip), so this costs nothing in the tap.
 import { LoginShortsStack } from '@/components/app/login/LoginShortsStack';
-import { TwoFactorLoginStep } from '@/components/app/two-factor/TwoFactorLoginStep';
 import { useTwoFactorPrompt } from '@/lib/two-factor-login';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
@@ -74,6 +73,11 @@ const LoginModalBody = preloadable(() =>
 // cold. Its own chunk so it does not drag the wallet body in behind it.
 const LoginProfileStep = React.lazy(() =>
   import('@/components/app/login/LoginProfileStep').then(m => ({ default: m.LoginProfileStep })),
+);
+
+// Only accounts with two-step sign-in ever see it, so it stays off first paint.
+const TwoFactorLoginStep = React.lazy(() =>
+  import('@/components/app/two-factor/TwoFactorLoginStep').then(m => ({ default: m.TwoFactorLoginStep })),
 );
 
 /**

@@ -78,7 +78,7 @@ export function TwoFactorLoginStep({ account, onSubmit, onCancel, previewMode, p
         <Input
           value={backupCode}
           onChange={(e) => { setBackupCode(e.target.value.toUpperCase()); setError(null); }}
-          placeholder="XXXX-XXXX"
+          placeholder="XXXXX-XXXXX"
           autoFocus
           autoCapitalize="characters"
           autoComplete="one-time-code"

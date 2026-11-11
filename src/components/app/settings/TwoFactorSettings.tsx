@@ -13,7 +13,7 @@ import {
   startTwoFactorSetup,
 } from '@/lib/api/dehub/two-factor';
 
-import { TwoFactorSheet, type TwoFactorApi } from './TwoFactorSheet';
+import { TwoFactorSheet, type TwoFactorApi } from '@/components/app/two-factor/TwoFactorSheet';
 
 const STATUS_KEY = ['two-factor-status'] as const;
 

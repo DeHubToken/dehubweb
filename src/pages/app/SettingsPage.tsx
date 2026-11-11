@@ -83,7 +83,7 @@ import {
   SETTINGS_HEADING_CLASS,
   SETTINGS_LABEL_CLASS,
 } from '@/components/app/settings/SettingsRow';
-import { TwoFactorSettings } from '@/components/app/two-factor/TwoFactorSettings';
+import { TwoFactorSettings } from '@/components/app/settings/TwoFactorSettings';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import Search from "@/components/ui/cut-icons/search";
