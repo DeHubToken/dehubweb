@@ -413,7 +413,7 @@ const DOCS_PAGES = {
   'dapps': { title: "Riftn dApps: The Complete Ecosystem", description: "Riftn's decentralized apps: streaming, feed, messaging, communities, wallet and more, how they fit together in one user-owned ecosystem." },
   'games': { title: 'Riftn Games: Play & Win On-Chain', description: "Riftn's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
   'token/overview': { title: 'Currency Overview | Riftn Docs', description: 'How Riftn tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
-  'token/economics': { title: 'Riftn tokens Economics | Riftn Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
+  'token/economics': { title: 'Token Economics | Riftn Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
   'token/stake': { title: 'Staking tokens | Riftn Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across Riftn.' },
   'roadmap': { title: 'Riftn Roadmap | Riftn Docs', description: "Where Riftn is headed: shipped milestones and what's next across the app, token and games." },
   'faq': { title: 'Riftn FAQ: Frequently Asked Questions', description: 'Answers to the most common questions about Riftn, Riftn tokens, staking, governance and the platform.' },
@@ -430,7 +430,7 @@ const DOCS_PAGES = {
   // has a hand-kept public/docs-content JSON mirroring its React page; the
   // description-only body in buildDocsHtml is only the fallback for a failed
   // fetch. docs-content-coverage.test.ts fails if an entry lands without one.
-  'token/utility': { title: 'Riftn tokens Utility & Holder Benefits | Riftn Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across Riftn.' },
+  'token/utility': { title: 'Token Utility & Holder Benefits | Riftn Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across Riftn.' },
   'token/where-to-buy': { title: 'Where to Buy Tokens | Riftn Docs', description: 'Where to buy Riftn tokens: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
   'token/governance': { title: 'Riftn Governance: Voting & Proposals', description: 'How Riftn governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
   'token/bridge': { title: 'Bridge tokens Between BASE & BNB | Riftn Docs', description: 'How to move tokens between the BASE and BNB networks with the manual Riftn bridge, and what to expect while it processes.' },

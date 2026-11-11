@@ -22,7 +22,10 @@ import Home from "@/components/ui/cut-icons/home";
 
 import { Button } from '@/components/ui/button';
 import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
-import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
+// The shared assistant avatar is a square photo on solid black; inside round
+// avatar frames that never shows, but on this page it drew a black box around
+// the figure. This copy is cut out on a clear background.
+import assistantAvatar from '@/assets/ai-assistant-avatar-cutout.png';
 
 /**
  * Signatures already reported this page load. Every page in the app stays
@@ -142,6 +145,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   handleReset = (): void => {
+    // A missing code file cannot be fixed by drawing the page again: React keeps
+    // the failed lazy import and throws it straight back, so "Try Again" used to
+    // land on this same screen. Only a fresh page load fetches the code again.
+    if (isChunkLoadError(this.state.error)) {
+      window.location.reload();
+      return;
+    }
     this.setState({ hasError: false, error: null });
   };
 

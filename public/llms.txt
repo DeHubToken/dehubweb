@@ -9,8 +9,9 @@ Every link below is a public page that renders without an account. The app's sig
 - Name: Riftn. It was called DeHub until November 2026. The old address dehub.io forwards to riftn.com, and old links keep working.
 - What it is: an open source, user-owned social network with video, shorts, live streaming, music, encrypted messaging, communities, browser games and a built-in wallet.
 - Cost: free to join and post. Creators keep up to 99% of what they earn, and tips arrive on-chain as they are sent.
-- Token: DHB, on Base and BNB Chain, used for tips, watch-to-earn rewards, staking and governance votes.
+- Token: $RIFT is Riftn's token, used for tips, unlocks, rewards and governance votes. It replaces DHB, and DHB holders keep their balance and claim it by logging in once after listing.
 - Apps: web at riftn.com, Android on Google Play or direct APK, and iPhone on the App Store.
+- Is Riftn the same as DeHub? Yes. [What changed and what did not](https://riftn.com/guides/is-riftn-the-same-as-dehub).
 - Since: in development since 2021. The rename and what changed is explained in [DeHub is now Riftn](https://riftn.com/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch).
 - Source code: [github.com/Riftn](https://github.com/Riftn).
 
