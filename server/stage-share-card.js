@@ -3,14 +3,14 @@
  * the host set no cover. It is the same "Chrome Mic" banner the app and site
  * draw (src/lib/stage-cover.ts), as an SVG the worker renders to PNG with resvg.
  *
- * resvg has Exo 500/700 and the brand mono ("Consolas") loaded; the backdrop,
+ * resvg has Manrope 500/700 and the brand mono ("Consolas") loaded; the backdrop,
  * mic and wordmark come in as data URIs (stage-share-image.js fetches them).
  * The worker runs in UTC, so the time says UTC.
  */
 import { buildStageCover, stageCoverTitleScale } from '../src/lib/stage-cover.ts';
 import { wrapPostText } from './post-share-card.js';
 
-export const STAGE_CARD_VERSION = 'v5';
+export const STAGE_CARD_VERSION = 'v6';
 const ORIGIN = 'https://riftn.com';
 
 export function stageShareImageUrl(id) {
@@ -63,7 +63,7 @@ export function renderStageCardSvg(stage, images = {}) {
   const left = 4.4 * U;
 
   const size = n(W * stageCoverTitleScale(m.title));
-  const lines = m.title ? wrapPostText(m.title.toUpperCase(), size, 56 * U * 1.08, 3) : [];
+  const lines = m.title ? wrapPostText(m.title.toUpperCase(), size, (56 * U) / 1.04, 3) : [];
   const lineH = n(size * 1.0);
   const tagSize = n(2.1 * U);
   const kvSize = n(1.5 * U);
@@ -109,13 +109,13 @@ export function renderStageCardSvg(stage, images = {}) {
   ${images.mic ? `<image href="${images.mic}" xlink:href="${images.mic}" x="${n(micX)}" y="${n(micY)}" width="${n(micW)}" height="${n(micH)}" transform="${micTransform}"/>` : ''}
   ${m.sparkles.map(sparkle).join('')}
 
-  ${images.wordmark ? `<image href="${images.wordmark}" xlink:href="${images.wordmark}" x="${n(left)}" y="${n(4.6 * U)}" width="${n(wordmarkW)}" height="${n(wordmarkH)}"/>` : `<text x="${n(left)}" y="${n(4.6 * U + wordmarkH * 0.85)}" font-family="Exo" font-weight="700" font-size="${n(wordmarkH)}" letter-spacing="${n(0.2 * U)}" fill="#fff">RIFTN</text>`}
+  ${images.wordmark ? `<image href="${images.wordmark}" xlink:href="${images.wordmark}" x="${n(left)}" y="${n(4.6 * U)}" width="${n(wordmarkW)}" height="${n(wordmarkH)}"/>` : `<text x="${n(left)}" y="${n(4.6 * U + wordmarkH * 0.85)}" font-family="Manrope" font-weight="700" font-size="${n(wordmarkH)}" letter-spacing="${n(0.2 * U)}" fill="#fff">RIFTN</text>`}
   <text x="${n(W - 5.7 * U)}" y="${n(6.2 * U)}" text-anchor="end" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".82">// type = "${escape(t('stageCover.stage'))}"</text>
   <path d="M${n(W - 22 * U)} ${n(5.2 * U)}v-${n(U)}h${n(U)}M${n(W - 4.4 * U)} ${n(6.6 * U)}v${n(U)}h-${n(U)}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/>
 
   ${m.status === 'live' ? `<circle cx="${n(left + 0.55 * U)}" cy="${n(tagY - tagSize * 0.33)}" r="${n(1.2 * U)}" fill="#ef4444" filter="url(#glow)"/><circle cx="${n(left + 0.55 * U)}" cy="${n(tagY - tagSize * 0.33)}" r="${n(0.55 * U)}" fill="#ef4444"/>` : ''}
-  <text x="${n(tagX)}" y="${tagY}" font-family="Exo" font-weight="500" font-size="${tagSize}" fill="#fff" fill-opacity=".92">${escape(m.statusTag)}</text>
-  <text font-family="Exo" font-weight="700" font-size="${size}" fill="url(#chrome)">${lines.map((line, i) => `<tspan x="${n(left)}" y="${n(titleY + i * lineH)}">${escape(line)}</tspan>`).join('')}</text>
+  <text x="${n(tagX)}" y="${tagY}" font-family="Manrope" font-weight="500" font-size="${tagSize}" fill="#fff" fill-opacity=".92">${escape(m.statusTag)}</text>
+  <text font-family="Manrope" font-weight="700" font-size="${size}" fill="url(#chrome)">${lines.map((line, i) => `<tspan x="${n(left)}" y="${n(titleY + i * lineH)}">${escape(line)}</tspan>`).join('')}</text>
   ${kv ? `<text x="${n(left)}" y="${kvY}" font-family="Consolas" font-size="${kvSize}" fill="#fff" fill-opacity=".6">${escape(wrapPostText(kv, kvSize, 56 * U, 1)[0] || '')}</text>` : ''}
 
   <text x="${n(left)}" y="${n(H - 4.2 * U - 1.05 * U)}" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".85">// riftn.com/stages</text>

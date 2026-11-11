@@ -30,9 +30,9 @@ const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/p
 // 1200x630 brand card, the same image the SEO worker serves when this function fails
 const FALLBACK_CARD = "https://riftn.com/og/riftn-share.png";
 
-// Inter font — cached in module scope (survives across requests in the same worker).
-// Must be TTF/OTF/WOFF: satori cannot parse WOFF2. Pinned so the file never changes under us.
-const FONT_BASE = "https://cdn.jsdelivr.net/fontsource/fonts/inter@5.2.5";
+// Manrope (the site font) from the brand kit — cached in module scope (survives
+// across requests in the same worker). Must be TTF/OTF/WOFF: satori cannot parse WOFF2.
+const FONT_BASE = "https://riftn.com/brand-kit/font";
 let fontRegular: ArrayBuffer | null = null;
 let fontBold: ArrayBuffer | null = null;
 
@@ -45,8 +45,8 @@ async function fetchFont(url: string): Promise<ArrayBuffer> {
 async function loadFonts() {
     if (fontRegular && fontBold) return { fontRegular, fontBold };
     [fontRegular, fontBold] = await Promise.all([
-        fetchFont(`${FONT_BASE}/latin-400-normal.ttf`),
-        fetchFont(`${FONT_BASE}/latin-700-normal.ttf`),
+        fetchFont(`${FONT_BASE}/manrope-500.ttf`),
+        fetchFont(`${FONT_BASE}/manrope-700.ttf`),
     ]);
     return { fontRegular: fontRegular!, fontBold: fontBold! };
 }
@@ -111,7 +111,7 @@ serve(async (req) => {
                     height: "630px",
                     backgroundColor: "#09090b",
                     padding: "60px 72px 52px",
-                    fontFamily: "Inter",
+                    fontFamily: "Manrope",
                     position: "relative" as const,
                 },
                 children: [
@@ -291,8 +291,8 @@ serve(async (req) => {
             width: 1200,
             height: 630,
             fonts: [
-                { name: "Inter", data: fr2, weight: 400, style: "normal" },
-                { name: "Inter", data: fb2, weight: 700, style: "normal" },
+                { name: "Manrope", data: fr2, weight: 400, style: "normal" },
+                { name: "Manrope", data: fb2, weight: 700, style: "normal" },
             ],
         });
 
