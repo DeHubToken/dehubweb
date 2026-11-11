@@ -18,7 +18,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ShippingAddressForm } from '@/components/app/stores/ShippingAddressForm';
+import { ShippingAddressForm } from './ShippingAddressForm';
 import { Loader2, ShoppingCart, ImageIcon, Truck, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { type StreamProduct } from '@/hooks/use-stream-shopping';

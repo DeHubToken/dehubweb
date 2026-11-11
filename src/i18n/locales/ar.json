@@ -3578,6 +3578,7 @@
     "statsLoadFailed": "تعذر تحميل إحصائيات الستيكينغ"
   },
   "communities": {
+    "sortTop": "الأفضل",
     "shareLink": "مشاركة الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرض أولاً",

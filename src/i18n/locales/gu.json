@@ -3323,6 +3323,7 @@
     "statsLoadFailed": "સ્ટેકિંગ સ્ટેટ્સ લોડ ન થઈ શક્યા"
   },
   "communities": {
+    "sortTop": "ટોચ",
     "shareLink": "લિંક શેર કરો",
     "pinnedMore": "વધુ",
     "showFirst": "પહેલા બતાવો",

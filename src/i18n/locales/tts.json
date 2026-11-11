@@ -3254,6 +3254,7 @@
     "statsLoadFailed": "ไม่สามารถโหลดสถิติเริ่มต้นได้"
   },
   "communities": {
+    "sortTop": "เทิงสุด",
     "shareLink": "แชร์ลิงก์",
     "pinnedMore": "เพิ่มเติม",
     "showFirst": "สำแดงก่อน",

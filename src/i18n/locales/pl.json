@@ -3337,6 +3337,7 @@
     "statsLoadFailed": "Nie udało się załadować statystyk stakingu"
   },
   "communities": {
+    "sortTop": "Najlepsze",
     "shareLink": "Udostępnij link",
     "pinnedMore": "Więcej",
     "showFirst": "Pokaż jako pierwszą",

@@ -3264,6 +3264,7 @@
     "statsLoadFailed": "لمْ يُمْكِنِ حَمْلِ إحصائياتِ التَّشْكِيل"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه أولاً",

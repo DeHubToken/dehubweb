@@ -509,8 +509,8 @@ describe('thin and test entities', () => {
     expect(api.entityLooksThin(entity)).toBe(false);
   });
 
-  it('is wired into the store, listing and event pages', () => {
-    for (const sig of ['function buildStoreHtml(store) {', 'function buildListingHtml(listing) {', 'function buildEventHtml(event) {']) {
+  it('is wired into the event pages', () => {
+    for (const sig of ['function buildEventHtml(event) {']) {
       const start = WORKER.indexOf(sig);
       expect(WORKER.slice(start, WORKER.indexOf('\n}\n', start)), sig).toMatch(/noindex: [^\n]*entityLooksThin\(/);
     }

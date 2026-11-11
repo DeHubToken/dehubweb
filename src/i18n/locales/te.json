@@ -3321,6 +3321,7 @@
     "statsLoadFailed": "స్టేకింగ్ గణాంకాలను లోడ్ చేయలేకపోయాను"
   },
   "communities": {
+    "sortTop": "అగ్రస్థానం",
     "shareLink": "లింక్ ‌ ను షేర్ చేయండి",
     "pinnedMore": "మరిన్ని",
     "showFirst": "ముందుగా చూపించు",

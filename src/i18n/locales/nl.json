@@ -3760,6 +3760,7 @@
     "statsLoadFailed": "Kon stakingstatistieken niet laden"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Link delen",
     "pinnedMore": "Meer",
     "showFirst": "Eerst tonen",

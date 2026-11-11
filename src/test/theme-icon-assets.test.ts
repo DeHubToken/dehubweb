@@ -229,7 +229,6 @@ describe('theme icon assets', () => {
       'src/pages/app/NotificationsPage.tsx',
       'src/pages/app/SettingsPage.tsx',
       'src/pages/app/StatsPage.tsx',
-      'src/pages/app/StoresPage.tsx',
       'src/pages/app/AccountsPage.tsx',
       'src/pages/app/UsernamesPage.tsx',
       'src/pages/app/TVPage.tsx',
@@ -251,14 +250,9 @@ describe('theme icon assets', () => {
 
   it('keeps page and state identity surfaces on themed icons', () => {
     const guardedImports: Record<string, RegExp> = {
-      'src/pages/app/StoresPage.tsx': /\b(Store|ShoppingBag|PackagePlus)\b/,
       'src/pages/app/WorkPage.tsx': /\b(Briefcase|Search|Scissors|MessageSquare)\b/,
       'src/pages/app/WorkPostPage.tsx': /\b(Briefcase|Scissors|MessageSquare)\b/,
       'src/pages/app/WorkJobDetailPage.tsx': /\bBriefcase\b/,
-      'src/components/app/stores/SetupStoreFlow.tsx': /\bStore\b/,
-      'src/components/app/stores/EditStoreDrawer.tsx': /\bStore\b/,
-      'src/components/app/stores/StoreListingCard.tsx': /\bImageIcon\b/,
-      'src/components/app/stores/StoreLinkEmbed.tsx': /\b(StoreIcon|ImageIcon)\b/,
       'src/features/work/components/JobCard.tsx': /\bBriefcase\b/,
       'src/features/work/components/BountyLinkEmbed.tsx': /\bBriefcase\b/,
       'src/components/app/settings/EmailSignInSettings.tsx': /\bMail\b/,

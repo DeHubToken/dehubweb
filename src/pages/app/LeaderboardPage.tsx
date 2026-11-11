@@ -7,7 +7,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
+import { PageBody, PageEmpty, PageIsland, PageTabs, usePhonePill } from '@/components/app/page-kit/PageKit';
 import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -365,6 +365,24 @@ export default function LeaderboardPage() {
 
   const sortToggleLabel = sortDirection === 'desc' ? t('leaderboard.highestFirst') : t('leaderboard.lowestFirst');
 
+  // Phones get the app's layout: the categories as labelled chips under the
+  // pill (lit one first), the periods, a "Highest first" line, then flat rows.
+  const phone = usePhonePill();
+  const pickCategory = (key: CategoryType | 'assets') => {
+    if (key === 'assets') { navigate('/app/top-100'); return; }
+    setCategory(key);
+    setSortDirection('desc');
+  };
+  const categoryTabs = [
+    ...categories.map((cat) => ({ id: cat.id as CategoryType | 'assets', label: t(cat.labelKey), icon: <cat.icon className="h-4 w-4" /> })),
+    { id: 'assets' as const, label: _copy("copy.bd12731d7bc9", { defaultValue: "Assets" }), icon: <TrendingUp className="h-4 w-4" /> },
+  ];
+  const phoneCategoryTabs = [
+    ...categoryTabs.filter((tab) => tab.id === category),
+    ...categoryTabs.filter((tab) => tab.id !== category),
+  ];
+  const pickPeriod = (key: LeaderboardPeriod) => { setTimePeriod(key); setShimmerKey(k => k + 1); setSortDirection('desc'); };
+
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -379,18 +397,16 @@ export default function LeaderboardPage() {
         icon={<BrandIcon src={trophyIcon} alt="" className="h-8 w-8 object-contain" />}
         title={t('leaderboard.title')}
         subtitle={t('leaderboard.subtitle')}
-        tabs={
+        tabs={phone ? undefined : (
           <PageTabs<CategoryType | 'assets'>
             value={category}
-            onChange={(key) => { if (key === 'assets') { navigate('/app/top-100'); return; } setCategory(key); setSortDirection('desc'); }}
-            tabs={[
-              ...categories.map((cat) => ({ id: cat.id, label: t(cat.labelKey), icon: <cat.icon className="h-4 w-4" /> })),
-              { id: 'assets' as const, label: _copy("copy.bd12731d7bc9", { defaultValue: "Assets" }), icon: <TrendingUp className="h-4 w-4" /> },
-            ]}
+            onChange={pickCategory}
+            tabs={categoryTabs}
           />
-        }
+        )}
       >
         {/* Time Period Tabs + Sort Toggle */}
+        {!phone && (
         <div className="flex items-center gap-2">
           <PageTabs
             size="sm"
@@ -411,6 +427,7 @@ export default function LeaderboardPage() {
             {sortDirection === 'desc' ? <ArrowDown className="w-4 h-4" aria-hidden="true" /> : <ArrowUp className="w-4 h-4" aria-hidden="true" />}
           </button>
         </div>
+        )}
 
         {/* Search + Refresh */}
         <div className="flex gap-2">
@@ -441,9 +458,35 @@ export default function LeaderboardPage() {
         </div>
       </PageIsland>
 
+      {phone && (
+        <div data-leaderboard-phone-head className="space-y-2 px-3">
+          <PageTabs<CategoryType | 'assets'>
+            key={category}
+            value={category}
+            onChange={pickCategory}
+            tabs={phoneCategoryTabs}
+          />
+          <PageTabs<LeaderboardPeriod>
+            size="sm"
+            value={timePeriod}
+            onChange={pickPeriod}
+            tabs={timePeriods.map((p) => ({ id: p.id, label: t(p.labelKey) }))}
+          />
+          <button
+            type="button"
+            onClick={() => setSortDirection(d => d === 'desc' ? 'asc' : 'desc')}
+            className={cn('flex items-center gap-1 px-1 pt-1 text-xs text-zinc-400', FOCUS_RING)}
+            aria-pressed={sortDirection === 'asc'}
+          >
+            {sortDirection === 'desc' ? <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" /> : <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />}
+            {sortToggleLabel}
+          </button>
+        </div>
+      )}
+
       {/* Content */}
-      <PageBody>
-        <div data-page-bento data-kit-section className="bg-zinc-900 overflow-hidden">
+      <PageBody className={phone ? 'pt-1' : undefined}>
+        <div data-page-bento={phone ? undefined : true} data-kit-section={phone ? undefined : true} className={phone ? undefined : 'bg-zinc-900 overflow-hidden'}>
         {/* Loading State */}
         {listLoading && (
           <DeHubPageLoader minHeight="40vh" />
@@ -484,12 +527,40 @@ export default function LeaderboardPage() {
               const profileHref = entry.username ? `/${entry.username}` : null;
               const displayName = getDisplayName(entry);
               const rowClass = cn(
-                "grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 transition-colors items-center",
+                phone ? "flex items-center gap-2 px-1 py-3.5" : "grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 transition-colors items-center",
                 profileHref && "cursor-pointer",
                 profileHref && (isLightTheme ? "hover:bg-zinc-100" : "hover:bg-zinc-800/50"),
                 FOCUS_RING,
               );
-              const rowContent = (
+              const rowContent = phone ? (
+                <>
+                  <div role="cell" className="flex w-9 shrink-0 items-center justify-center">
+                    {rank <= 10 ? (
+                      <div className="medal-shine-container h-7 w-7" style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}>
+                        <img src={MEDALS[rank - 1]} alt={t('leaderboard.rankN', { rank })} className="relative h-7 w-7 object-contain" />
+                        <div key={shimmerKey} className="medal-shine-overlay" />
+                      </div>
+                    ) : (
+                      <span className="text-sm font-semibold tabular-nums text-zinc-400" aria-label={t('leaderboard.rankN', { rank })}>{rank}</span>
+                    )}
+                  </div>
+                  <div role="cell" className="flex min-w-0 flex-1 items-center gap-3">
+                    <LeaderboardUserAvatar avatarUrl={getAvatarUrl(entry)} fallbackSeed={entry.account} displayName={displayName} size="md" />
+                    <div className="min-w-0">
+                      <span className="flex min-w-0 items-baseline gap-1">
+                        <span className="truncate text-sm font-semibold text-white">{displayName}</span>
+                        {!hidden && (
+                          <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} username={entry.username} className="h-[1em] w-[1em] shrink-0" />
+                        )}
+                      </span>
+                      <span className="block truncate text-xs text-zinc-500">{getHandle(entry)}</span>
+                    </div>
+                  </div>
+                  <div role="cell" className={`shrink-0 whitespace-nowrap text-sm font-bold tabular-nums ${valueTone(entry)}`}>
+                    {formatDisplayValue(entry)}
+                  </div>
+                </>
+              ) : (
                 <>
                   {/* Rank */}
                   <div role="cell" className="col-span-2 sm:col-span-1 flex items-center justify-center -ml-[5.5px]">

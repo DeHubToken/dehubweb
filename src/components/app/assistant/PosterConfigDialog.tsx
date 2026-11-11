@@ -121,7 +121,6 @@ const FEATURE_GROUPS: { group: string; groupLabel: string; items: { value: strin
   {
     group: 'Marketplace & Commerce', get groupLabel() { return _translateCopy("copy.92e31dc02897", { defaultValue: "Marketplace & Commerce" }); },
     items: [
-      { value: 'stores', get label() { return _translateCopy("copy.50d8d34a787b", { defaultValue: "🛍️ Riftn Stores" }); }, blurb: 'P2P commerce in tokens on Base', get blurbLabel() { return _translateCopy("copy.88bcb881a608", { defaultValue: "P2P commerce in tokens on Base" }); } },
       { value: 'fractions', get label() { return _translateCopy("copy.6ee5630c9dde", { defaultValue: "🧩 Fractions" }); }, blurb: 'Fractional NFT marketplace', get blurbLabel() { return _translateCopy("copy.515c1d5bac05", { defaultValue: "Fractional NFT marketplace" }); } },
       { value: 'work', get label() { return _translateCopy("copy.fb673c9c986e", { defaultValue: "🧑‍💻 Riftn Bounties" }); }, blurb: 'Escrow bounties: social, clips, contracts', get blurbLabel() { return _translateCopy("copy.cb7691b210ac", { defaultValue: "Escrow bounties: social, clips, contracts" }); } },
       { value: 'tipping', get label() { return _translateCopy("copy.2b13f4c55720", { defaultValue: "💸 Tipping" }); }, blurb: 'Reward creators on any post', get blurbLabel() { return _translateCopy("copy.3c0a4db437c9", { defaultValue: "Reward creators on any post" }); } },

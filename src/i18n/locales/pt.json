@@ -3511,6 +3511,7 @@
     "statsLoadFailed": "Não foi possível carregar estatísticas de staking"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Partilhar ligação",
     "pinnedMore": "Mais",
     "showFirst": "Mostrar primeiro",

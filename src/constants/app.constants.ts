@@ -16,7 +16,6 @@ import Quote from "@/components/ui/cut-icons/quote";
 import Handshake from "@/components/ui/cut-icons/affiliate";
 
 import Blocks from "@/components/ui/cut-icons/apps";
-import Store from "@/components/ui/cut-icons/store";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import Image from "@/components/ui/cut-icons/images";
 import Video from "@/components/ui/cut-icons/video";
@@ -86,7 +85,6 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Hammer, label: 'Bounties', path: '/work' },
   { icon: Handshake, label: 'Affiliate', path: '/affiliate' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
-  { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: PieChart, label: 'Fractions', path: '/app/fractions' },
   { icon: AtSign, label: 'Usernames', path: '/usernames' },
   { icon: Users, label: 'Accounts', path: '/accounts' },

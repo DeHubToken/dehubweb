@@ -3281,6 +3281,7 @@
     "pendingSubmitted": "{{amount}} توكن تم إرسالها. التأكيد لا يزال قيد الفحص. لا ترسلها مرة أخرى."
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه أول",

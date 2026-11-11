@@ -3400,6 +3400,7 @@
     "statsLoadFailed": "투표 제안 통계를 불러올 수 없습니다"
   },
   "communities": {
+    "sortTop": "인기",
     "shareLink": "링크 공유하기",
     "pinnedMore": "더 보기",
     "showFirst": "맨 앞에 표시",

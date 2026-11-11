@@ -3317,6 +3317,7 @@
     "statsLoadFailed": "Стейкинг статистикасын жүктөө мүмкүн болбоду"
   },
   "communities": {
+    "sortTop": "Мыкты",
     "shareLink": "Шилтемени бөлүшүү",
     "pinnedMore": "Көбүрөөк",
     "showFirst": "Биринчи көрсөтүү",

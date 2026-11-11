@@ -3581,6 +3581,7 @@
     "statsLoadFailed": "Tidak dapat memuat staking statistik"
   },
   "communities": {
+    "sortTop": "Teratas",
     "shareLink": "Kongsi pautan",
     "pinnedMore": "Lagi",
     "showFirst": "Tunjukkan dahulu",

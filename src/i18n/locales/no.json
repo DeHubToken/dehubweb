@@ -3327,6 +3327,7 @@
     "statsLoadFailed": "Kunne ikke laste opp staking-statistikk"
   },
   "communities": {
+    "sortTop": "Topp",
     "shareLink": "Del lenke",
     "pinnedMore": "Flere",
     "showFirst": "Vis først",

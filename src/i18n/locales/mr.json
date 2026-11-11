@@ -3322,6 +3322,7 @@
     "statsLoadFailed": "स्टॅकिंग आकडेवारी लोड करू शकलो नाही"
   },
   "communities": {
+    "sortTop": "अव्वल",
     "shareLink": "लिंक शेअर करा",
     "pinnedMore": "अधिक",
     "showFirst": "प्रथम दाखवा",

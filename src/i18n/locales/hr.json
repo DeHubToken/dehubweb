@@ -3328,6 +3328,7 @@
     "statsLoadFailed": "Nije uspjelo učitati statistike stakinga"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Podijeli poveznicu",
     "pinnedMore": "Više",
     "showFirst": "Prikaži prvo",

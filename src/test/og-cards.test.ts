@@ -144,7 +144,7 @@ describe('per-route OG cards', () => {
     expect(WORKER).not.toContain("path: '/app/");
 
     // The three that used to be the exception collapse onto the bare URL now.
-    for (const key of ['stores', 'fractions', 'superpowers', 'glossary']) {
+    for (const key of ['fractions', 'superpowers', 'glossary']) {
       expect(staticRoutes.has(key), `${key} should collapse onto /${key}`).toBe(true);
     }
   });

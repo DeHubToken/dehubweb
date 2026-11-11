@@ -3327,6 +3327,7 @@
     "statsLoadFailed": "Nu s-au putut încărca statisticile de mizare"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Distribuie linkul",
     "pinnedMore": "Mai multe",
     "showFirst": "Afișează prima",

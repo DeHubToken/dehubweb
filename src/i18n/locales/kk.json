@@ -3335,6 +3335,7 @@
     "statsLoadFailed": "Ставка статистикасын жүктеу мүмкін емес"
   },
   "communities": {
+    "sortTop": "Үздік",
     "shareLink": "Сілтемені бөлісу",
     "pinnedMore": "Толығырақ",
     "showFirst": "Бірінші көрсету",

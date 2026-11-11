@@ -3276,6 +3276,7 @@
     "statsLoadFailed": "स्टेकिंग आंकड़े लोड नहीं कर सके"
   },
   "communities": {
+    "sortTop": "اوپر",
     "shareLink": "लिंक शेअर करा",
     "pinnedMore": "अधिक",
     "showFirst": "पहिले देखाव",
