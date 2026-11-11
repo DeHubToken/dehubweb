@@ -1671,6 +1671,7 @@ export default function StateGalleryPage() {
 
         <PinnedProfileGallery />
         <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
+        <TextTilesGallery />
         <ArticleTilesGallery initialLook={params.get('atile')} initiallyOpen={params.get('sheet') === 'article-tile'} />
         <GridCardsGallery />
 
@@ -2223,6 +2224,28 @@ function GridCardsGallery() {
       <h2 className="mb-3 text-sm font-semibold">Profile grid: posts with cards</h2>
       <AuthContext.Provider value={GALLERY_AUTH}>
         {ready && <div className="max-w-[360px]"><ProfileMixedGrid entries={GRID_CARD_ENTRIES} /></div>}
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+/** Plain text posts in the profile grid: Soft Light with no backdrop chosen, then the three backdrops that differ per post. */
+function TextTilesGallery() {
+  const entries: MixedGridEntry[] = GALLERY_TEXT_POSTS.slice(0, 3).map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
+  return (
+    <section data-page-bento data-text-tiles-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Text tiles in the profile grid</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div className="flex flex-wrap gap-4">
+          {[null, 'echo', 'cards', 'deck'].map((id) => (
+            <div key={id ?? 'soft'} className="w-full max-w-[360px]">
+              <p className="mb-1 text-xs opacity-60">{postBgById(id)?.name ?? 'Soft Light (default)'}</p>
+              <ProfilePostBgContext.Provider value={postBgById(id)}>
+                <ProfileMixedGrid entries={entries} />
+              </ProfilePostBgContext.Provider>
+            </div>
+          ))}
+        </div>
       </AuthContext.Provider>
     </section>
   );

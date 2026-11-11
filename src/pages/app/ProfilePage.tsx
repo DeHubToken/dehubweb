@@ -881,6 +881,7 @@ return () => rail.removeEventListener('wheel', onWheel);
           />
         )}
         <ProfilePostBgContext.Provider value={postBg}>
+        <ProfilePostBgArtContext.Provider value={data.profile?.avatarUrl ?? null}>
         <ProfileArticleTileContext.Provider value={articleTile}>
         <div ref={postBgPostHold.hostRef} className="relative" {...postBgPostHold.handlers}>
         {postBgPostHold.ringEl}
@@ -920,6 +921,7 @@ return () => rail.removeEventListener('wheel', onWheel);
         </div>
         </div>
         </ProfileArticleTileContext.Provider>
+        </ProfilePostBgArtContext.Provider>
         </ProfilePostBgContext.Provider>
         </FeedSwallowMotion>
         </div>
