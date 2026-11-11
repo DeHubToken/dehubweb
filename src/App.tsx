@@ -36,7 +36,8 @@ import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-
 import { AppLayout } from "./components/app/AppLayout";
 import { QuickActionsHost } from "./components/app/QuickActionsHost";
 import { LoginModal, scheduleLoginPrefetch } from "@/components/app/LoginModal";
-import React, { Suspense, useEffect, useState, type ReactNode } from "react";
+import { getTwoFactorPrompt, useTwoFactorPrompt } from "@/lib/two-factor-login";
+import React, { Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
@@ -427,6 +428,7 @@ if (typeof window !== "undefined") {
 function LoginSheetHost() {
   const { isLoginModalOpen } = useLoginSheet();
   const { closeLoginModal, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const twoFactor = useTwoFactorPrompt();
 
   // The login flow is "active" from the modal opening until any
   // connect/redirect it started has finished, which is a little past the sheet
@@ -438,14 +440,14 @@ function LoginSheetHost() {
   // everything has gone quiet the resume is deferred past the sheet's exit
   // animation (see scheduleBackgroundResume).
   useEffect(() => {
-    const active = isLoginModalOpen || isConnecting || isProcessingRedirect || requiresUsername;
+    const active = isLoginModalOpen || isConnecting || isProcessingRedirect || requiresUsername || !!twoFactor;
     document.documentElement.toggleAttribute('data-login-active', active);
     if (active) {
       setBackgroundPaused(true);
     } else {
       scheduleBackgroundResume();
     }
-  }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername]);
+  }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername, twoFactor]);
 
   // Always mounted, and closed it costs nothing: ui/drawer keeps vaul's Root
   // out of the tree until a sheet first opens, so this renders no DOM and
@@ -458,7 +460,15 @@ function LoginSheetHost() {
   // signing up on the sheet's profile step, which used to be a separate
   // centred dialog on top of the whole viewport. The sheet refuses to close
   // while that flag is set.
-  return <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />;
+  //
+  // A sign-in waiting on its two-step code holds it open as well (wallet and
+  // redirect logins can reach that point with the sheet already closed);
+  // closing it there cancels that sign-in.
+  const onOpenChange = useCallback((next: boolean) => {
+    if (!next) getTwoFactorPrompt()?.cancel();
+    closeLoginModal();
+  }, [closeLoginModal]);
+  return <LoginModal open={isLoginModalOpen || requiresUsername || !!twoFactor} onOpenChange={onOpenChange} />;
 }
 
 /**

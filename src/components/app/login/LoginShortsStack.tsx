@@ -106,7 +106,13 @@ function Lane({ clips, reverse }: { clips: ClipName[]; reverse?: boolean }) {
 /** Desktop shows four lanes; phones keep two. */
 const DESKTOP_LANES = 4;
 
-export function LoginShortsStack() {
+/** A step further into signing in (the 2FA code) keeps the wall and the logo and only changes the words. */
+export interface LoginStackHeadline {
+  top: string;
+  accent: string;
+}
+
+export function LoginShortsStack({ headline }: { headline?: LoginStackHeadline } = {}) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const count = DESKTOP_LANES;
@@ -128,8 +134,8 @@ export function LoginShortsStack() {
           <span className="login-stack__logo-mark" />
         </div>
         <h2 className="login-stack__headline text-white">
-          {t('loginStack.headlineTop', 'You will own everything')}
-          <span className="login-stack__accent">{t('loginStack.headlineAccent', 'and be happy.')}</span>
+          {headline?.top ?? t('loginStack.headlineTop', 'You will own everything')}
+          <span className="login-stack__accent">{headline?.accent ?? t('loginStack.headlineAccent', 'and be happy.')}</span>
         </h2>
       </div>
     </div>

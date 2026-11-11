@@ -427,6 +427,13 @@ All colors MUST be HSL.
     100% { opacity: .5; transform: translateY(-340px); }
   }
 
+  /* Two-step sign-in: a wrong code nudges the boxes sideways */
+  @keyframes two-factor-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
   /* Marquee auto-scroll */
   .trending-marquee {
     animation: trending-scroll 40s linear infinite;
