@@ -433,6 +433,7 @@
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."
   },
   "nav": {
+    "launchpad": "Ishga tushirish paneli",
     "reorderHint": "Qayta tartiblash uchun istalgan belgini ushlab turing va sudrang",
     "reorderReset": "Qayta tiklash",
     "reorderResetLong": "Menyu tartibini tiklash",

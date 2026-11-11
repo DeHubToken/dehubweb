@@ -409,6 +409,7 @@
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول بعد قليل."
   },
   "nav": {
+    "launchpad": "منصة الإطلاق",
     "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
     "reorderReset": "إعادة ضبط",
     "reorderResetLong": "إعادة ترتيب القائمة",

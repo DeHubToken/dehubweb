@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
   },
   "nav": {
+    "launchpad": "Palaišanas panelis",
     "reorderHint": "Turiet un velciet jebkuru ikonu, lai pārkārtotu",
     "reorderReset": "Atiestatīt",
     "reorderResetLong": "Atiestati ēdienkartes secību",

@@ -409,6 +409,7 @@
     "gasSponsorshipFailed": "搿笔交易垫勿出。歇歇再试。"
   },
   "nav": {
+    "launchpad": "发射台",
     "reorderHint": "按住并拖动任意图标来重新排列",
     "reorderReset": "重置",
     "reorderResetLong": "重置菜单顺序",

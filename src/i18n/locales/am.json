@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
   },
   "nav": {
+    "launchpad": "ላውንችፓድ",
     "reorderHint": "የተሰጠው አይኮን ይጠየቀው እና ይምረጡ",
     "reorderReset": "ዳግም አስጀምር",
     "reorderResetLong": "ምናሌ ትዕዛዝ ዳግም አስጀምር",

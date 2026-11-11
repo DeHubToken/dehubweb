@@ -436,6 +436,7 @@
     "gasSponsorshipFailed": "Hindi nasagot ang bayad para sa transaksyong ito. Pakisubukan ulit mamaya."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "I - hold at i - drag ang anumang icon upang muling ayusin",
     "reorderReset": "I - reset",
     "reorderResetLong": "I - reset ang order ng menu",

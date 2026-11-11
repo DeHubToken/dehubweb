@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "No s'ha pogut patrocinar aquesta transacció. Torna-ho a provar d'aquí a un moment."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Mantingues i arrossega qualsevol icona per reorganitzar",
     "reorderReset": "Reset",
     "reorderResetLong": "Restableix l'ordre del menú",

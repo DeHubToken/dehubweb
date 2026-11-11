@@ -13,6 +13,11 @@ import Gamepad2 from "@/components/ui/cut-icons/arcade";
 import History from "@/components/ui/cut-icons/history";
 import Music2 from "@/components/ui/cut-icons/music";
 import Video from "@/components/ui/cut-icons/video";
+import Packs from "@/components/ui/cut-icons/packs";
+import Chat from "@/components/ui/cut-icons/chat";
+import Clock from "@/components/ui/cut-icons/clock";
+import Live from "@/components/ui/cut-icons/live";
+import Growing from "@/components/ui/cut-icons/growing";
 
 import type { NavItem } from '@/types/app.types';
 import { NAV_LABEL_KEYS } from './SidebarNavItem';
@@ -56,14 +61,15 @@ type TranslateFn = (key: string, defaultValue: string) => string;
  *   TYPO TOLERANCE — a last-resort pass within one or two edits, so "setings"
  *     and "arcde" land where they were aimed instead of on the empty state.
  *
- * WHAT STAYS IN ENGLISH, AND WHY
- * ------------------------------
+ * WHAT IS MATCHED IN WHICH LANGUAGE
+ * ---------------------------------
  * Labels are matched in the language the UI is rendering AND in English, so a
- * Turkish reader can type either "ayarlar" or "settings". The keyword lists
- * are English only and deliberately so: they are 300-odd matching aids, not
- * copy, translating them means 110 locale files per edit, and the loanwords
- * that make up most of them ("dm", "apy", "nft", "fps") are typed in English
- * on every keyboard anyway.
+ * Turkish reader can type either "ayarlar" or "settings". The big keyword
+ * table below is English: it is mostly brand names and loanwords ("dm",
+ * "apy", "nft", "fps") typed in English on every keyboard anyway. On top of it
+ * every destination has one translated line of search words
+ * (`nav.findWords.*`, NAV_FIND_WORDS), so "construir" or "バグ" finds Requests
+ * the way "build" and "bug" do.
  */
 
 /** Where the "search Riftn for …" hand-off row points. */
@@ -219,14 +225,41 @@ function scoreItem(item: NavItem, tokens: string[], t: TranslateFn): number {
   const english = foldOnce(item.label);
   const labels = translated === english ? [english] : [translated, english];
   const keywords = (NAV_KEYWORDS[item.label] ?? []).map(foldOnce);
+  for (const word of translatedFindWords(item.label, t)) {
+    if (!keywords.includes(word)) keywords.push(word);
+  }
 
   let worst = 0;
   for (const token of tokens) {
-    const tier = scoreToken(labels, keywords, token);
+    let tier = scoreToken(labels, keywords, token);
+    // "builders", "bugs", "streaming": try the bare word before giving up.
+    // Ranked just behind the same match typed exactly.
+    if (tier === NO_MATCH) {
+      const stem = stemOf(token);
+      if (stem !== token) tier = scoreToken(labels, keywords, stem) + 0.5;
+    }
     if (tier === NO_MATCH) return NO_MATCH;
     if (tier > worst) worst = tier;
   }
   return worst;
+}
+
+/**
+ * A rough English stem: plurals, -ing, -ed and -er(s) off, so "builders",
+ * "building" and "built-ins" all fall back to "build". Only ever a second try
+ * after the word as typed found nothing, and never shorter than three letters.
+ */
+function stemOf(token: string): string {
+  const rules: Array<[RegExp, string]> = [
+    [/ies$/, 'y'], [/ers$/, ''], [/ings?$/, ''], [/er$/, ''], [/ed$/, ''], [/es$/, ''], [/s$/, ''],
+  ];
+  for (const [suffix, replacement] of rules) {
+    if (suffix.test(token)) {
+      const stem = token.replace(suffix, replacement);
+      if (stem.length >= 3) return stem;
+    }
+  }
+  return token;
 }
 
 // ---------------------------------------------------------------------------
@@ -247,37 +280,46 @@ function scoreItem(item: NavItem, tokens: string[], t: TranslateFn): number {
  */
 export const NAV_KEYWORDS: Record<string, string[]> = {
   // --- rail rows -----------------------------------------------------------
-  Home: ['feed', 'timeline', 'latest', 'for you', 'posts', 'front page'],
-  Profile: ['my profile', 'my account', 'me', 'my posts', 'avatar', 'bio', 'followers', 'following'],
-  Explore: ['search', 'discover', 'find', 'trending', 'hashtags', 'tags', 'people', 'users', 'topics'],
-  Prompt: ['ai', 'generate', 'ai image', 'ai video', 'image generator', 'text to image', 'art', 'create with ai', 'credits'],
-  Editor: ['edit', 'video editor', 'trim', 'cut', 'timeline', 'captions', 'clips'],
-  Creator: ['create', 'creator studio', 'generate', 'image', 'video', 'audio', 'music'],
+  Home: ['feed', 'timeline', 'latest', 'for you', 'following', 'posts', 'front page', 'news feed', 'start'],
+  Profile: ['my profile', 'my account', 'me', 'my page', 'my posts', 'my videos', 'avatar', 'bio', 'banner', 'followers', 'following', 'edit profile'],
+  Explore: ['search', 'discover', 'find', 'browse', 'look up', 'trending', 'popular', 'viral', 'hashtags', 'tags', 'people', 'users', 'creators', 'topics'],
+  Prompt: ['ai', 'generate', 'make', 'ai image', 'ai video', 'image generator', 'picture', 'text to image', 'art', 'ai art', 'imagine', 'create with ai', 'credits'],
+  Editor: ['edit', 'video editor', 'edit video', 'video editing', 'trim', 'cut', 'timeline', 'captions', 'subtitles', 'effects', 'clips', 'montage', 'export'],
+  Creator: ['create', 'creator studio', 'studio', 'tools', 'ai tools', 'generate', 'image', 'video', 'audio', 'music', 'voiceover', 'thumbnail', 'design', '3d'],
   // Nobody types "converter" looking for this — they type the platform
   // they're bringing content over from, or what they're trying to do with it.
   Converter: ['youtube', 'yt', 'yt-dlp', 'import youtube', 'import video', 'migrate', 'migrate all', 'download', 'convert', 'tiktok', 'instagram', 'reel', 'reels', 'twitter', 'x', 'facebook', 'twitch', 'clip', 'kick', 'rumble', 'vimeo', 'dailymotion', 'reddit', 'bluesky', 'odysee', 'streamable', 'loom', 'tumblr', 'pinterest', 'snapchat', 'vk', 'rutube', 'bilibili'],
-  Migrate: ['migrate all', 'import channel', 'youtube channel', 'bulk import', 'back catalogue', 'move channel', 'youtube', 'yt'],
-  Notifications: ['alerts', 'activity', 'mentions', 'replies', 'likes', 'bell'],
-  Messages: ['dm', 'dms', 'direct messages', 'chat', 'inbox', 'conversations', 'pm'],
-  Communities: ['groups', 'community', 'rooms', 'servers', 'clubs'],
-  Assistant: ['ai', 'chatbot', 'bot', 'ask', 'help', 'copilot', 'agent'],
+  Migrate: ['migrate all', 'import channel', 'youtube channel', 'bulk import', 'back catalogue', 'move channel', 'move my channel', 'youtube', 'yt'],
+  Notifications: ['alerts', 'activity', 'mentions', 'replies', 'likes', 'bell', 'notifs', 'pings', 'updates', 'new followers', 'tips'],
+  Messages: ['dm', 'dms', 'direct messages', 'message', 'chat', 'chats', 'inbox', 'conversations', 'pm', 'private message', 'text', 'group chat', 'talk', 'contact'],
+  Communities: ['groups', 'group', 'community', 'rooms', 'servers', 'clubs', 'forums', 'tribes', 'members', 'channels', 'join a group'],
+  Assistant: ['ai', 'chatbot', 'bot', 'ask', 'help', 'copilot', 'agent', 'gpt', 'chatgpt', 'ai chat', 'questions', 'helper'],
   Settings: [
     'preferences', 'account', 'privacy', 'security', 'password', 'language',
-    'theme', 'appearance', 'dark mode', 'blocked', 'two factor', 'notifications settings',
-    'delete account', 'options', 'config',
+    'theme', 'themes', 'appearance', 'dark mode', 'light mode', 'blocked', 'block', 'mute', 'two factor', '2fa', 'authenticator',
+    'notifications settings', 'email', 'phone', 'sessions', 'kids mode', 'font', 'data',
+    'delete account', 'deactivate', 'options', 'config', 'setup',
   ],
-  Leaderboard: ['ranking', 'rankings', 'rank', 'top creators', 'top users', 'points', 'league'],
-  Bookmarks: ['saved', 'saves', 'favourites', 'favorites', 'watch later', 'read later', 'saved posts'],
-  Command: ['command centre', 'command center', 'dashboard', 'creator studio', 'analytics', 'earnings', 'insights', 'moderation', 'my stats'],
-  Wallet: ['balance', 'funds', 'dhb', 'tokens', 'crypto', 'deposit', 'withdraw', 'send', 'receive', 'transactions', 'top up', 'address'],
-  Events: ['calendar', 'schedule', 'ama', 'meetup', 'upcoming', 'town hall'],
-  Stages: ['audio', 'spaces', 'live audio', 'talk', 'voice', 'mic', 'podcast', 'rooms'],
-  'Feature Requests': ['feedback', 'suggestions', 'ideas', 'request a feature', 'roadmap', 'vote', 'wishlist'],
-  Staking: ['stake', 'apy', 'apr', 'yield', 'rewards', 'earn', 'vault', 'lock', 'pool'],
-  SuperPowers: ['boost', 'boosts', 'second wind', 'promote', 'amplify', 'reach', 'top of feed', 'badge perks', 'powers'],
-  Governance: ['vote', 'voting', 'votes', 'proposals', 'dao', 'poll', 'ballot', 'referendum'],
-  DAO: ['treasury', 'donate', 'donation', 'contribute', 'contribution', 'fund', 'pool', 'power'],
-  Bounties: ['work', 'jobs', 'tasks', 'gigs', 'freelance', 'hire', 'earn', 'escrow', 'contracts'],
+  Leaderboard: ['ranking', 'rankings', 'rank', 'top', 'top creators', 'top users', 'best', 'points', 'scores', 'high score', 'league'],
+  Bookmarks: ['saved', 'saves', 'bookmark', 'favourites', 'favorites', 'watch later', 'read later', 'saved posts', 'library', 'collection'],
+  Command: ['command centre', 'command center', 'dashboard', 'creator studio', 'creator dashboard', 'analytics', 'earnings', 'revenue', 'income', 'payouts', 'insights', 'audience', 'growth', 'views', 'moderation', 'my stats'],
+  Wallet: ['balance', 'money', 'funds', 'cash', 'pay', 'payment', 'dhb', 'rift', 'tokens', 'coins', 'crypto', 'usdc', 'eth', 'bnb', 'deposit', 'withdraw', 'send', 'receive', 'transactions', 'top up', 'address', 'swap', 'seed phrase', 'recovery phrase', 'private key'],
+  Events: ['event', 'calendar', 'schedule', 'agenda', 'ama', 'meetup', 'meetups', 'upcoming', 'tickets', 'party', 'irl', 'town hall'],
+  Stages: ['audio', 'spaces', 'twitter spaces', 'clubhouse', 'live audio', 'audio rooms', 'voice chat', 'talk', 'voice', 'mic', 'speak', 'panel', 'podcast', 'rooms'],
+  // The page is a board where people prompt what gets built next, report bugs
+  // and watch them ship, so "build" and "bug" are the words people reach for.
+  'Feature Requests': [
+    'requests', 'request', 'build', 'builder', 'builders', 'building', 'top builders',
+    'bug', 'bugs', 'report a bug', 'bug report', 'issue', 'issues', 'broken', 'fix', 'fixes',
+    'feedback', 'suggestions', 'suggest', 'idea', 'ideas', 'request a feature', 'feature',
+    'prompt', 'prompts', 'shipped', 'queued', 'roadmap', 'changelog', 'improve', 'improvements',
+    'vote', 'upvote', 'wishlist', 'contribute',
+  ],
+  Staking: ['stake', 'unstake', 'deposit', 'apy', 'apr', 'yield', 'interest', 'rewards', 'earn', 'passive income', 'profit share', 'vault', 'lock', 'pool', 'badge', 'badges', 'tier', 'tiers', 'holder'],
+  SuperPowers: ['boost', 'boosts', 'second wind', 'promote', 'amplify', 'reach', 'top of feed', 'badge perks', 'perks', 'powers', 'abilities', 'unlock', 'upgrades'],
+  Governance: ['vote', 'voting', 'votes', 'proposals', 'proposal', 'propose', 'dao', 'poll', 'ballot', 'referendum', 'decide', 'community vote'],
+  DAO: ['treasury', 'donate', 'donation', 'contribute', 'contribution', 'fund', 'community fund', 'grants', 'pool', 'power'],
+  Bounties: ['bounty', 'work', 'jobs', 'job board', 'tasks', 'task', 'gigs', 'freelance', 'hire', 'hire someone', 'earn', 'earn money', 'make money', 'paid work', 'side hustle', 'escrow', 'contracts', 'usdc'],
   // Nobody types "bounty history" — they type the thing they are chasing, which
   // is usually a payment or a job they already finished.
   'My Bounties': [
@@ -285,14 +327,14 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
     'history', 'payouts', 'paid', 'my submissions', 'my posted bounties',
     'transactions', 'escrow',
   ],
-  Affiliate: ['referral', 'referrals', 'refer', 'invite', 'commission', 'partner', 'share link'],
-  Careers: ['jobs', 'hiring', 'vacancies', 'work with us', 'apply', 'recruitment', 'roles'],
-  Stores: ['shop', 'store', 'marketplace', 'merch', 'buy', 'sell', 'products', 'ecommerce', 'orders'],
+  Affiliate: ['referral', 'referrals', 'refer', 'invite', 'invite friends', 'referral link', 'ref link', 'promo code', 'commission', 'partner', 'ambassador', 'share link', 'earn'],
+  Careers: ['jobs', 'job', 'career', 'hiring', 'vacancies', 'work with us', 'work at riftn', 'join the team', 'team', 'apply', 'recruitment', 'roles', 'cv', 'resume'],
+  Stores: ['shop', 'shops', 'store', 'storefront', 'marketplace', 'merch', 'buy', 'sell', 'products', 'goods', 'shopping', 'ecommerce', 'orders', 'checkout'],
   // Nobody types "fractions" — they type what they are trying to do with them.
   // "shares" and "ownership" are how the docs and the marketing copy describe
   // the same thing, so both have to land here.
   Fractions: [
-    'fraction', 'shares', 'ownership', 'own a post', 'invest', 'stake in a post',
+    'fraction', 'shares', 'ownership', 'own a post', 'co own', 'invest', 'stake in a post',
     'tokenised', 'erc1155', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
     // The NFT market is the Fractions page's NFTs tab.
     'nft', 'nfts', 'nft market', 'nft marketplace', 'buy nft', 'sell nft', 'list nft', 'collectibles',
@@ -300,7 +342,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   ],
   // Nobody hunting a handle types "usernames" — they type the thing they want
   // to change, which is their @name, or the thing they want to do with it.
-  Usernames: ['username', 'handle', 'handles', 'name', 'names', '@', 'change my name', 'buy a name', 'sell my name', 'vanity', 'domain'],
+  Usernames: ['username', 'handle', 'handles', 'name', 'names', '@', 'change my name', 'rename', 'buy a name', 'sell my name', 'vanity', 'domain', 'ens'],
   // Sibling of Usernames — that one sells the handle, this one sells the whole
   // account with its followers and history. People search for the outcome
   // ("buy an account with followers"), not the noun.
@@ -311,40 +353,45 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   ],
   // The mini app store, which people will look for by what they want to do.
   Apps: [
-    'apps', 'app store', 'mini apps', 'miniapps', 'store', 'build an app',
-    'developer', 'developers', 'sdk', 'farcaster', 'frames',
+    'apps', 'app store', 'mini apps', 'miniapps', 'store', 'build an app', 'make an app',
+    'developer', 'developers', 'sdk', 'farcaster', 'frames', 'dapps', 'dapp', 'plugins', 'integrations', 'tools',
   ],
   // The example that started this: nobody looking for a game types "arcade".
   // The individual games are here as well as being rows of their own, so a
   // half-remembered title finds the grid even when it does not find the game.
   Arcade: [
-    'games', 'game', 'play', 'gaming', 'play to earn', 'p2e', 'arcade',
+    'games', 'game', 'play', 'gaming', 'play to earn', 'p2e', 'arcade', 'fun', 'mini games', 'minigames', 'bored',
     "king's gambit", 'chess', 'claude of duty', 'fps', 'shooter', 'jungle trail',
     'street slayer', 'beat em up', 'fighting', 'trenchstar', 'chartopia', 'trading floor',
   ],
-  Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms'],
-  'Compare Riftn': ['comparison', 'compare', 'youtube', 'twitter', 'kick', 'twitch', 'facebook', 'instagram', 'tiktok', 'rumble', 'mastodon', 'bluesky', 'farcaster'],
-  Guide: ['getting started', 'how to', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'new here'],
-  Feedback: ['feedback', 'experience', 'give feedback', 'testimonial'],
-  Stats: ['analytics', 'metrics', 'live stats', 'charts', 'numbers', 'price', 'supply', 'holders', 'volume'],
-  Docs: ['documentation', 'help', 'api', 'whitepaper', 'developers', 'sdk', 'reference', 'brand', 'advertising'],
-  Blog: ['news', 'articles', 'updates', 'announcements', 'press', 'releases'],
+  Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms', 'abbreviations', 'words', 'explain'],
+  'Compare Riftn': ['comparison', 'compare', 'vs', 'versus', 'alternative', 'alternatives', 'why riftn', 'difference', 'youtube', 'twitter', 'kick', 'twitch', 'facebook', 'instagram', 'tiktok', 'rumble', 'mastodon', 'bluesky', 'farcaster'],
+  Guide: ['getting started', 'start here', 'how to', 'how does it work', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'faq', 'beginner', 'basics', 'manual', 'new here'],
+  Feedback: ['feedback', 'experience', 'give feedback', 'testimonial', 'review', 'rate', 'rating', 'survey', 'opinion', 'complaint'],
+  Stats: ['statistics', 'analytics', 'metrics', 'live stats', 'data', 'charts', 'numbers', 'price', 'supply', 'holders', 'volume', 'market', 'burn', 'treasury'],
+  Docs: ['documentation', 'help', 'api', 'whitepaper', 'developers', 'sdk', 'reference', 'brand', 'advertising', 'knowledge base', 'manual', 'tokenomics', 'faq', 'support'],
+  Blog: ['news', 'articles', 'updates', 'announcements', 'press', 'releases', 'release notes', "what's new", 'changelog', 'stories'],
 
   // --- search-only rows ----------------------------------------------------
-  Videos: ['watch', 'video feed', 'clips', 'long form'],
-  Shorts: ['reels', 'short videos', 'vertical', 'swipe', 'feed'],
-  Music: ['audio', 'songs', 'tracks', 'listen', 'radio', 'playlist'],
-  'Live TV': ['tv', 'streams', 'streaming', 'live', 'broadcast', 'channels', 'watch live'],
-  'Buy Tokens': ['buy tokens', 'buy dhb', 'purchase', 'top up', 'card', 'fiat', 'on ramp', 'credit card'],
-  Bridge: ['cross chain', 'swap chain', 'transfer chain', 'bnb', 'base', 'chains'],
-  'Top 100': ['top 100', 'cryptos', 'coins', 'market cap', 'prices', 'tickers'],
-  'AI Agents': ['agents', 'ai agents', 'bots', 'automation', 'personas'],
-  Advertising: ['ads', 'adverts', 'advertising', 'campaign', 'promote', 'sponsor', 'marketing'],
-  Premium: ['premium', 'subscription', 'upgrade', 'pro', 'membership', 'plans'],
-  Pricing: ['pricing', 'plans', 'cost', 'price', 'credits', 'subscription', 'how much'],
-  Creators: ['creator program', 'ambassadors', 'partners', 'apply as creator'],
-  'Get the App': ['apk', 'android', 'download', 'mobile app', 'install', 'play store', 'ios', 'app store'],
+  Videos: ['watch', 'video feed', 'clips', 'long form', 'long videos'],
+  Shorts: ['reels', 'short videos', 'vertical', 'vertical videos', 'swipe', 'feed', 'tiktok'],
+  Music: ['audio', 'songs', 'song', 'tracks', 'listen', 'radio', 'playlist', 'spotify'],
+  'Live TV': ['tv', 'television', 'streams', 'streaming', 'live', 'broadcast', 'channels', 'watch live', 'iptv', 'news channels', 'sports'],
+  'Buy Tokens': ['buy tokens', 'buy dhb', 'buy rift', 'purchase', 'top up', 'card', 'fiat', 'on ramp', 'credit card', 'apple pay'],
+  Bridge: ['cross chain', 'swap chain', 'transfer chain', 'move tokens', 'bnb', 'base', 'chains'],
+  'Top 100': ['top 100', 'cryptos', 'cryptocurrencies', 'coins', 'market cap', 'prices', 'tickers'],
+  'AI Agents': ['agents', 'ai agents', 'bots', 'automation', 'personas', 'autopilot'],
+  Advertising: ['ads', 'ad', 'adverts', 'advertising', 'campaign', 'promote', 'boost post', 'sponsor', 'marketing', 'business'],
+  Premium: ['premium', 'subscription', 'subscribe', 'upgrade', 'pro', 'membership', 'plans', 'no ads', 'ad free', 'background play', 'family plan'],
+  Pricing: ['pricing', 'plans', 'cost', 'price', 'credits', 'subscription', 'how much', 'fees'],
+  Creators: ['creator program', 'creator programme', 'creator fund', 'ambassadors', 'partners', 'apply as creator', 'monetise', 'monetize', 'influencer'],
+  'Get the App': ['apk', 'android', 'download', 'mobile app', 'phone app', 'install', 'play store', 'ios', 'iphone', 'app store', 'testflight'],
   'Connect AI': ['mcp', 'chatgpt', 'claude', 'api', 'integration', 'connect ai', 'model context protocol'],
+  Packs: ['emoji', 'emojis', 'stickers', 'sticker', 'gif', 'gifs', 'emoji packs', 'sticker packs', 'custom emoji', 'reactions'],
+  'Public Chat': ['chat', 'global chat', 'chat room', 'chatroom', 'lobby', 'trollbox', 'community chat', 'talk'],
+  Planned: ['scheduled', 'schedule', 'scheduled posts', 'queue', 'later', 'upcoming posts', 'calendar'],
+  'Live Studio': ['go live', 'stream', 'streaming', 'obs', 'stream key', 'overlays', 'alerts', 'widgets', 'subathon', 'multistream', 'restream'],
+  Launchpad: ['launch', 'launch a token', 'create coin', 'make a coin', 'memecoin', 'meme coin', 'pump', 'bonding curve', 'tokenise', 'tokenize', 'presale'],
   // Games. Their titles are the labels, so these are only the ways in that the
   // title itself does not cover.
   "God's Eye": ['globe', 'world map', '3d map', 'community map', 'social map', 'earth', 'satellite'],
@@ -354,6 +401,46 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   'Street Slayer': ['beat em up', 'brawler', 'fighting', 'fighter', 'side scroller', 'arcade fighter'],
   Chartopia: ['trenchstar', 'trading floor', 'trading', 'charts', 'markets', 'binance', 'dexscreener', 'trenches', 'vr'],
 };
+
+/**
+ * The same idea in the reader's own language. Each destination has one
+ * translated line of comma-separated search words (`nav.findWords.<id>` in
+ * every locale), so someone typing in Spanish, Hindi or Japanese finds a page
+ * by what it does, not only by its translated name. `nav` is in the core
+ * language pack, so these arrive with the menu itself and typing never fetches
+ * anything. The English table above stays the richer one: brand names and
+ * shorthands that every keyboard types in English anyway.
+ */
+export const NAV_FIND_WORDS: Record<string, string> = {
+  Home: 'home', Profile: 'profile', Explore: 'explore', Prompt: 'prompt', Editor: 'editor',
+  Creator: 'creator', Converter: 'converter', Migrate: 'migrate', Notifications: 'notifications',
+  Messages: 'messages', Communities: 'communities', Assistant: 'assistant', Settings: 'settings',
+  Leaderboard: 'leaderboard', Bookmarks: 'bookmarks', Command: 'command', Wallet: 'wallet',
+  Events: 'events', Stages: 'stages', 'Feature Requests': 'featureRequests', Feedback: 'feedback',
+  Staking: 'staking', SuperPowers: 'superpowers', Governance: 'governance', DAO: 'dao',
+  Bounties: 'bounties', 'My Bounties': 'myBounties', Affiliate: 'affiliate', Careers: 'careers',
+  Stores: 'stores', Fractions: 'fractions', Usernames: 'usernames', Accounts: 'accounts', Apps: 'apps',
+  Arcade: 'arcade', Glossary: 'glossary', 'Compare Riftn': 'compare', Guide: 'guide', Stats: 'stats',
+  Docs: 'docs', Blog: 'blog', Videos: 'videos', Shorts: 'shorts', Music: 'music', 'Live TV': 'liveTv',
+  'Buy Tokens': 'buyTokens', Bridge: 'bridge', 'Top 100': 'top100', 'AI Agents': 'agents',
+  Advertising: 'advertising', Premium: 'premium', Pricing: 'pricing', Creators: 'creators',
+  'Get the App': 'getTheApp', 'Connect AI': 'connectAi', Packs: 'packs', 'Public Chat': 'publicChat',
+  Planned: 'planned', 'Live Studio': 'liveStudio', Launchpad: 'launchpad',
+};
+
+/** Commas in every script a translation came back in, plus semicolons. */
+const WORD_LIST_SEPARATOR = /[,،、，;；؛]/;
+
+/** The translated search words for one destination, folded; empty when missing. */
+function translatedFindWords(label: string, t: TranslateFn): string[] {
+  const id = NAV_FIND_WORDS[label];
+  if (!id) return [];
+  const key = `nav.findWords.${id}`;
+  const line = t(key, '');
+  // A missing key comes back empty, or as the key itself, or humanised.
+  if (!line || line === key || !WORD_LIST_SEPARATOR.test(line)) return [];
+  return line.split(WORD_LIST_SEPARATOR).map(foldOnce).filter(Boolean);
+}
 
 // ---------------------------------------------------------------------------
 // Destinations that are not on the menu
@@ -395,6 +482,11 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Star, label: "Creators", path: '/creators' },
   { icon: Smartphone, label: "Get the App", path: '/apk' },
   { icon: Plug, label: "Connect AI", path: '/connect' },
+  { icon: Packs, label: "Packs", path: '/packs' },
+  { icon: Chat, label: "Public Chat", path: '/chat' },
+  { icon: Clock, label: "Planned", path: '/planned' },
+  { icon: Live, label: "Live Studio", path: '/live-studio' },
+  { icon: Growing, label: "Launchpad", path: '/launchpad' },
   { icon: Gamepad2, label: "God's Eye", path: '/arcade/gods-eye' },
   { icon: Gamepad2, label: "King's Gambit", path: '/arcade/kings-gambit' },
   { icon: Gamepad2, label: "Claude of Duty", path: '/arcade/claude-of-duty' },

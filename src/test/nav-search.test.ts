@@ -23,6 +23,7 @@ import { NAV_ITEMS } from '@/constants/app.constants';
 import { NAV_LABEL_KEYS } from '@/components/app/navigation/SidebarNavItem';
 import {
   filterNavItems,
+  NAV_FIND_WORDS,
   NAV_KEYWORDS,
   SEARCH_ONLY_ITEMS,
 } from '@/components/app/navigation/nav-search';
@@ -123,6 +124,47 @@ describe('menu search — the query someone actually types', () => {
   });
 });
 
+describe('menu search — Requests is where builders go', () => {
+  it('puts Requests first for "build" and the words around it', () => {
+    expect(search('build')[0]).toBe('Feature Requests');
+    for (const query of ['builder', 'builders', 'building', 'builds', 'bug', 'bugs', 'report a bug', 'ideas', 'roadmap', 'suggestions']) {
+      expect(search(query), query).toContain('Feature Requests');
+    }
+  });
+
+  it('still finds the row by its own name', () => {
+    expect(search('requests')[0]).toBe('Feature Requests');
+    expect(search('feature')).toContain('Feature Requests');
+  });
+});
+
+describe('menu search — every destination answers to more than its name', () => {
+  it('finds pages by what they do', () => {
+    expect(search('money')).toContain('Wallet');
+    expect(search('2fa')).toContain('Settings');
+    expect(search('invite friends')).toContain('Affiliate');
+    expect(search('clubhouse')).toContain('Stages');
+    expect(search('subtitles')).toContain('Editor');
+    expect(search('job')).toContain('Careers');
+    expect(search('earn money')).toContain('Bounties');
+    expect(search('faq')).toContain('Guide');
+  });
+
+  it('reveals the newer pages that have no menu row', () => {
+    expect(search('emoji')).toContain('Packs');
+    expect(search('stickers')).toContain('Packs');
+    expect(search('global chat')).toContain('Public Chat');
+    expect(search('scheduled')).toContain('Planned');
+    expect(search('obs')).toContain('Live Studio');
+    expect(search('meme coin')).toContain('Launchpad');
+  });
+
+  it('falls back to the bare word for plurals and -ing forms', () => {
+    expect(search('streamings')).toContain('Live Studio');
+    expect(search('proposals')).toContain('Governance');
+  });
+});
+
 describe('menu search — destinations that are not on the menu', () => {
   it('reveals a real page that has no rail row', () => {
     expect(search('apk')).toContain('Get the App');
@@ -169,6 +211,25 @@ describe('menu search — matching in the reader’s own language', () => {
     expect(searchTr('cuzdan')).toContain('Wallet');
   });
 
+  it('matches the translated search words for each page', () => {
+    const spanish: Record<string, string> = {
+      'nav.findWords.featureRequests': 'construir, constructores, ideas, reportar un error, errores',
+      'nav.findWords.arcade': 'juegos, juego, jugar, ajedrez',
+    };
+    const es = (key: string) => spanish[key] ?? t(key);
+    const searchEs = (query: string) => filterNavItems(NAV_ITEMS, query, es).map((item) => item.label);
+    expect(searchEs('construir')).toContain('Feature Requests');
+    expect(searchEs('errores')).toContain('Feature Requests');
+    expect(searchEs('juegos')).toContain('Arcade');
+    expect(searchEs('ajedrez')).toContain('Arcade');
+  });
+
+  it('reads search words written with non-Latin commas', () => {
+    const japanese: Record<string, string> = { 'nav.findWords.featureRequests': 'ビルド、バグ、アイデア' };
+    const ja = (key: string) => japanese[key] ?? t(key);
+    expect(filterNavItems(NAV_ITEMS, 'バグ', ja).map((item) => item.label)).toContain('Feature Requests');
+  });
+
   it('still matches the English label, because the keywords are English anyway', () => {
     expect(searchTr('settings')).toContain('Settings');
     expect(searchTr('wallet')).toContain('Wallet');
@@ -203,6 +264,17 @@ describe('menu search — the joins nothing else checks', () => {
       // Stages, Bounties, Affiliate and Stores read as themselves; what
       // matters is that nothing is reachable by its exact name alone.
       expect(keywords[label]?.length, `"${label}" has no keywords`).toBeGreaterThan(0);
+    }
+  });
+
+  it('gives every destination a line of search words for translators', () => {
+    const findWords = (en as { nav: { findWords: Record<string, string> } }).nav.findWords;
+    const isGame = (label: string) => ARCADE_GAMES.some((game) => game.title === label);
+    for (const label of everyLabel) {
+      if (isGame(label) || label === 'Log out') continue;
+      const id = NAV_FIND_WORDS[label];
+      expect(id, `"${label}" has no nav.findWords id`).toBeTruthy();
+      expect(findWords[id], `nav.findWords.${id} is missing from en.json`).toBeTruthy();
     }
   });
 

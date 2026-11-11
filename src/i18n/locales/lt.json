@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Šios operacijos nepavyko padengti. Po akimirkos bandykite dar kartą."
   },
   "nav": {
+    "launchpad": "Paleisties skydelis",
     "reorderHint": "Laikykite ir vilkite bet kurią piktogramą, kad pertvarkytumėte",
     "reorderReset": "Nustatyti iš naujo",
     "reorderResetLong": "Atkurti meniu tvarką",

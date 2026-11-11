@@ -437,6 +437,7 @@
     "gasSponsorshipFailed": "Bu əməliyyat sponsorluq edilə bilmədi. Bir azdan yenidən cəhd edin."
   },
   "nav": {
+    "launchpad": "İşəsalma paneli",
     "reorderHint": "Dəstək və simvolları yerinə yetirmək üçün tutaraq sırala bilərsiniz.",
     "reorderReset": "Sıfırla",
     "reorderResetLong": "Menyu sifarişini sıfırla",

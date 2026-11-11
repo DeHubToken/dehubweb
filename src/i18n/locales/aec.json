@@ -396,6 +396,7 @@
     "gasSponsorshipFailed": "ما قدرناش نغطي المعاملة دي. جرب تاني بعد شوية."
   },
   "nav": {
+    "launchpad": "منصة الإطلاق",
     "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
     "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة ترتيب القائمة الأصلي",

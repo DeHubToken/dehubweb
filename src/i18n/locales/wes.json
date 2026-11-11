@@ -411,6 +411,7 @@
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Hold and drag any icon to rearrange am",
     "reorderReset": "Reset",
     "reorderResetLong": "Reset menu order",
