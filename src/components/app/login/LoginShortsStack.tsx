@@ -122,10 +122,16 @@ export function LoginShortsStack() {
       <div className="login-stack__lanes" aria-hidden="true">
         {columns.map((clips, index) => <Lane key={index} clips={clips} reverse={index % 2 === 1} />)}
       </div>
-      <h2 className="login-stack__headline text-white">
-        {t('loginStack.headlineTop', 'You will own everything')}
-        <span className="login-stack__accent">{t('loginStack.headlineAccent', 'and be happy.')}</span>
-      </h2>
+      <div className="login-stack__title">
+        {/* Riftn wordmark as a neon sign, just above the headline, over the clips. */}
+        <div className="login-stack__logo" role="img" aria-label="Riftn">
+          <span className="login-stack__logo-mark" />
+        </div>
+        <h2 className="login-stack__headline text-white">
+          {t('loginStack.headlineTop', 'You will own everything')}
+          <span className="login-stack__accent">{t('loginStack.headlineAccent', 'and be happy.')}</span>
+        </h2>
+      </div>
     </div>
   );
 }
