@@ -15,6 +15,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Shield, Palette, Clock, Globe, Sun, Wand2, Save, FileText, AtSign, Handshake, Loader2, Lamp, Bug, Bot, Film, Hand, Paintbrush, Gauge, FastForward, LifeBuoy, ChevronDown } from "lucide-react";
 import Eye from "@/components/ui/cut-icons/visibility";
+import SettingsCog from "@/components/ui/cut-icons/settings-cog";
 import EyeOff from "@/components/ui/cut-icons/hidden";
 import Camera from "@/components/ui/cut-icons/camera";
 import Link2 from "@/components/ui/cut-icons/link";
@@ -283,12 +284,14 @@ import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandl
 import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 
-export default function SettingsPage() {
+/** `initialTab` opens a tab directly (the full-screen chat opens Messages). */
+export default function SettingsPage({ initialTab }: { initialTab?: string } = {}) {
   const { t: _copy } = _useCopy();
   // `?tab=privacy` deep-links a tab. Anything pointing someone at one specific
   // setting — the new-member notice toast, a support reply — otherwise lands
   // them on Profile and leaves them hunting for it.
   const [activeTab, setActiveTab] = useState(() => {
+    if (initialTab && tabs.some((tab) => tab.value === initialTab)) return initialTab;
     const params = new URLSearchParams(window.location.search);
     const requested = params.get('tab');
     if (requested && tabs.some((tab) => tab.value === requested)) return requested;
@@ -377,7 +380,8 @@ export default function SettingsPage() {
       {/* Header + tab nav — anchored (sticky) so it stays pinned while the
           settings content scrolls under it and is swallowed at its top edge. */}
       <PageIsland
-        icon="settings"
+        // Inside the full-screen chat the page keeps that page's 2D icons.
+        icon={initialTab ? <SettingsCog className="h-6 w-6 text-zinc-200" /> : 'settings'}
         title={t('settings.title')}
         subtitle={t('settings.manageAccount')}
         actions={
