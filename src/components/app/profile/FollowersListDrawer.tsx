@@ -32,7 +32,6 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { AppState } from '@/components/app/AppState';
 import { FollowBackAllButton, FollowBackAllSheet, type FollowBackAllStage } from '@/components/app/profile/FollowBackAllSheet';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { playFollowBackChime } from '@/lib/follow-back-chime';
 import { BadgedName } from '@/components/app/BadgedName';
 
@@ -282,7 +281,9 @@ export function FollowersListDrawer({
   const [isFollowingBackAll, setIsFollowingBackAll] = useState(false);
   const [bulkFollowProgress, setBulkFollowProgress] = useState({ completed: 0, total: 0 });
   const [isFindingFollowBacks, setIsFindingFollowBacks] = useState(false);
-  // Phone confirm sheet. Desktop asks with a toast instead.
+  // Confirm sheet inside the panel (phone and desktop).
+  /** Whether the phone confirm sheet is still up; closing it mid-run only hides it. */
+  const followBackSheetOpenRef = useRef(false);
   const [followBackSheet, setFollowBackSheet] = useState<{
     stage: FollowBackAllStage;
     candidates: UserListItem[];
@@ -292,7 +293,6 @@ export function FollowersListDrawer({
   // The nudge + chime play once when the button first shows, not per render.
   const [followBackNudge, setFollowBackNudge] = useState(false);
   const followBackAnnouncedRef = useRef(false);
-  const isMobile = useIsMobile();
   
 
   // Pagination state
@@ -546,6 +546,7 @@ export function FollowersListDrawer({
       setShowFollowBackAll(false);
       setIsFollowingBackAll(false);
       setIsFindingFollowBacks(false);
+      followBackSheetOpenRef.current = false;
       setFollowBackSheet(null);
       setFollowBackNudge(false);
       followBackAnnouncedRef.current = false;
@@ -591,10 +592,11 @@ export function FollowersListDrawer({
       setUsers(prev => prev.map(u =>
         u.address === user.address ? { ...u, isPending: true } : u
       ));
+      // Counted on the tap so the button, its shake and chime land with the click.
+      if (canFollowBackAll && user.followsYou) recordFollowBack();
+      else followBackStreakRef.current = 0;
       followUser(user.address)
         .then(() => {
-          if (canFollowBackAll && user.followsYou) recordFollowBack();
-          else followBackStreakRef.current = 0;
           toast.success(t('follow.requestSentTo', { name }));
         })
         .catch((error: unknown) => {
@@ -626,6 +628,7 @@ export function FollowersListDrawer({
     const wasFollowing = user.isFollowing === true;
     const isFollowBack = canFollowBackAll && user.followsYou && !wasFollowing;
     if (!isFollowBack) followBackStreakRef.current = 0;
+    else recordFollowBack();
     if (wasFollowing) followingSetRef.current?.delete(user.address.toLowerCase());
     else followingSetRef.current?.add(user.address.toLowerCase());
     setUsers(prev => prev.map(u =>
@@ -641,9 +644,6 @@ export function FollowersListDrawer({
           u.address === user.address ? { ...u, isFollowing: wasFollowing } : u
         ));
         if (!info.handled) handleApiError(error, t('follow.updateFailed'));
-      },
-      onSuccess: () => {
-        if (isFollowBack) recordFollowBack();
       },
     });
   };
@@ -842,7 +842,7 @@ export function FollowersListDrawer({
     }
   }, [handleApiError, isFollowingBackAll, queryClient, t]);
 
-  /** Desktop's answer once it's done: one toast with the count. */
+  /** The result as a toast, for a run whose sheet was closed while it worked. */
   const toastFollowBackResult = useCallback((result: { followed: number; failed: number }) => {
     const { followed, failed } = result;
     if (failed === 0) {
@@ -858,24 +858,26 @@ export function FollowersListDrawer({
     }
   }, [t]);
 
-  const confirmFollowBackOnPhone = useCallback(async (candidates: UserListItem[]) => {
+  const confirmFollowBack = useCallback(async (candidates: UserListItem[]) => {
+    if (isFollowingBackAll) return;
+    followBackSheetOpenRef.current = true;
     setFollowBackSheet({ stage: 'working', candidates, followed: 0, failed: 0 });
     const result = await runFollowBackAll(candidates);
-    if (!result) {
-      setFollowBackSheet(null);
+    const ok = !!result && result.followed > 0;
+    // Closed while it worked: the sheet stays away and a toast says how it went.
+    if (!followBackSheetOpenRef.current) {
+      if (result) toastFollowBackResult(result);
+      else toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'), { id: 'follow-back-all' });
       return;
     }
-    if (result.followed === 0) {
-      setFollowBackSheet(null);
-      toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'));
-      return;
-    }
-    setFollowBackSheet({ stage: 'done', candidates, ...result });
-  }, [runFollowBackAll, t]);
+    setFollowBackSheet(ok
+      ? { stage: 'done', candidates, ...result! }
+      : { stage: 'failed', candidates, followed: 0, failed: candidates.length });
+  }, [isFollowingBackAll, runFollowBackAll, t, toastFollowBackResult]);
 
   /**
-   * Tap: count who's left, then ask. A small sheet on phones, a toast with a
-   * Follow back button on desktop. Nothing is followed until that second tap.
+   * Tap: count who's left, then ask in a small sheet inside the panel.
+   * Nothing is followed until that second tap.
    */
   const handleFollowBackAll = useCallback(async () => {
     if (!canFollowBackAll || !currentUserAddress || isFollowingBackAll || isFindingFollowBacks) return;
@@ -896,32 +898,16 @@ export function FollowersListDrawer({
       return;
     }
 
-    if (isMobile) {
-      setFollowBackSheet({ stage: 'confirm', candidates, followed: 0, failed: 0 });
-      return;
-    }
-
-    toast(t('follow.followBackConfirmTitle', { count: candidates.length, defaultValue: 'Follow back {{count}} people?' }), {
-      id: 'follow-back-all',
-      description: t('follow.followBackConfirmBody', 'They already follow you. Private accounts get a follow request.'),
-      duration: 12000,
-      action: {
-        label: t('follow.followBackConfirm', 'Follow back'),
-        onClick: () => {
-          void runFollowBackAll(candidates).then(result => {
-            if (result) toastFollowBackResult(result);
-          });
-        },
-      },
-      cancel: {
-        label: t('follow.followBackNotNow', 'Not now'),
-        onClick: () => {},
-      },
-    });
-  }, [canFollowBackAll, currentUserAddress, findFollowBackCandidates, handleApiError, isFindingFollowBacks, isFollowingBackAll, isMobile, runFollowBackAll, t, toastFollowBackResult]);
+    // Asked inside the panel on every screen size. A toast sits outside the
+    // drawer, which blocks clicks on everything outside itself, so on desktop
+    // its Follow back button could not be pressed and it just timed out.
+    followBackSheetOpenRef.current = true;
+    setFollowBackSheet({ stage: 'confirm', candidates, followed: 0, failed: 0 });
+  }, [canFollowBackAll, currentUserAddress, findFollowBackCandidates, handleApiError, isFindingFollowBacks, isFollowingBackAll]);
 
   const closeFollowBackSheet = useCallback(() => {
-    setFollowBackSheet(current => (current?.stage === 'working' ? current : null));
+    followBackSheetOpenRef.current = false;
+    setFollowBackSheet(null);
   }, []);
 
   const followBackButtonVisible = canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || hasMore || isFollowingBackAll || isFindingFollowBacks);
@@ -1139,7 +1125,7 @@ export function FollowersListDrawer({
             completed={bulkFollowProgress.completed}
             followed={followBackSheet.followed}
             failed={followBackSheet.failed}
-            onConfirm={() => void confirmFollowBackOnPhone(followBackSheet.candidates)}
+            onConfirm={() => void confirmFollowBack(followBackSheet.candidates)}
             onClose={closeFollowBackSheet}
           />
         )}
