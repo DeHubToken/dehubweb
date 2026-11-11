@@ -360,6 +360,9 @@ export function PageTabs<T extends string>({
     check();
     const ro = new ResizeObserver(check);
     ro.observe(el);
+    // The row keeps its size when a tab grows (a count arriving), so watch
+    // the tabs too or the tile stays the old tab's width.
+    for (const tab of Array.from(el.children)) ro.observe(tab);
     el.addEventListener('scroll', check, { passive: true });
     return () => { ro.disconnect(); el.removeEventListener('scroll', check); };
   }, [inPill, tabs.length, onScroll]);
@@ -408,7 +411,7 @@ export function PageTabs<T extends string>({
                   }}
                   className={cn(
                     'relative z-10 flex flex-1 shrink-0 items-center justify-center rounded-xl py-2.5 text-[13px] font-semibold transition-colors',
-                    iconOnly ? 'min-w-[32px] px-2' : 'whitespace-nowrap px-3',
+                    iconOnly ? (typeof tab.count === 'number' ? 'min-w-max whitespace-nowrap px-2.5' : 'min-w-[32px] px-2') : 'whitespace-nowrap px-3',
                     active ? 'text-white' : 'text-zinc-400 [@media(hover:hover)]:hover:text-white',
                   )}
                 >
@@ -419,7 +422,9 @@ export function PageTabs<T extends string>({
                   ) : null}
                   <span className={iconOnly ? 'sr-only' : 'relative z-10'}>{tab.label}</span>
                   {typeof tab.count === 'number' ? (
-                    <span data-kit-pill-count className="absolute right-1 top-1 z-20 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold leading-none text-black">{tab.count > 99 ? '99+' : tab.count}</span>
+                    // Beside the icon as plain text, as the app draws it; a white
+                    // dot over the icon hid the glyph and read as a red badge.
+                    <span data-kit-pill-count className="relative z-10 ml-1 text-[12px] font-semibold leading-none tabular-nums opacity-60">{tab.count > 99 ? '99+' : tab.count}</span>
                   ) : null}
                 </button>
               );
