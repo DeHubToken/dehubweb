@@ -40,6 +40,7 @@ function DesktopRightRail() {
   );
 }
 import { StickyNavHideSync } from './StickyNavHideSync';
+import { PillRouteMotion } from './PillRouteMotion';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 // Direct import, NOT the '@/hooks' barrel: the barrel re-exports every hook
 // (TV player, etc.), so importing it here would drag all of them — and their
@@ -92,6 +93,14 @@ const AudioPostMiniPlayer = React.lazy(() =>
     default: m.AudioPostMiniPlayer,
   })),
 );
+// Spotify's corner player, same gate: nothing loads until a Spotify card's
+// Play is pressed.
+const SpotifyMiniPlayer = React.lazy(() =>
+  import('@/components/app/spotify/SpotifyMiniPlayer').then((m) => ({
+    default: m.SpotifyMiniPlayer,
+  })),
+);
+import { useSpotifyPlayer } from '@/lib/spotify-player';
 import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 import { DmDockMount } from '@/components/app/chat/DmDockMount';
@@ -242,6 +251,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const mainRef = useRef<HTMLElement | null>(null);
   // Gate for the corner player's chunk — see its lazy import above.
   const hasPoppedOutAudio = useAudioPostPoppedOut();
+  const spotifyOpen = useSpotifyPlayer().current !== null;
   const brainrotOpened = useBrainrotEverOpened();
 
   // "A stage you set a reminder for is starting soon / just started" — announced
@@ -619,6 +629,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       {/* Slides each page's sticky nav pill away with the header and bottom
           nav — one subscription for the whole app, applied in CSS. */}
       <StickyNavHideSync />
+      <PillRouteMotion />
 
       <Suspense fallback={null}>
         <RadioMiniPlayer />
@@ -633,6 +644,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       {hasPoppedOutAudio && (
         <Suspense fallback={null}>
           <AudioPostMiniPlayer />
+        </Suspense>
+      )}
+      {spotifyOpen && (
+        <Suspense fallback={null}>
+          <SpotifyMiniPlayer />
         </Suspense>
       )}
       <AudioSpacesModal />

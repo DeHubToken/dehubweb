@@ -7897,6 +7897,15 @@
     "followingBackProgress": "{{completed}} von {{total}} zurückverfolgen",
     "findingFollowers": "Follower werden gesucht...",
     "followBackAll": "Alles zurückverfolgen",
+    "followBackConfirmTitle_one": "{{count}} Person zurückfolgen?",
+    "followBackConfirmTitle_other": "{{count}} Personen zurückfolgen?",
+    "followBackConfirmBody": "Sie folgen dir bereits. Private Konten bekommen eine Anfrage.",
+    "followBackConfirm": "Zurückfolgen",
+    "followBackNotNow": "Nicht jetzt",
+    "followedBackCount_one": "{{count}} Person zurückgefolgt",
+    "followedBackCount_other": "{{count}} Personen zurückgefolgt",
+    "followBackDoneBody": "Du findest alle unter Folge ich.",
+    "followBackDone": "Fertig",
     "nonFollowers": {
       "title": "Aufräumen, wem du folgst?",
       "body": "{{count}} Konten, denen du folgst, folgen dir nicht zurück.",
@@ -8472,7 +8481,7 @@
     "scheduled": "Geplant"
   },
   "home": {
-    "seoTitle": "Riftn | Open Source, soziales Netzwerk im Besitz der Nutzer",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn ist ein quelloffenes, nutzereigenes und zensurresistentes Social-Media-Protokoll mit all den Funktionen, die etablierte Plattformen verweigert haben."
   },
   "docs": {

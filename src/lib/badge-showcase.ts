@@ -41,6 +41,45 @@ export type BadgeShowcaseRequest = HolderShowcaseRequest | StreamerShowcaseReque
 
 let current: BadgeShowcaseRequest | null = null;
 let sequence = 0;
+let openedAt = 0;
+
+/** Where the loading stand-in left the badge, so the showcase carries on from there. */
+export interface ShowcaseHandoff {
+  id: number;
+  box: { x: number; y: number; size: number } | null;
+  /** The art that copy was showing. */
+  art: string | null;
+}
+let handoff: { id: number; copy: HTMLImageElement | null } | null = null;
+
+/**
+ * A second tap that lands this soon after the one that opened the showcase is
+ * the same gesture (a double tap, or a tap repeated because the first looked
+ * ignored), not a request to close it.
+ */
+const TAP_GRACE_MS = 700;
+
+/** True while a tap on the backdrop should be ignored rather than close. */
+export function badgeShowcaseJustOpened(): boolean {
+  return performance.now() - openedAt < TAP_GRACE_MS;
+}
+
+/** The loading stand-in registers itself (and its copy of the badge, if any). */
+export function setBadgeShowcaseHandoff(copy: HTMLImageElement | null) {
+  if (current) handoff = { id: current.id, copy };
+}
+
+/**
+ * Set when the request on screen was already dimmed by the loading stand-in.
+ * Read as the showcase first renders, while that copy is still on screen.
+ */
+export function badgeShowcaseHandoff(): ShowcaseHandoff | null {
+  if (!handoff || !current || handoff.id !== current.id) return null;
+  const { id, copy } = handoff;
+  const r = copy?.isConnected ? copy.getBoundingClientRect() : null;
+  if (!copy || !r || r.width === 0) return { id, box: null, art: null };
+  return { id, box: { x: r.left, y: r.top, size: r.width }, art: copy.currentSrc || copy.src || null };
+}
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -56,12 +95,14 @@ function subscribe(listener: () => void) {
 
 export function openBadgeShowcase(tier: string | null, anchor: HTMLElement | null) {
   current = { kind: 'holder', tier, anchor, id: ++sequence };
+  openedAt = performance.now();
   emit();
 }
 
 /** Open the showcase on a tier just reached, playing the promotion first. */
 export function openBadgePromotion(from: string | null, to: string, anchor: HTMLElement | null) {
   current = { kind: 'holder', tier: to, promotedFrom: from, anchor, id: ++sequence };
+  openedAt = performance.now();
   emit();
 }
 
@@ -72,12 +113,14 @@ export function openStreamerShowcase(
   anchor: HTMLElement | null,
 ) {
   current = { kind: 'streamer', badgeId, address, canSelect, anchor, id: ++sequence };
+  openedAt = performance.now();
   emit();
 }
 
 export function closeBadgeShowcase() {
   if (!current) return;
   current = null;
+  handoff = null;
   emit();
 }
 
@@ -88,6 +131,7 @@ export function useBadgeShowcaseRequest(): BadgeShowcaseRequest | null {
 /** Start fetching the holder showcase chunk, so a click opens it without a wait. */
 export function preloadBadgeShowcase(tier?: string, replace = true) {
   return import('@/components/app/badge-showcase/BadgeShowcase').then(module => {
+    holderShowcase = module.default;
     if (tier) module.warmHolderBadge(tier, replace);
     return module;
   });
@@ -95,5 +139,25 @@ export function preloadBadgeShowcase(tier?: string, replace = true) {
 
 /** Start fetching the streamer showcase chunk. */
 export function preloadStreamerShowcase() {
-  return import('@/components/app/badge-showcase/StreamerShowcase');
+  return import('@/components/app/badge-showcase/StreamerShowcase').then(module => {
+    streamerShowcase = module.default;
+    return module;
+  });
+}
+
+type HolderShowcase = typeof import('@/components/app/badge-showcase/BadgeShowcase').default;
+type StreamerShowcase = typeof import('@/components/app/badge-showcase/StreamerShowcase').default;
+let holderShowcase: HolderShowcase | null = null;
+let streamerShowcase: StreamerShowcase | null = null;
+
+/**
+ * The showcases once their code has arrived. A lazy component suspends for a
+ * beat even when its chunk is already here, which flashed the loading
+ * stand-in on every first open; rendering these directly skips that.
+ */
+export function loadedBadgeShowcase(): HolderShowcase | null {
+  return holderShowcase;
+}
+export function loadedStreamerShowcase(): StreamerShowcase | null {
+  return streamerShowcase;
 }

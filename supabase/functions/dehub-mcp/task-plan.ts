@@ -4,8 +4,16 @@ import { z } from "zod";
 export const AGENT_OWNER = "0xec4e2c7417f781b35d830671f013b3b91f29ba64";
 /** His erased account's wallet, kept so agents still filed under it keep working until they are moved. */
 export const PREVIOUS_AGENT_OWNER = "0x9324840523a5d17dd12a2f11a9472e5a199c1937";
+/** Any signed-in wallet can own agents. */
 export const agentOwnerAllowed = (wallet: unknown): boolean =>
+  typeof wallet === "string" && /^0x[0-9a-f]{40}$/i.test(wallet);
+/** Group runs, runs across every post or user, and Alive mode stay with the team account. */
+export const agentTeamOwner = (wallet: unknown): boolean =>
   typeof wallet === "string" && [AGENT_OWNER, PREVIOUS_AGENT_OWNER].includes(wallet.toLowerCase());
+/** A plan that acts on one target at a time, or likes up to three recent posts. */
+export const singleTargetPlan = (plan: { steps: { audience: string }[] }): boolean =>
+  plan.steps.every(step => step.audience === "single" || step.audience === "selected_posts");
+export const TEAM_ONLY_MESSAGE = "Your agents can act on one post or person at a time, or like up to 3 recent posts. Runs across every post or every user are not open yet.";
 
 const tools = ["dehub_post_create", "dehub_follow", "dehub_vote", "dehub_comment", "dehub_update_profile", "dehub_view"] as const;
 /** How far ahead a post window may end. Until then the task keeps checking for new posts. */

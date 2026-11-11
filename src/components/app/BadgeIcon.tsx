@@ -100,9 +100,11 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const playing = active && !reducedMotion && art && failedAnimation !== art.animation;
   const { theme } = useAppTheme();
   const metallic = badgeAnimationStyle(theme) === 'metallic';
-  const warmShowcase = () => { void preloadBadgeShowcase(metallic ? visualName : undefined).catch(() => {}); };
-  // Warm only on intent below. An idle callback still downloads the full 3D
-  // showcase and creates a renderer while the visitor is loading the feed.
+  // A mouse resting on the badge has time to spare, so the metal stage is
+  // prepared under it. A finger does not: building a renderer between touch
+  // and click held the tap's own response back, so touch and focus only make
+  // sure the code is here.
+  const warmShowcase = (stage = false) => { void preloadBadgeShowcase(stage && metallic ? visualName : undefined).catch(() => {}); };
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
@@ -154,11 +156,11 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           aria-label={visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
           data-badge-playing={playing ? 'true' : 'false'}
           onPointerEnter={(e) => {
-            warmShowcase();
+            warmShowcase(e.pointerType === 'mouse');
             if (e.pointerType !== 'touch') setHovered(true);
           }}
           onPointerLeave={() => setHovered(false)}
-          onTouchStart={warmShowcase}
+          onTouchStart={() => warmShowcase()}
           onFocus={() => { warmShowcase(); setFocused(true); }}
           onBlur={() => setFocused(false)}
           onKeyDown={(e) => {

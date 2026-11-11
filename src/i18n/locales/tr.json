@@ -8537,6 +8537,15 @@
     "followingBackProgress": "{{completed}}/{{total}} takip ediliyor",
     "findingFollowers": "Takipçiler bulunuyor...",
     "followBackAll": "Tümünü geri takip et",
+    "followBackConfirmTitle_one": "{{count}} kişiyi geri takip et?",
+    "followBackConfirmTitle_other": "{{count}} kişiyi geri takip et?",
+    "followBackConfirmBody": "Seni zaten takip ediyorlar. Gizli hesaplara takip isteği gider.",
+    "followBackConfirm": "Geri takip et",
+    "followBackNotNow": "Şimdi değil",
+    "followedBackCount_one": "{{count}} kişi geri takip edildi",
+    "followedBackCount_other": "{{count}} kişi geri takip edildi",
+    "followBackDoneBody": "Hepsini Takip edilenler bölümünde bulabilirsin.",
+    "followBackDone": "Tamam",
     "nonFollowers": {
       "title": "Takip ettiklerini temizlemek ister misin?",
       "body": "Takip ettiğin {{count}} hesap seni geri takip etmiyor.",
@@ -9112,7 +9121,7 @@
     "scheduled": "Planlandı"
   },
   "home": {
-    "seoTitle": "Riftn | Açık kaynaklı, kullanıcıların sahibi olduğu sosyal medya",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn, açık kaynaklı, kullanıcılarına ait ve sansüre dirençli bir sosyal medya protokolüdür; büyük platformların vermediği tüm özellikleri sunar."
   },
   "docs": {

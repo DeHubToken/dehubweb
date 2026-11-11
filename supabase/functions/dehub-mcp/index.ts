@@ -475,7 +475,7 @@ async function registerAgent(
     return { status, body: status === 401 ? { ...body, hint: REGISTER_AUTH_HINT } : body };
   }
   const owner = auth.wallet;
-  if (!agentOwnerAllowed(owner)) return { status: 403, body: { error: "Agents are in private preview." } };
+  if (!agentOwnerAllowed(owner)) return { status: 403, body: { error: "Sign in with a wallet to use agents." } };
 
   const claimed = input.owner_wallet_address?.trim().toLowerCase();
   if (claimed && claimed !== owner) {
@@ -1586,7 +1586,7 @@ app.get("/*", async (c, next) => {
   if (!new URL(c.req.url).pathname.endsWith("/limits")) return next();
   const auth = await requireDeHubAuth(c.req.raw);
   if (!auth.ok) return auth.response;
-  if (!agentOwnerAllowed(auth.wallet)) return c.json({ error: "Agents are in private preview." }, 403);
+  if (!agentOwnerAllowed(auth.wallet)) return c.json({ error: "Sign in with a wallet to use agents." }, 403);
   try {
     const { weight, badgeName } = await resolveVoteWeight(auth.wallet, true);
     return c.json({ limit: agentCapForBadgeWeight(weight), badge: badgeName });

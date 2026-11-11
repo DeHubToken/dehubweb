@@ -7890,6 +7890,15 @@
     "followingBackProgress": "{{completed}} 중 {{total}}을/를 팔로우합니다",
     "findingFollowers": "팔로워 찾기...",
     "followBackAll": "모두 팔로우",
+    "followBackConfirmTitle_one": "{{count}}명을 맞팔로우할까요?",
+    "followBackConfirmTitle_other": "{{count}}명을 맞팔로우할까요?",
+    "followBackConfirmBody": "이미 회원님을 팔로우하고 있어요. 비공개 계정에는 요청이 전송돼요.",
+    "followBackConfirm": "맞팔로우",
+    "followBackNotNow": "나중에",
+    "followedBackCount_one": "{{count}}명을 맞팔로우했어요",
+    "followedBackCount_other": "{{count}}명을 맞팔로우했어요",
+    "followBackDoneBody": "팔로잉에서 모두 확인할 수 있어요.",
+    "followBackDone": "완료",
     "nonFollowers": {
       "title": "당신이 팔로우하는 사람 정리하기",
       "body": "{{count}} 계정이 당신을 팔로우하지 않습니다.",
@@ -8465,7 +8474,7 @@
     "scheduled": "예약됨"
   },
   "home": {
-    "seoTitle": "Riftn | 오픈소스, 사용자가 소유하는 소셜 미디어",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn는 오픈소스이며 사용자가 소유하고 검열에 강한 소셜 미디어 프로토콜로, 기존 플랫폼이 제공하지 않던 모든 기능을 제공합니다."
   },
   "docs": {

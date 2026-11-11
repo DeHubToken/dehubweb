@@ -9,7 +9,7 @@ on:
       target:
         description: Where riftn.com should point
         type: choice
-        options: [check, backup, cloudflare]
+        options: [check, backup, cloudflare, token]
         default: check
 permissions:
   contents: read
@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '22'
       - name: Standby copy answers for riftn.com
-        if: inputs.target != 'cloudflare'
+        if: inputs.target == 'check' || inputs.target == 'backup'
         run: |
           curl --fail --silent --show-error --max-time 15 --resolve riftn.com:443:138.68.188.224 \
             -D /tmp/h https://riftn.com/version.json

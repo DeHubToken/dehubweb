@@ -8545,6 +8545,15 @@
     "followingBackProgress": "متابعة {{completed}} من أصل {{total}}",
     "findingFollowers": "جارٍ العثور على المتابعين...",
     "followBackAll": "متابعة الجميع",
+    "followBackConfirmTitle_one": "متابعة {{count}} شخص بالمقابل؟",
+    "followBackConfirmTitle_other": "متابعة {{count}} أشخاص بالمقابل؟",
+    "followBackConfirmBody": "إنهم يتابعونك بالفعل. ستصل الحسابات الخاصة طلبات متابعة.",
+    "followBackConfirm": "تابِع بالمقابل",
+    "followBackNotNow": "ليس الآن",
+    "followedBackCount_one": "تمت متابعة {{count}} شخص بالمقابل",
+    "followedBackCount_other": "تمت متابعة {{count}} أشخاص بالمقابل",
+    "followBackDoneBody": "ستجدهم جميعًا في قائمة المتابَعين.",
+    "followBackDone": "تم",
     "nonFollowers": {
       "title": "هل تريد ترتيب من تتابعهم؟",
       "body": "{{count}} حسابًا تتابعه لا يتابعك.",
@@ -9120,7 +9129,7 @@
     "scheduled": "مجدول"
   },
   "home": {
-    "seoTitle": "Riftn | شبكة تواصل اجتماعي مفتوحة المصدر يملكها مستخدموها",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn بروتوكول تواصل اجتماعي مفتوح المصدر يملكه مستخدموه ومقاوم للرقابة، ويمنحك كل المزايا التي رفضت المنصات الكبرى منحها لك."
   },
   "docs": {

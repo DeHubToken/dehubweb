@@ -8727,6 +8727,15 @@
     "followingBackProgress": "Volgt {{completed}} van {{total}} terug",
     "findingFollowers": "Zoekt volgers...",
     "followBackAll": "Volg iedereen terug",
+    "followBackConfirmTitle_one": "{{count}} persoon terugvolgen?",
+    "followBackConfirmTitle_other": "{{count}} mensen terugvolgen?",
+    "followBackConfirmBody": "Ze volgen je al. Privéaccounts krijgen een volgverzoek.",
+    "followBackConfirm": "Terugvolgen",
+    "followBackNotNow": "Niet nu",
+    "followedBackCount_one": "{{count}} persoon teruggevolgd",
+    "followedBackCount_other": "{{count}} mensen teruggevolgd",
+    "followBackDoneBody": "Je vindt ze allemaal bij Volgend.",
+    "followBackDone": "Klaar",
     "nonFollowers": {
       "title": "Opruimen wie je volgt?",
       "body": "{{count}} accounts die je volgt, volgen jou niet terug.",
@@ -9302,7 +9311,7 @@
     "scheduled": "Gepland"
   },
   "home": {
-    "seoTitle": "Riftn | Opensource sociaal netwerk in handen van gebruikers",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn is een opensource, censuurbestendig sociaal protocol in handen van de gebruikers, met alle functies die de gevestigde platforms weigerden te geven.",
     "title": "Home",
     "description": "Welkom op de homepagina"

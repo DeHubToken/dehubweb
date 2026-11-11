@@ -103,9 +103,11 @@ function StreamTile({ stream, onClick }: { stream: LiveStream; onClick: () => vo
           </>
         )}
         {stream.isLive && <LiveBadge className="absolute left-1.5 top-1.5" />}
-        <span className="absolute bottom-1.5 right-1.5 flex items-center gap-1 rounded-[5px] bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
-          <Eye className="h-2.5 w-2.5" /> {stream.viewers}
-        </span>
+        {stream.watching ? (
+          <span className="absolute bottom-1.5 right-1.5 flex items-center gap-1 rounded-[5px] bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
+            <Eye className="h-2.5 w-2.5" /> {stream.watching}
+          </span>
+        ) : null}
       </span>
       <span className="mt-1.5 flex gap-1.5">
         <Avatar src={stream.avatar} name={stream.streamer} className="h-[22px] w-[22px] shrink-0 rounded-md" />

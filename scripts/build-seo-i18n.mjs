@@ -11,7 +11,8 @@
 // page that is English underneath is a duplicate to Google, not a variant:
 //  - it is one of SEO_I18N_LOCALES, the languages visitors actually arrive in;
 //  - the locale file carries the page's seoTitle and seoDescription, and the
-//    title is not simply the English one;
+//    description is not simply the English one (a title can be the bare brand,
+//    which reads the same in every language);
 //  - scripts/seo-i18n-copy/<lang>.json carries the page's heading and body.
 // Titles and descriptions come from the app's locale files, so the SPA and the
 // crawler page say the same thing; the body copy exists only for crawlers and
@@ -85,7 +86,7 @@ export function buildSeoI18n(localesDir, copyDir = join(HERE, 'seo-i18n-copy')) 
       const h1 = clean(page.h1);
       const body = typeof page.body === 'string' ? page.body.trim() : '';
       if (!title || !description || !h1 || !body) continue;
-      if (title === out[route].en.title) continue;
+      if (description === out[route].en.description) continue;
       out[route][lang] = { title, description, h1, body, ...(page.lede ? { lede: clean(page.lede) } : {}) };
     }
   }

@@ -7892,6 +7892,15 @@
     "followingBackProgress": "Podążaj za {{completed}} z {{total}}",
     "findingFollowers": "Szukanie obserwujących...",
     "followBackAll": "Podążaj za wszystkimi",
+    "followBackConfirmTitle_one": "Obserwować w odpowiedzi {{count}} osobę?",
+    "followBackConfirmTitle_other": "Obserwować w odpowiedzi {{count}} osób?",
+    "followBackConfirmBody": "Już cię obserwują. Konta prywatne dostaną prośbę.",
+    "followBackConfirm": "Obserwuj w odpowiedzi",
+    "followBackNotNow": "Nie teraz",
+    "followedBackCount_one": "Obserwujesz w odpowiedzi {{count}} osobę",
+    "followedBackCount_other": "Obserwujesz w odpowiedzi {{count}} osób",
+    "followBackDoneBody": "Znajdziesz je wszystkie w Obserwowanych.",
+    "followBackDone": "Gotowe",
     "nonFollowers": {
       "title": "Czyścić kogo śledzisz?",
       "body": "{{count}} konta, które śledzisz, nie śledzą cię z powrotem.",
@@ -8467,7 +8476,7 @@
     "scheduled": "Zaplanowano"
   },
   "home": {
-    "seoTitle": "Riftn | Otwartoźródłowe media społecznościowe należące do użytkowników",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn to otwartoźródłowy, odporny na cenzurę protokół społecznościowy należący do użytkowników, z wszystkimi funkcjami, których odmówiły ci duże platformy."
   },
   "docs": {

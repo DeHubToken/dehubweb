@@ -1,5 +1,5 @@
 {
-  "version": "2dd5798e22622202",
+  "version": "4bb86c8a13bdc6a8",
   "routes": {
     "/": [
       "ar",
@@ -1493,6 +1493,13 @@
       "tr"
     ],
     "/guides/yearly-wrap-up-2025-and-2026-roadmap": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/you-will-own-everything-and-be-happy": [
       "ar",
       "es",
       "fr",

@@ -8452,6 +8452,15 @@
     "followingBackProgress": "A seguir {{completed}} de {{total}}",
     "findingFollowers": "A encontrar seguidores...",
     "followBackAll": "Seguir tudo de volta",
+    "followBackConfirmTitle_one": "Seguir de volta {{count}} pessoa?",
+    "followBackConfirmTitle_other": "Seguir de volta {{count}} pessoas?",
+    "followBackConfirmBody": "Elas já seguem você. Contas privadas recebem um pedido.",
+    "followBackConfirm": "Seguir de volta",
+    "followBackNotNow": "Agora não",
+    "followedBackCount_one": "{{count}} pessoa seguida de volta",
+    "followedBackCount_other": "{{count}} pessoas seguidas de volta",
+    "followBackDoneBody": "Você encontra todas em Seguindo.",
+    "followBackDone": "Pronto",
     "nonFollowers": {
       "title": "Limpar quem você segue?",
       "body": "{{count}} contas que você segue não te seguem de volta.",
@@ -9027,7 +9036,7 @@
     "scheduled": "Agendado"
   },
   "home": {
-    "seoTitle": "Riftn | Rede social de código aberto, pertencente aos utilizadores",
+    "seoTitle": "Riftn",
     "seoDescription": "O Riftn é um protocolo social de código aberto, pertencente aos utilizadores e resistente à censura, com todas as funcionalidades que as plataformas tradicionais recusaram dar-lhe."
   },
   "docs": {

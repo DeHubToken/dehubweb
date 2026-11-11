@@ -9,6 +9,7 @@ import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
 import { handleDomainHandoff } from './server/domain-handoff.js';
+import { isMediaPath, serveMediaWithRanges } from './server/media-range.js';
 import { profileFieldLinks, verifiedGithubUrl } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
 import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
@@ -303,8 +304,9 @@ const ORG_JSONLD = {
 };
 // Browser SPA <title> in index.html — bot HTML must carry the same string so
 // the two variants never diverge (cloaking-suspicion surface).
-const HOME_TITLE = 'Riftn | Open Source, User Owned Social Media';
+const HOME_TITLE = 'Riftn';
 const HOME_TITLE_LEGACY = 'Riftn | Open Source, User Owned & Censorship Resistant Media';
+const HOME_TITLE_PREVIOUS = 'Riftn | Open Source, User Owned Social Media';
 // What the deployed fn still writes: old name, long dash, either escaping.
 const FN_HOME_TITLE = /(?:DeHub|Riftn) (?:—|&mdash;) Open Source, User Owned (?:&amp;|&) Censorship Resistant Media/g;
 // Browser SPA <meta name="description"> in index.html, for the same reason.
@@ -353,7 +355,7 @@ const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investi
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
 <h2 style="font-size:16px">Welcome to Riftn, the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>Riftn is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different Riftn, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>Riftn, formerly DeHub, is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
 <p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">Riftn press coverage</a></p>
 <nav aria-label="Learn more about Riftn"><ul style="list-style:none;padding:0;margin:0">${
@@ -4359,7 +4361,7 @@ const BOT_UA_PATTERN = /bot|crawl|spider|wordpress|facebook|twitter|linkedin|wha
 // cannot be read, a search engine should be told to come back (503) rather
 // than shown a thin stand-in it might index; a previewer only ever wants a
 // card, and a stand-in card beats a failed unfurl.
-const SEARCH_BOT_UA_PATTERN = /googlebot|google-inspectiontool|googleother|storebot-google|adsbot-google|bingbot|msnbot|bingpreview|applebot|duckduckbot|duckassistbot|yandex|baiduspider|petalbot|seznambot|qwantbot|yeti|slurp|gptbot|oai-searchbot|claudebot|claude-searchbot|perplexitybot|ccbot|amazonbot|bytespider|ahrefsbot|semrushbot|mj12bot|dotbot/i;
+const SEARCH_BOT_UA_PATTERN = /googlebot|google-inspectiontool|googleother|storebot-google|adsbot-google|bingbot|msnbot|bingpreview|applebot|duckduckbot|duckassistbot|yandex|baiduspider|petalbot|seznambot|qwantbot|yeti|slurp|gptbot|oai-searchbot|claudebot|claude-searchbot|perplexitybot|perplexity-user|chatgpt-user|claude-user|meta-externalagent|mistralai-user|ccbot|amazonbot|bytespider|ahrefsbot|semrushbot|mj12bot|dotbot/i;
 
 export function isSearchBotUa(ua) {
   return SEARCH_BOT_UA_PATTERN.test(ua || '');
@@ -6133,6 +6135,10 @@ async function handleRequest(request, env, ctx) {
   const pathname = url.pathname;
   const handoff = handleDomainHandoff(url);
   if (handoff) return handoff;
+  // Video and audio files need byte ranges or Safari will not play them.
+  if ((request.method === 'GET' || request.method === 'HEAD') && isMediaPath(pathname)) {
+    return serveMediaWithRanges(request, env, pathname);
+  }
   if (pathname.startsWith('/locale-pages/')) {
     const asset = await serveLocaleAsset(request, env);
     if (asset) return asset;
@@ -7950,6 +7956,7 @@ async function handleRequest(request, env, ctx) {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replace(FN_HOME_TITLE, HOME_TITLE);
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
+      html = html.replaceAll(HOME_TITLE_PREVIOUS, HOME_TITLE);
       // …and the description: the fn's is a different sentence from the one
       // in index.html, so the two variants disagreed on what Riftn is.
       html = html.replace(

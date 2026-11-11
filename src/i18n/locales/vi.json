@@ -7900,6 +7900,15 @@
     "followingBackProgress": "Đang theo dõi {{completed}} trên {{total}}",
     "findingFollowers": "Đang tìm người theo dõi...",
     "followBackAll": "Theo dõi lại tất cả",
+    "followBackConfirmTitle_one": "Theo dõi lại {{count}} người?",
+    "followBackConfirmTitle_other": "Theo dõi lại {{count}} người?",
+    "followBackConfirmBody": "Họ đã theo dõi bạn. Tài khoản riêng tư sẽ nhận yêu cầu.",
+    "followBackConfirm": "Theo dõi lại",
+    "followBackNotNow": "Để sau",
+    "followedBackCount_one": "Đã theo dõi lại {{count}} người",
+    "followedBackCount_other": "Đã theo dõi lại {{count}} người",
+    "followBackDoneBody": "Bạn có thể xem tất cả trong Đang theo dõi.",
+    "followBackDone": "Xong",
     "nonFollowers": {
       "title": "Dọn danh sách đang theo dõi?",
       "body": "{{count}} tài khoản bạn theo dõi không theo dõi lại bạn.",
@@ -8475,7 +8484,7 @@
     "scheduled": "Đã lên lịch"
   },
   "home": {
-    "seoTitle": "Riftn | Mạng xã hội mã nguồn mở, thuộc sở hữu người dùng",
+    "seoTitle": "Riftn",
     "seoDescription": "Riftn là giao thức mạng xã hội mã nguồn mở, thuộc sở hữu người dùng và chống kiểm duyệt, mang đến mọi tính năng mà các nền tảng lớn từ chối cung cấp."
   },
   "docs": {
