@@ -69,7 +69,7 @@ html:is([data-theme='light'], [data-system-tone='light']) [data-spotify-card] .s
 
 /* Profile grid tile (GridCardTile SpotifyFace): a media tile, so dark in every
    theme, like the audio tile beside it. */
-[data-profile-mixed-grid] .pmg-spotify { background: #0d0d10; color: #fff; }
+[data-profile-mixed-grid] .pmg-mini.pmg-spotify { background: #0d0d10; color: #fff; }
 [data-profile-mixed-grid] .pmg-spotify .pmg-audio-cover { top: 15%; overflow: visible; }
 [data-profile-mixed-grid] .pmg-spotify .pmg-audio-cover > img {
   width: 100%;
