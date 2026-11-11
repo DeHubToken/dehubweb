@@ -110,7 +110,7 @@ Only with your permission. We may reuse great posts to promote Riftn, but you de
 ### What is $RIFT's role?
 
 $RIFT is Riftn's token, and it brings everyone onto one token and one contract. Holders vote on proposals that shape Riftn, and you can use it to tip, unlock and pay for things in the app. If you hold DHB today, your balance comes with you: log in once to claim it after listing.`,
-  bannerImage: '/media/you-will-own-everything-banner-riftn.png',
+  bannerImage: '/media/you-will-own-everything-banner-manrope.jpg',
   bannerImageAlt: 'You will own everything, and be happy, the Riftn tagline',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-11-11T04:00:00.000Z',

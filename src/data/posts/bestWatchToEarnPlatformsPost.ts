@@ -123,7 +123,7 @@ You should not have to. Genuine watch-to-earn rewards your attention, so a manda
 
 Generally, crypto you receive as a reward can be subject to UK tax, and disposing of tokens later can trigger capital gains, but rules depend on your circumstances and change over time. Keep records of what you earn and when, and check current HMRC guidance or speak to a qualified adviser. Do not treat any figure in this article as tax advice.
 `,
-  bannerImage: '/media/best-watch-to-earn-platforms-2026-banner-riftn.png',
+  bannerImage: '/media/best-watch-to-earn-platforms-2026-banner-manrope.jpg',
   bannerImageAlt: 'Illustration ranking the best watch-to-earn platforms of 2026 with Riftn, Theta, XCAD and others',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-05-31T09:45:00.000Z',

@@ -98,7 +98,7 @@ No. You can sign in with Google, Apple, email or SMS and a wallet is created for
 ### Should I stop posting on Instagram and TikTok?
 
 No. They are where your reach is and you should keep using them. The argument is to stop depending on them exclusively, treat them as discovery and build a home base you actually own alongside.`,
-  bannerImage: '/media/nil-ends-your-audience-does-not-banner-riftn.png',
+  bannerImage: '/media/nil-ends-your-audience-does-not-banner-manrope.jpg',
   bannerImageAlt: 'A college athlete building an audience that outlasts NIL eligibility',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T12:00:00.000Z',

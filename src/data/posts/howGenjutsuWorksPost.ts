@@ -192,7 +192,7 @@ Yes. On both Maboroshi routes the complete original track is copied back onto th
 
 Higgsfield's Genjutsu figures come from its Genjutsu page as checked in September 2026. Katana details come from Higgsfield's Katana article of October 12, 2026. Higgsfield prices in credits and changes its plans often, so check its live pricing before you compare. Riftn prices are retail rates at the time of writing, and the price shown before each step is always the price you pay. The depth image in step 3 was made with a single-frame depth model for illustration. Maboroshi itself uses Video Depth Anything.
   `,
-  bannerImage: '/media/maboroshi-how-genjutsu-works-banner-riftn.jpg',
+  bannerImage: '/media/maboroshi-how-genjutsu-works-banner-manrope.jpg',
   bannerImageAlt: 'How Higgsfield Genjutsu works, and how Riftn Maboroshi does the same job for less',
   author: {
     name: 'Riftn Team',
