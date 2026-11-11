@@ -136,7 +136,7 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
           onChange={(e) => push(e.target.value)}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="h-10 min-w-0 flex-1 bg-transparent px-1.5 text-[15px] text-white outline-none placeholder:text-zinc-500"
+          className="h-9 min-w-0 flex-1 bg-transparent px-1 text-[15px] text-white outline-none placeholder:text-zinc-500"
         />
         <div className="flex shrink-0 items-center pr-1">{trailing}</div>
       </div>

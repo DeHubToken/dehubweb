@@ -18,6 +18,7 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { BrandIcon, ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { LiquidOrb, type LiquidOrbMode } from '@/components/app/assistant/LiquidOrb';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { PILL_ACTION_CLASS, PILL_LEAD_ICON, PILL_ROW, PILL_TEXT, usePhonePill } from '@/components/app/page-kit/PageKit';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -689,6 +690,7 @@ function AssistantPageForAccount() {
   const { data: supportTickets } = useMySupportTickets(isAuthenticated);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const phonePill = usePhonePill();
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
   
@@ -2390,24 +2392,45 @@ function AssistantPageForAccount() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4">
+      {/* Header. Phones draw it as every page's top pill (Home's size: 36px
+          row, 18px icon, 14px title); desktop keeps the open header. */}
+      <div
+        data-feed-nav-outer={phonePill ? '' : undefined}
+        data-kit-pill-outer={phonePill ? '' : undefined}
+        className={phonePill ? 'relative z-50 shrink-0 px-2 pt-1 pb-2' : 'flex items-center justify-between p-4'}
+      >
+        <div
+          data-feed-nav={phonePill ? '' : undefined}
+          data-kit-pill={phonePill ? '' : undefined}
+          className={phonePill ? 'relative flex flex-col rounded-xl bg-zinc-900' : 'contents'}
+          style={phonePill ? { overflowX: 'clip', overflowClipMargin: '8px' } : undefined}
+        >
+        {phonePill ? <span data-nav-glass-backdrop aria-hidden="true" /> : null}
+        <div className={phonePill ? cn('relative z-20 flex min-w-0 items-center justify-between', PILL_ROW) : 'contents'}>
+        {/* Wrapped so themes that mark the pill's first button (Home's
+            settings divider) leave the title alone. */}
+        <div className={phonePill ? 'flex min-w-0' : 'contents'}>
         <button
           onClick={() => {
             startNewConversation();
             setMessages([]);
                     setAttachedImage(null);
           }}
-          className="flex items-center gap-3 group"
+          className={phonePill ? 'flex min-w-0 items-center gap-2 pl-3' : 'flex items-center gap-3 group'}
         >
-          <BrandIcon src={aiSparkleIcon} alt={_copy("copy.391e40515277", { defaultValue: "Assistant" })} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
-          <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
+          {phonePill ? (
+            <ThemedIcon icon="assistant" alt="" className={cn(PILL_LEAD_ICON, 'shrink-0 object-contain')} />
+          ) : (
+            <BrandIcon src={aiSparkleIcon} alt={_copy("copy.391e40515277", { defaultValue: "Assistant" })} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
+          )}
+          <h1 className={phonePill ? cn('truncate text-white', PILL_TEXT) : 'text-lg font-semibold text-white leading-none mt-0.5'}>{t('assistant.title')}</h1>
         </button>
+        </div>
 
-        <div className="flex items-center gap-1">
+        <div className={phonePill ? 'flex shrink-0 items-center' : 'flex items-center gap-1'}>
           <button
             onClick={() => setHistoryDrawerOpen(true)}
-            className="p-2 rounded-xl text-white/60 hover:text-white transition-colors"
+            className={phonePill ? PILL_ACTION_CLASS : 'p-2 rounded-xl text-white/60 hover:text-white transition-colors'}
             aria-label={t('bookmarks.history')}
           >
             <History className="w-5 h-5" />
@@ -2418,7 +2441,7 @@ function AssistantPageForAccount() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="relative p-2 rounded-xl text-white/60 hover:text-white transition-colors"
+                className={phonePill ? PILL_ACTION_CLASS : 'relative p-2 rounded-xl text-white/60 hover:text-white transition-colors'}
                 aria-label={t('postStage.more')}
               >
                 <More className="w-5 h-5" />
@@ -2463,6 +2486,8 @@ function AssistantPageForAccount() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+        </div>
         </div>
 
         {/* Style Drawer */}
