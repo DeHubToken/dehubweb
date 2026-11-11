@@ -31,6 +31,7 @@ import { useDeHubProfile } from "@/hooks/use-dehub-profile";
 import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, DEFAULT_AFFILIATE_LANDING, AFFILIATE_CTA_PRESETS, MAX_AFFILIATE_LANDING_CTAS, isSafeLandingDestination, loadAffiliateStats, saveAffiliateLanding, type AffiliateLandingCustomization, type AffiliateLandingCta, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeepLink";
+import { buildInviteUrl } from "@/lib/inviteLink";
 import { streamerInviteLink } from "@/lib/streamer-page.js";
 import { Input } from "@/components/ui/input";
 import { PageBody } from "@/components/app/page-kit/PageKit";
@@ -133,9 +134,11 @@ export default function AffiliatePage() {
     void load().finally(() => setRefreshing(false));
   };
 
+  // Tagged with the current name so X and chat apps draw a fresh card after a rename.
+  const inviteName = displayName || stats?.shareName || null;
   const shareUrl = useMemo(
-    () => (stats?.code ? `${SITE}/r/${stats.code}` : ""),
-    [stats?.code],
+    () => (stats?.code ? buildInviteUrl(SITE, stats.code, inviteName) : ""),
+    [stats?.code, inviteName],
   );
   const shareImageUrl = useMemo(
     () => `${getAffiliateShareImageUrl(stats?.code, 1200, 630, "svg")}&v=${imgVersion}`,
@@ -145,7 +148,7 @@ export default function AffiliatePage() {
   const copy = async (txt: string, label?: string) => {
     try {
       await navigator.clipboard.writeText(txt);
-      trackEvent("invite_link_copied", { method: "copy", deep_link: !txt.endsWith(`/r/${stats?.code}`) });
+      trackEvent("invite_link_copied", { method: "copy", deep_link: !/\/r\/[A-Z0-9]+(\?n=[0-9a-z]+)?$/i.test(txt) });
       toast.success(label ?? _copy("copy.8d525e5f158b", { defaultValue: "Copied" }));
     }
     catch { toast.error(_copy("copy.5b50e7a693fe", { defaultValue: "Copy failed" })); }
@@ -395,7 +398,7 @@ export default function AffiliatePage() {
                       to={`/r/${stats.code}`}
                       className="px-3 py-1.5 rounded-md bg-white/10 text-white font-mono truncate hover:bg-white/15 inline-flex items-center gap-2"
                     >
-                      {`${typeof window !== "undefined" ? window.location.origin : "https://riftn.com"}/r/${stats.code}`}
+                      {buildInviteUrl(typeof window !== "undefined" ? window.location.origin : "https://riftn.com", stats.code, inviteName)}
                       <ExternalLink className="w-3 h-3 opacity-70" />
                     </Link>
                     <Button
