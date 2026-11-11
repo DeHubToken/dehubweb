@@ -5,6 +5,7 @@ import type { TokenRefreshOutcome } from './core';
 import type { AuthResponse } from './types';
 import { deviceHeaders } from '@/lib/device-id';
 import { requestSession } from './session-request';
+import { TWO_FACTOR_REQUIRED_CODE } from '@/lib/two-factor-login';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface UsernameCheckResponse {
@@ -263,6 +264,10 @@ export async function rotateWallet(
     if (code === 'WALLET_NOT_LINKED') {
       throw new WalletNotLinkedError((errorData.message as string) || undefined);
     }
+    // The move is done; the API only held back the session it would have
+    // handed out because the account uses two-step sign-in. The sign-in that
+    // follows asks for the code.
+    if (code === TWO_FACTOR_REQUIRED_CODE) return;
     throw Object.assign(new Error(
       (errorData.message as string) || (errorData.error as string) || _translateCopy("copy.2877ceb92688", { defaultValue: "Could not move the account" }),
     ), { code, status: response.status });
