@@ -11,7 +11,7 @@ import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { NewMembersBento } from '@/components/app/NewMembersBento';
 import { SearchPeopleCards } from '@/components/app/search/SearchPeopleCards';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
-import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
+import { PageBody, PageIsland, PageTabs, usePhonePill } from '@/components/app/page-kit/PageKit';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTranslation } from 'react-i18next';
 import searchIcon from '@/assets/icons/search-icon.png';
@@ -96,12 +96,15 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
   onChange,
   placeholder,
   trailing,
+  bare = false,
 }: {
   value: string;
   onChange: (next: string) => void;
   placeholder: string;
   /** Quiet icon actions at the field's right end. */
   trailing?: React.ReactNode;
+  /** Drawn as the phone pill's own line: no box, no leading icon. */
+  bare?: boolean;
 }) {
   const [local, setLocal] = useSurfaceDraft("src/pages/app/ExplorePage.tsx:local", value);
   const lastPushedRef = useRef(value);
@@ -120,6 +123,24 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
     lastPushedRef.current = next;
     startTransition(() => onChange(next));
   };
+
+  if (bare) {
+    return (
+      <div data-explore-pill-search className="flex min-w-0 flex-1 items-center">
+        <input
+          type="text"
+          inputMode="search"
+          enterKeyHint="search"
+          value={local}
+          onChange={(e) => push(e.target.value)}
+          placeholder={placeholder}
+          aria-label={placeholder}
+          className="h-10 min-w-0 flex-1 bg-transparent px-1.5 text-[15px] text-white outline-none placeholder:text-zinc-500"
+        />
+        <div className="flex shrink-0 items-center pr-1">{trailing}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex-1">
@@ -652,6 +673,86 @@ export default function ExplorePage() {
     islandHostRef.current?.querySelector('[data-feed-nav-outer]')?.setAttribute('data-nav-hide', 'pin');
   }, []);
 
+  const phonePill = usePhonePill();
+  // On phones the type tabs sit behind the sliders button with the filters,
+  // so a lit button also counts a type other than All.
+  const optionCount = activeFilterCount + (phonePill && activeTab !== 'all' ? 1 : 0);
+  const exploreTabs = (
+    <PageTabs
+      value={activeTab}
+      onChange={setActiveTab}
+      tabs={EXPLORE_TABS.map((tab) => ({
+        id: tab.value,
+        label: <span className="sr-only">{t(`explore.${tab.value}`)}</span>,
+        icon: <tab.icon className="h-4 w-4" aria-hidden="true" />,
+      }))}
+      className="[&>button]:flex-1 [&>button]:justify-center"
+    />
+  );
+  const filterToggle = (
+    <button
+      type="button"
+      data-explore-filter-toggle
+      onClick={() => setShowFilters(!showFilters)}
+      aria-label={t('explorePage.filters')}
+      aria-expanded={showFilters}
+      title={t('explorePage.filters')}
+      className={cn(
+        'relative h-8 w-8 flex items-center justify-center transition-colors',
+        showFilters || optionCount > 0 ? 'text-white' : 'text-zinc-500 [@media(hover:hover)]:hover:text-white',
+      )}
+    >
+      {/* Open: the sliders spin into a glowing X that closes the
+          panel, the same turn the home pill's toggle makes into
+          its back arrow. */}
+      <AnimatePresence initial={false}>
+        {showFilters && (
+          <motion.span
+            key="glow"
+            aria-hidden
+            data-explore-filter-glow
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="pointer-events-none absolute inset-0 rounded-full blur-[3px]"
+            style={{ background: 'radial-gradient(closest-side, color-mix(in srgb, currentColor var(--explore-glow-core, 65%), transparent), color-mix(in srgb, currentColor var(--explore-glow-edge, 20%), transparent) 60%, transparent)' }}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence mode="wait" initial={false}>
+        {showFilters ? (
+          <motion.span
+            key="close"
+            initial={{ rotate: -180, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: 180, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="relative z-10 flex"
+          >
+            <X className="h-[18px] w-[18px]" />
+          </motion.span>
+        ) : (
+          <motion.span
+            key="sliders"
+            initial={{ rotate: 180, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: -180, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="relative z-10 flex"
+          >
+            <SlidersHorizontal className="h-[18px] w-[18px]" />
+          </motion.span>
+        )}
+      </AnimatePresence>
+      {optionCount > 0 && !showFilters && (
+        <span className="absolute top-0 right-0 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
+          {optionCount}
+        </span>
+      )}
+    </button>
+  );
+
   return (
     <div className="min-h-screen" data-explore-page>
       <SEOHead title={t('explore.seoTitle')} description={t('explore.seoDescription')} url={HUB_ROUTE_META.explore.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore Riftn', url: HUB_ROUTE_META.explore.url, description: _copy("copy.68f66b1f5bba", { defaultValue: "Discover trending content, creators and topics on Riftn." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
@@ -668,110 +769,55 @@ export default function ExplorePage() {
         <PageIsland
           icon="search"
           title={t('nav.explore')}
-          tabs={
-            <PageTabs
-              value={activeTab}
-              onChange={setActiveTab}
-              tabs={EXPLORE_TABS.map((tab) => ({
-                id: tab.value,
-                label: <span className="sr-only">{t(`explore.${tab.value}`)}</span>,
-                icon: <tab.icon className="h-4 w-4" aria-hidden="true" />,
-              }))}
-              className="[&>button]:flex-1 [&>button]:justify-center"
+          tabs={phonePill ? undefined : exploreTabs}
+          pillLine={phonePill ? (
+            <ExploreSearchInput
+              bare
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={t('explorePage.searchPlaceholder')}
+              trailing={filterToggle}
             />
-          }
+          ) : undefined}
+          drawerOpen={phonePill ? showFilters : undefined}
         >
-          {/* The filter toggle is a plain icon inside the search field, the
-              same quiet treatment as the messages search. */}
-          <ExploreSearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder={t('explorePage.searchPlaceholder')}
-            trailing={
-              <button
-                type="button"
-                data-explore-filter-toggle
-                onClick={() => setShowFilters(!showFilters)}
-                aria-label={t('explorePage.filters')}
-                aria-expanded={showFilters}
-                title={t('explorePage.filters')}
-                className={cn(
-                  'relative h-8 w-8 flex items-center justify-center transition-colors',
-                  showFilters || activeFilterCount > 0 ? 'text-white' : 'text-zinc-500 [@media(hover:hover)]:hover:text-white',
-                )}
-              >
-                {/* Open: the sliders spin into a glowing X that closes the
-                    panel, the same turn the home pill's toggle makes into
-                    its back arrow. */}
-                <AnimatePresence initial={false}>
-                  {showFilters && (
-                    <motion.span
-                      key="glow"
-                      aria-hidden
-                      data-explore-filter-glow
-                      initial={{ opacity: 0, scale: 0.6 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.6 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
-                      className="pointer-events-none absolute inset-0 rounded-full blur-[3px]"
-                      style={{ background: 'radial-gradient(closest-side, color-mix(in srgb, currentColor var(--explore-glow-core, 65%), transparent), color-mix(in srgb, currentColor var(--explore-glow-edge, 20%), transparent) 60%, transparent)' }}
-                    />
-                  )}
-                </AnimatePresence>
-                <AnimatePresence mode="wait" initial={false}>
-                  {showFilters ? (
-                    <motion.span
-                      key="close"
-                      initial={{ rotate: -180, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 180, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
-                      className="relative z-10 flex"
-                    >
-                      <X className="h-[18px] w-[18px]" />
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      key="sliders"
-                      initial={{ rotate: 180, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -180, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
-                      className="relative z-10 flex"
-                    >
-                      <SlidersHorizontal className="h-[18px] w-[18px]" />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-                {activeFilterCount > 0 && !showFilters && (
-                  <span className="absolute top-0 right-0 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
-                    {activeFilterCount}
-                  </span>
-                )}
-              </button>
-            }
-          />
-
-          {/* Filter panel — the sliders button's payload. Collapsed by
-              default; it lives inside the sticky bento so the rows stay
-              reachable while the results scroll underneath. */}
-          <AnimatePresence initial={false}>
-            {showFilters && (
-              <motion.div
-                key="search-filters"
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-              >
-                <SearchFilterPanel
-                  filters={filters}
-                  onChange={setFilters}
-                  onReset={resetFilters}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {phonePill ? (
+            // Phones: the pill is just the search, over everything. The
+            // sliders button pulls the options out under it: what to search
+            // (all, people, posts...) and the filters.
+            <>
+              {exploreTabs}
+              <SearchFilterPanel filters={filters} onChange={setFilters} onReset={resetFilters} />
+            </>
+          ) : (
+            <>
+              {/* The filter toggle is a plain icon inside the search field, the
+                  same quiet treatment as the messages search. */}
+              <ExploreSearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder={t('explorePage.searchPlaceholder')}
+                trailing={filterToggle}
+              />
+            <AnimatePresence initial={false}>
+              {showFilters && (
+                <motion.div
+                  key="search-filters"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <SearchFilterPanel
+                    filters={filters}
+                    onChange={setFilters}
+                    onReset={resetFilters}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            </>
+          )}
         </PageIsland>
       </div>
 
