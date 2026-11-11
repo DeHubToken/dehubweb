@@ -5530,6 +5530,11 @@ const SUPABASE_RELAY_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
 const DEHUB_IO_KEEP_PATHS = [
   /^\/api\//, /^\/_sb(?:\/|$)/, /^\/\.well-known\//, /^\/apple-app-site-association$/,
   /^\/assets\//, /^\/cdn-cgi\//, /^\/_handoff-out$/,
+  // Fediverse accounts were @name@dehub.io before the move. Their old actor
+  // documents keep answering here (as "moved to riftn.com"), which is what
+  // lets Mastodon servers move their followers over. Not redirected: a
+  // redirect to another host would fail Mastodon's id check.
+  /^\/ap\/users\/[^/]+\/?$/,
 ];
 // Installed app builds load arcade games, the mesh preview and other pages
 // from dehub.io inside a WebView, and send any load that leaves dehub.io out
@@ -6286,14 +6291,17 @@ async function handleRequest(request, env, ctx) {
 
   // ActivityPub (server/activitypub-relay.js): WebFinger, NodeInfo, /ap/*, and
   // profile/post pages asked for activity+json. Every UA, ahead of the SSR
-  // branches — a federating server wants JSON, not the HTML shell.
-  if (isCanonicalHost) {
+  // branches — a federating server wants JSON, not the HTML shell. dehub.io
+  // too: old @name@dehub.io handles, followers' deliveries to the old inboxes
+  // and Mastodon apps signed in there before the move. The API answers those
+  // with the riftn.com address (it sees the host in x-ap-host).
+  if (isCanonicalHost || aliasHost === 'dehub.io') {
     const apTarget = apRelayTarget(pathname, request.headers.get('accept'), (segment) =>
       couldBeProfileSegment(segment, SYSTEM_ROUTES),
     );
     if (apTarget) return handleApRelay(request, apTarget, 'https://api.dehub.io');
 
-    // Mastodon apps signed in to dehub.io (server/mastodon-relay.js): the
+    // Mastodon apps signed in to riftn.com (server/mastodon-relay.js): the
     // client API and the OAuth token endpoints. The approval page itself,
     // /oauth/authorize, falls through to the SPA.
     const mastodonTarget = mastodonRelayTarget(pathname);

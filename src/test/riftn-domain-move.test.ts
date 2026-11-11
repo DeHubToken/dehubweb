@@ -66,3 +66,37 @@ describe('dehub.io forwards to riftn.com', () => {
     expect(await hit('https://www.dehub.io/mal')).toEqual({ status: 301, to: 'https://riftn.com/mal' });
   });
 });
+
+describe('old @name@dehub.io fediverse handles', () => {
+  const relayed = async (url: string, method = 'GET') => {
+    const seen: { url: string; host: string | null }[] = [];
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      seen.push({ url: String(input), host: new Headers(init?.headers).get('x-ap-host') });
+      return new Response('{}', { status: 200, headers: { 'content-type': 'application/activity+json' } });
+    }) as typeof fetch;
+    try {
+      const res = await worker.fetch(new Request(url, { method, headers: { Accept: 'application/activity+json' }, body: method === 'POST' ? '{}' : undefined }), {});
+      return { status: res.status, seen };
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  };
+
+  it('answers WebFinger and the old actor on dehub.io, telling the API which host was asked', async () => {
+    const finger = await relayed('https://dehub.io/.well-known/webfinger?resource=acct:mal@dehub.io');
+    expect(finger.seen[0]).toEqual({ url: 'https://api.dehub.io/api/ap/webfinger?resource=acct:mal@dehub.io', host: 'dehub.io' });
+    const actor = await relayed('https://dehub.io/ap/users/mal');
+    expect(actor.status).toBe(200);
+    expect(actor.seen[0]).toEqual({ url: 'https://api.dehub.io/api/ap/users/mal', host: 'dehub.io' });
+  });
+
+  it('takes deliveries to the old inboxes', async () => {
+    const inbox = await relayed('https://dehub.io/ap/users/mal/inbox', 'POST');
+    expect(inbox.seen[0]).toEqual({ url: 'https://api.dehub.io/api/ap/users/mal/inbox', host: 'dehub.io' });
+  });
+
+  it('still forwards everything else under /ap to riftn.com', async () => {
+    expect(await hit('https://dehub.io/ap/posts/42')).toEqual({ status: 301, to: 'https://riftn.com/ap/posts/42' });
+  });
+});

@@ -1457,7 +1457,11 @@
     "giftBoost": "Gift a boost",
     "markSection": "Skippable sections",
     "copyFailed": "Could not copy link",
-    "share": "Share"
+    "share": "Share",
+    "castToTv": "Cast to TV",
+    "castStarted": "Playing on your TV",
+    "castUnsupported": "This browser can't cast. Open Riftn in Chrome or Safari to play it on your TV.",
+    "castFailed": "Couldn't reach the TV. Check it's on the same Wi-Fi and try again."
   },
   "filters": {
     "sort": "Sort",

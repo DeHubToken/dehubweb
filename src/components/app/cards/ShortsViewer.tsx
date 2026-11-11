@@ -38,6 +38,8 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import EyeOff from "@/components/ui/cut-icons/hidden";
 
 import Download from "@/components/ui/cut-icons/download";
+import { CastMenuItem } from './CastMenuItem';
+import { visibleVideo } from '@/lib/castToTv';
 import X from "@/components/ui/cut-icons/close";
 import Play from "@/components/ui/cut-icons/play";
 import Pause from "@/components/ui/cut-icons/pause";
@@ -2514,6 +2516,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               }} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Download className="w-5 h-5" /> {t("postOptions.download")}
               </button>
+            )}
+            {!!currentShort.videoUrl && !currentShort.imageUrls?.length && !currentShort.gated && !downloadGate.isGated && (
+              <CastMenuItem
+                onBeforeCast={() => setShareSheetOpen(false)}
+                onCasting={() => setIsPaused(true)}
+                getSource={() => {
+                  const pageVideo = visibleVideo('video.shorts-inline-video');
+                  return {
+                    url: currentShort.videoUrl,
+                    title: currentShort.title,
+                    poster: currentShort.thumbnail,
+                    startAt: pageVideo?.currentTime,
+                    pageVideo,
+                  };
+                }}
+              />
             )}
             <PostUtilityMenuItems
               postId={currentShort.id}

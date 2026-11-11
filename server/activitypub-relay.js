@@ -1,8 +1,10 @@
 /**
- * ActivityPub on dehub.io.
+ * ActivityPub on riftn.com.
  *
- * Federated ids live on dehub.io (that is the domain in an @alice@dehub.io
- * handle), but the state — keys, remote followers, delivery — lives in the API
+ * Federated ids live on riftn.com (that is the domain in an @alice@riftn.com
+ * handle; accounts were @alice@dehub.io before the November 2026 move, and
+ * dehub.io still relays here so those old handles and follows keep working),
+ * but the state — keys, remote followers, delivery — lives in the API
  * (dehub-stream-backend src/activitypub). The Worker passes these requests
  * through to /api/ap/* unchanged, plus the host and path the sender signed:
  * the API checks HTTP signatures against those, and behind this hop it would

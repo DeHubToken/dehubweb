@@ -6,10 +6,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { SETTINGS_HEADING_CLASS, SETTINGS_INLINE_ACTION_CLASS } from './SettingsRow';
 
+/** The domain in every fediverse handle. */
+export const FEDIVERSE_DOMAIN = 'riftn.com';
+
 /**
  * Settings → Profile → Fediverse. The address Mastodon (and every other
- * ActivityPub app) can follow this account at — @username@riftn.com. The
- * federation itself is server-side (dehub-stream-backend src/activitypub);
+ * ActivityPub app) can follow this account at — @username@riftn.com (it was
+ * @username@dehub.io before the domain move; the old address still finds the
+ * account, and remote followers are moved over by the API). The federation
+ * itself is server-side (riftn-backend src/activitypub);
  * private accounts and accounts without a username are not federated.
  */
 export function FediverseHandleSetting() {
@@ -17,7 +22,7 @@ export function FediverseHandleSetting() {
   const { user } = useAuth() as any;
   const username = String(user?.username || '').replace(/^@/, '');
   const isPrivate = !!(user?.isPrivate || user?.customs?.isPrivate);
-  const handle = username ? `@${username}@riftn.com` : '';
+  const handle = username ? `@${username}@${FEDIVERSE_DOMAIN}` : '';
 
   const copy = async () => {
     try {
