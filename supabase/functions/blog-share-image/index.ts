@@ -19,9 +19,12 @@ let fontBuffers: Uint8Array[] | null = null;
 async function loadFonts(): Promise<Uint8Array[]> {
   if (fontBuffers) return fontBuffers;
   const ttfs = [
-    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-800-normal.ttf",
-    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf",
-    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf",
+    // Manrope, the site font: brand-kit faces first (full character set), then
+    // the Fontsource Latin subset (also the only 800 weight).
+    "https://riftn.com/brand-kit/font/manrope-700.ttf",
+    "https://riftn.com/brand-kit/font/manrope-500.ttf",
+    "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-800-normal.ttf",
+    "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-400-normal.ttf",
   ];
   const out: Uint8Array[] = [];
   for (const u of ttfs) {
@@ -142,7 +145,7 @@ async function buildPngFor(params: {
     const fonts = await loadFonts();
     const resvg = new Resvg(svg, {
       fitTo: { mode: "width", value: params.width },
-      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
+      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Manrope" },
     });
     const png = resvg.render().asPng();
     return { png, svg };

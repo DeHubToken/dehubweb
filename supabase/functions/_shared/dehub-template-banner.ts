@@ -3,7 +3,7 @@
 // Instead of asking a diffusion model to imitate the brand, this renders the
 // official template system directly: silk background (with an opt-in dust/grid/
 // starfield overlay) + a chrome 3D icon hero standing inside the frame's own
-// safe box + an Exo headline carrying a horizontal tone+alpha sweep and a lead
+// safe box + a Manrope headline carrying a horizontal tone+alpha sweep and a lead
 // focus ramp + HUD chrome drawn as corner brackets (pill, //dehub.io, one-line
 // type tag, QR) inside a bevelled card — as pure SVG rasterized with resvg-wasm.
 // The LLM only fills a small validated spec (headline / subtitle / icon choice);
@@ -88,7 +88,7 @@ let fontsCache: Uint8Array[] | null = null;
 async function kitFonts(): Promise<Uint8Array[]> {
   if (fontsCache) return fontsCache;
   const out: Uint8Array[] = [];
-  for (const f of ["font/exo-700.ttf", "font/exo-500.ttf", "font/mono.ttf"]) {
+  for (const f of ["font/manrope-700.ttf", "font/manrope-500.ttf", "font/mono.ttf"]) {
     out.push(await fetchKitBytes(f));
   }
   fontsCache = out;
@@ -420,11 +420,11 @@ function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, s
   const lh = size * 0.92;
   const maxLen = Math.max(...lines.map((l) => l.text.length), 1);
   const blockW = maxLen * size * CHARW;
-  // Cancel Exo's left side bearing, or the headline looks indented against the
+  // Cancel Manrope's left side bearing, or the headline looks indented against the
   // pill and the sub row and the shared gutter stops reading as shared.
-  const tx = x - size * 0.085;
+  const tx = x - size * 0.091;
   const x0 = n1(tx), x1 = n1(tx + blockW);
-  const common = `font-family="Exo" font-weight="700" font-size="${size}" letter-spacing="${(-0.022 * size).toFixed(1)}"`;
+  const common = `font-family="Manrope" font-weight="700" font-size="${size}" letter-spacing="${(-0.022 * size).toFixed(1)}"`;
   const rows = lines
     .map((l, i) => `<text x="${n1(tx)}" y="${n1(topY + size * 0.82 + i * lh)}" ${common} fill="url(#hg_${uid})">${esc(l.text)}</text>`)
     .join("");
@@ -463,8 +463,9 @@ function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, s
   <g mask="url(#msharp_${uid})">${rows}</g>`;
 }
 
-// Width of one Exo-700 uppercase glyph as a fraction of font-size (measured empirically).
-const CHARW = 0.62;
+// Width of one Manrope-700 uppercase glyph as a fraction of font-size (Exo's
+// 0.62 scaled by the measured advance ratio, 0.660 / 0.639).
+const CHARW = 0.64;
 
 function splitHeadline(line: { text: string; blurTail: number }): { text: string; blurTail: number }[] {
   const t = line.text.trim();
@@ -522,10 +523,10 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   }
   const tx = x - size * 0.03;
   const slashW = size * 0.58 * 2;
-  // Only exo-700 and exo-500 are loaded as static faces (a variable Exo renders
+  // Only manrope-700 and manrope-500 are loaded as static faces (a variable font renders
   // thin under resvg), so the sub row stays on 500 — asking for 600 or 300 would
   // have resvg silently substitute the nearest face.
-  const common = `font-family="Exo" font-weight="500" font-size="${size}" text-anchor="${anchor}"`;
+  const common = `font-family="Manrope" font-weight="500" font-size="${size}" text-anchor="${anchor}"`;
   // The `//` is deliberately dimmer than the word — it reads as punctuation
   // rather than as part of the label.
   let out = `<text x="${n1(tx)}" y="${n1(y)}" ${common} fill="rgba(255,255,255,0.42)">//</text>`;
@@ -534,7 +535,7 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   if (spec.extra) {
     out += `<text x="${n1(ex)}" y="${n1(y - 2)}" font-family="Consolas" font-size="${Math.round(size * 0.55)}" letter-spacing="${(size * 0.04).toFixed(1)}" fill="rgba(255,255,255,0.72)">${esc(spec.extra)}</text>`;
   }
-  out += `<text x="${n1(ex + (spec.extra ? spec.extra.length * size * 0.36 + 40 : 0))}" y="${n1(y - 1)}" font-family="Exo" font-weight="500" font-size="${Math.round(size * 0.74)}" fill="rgba(255,255,255,0.5)">×</text>`;
+  out += `<text x="${n1(ex + (spec.extra ? spec.extra.length * size * 0.36 + 40 : 0))}" y="${n1(y - 1)}" font-family="Manrope" font-weight="500" font-size="${Math.round(size * 0.74)}" fill="rgba(255,255,255,0.5)">×</text>`;
   return out;
 }
 
@@ -788,7 +789,7 @@ export async function renderTemplateBanner(spec: BannerSpec): Promise<string> {
   const fonts = await kitFonts();
   const resvg = new Resvg(svg, {
     background: "#020203",
-    font: { fontBuffers: fonts, defaultFontFamily: "Exo", loadSystemFonts: false },
+    font: { fontBuffers: fonts, defaultFontFamily: "Manrope", loadSystemFonts: false },
     fitTo: { mode: "original" },
   });
   const png = resvg.render().asPng();

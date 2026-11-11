@@ -199,7 +199,7 @@ const OG_CARD_ROUTES = new Set([
 /** Bump when the cards in public/og are re-rendered: X, Facebook, LinkedIn and
  *  Telegram cache a share image by its URL, so new art under the old URL keeps
  *  showing the old picture until their cache expires. */
-const OG_CARD_REV = '3';
+const OG_CARD_REV = '4';
 
 /** A route's own share card, or the shared one when it has none. */
 function shareImage(key) {
@@ -6863,7 +6863,7 @@ async function handleRequest(request, env, ctx) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
   }
-  const stageCard = pathname.match(/^\/_og\/stage\/v[1-5]\/([0-9a-fA-F-]{16,64})\.png$/);
+  const stageCard = pathname.match(/^\/_og\/stage\/v[1-6]\/([0-9a-fA-F-]{16,64})\.png$/);
   if (stageCard) {
     const { handleStageShareImage } = await import('./server/stage-share-image.js');
     return handleStageShareImage(request, env, ctx, stageCard[1], supabaseLookup);
