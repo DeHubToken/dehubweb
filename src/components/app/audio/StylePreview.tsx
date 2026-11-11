@@ -11,8 +11,9 @@ const FRAME_MS = 1000 / 30;
 const BINS = 128;
 
 /**
- * A small moving example of one visualizer style for the style picker. It
- * plays the synthesised groove (no audio) and only runs while on screen.
+ * A small example of one visualizer style for the style picker. Every tile is
+ * one still frame; the tile under the mouse plays (the synthesised groove, no
+ * audio). A grid of tiles all moving at once was most of the picker's cost.
  */
 export function StylePreview({ style, hue, theme, seed }: { style: string; hue: number; theme: string; seed: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -66,21 +67,35 @@ export function StylePreview({ style, hue, theme, seed }: { style: string; hue: 
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     // Particle styles start empty; run a second of frames so the tile shows them.
     const warm = () => { const start = performance.now(); for (let i = 30; i > 0; i--) paint(start - i * FRAME_MS); };
+    let hovered = false;
     const loop = (now: number) => {
-      if (!visible) return;
+      if (!visible || !hovered) return;
       if (now - last >= FRAME_MS) { last = now; paint(now); }
       raf = requestAnimationFrame(loop);
     };
     let drawn = false;
+    let idle = 0;
+    const later = (run: () => void) => window.setTimeout(run, 0);
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       cancelAnimationFrame(raf);
       if (!visible) return;
-      if (still || reduced) { if (!drawn) { drawn = true; if (isExtraStyle(style)) warm(); paint(performance.now()); } return; }
-      raf = requestAnimationFrame(loop);
+      // One tile per idle slot, so a page of stills never blocks the picker opening.
+      if (!drawn) { drawn = true; idle = later(() => { if (isExtraStyle(style)) warm(); paint(performance.now()); }); }
+      if (hovered && !still && !reduced) raf = requestAnimationFrame(loop);
     });
     observer.observe(canvas);
-    return () => { visible = false; observer.disconnect(); cancelAnimationFrame(raf); };
+    const tile = canvas.closest('button') ?? canvas;
+    const enter = (event: Event) => {
+      if ((event as PointerEvent).pointerType !== 'mouse' || still || reduced) return;
+      hovered = true;
+      cancelAnimationFrame(raf);
+      if (visible) raf = requestAnimationFrame(loop);
+    };
+    const leave = () => { hovered = false; cancelAnimationFrame(raf); };
+    tile.addEventListener('pointerenter', enter);
+    tile.addEventListener('pointerleave', leave);
+    return () => { visible = false; observer.disconnect(); cancelAnimationFrame(raf); window.clearTimeout(idle); tile.removeEventListener('pointerenter', enter); tile.removeEventListener('pointerleave', leave); };
   }, [style, hue, theme, seed]);
   return <canvas ref={canvasRef} data-audio-style-preview aria-hidden />;
 }
