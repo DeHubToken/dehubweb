@@ -36,6 +36,7 @@ import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
+import { CleanRow, CleanSection, useCleanConcept } from '@/components/app/clean/CleanKit';
 import { badgeImage } from '@/lib/staking-badges';
 import {
   useCancelBoost,
@@ -86,6 +87,7 @@ export default function SuperPowersPage() {
   const [teamUpOpen, setTeamUpOpen] = useState(false);
   const [buyOpen, setBuyOpen] = useState(false);
 
+  const clean = useCleanConcept();
   const historyBookings = historyPower
     ? (status?.bookings.filter(booking => booking.power === historyPower.key) ?? [])
     : [];
@@ -147,14 +149,53 @@ export default function SuperPowersPage() {
           </section>
         ) : (
           // Team up is available without buying tokens or holding a badge.
-          <section data-kit-section className="bg-white/5 p-5 flex flex-col gap-3">
+          <section data-kit-section={clean ? undefined : true} className={clean ? 'flex flex-col gap-3 px-1 py-2' : 'bg-white/5 p-5 flex flex-col gap-3'}>
             <p className="text-[12px] text-zinc-400">{t('superpowers.teamUp.openToEveryone')}</p>
             <BadgeProgress variant="rail" />
             <Button variant="outline" className="self-start" onClick={() => setBuyOpen(true)}>{t('nav.buyDhb')}</Button>
           </section>
         )}
 
-        {/* ── The twelve powers ──────────────────────────────────────── */}
+        {clean ? (
+          <CleanSection icon="superpowers" title={t('superpowers.currentPowersHeading', { defaultValue: 'The twelve powers' })} className="-mx-1 border-t border-zinc-800/60">
+            {powers.map((power) => {
+              const isTeamUp = power.key === 'team_up';
+              const unlocked = isTeamUp || !!power.unlocked;
+              const usable = unlocked && power.available;
+              const unlockBadge = badgeImage(power.tier);
+              const allowance =
+                power.key === 'signal_flare' || power.key === 'harpoon'
+                  ? (status?.signalsLeft ?? status?.boostsLeft)
+                  : status?.boostsLeft;
+              return (
+                <CleanRow
+                  key={power.key}
+                  onClick={usable ? () => (isTeamUp ? setTeamUpOpen(true) : setSpending(power)) : undefined}
+                  className={unlocked ? '' : '[&_img[data-power]]:opacity-60'}
+                  lead={<span data-power-lead className={cn('shrink-0', !unlocked && 'opacity-60')}><SuperPowerIcon power={power.key} alt="" className="h-9 w-9 object-contain" /></span>}
+                  title={<span className={unlocked ? '' : 'text-zinc-400'}>{power.label}</span>}
+                  sub={power.summary}
+                  trail={
+                    isTeamUp ? (
+                      <span className="shrink-0 text-[12px] font-semibold text-zinc-300">{_copy("copy.9a4e2cc5cbdc", { defaultValue: "Open to everyone" })}</span>
+                    ) : usable && allowance !== undefined ? (
+                      <span className="shrink-0 text-[13px] font-semibold tabular-nums text-white">{allowance}</span>
+                    ) : !power.available ? (
+                      <span className="shrink-0 text-[12px] text-zinc-500">{t('superpowers.comingSoon')}</span>
+                    ) : unlockBadge ? (
+                      <span className="flex shrink-0 items-center gap-1 text-[12px] text-zinc-500">
+                        <Lock className="h-3 w-3" />
+                        <img src={unlockBadge} alt={power.tier ?? ''} className="h-7 w-7 object-contain" />
+                      </span>
+                    ) : (
+                      <Lock className="h-3.5 w-3.5 shrink-0 text-zinc-600" />
+                    )
+                  }
+                />
+              );
+            })}
+          </CleanSection>
+        ) : (
         <section data-kit-section className="bg-zinc-900 p-4 flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
             {t('superpowers.currentPowersHeading', { defaultValue: 'The twelve powers' })}
@@ -249,6 +290,7 @@ export default function SuperPowersPage() {
             })}
           </div>
         </section>
+        )}
 
         {/* ── The ladder ─────────────────────────────────────────────── */}
         <section data-kit-section className="bg-zinc-900 p-4 flex flex-col gap-3">

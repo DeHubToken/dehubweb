@@ -19,6 +19,8 @@ import { useBrowseListings } from '@/hooks/use-stores';
 import { StoreListingCard } from './StoreListingCard';
 import { ListingDetailDrawer } from './ListingDetailDrawer';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { CleanWords, useCleanConcept } from '@/components/app/clean/CleanKit';
+import { StoreListingRow } from '@/components/app/clean/StoreListingRow';
 
 const CATEGORIES = [
   { value: 'all', labelKey: 'stores.catAll' },
@@ -86,6 +88,41 @@ export function BrowseTab() {
   const priceLabel = hasPriceFilter
     ? `$${minPrice || '0'}${maxPrice ? ` – $${maxPrice}` : '+'}`
     : null;
+
+  const clean = useCleanConcept();
+  if (clean) {
+    return (
+      <div data-clean-stores>
+        <CleanWords
+          layoutId="stores-clean-category"
+          value={category}
+          onChange={setCategory}
+          items={CATEGORIES.map((c) => ({ id: c.value, label: t(c.labelKey) }))}
+        />
+        <CleanWords
+          size="sm"
+          className="mt-1"
+          layoutId="stores-clean-sort"
+          value={sort}
+          onChange={setSort}
+          items={SORT_OPTIONS.map((o) => ({ id: o.value, label: t(o.labelKey) }))}
+        />
+        <div className="divide-y divide-zinc-800/60 px-1 pt-1">
+          {isLoading ? null : filteredListings.length === 0 ? (
+            <p className="py-16 text-center text-sm text-zinc-500">{t('stores.emptyNoListings')}</p>
+          ) : filteredListings.map((listing: any) => (
+            <StoreListingRow key={listing.id} listing={listing} onClick={() => setSelectedListing(listing)} />
+          ))}
+        </div>
+        {hasNextPage && (
+          <button type="button" disabled={isFetching} onClick={() => fetchNextPage()} className="mt-2 w-full py-2 text-[13px] font-medium text-zinc-400">
+            {t('common.loadMore', { defaultValue: 'Load more' })}
+          </button>
+        )}
+        <ListingDetailDrawer listing={selectedListing} open={!!selectedListing} onClose={() => setSelectedListing(null)} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

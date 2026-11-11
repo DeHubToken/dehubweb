@@ -9,6 +9,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
 import { AppState } from '@/components/app/AppState';
 import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
+import { CleanWords, useCleanConcept } from '@/components/app/clean/CleanKit';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
 import microsoftLogoImg from '@/assets/logo-microsoft.png';
@@ -206,8 +207,11 @@ export default function Top100CryptosPage() {
     return unified;
   }, [assets, coins]);
 
-  const hasMore = allAssets.length > visibleCount;
-  const visibleAssets = allAssets.slice(0, visibleCount);
+  const clean = useCleanConcept();
+  const [kind, setKind] = useState<'all' | 'coin' | 'asset'>('all');
+  const listed = clean && kind !== 'all' ? allAssets.filter((a) => a.id.startsWith(kind + '-')) : allAssets;
+  const hasMore = listed.length > visibleCount;
+  const visibleAssets = listed.slice(0, visibleCount);
 
   const loadMore = useCallback(() => {
     if (hasMore) {
@@ -239,7 +243,7 @@ export default function Top100CryptosPage() {
         onBack={() => navigate(-1)}
         icon="stats"
         title={_copy("copy.c603180499e7", { defaultValue: "Top Assets" })}
-        subtitle={!isLoading && allAssets.length > 0
+        subtitle={!clean && !isLoading && allAssets.length > 0
           ? _copy("copy.ccf0988984a3", { defaultValue: "Showing {{value1}} of {{value2}}", value1: visibleAssets.length.toLocaleString(), value2: allAssets.length.toLocaleString() })
           : undefined}
       />
@@ -265,7 +269,49 @@ export default function Top100CryptosPage() {
         />
       )}
 
-      {!isLoading && visibleAssets.length > 0 && (
+      {clean && (
+        <CleanWords<'all' | 'coin' | 'asset'>
+          layoutId="top-assets-clean-kind"
+          value={kind}
+          onChange={setKind}
+          items={[
+            { id: 'all', label: _copy('filters.all', { defaultValue: 'All' }) },
+            { id: 'coin', label: _copy('explorePage.crypto', { defaultValue: 'Crypto' }) },
+            { id: 'asset', label: _copy('clean.stocksMetals', { defaultValue: 'Stocks & metals' }) },
+          ]}
+        />
+      )}
+
+      {clean && !isLoading && visibleAssets.length > 0 && (
+        <div data-clean-assets className="px-1 pt-1">
+          {visibleAssets.map((asset, i) => {
+            const up = asset.change24h >= 0;
+            return (
+              <button
+                key={asset.id}
+                type="button"
+                onClick={() => navigate(`/app/explore?q=${asset.navQuery}`)}
+                className="flex w-full min-w-0 items-center gap-3 py-2.5 text-left"
+              >
+                <span className="w-6 shrink-0 text-center text-[13px] font-semibold tabular-nums text-zinc-500">{i + 1}</span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center [&>*]:!h-9 [&>*]:!w-9">{asset.logoElement}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-semibold leading-tight text-white">{asset.name}</span>
+                  <span className="mt-0.5 block truncate text-[12.5px] text-zinc-500">{asset.symbol} · {formatLargeNumber(asset.marketCap)}</span>
+                </span>
+                <span className="shrink-0 text-right">
+                  <span className="block text-[14px] font-semibold tabular-nums text-white">{formatPrice(asset.price)}</span>
+                  <span className={cn('block text-[12.5px] font-semibold tabular-nums', up ? 'text-emerald-400' : 'text-red-400')}>
+                    {up ? '+' : ''}{asset.change24h.toFixed(2)}%
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {!clean && !isLoading && visibleAssets.length > 0 && (
         <div data-page-bento data-kit-section className="border border-white/10 overflow-x-auto">
           <table className="w-full min-w-[540px]">
             <thead>

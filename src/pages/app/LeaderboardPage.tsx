@@ -38,6 +38,7 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
+import { CleanWords, useCleanConcept } from '@/components/app/clean/CleanKit';
 import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
@@ -363,6 +364,54 @@ export default function LeaderboardPage() {
   const listLoading = isAffiliates ? affiliateLoading : isLoading;
   const listError = isAffiliates ? affiliateError : error;
 
+  const clean = useCleanConcept();
+
+  /** Clean concept: one line per person, top three on a small podium. */
+  const cleanLine = (entry: RankedEntry<LeaderboardEntry>) => {
+    const displayName = getDisplayName(entry);
+    const hidden = isHidden(entry);
+    const href = entry.username ? `/${entry.username}` : null;
+    const inner = (
+      <>
+        <span className="w-6 shrink-0 text-center text-[13px] font-semibold tabular-nums text-zinc-500">{entry.rank}</span>
+        <LeaderboardUserAvatar avatarUrl={getAvatarUrl(entry)} fallbackSeed={entry.account} displayName={displayName} size="md" />
+        <span className="min-w-0 flex-1">
+          <span className="flex min-w-0 items-baseline gap-1">
+            <span className="truncate text-[15px] font-semibold text-white">{displayName}</span>
+            {!hidden && <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} username={entry.username} className="h-[1em] w-[1em]" />}
+          </span>
+          <span className="block truncate text-[12.5px] text-zinc-500">{getHandle(entry)}</span>
+        </span>
+        <span className={cn('shrink-0 text-right text-[14px] font-semibold tabular-nums', valueTone(entry))}>{formatDisplayValue(entry)}</span>
+      </>
+    );
+    const cls = 'flex w-full min-w-0 items-center gap-3 py-2.5';
+    return href ? <Link key={entry.account} to={href} className={cls}>{inner}</Link> : <div key={entry.account} className={cls}>{inner}</div>;
+  };
+
+  const cleanPodium = (top: RankedEntry<LeaderboardEntry>[]) => {
+    const order = [top[1], top[0], top[2]].filter(Boolean);
+    return (
+      <div data-clean-podium className="grid grid-cols-3 items-end gap-2 px-1 pb-4 pt-5">
+        {order.map((entry) => {
+          const first = entry.rank === 1;
+          const displayName = getDisplayName(entry);
+          const body = (
+            <span className="flex min-w-0 flex-col items-center text-center">
+              <span className="relative">
+                <LeaderboardUserAvatar avatarUrl={getAvatarUrl(entry)} fallbackSeed={entry.account} displayName={displayName} size="md" className={cn('rounded-full', first ? 'h-[72px] w-[72px]' : 'h-14 w-14')} />
+                <img src={MEDALS[entry.rank - 1]} alt="" className={cn('absolute -bottom-2 left-1/2 -translate-x-1/2 object-contain', first ? 'h-8 w-8' : 'h-7 w-7')} />
+              </span>
+              <span className={cn('mt-3 w-full truncate font-semibold text-white', first ? 'text-[15px]' : 'text-[13.5px]')}>{displayName}</span>
+              <span className={cn('w-full truncate text-[12.5px] font-semibold tabular-nums', valueTone(entry) === 'text-white' ? 'text-zinc-400' : valueTone(entry))}>{formatDisplayValue(entry)}</span>
+            </span>
+          );
+          return entry.username ? <Link key={entry.account} to={`/${entry.username}`} className={first ? '' : 'pb-1'}>{body}</Link> : <div key={entry.account} className={first ? '' : 'pb-1'}>{body}</div>;
+        })}
+      </div>
+    );
+  };
+
   const sortToggleLabel = sortDirection === 'desc' ? t('leaderboard.highestFirst') : t('leaderboard.lowestFirst');
 
   return (
@@ -379,7 +428,7 @@ export default function LeaderboardPage() {
         icon={<BrandIcon src={trophyIcon} alt="" className="h-8 w-8 object-contain" />}
         title={t('leaderboard.title')}
         subtitle={t('leaderboard.subtitle')}
-        tabs={
+        tabs={clean ? undefined :
           <PageTabs<CategoryType | 'assets'>
             value={category}
             onChange={(key) => { if (key === 'assets') { navigate('/app/top-100'); return; } setCategory(key); setSortDirection('desc'); }}
@@ -390,6 +439,7 @@ export default function LeaderboardPage() {
           />
         }
       >
+        {clean ? null : <>
         {/* Time Period Tabs + Sort Toggle */}
         <div className="flex items-center gap-2">
           <PageTabs
@@ -439,10 +489,44 @@ export default function LeaderboardPage() {
             </button>
           )}
         </div>
+        </>}
       </PageIsland>
 
       {/* Content */}
       <PageBody>
+        {clean ? (
+          <div data-clean-leaderboard>
+            <CleanWords
+              layoutId="leaderboard-clean-category"
+              value={category as string}
+              onChange={(key) => { if (key === 'assets') { navigate('/app/top-100?concept=clean'); return; } setCategory(key as CategoryType); setSortDirection('desc'); }}
+              items={[...categories.map((cat) => ({ id: cat.id as string, label: t(cat.labelKey) })), { id: 'assets', label: _copy("copy.bd12731d7bc9", { defaultValue: "Assets" }) }]}
+            />
+            <CleanWords
+              size="sm"
+              className="mt-1"
+              layoutId="leaderboard-clean-period"
+              value={timePeriod}
+              onChange={(key) => { setTimePeriod(key); setSortDirection('desc'); }}
+              items={timePeriods.map((p) => ({ id: p.id, label: t(p.labelKey) }))}
+            />
+            {listLoading ? <DeHubPageLoader minHeight="40vh" /> : entries.length === 0 ? (
+              <AppState icon="trophy" title={t('leaderboard.noDataForPeriod')} size="page" />
+            ) : (
+              <>
+                {!searchQuery.trim() && sortDirection === 'desc' && cleanPodium(entries.slice(0, 3))}
+                <div className="border-t border-zinc-800/60 px-1 pt-1">
+                  {visibleEntries.slice(!searchQuery.trim() && sortDirection === 'desc' ? 3 : 0).map(cleanLine)}
+                </div>
+                {hasMore && (
+                  <div ref={sentinelRef} className="flex justify-center py-4" aria-hidden="true">
+                    <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        ) : (
         <div data-page-bento data-kit-section className="bg-zinc-900 overflow-hidden">
         {/* Loading State */}
         {listLoading && (
@@ -573,6 +657,7 @@ export default function LeaderboardPage() {
           </div>
         )}
       </div>
+        )}
       </PageBody>
 
       <AuthPrompt isOpen={isAuthOpen} onClose={closeAuth} />

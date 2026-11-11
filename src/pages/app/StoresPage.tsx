@@ -15,6 +15,7 @@ import { useMyStores } from '@/hooks/use-stores';
 import { useAuth } from '@/contexts/AuthContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { useCleanConcept } from '@/components/app/clean/CleanKit';
 
 export default function StoresPage() {
   const { t: _copy } = _useCopy();
@@ -26,6 +27,7 @@ export default function StoresPage() {
   const [createStoreOpen, setCreateStoreOpen] = useState(false);
 
   const hasStores = stores.length > 0;
+  const clean = useCleanConcept();
   const storeLabel = stores.length > 1 ? t('stores.myStores') : t('stores.myStore');
 
   return (
@@ -63,7 +65,7 @@ export default function StoresPage() {
             </DropdownMenu>
           ) : undefined
         }
-        tabs={
+        tabs={clean ? undefined :
           <PageTabs
             value={tab}
             onChange={setTab}

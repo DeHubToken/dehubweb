@@ -7,7 +7,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { useState, useMemo } from 'react';
+import { Suspense, lazy, useState, useMemo } from 'react';
+import { useCleanConcept } from '@/components/app/clean/CleanKit';
+const CommunitiesClean = lazy(() => import('@/components/app/clean/CommunitiesClean'));
 import { useNavigate } from 'react-router-dom';
 import Plus from "@/components/ui/cut-icons/add";
 import Search from "@/components/ui/cut-icons/search";
@@ -126,6 +128,7 @@ export default function CommunitiesPage() {
   // Treat that pre-wallet window as loading to ensure all communities show.
   const waitingForWallet = isAuthenticated && !walletAddress;
   const isLoading = loadingUser || loadingAll || waitingForWallet;
+  const clean = useCleanConcept();
 
   return (
     <div className="min-h-screen">
@@ -171,7 +174,7 @@ export default function CommunitiesPage() {
           ) : undefined
         }
       >
-        {tab === 'communities' ? (
+        {tab === 'communities' && !clean ? (
           <div className="flex items-center gap-1.5">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -219,6 +222,18 @@ export default function CommunitiesPage() {
             <div key={i} className="h-20 rounded-xl theme-skeleton animate-pulse" />
           ))}
         </div>
+      ) : clean ? (
+        <Suspense fallback={null}>
+          <CommunitiesClean
+            mine={isAuthenticated ? (filteredMine as any) : []}
+            others={filteredOthers}
+            roleMap={roleMap}
+            unreadFor={(c) => countFor(c) || 0}
+            sortMode={sortMode}
+            onSort={setSortMode}
+            onOpen={(c) => navigate(`/app/communities/${c.slug}`)}
+          />
+        </Suspense>
       ) : (
         <div>
           {isAuthenticated && filteredMine.length > 0 && (
