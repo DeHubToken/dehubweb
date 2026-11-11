@@ -65,7 +65,7 @@ function itemChannel(item: BookmarkFolderItem): string {
 function itemThumbnail(item: BookmarkFolderItem): string | undefined {
   const post = item.post;
   if (!post) return undefined;
-  const fromImages = buildFeedImageUrls(post.imageUrls)?.[0];
+  const fromImages = buildFeedImageUrls(post.imageUrls, undefined, (post as { imageSizes?: unknown }).imageSizes)?.[0];
   return fromImages || buildImageUrl(post.tokenId, post.imageUrl);
 }
 

@@ -281,7 +281,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   const id = String(tokenId);
 
   // Build image URLs array from imageUrls field using shared utility
-  const imageUrls = buildFeedImageUrls(nft.imageUrls) || [];
+  const imageUrls = buildFeedImageUrls(nft.imageUrls, undefined, (nft as { imageSizes?: unknown }).imageSizes) || [];
 
   // Get primary image URL (first from array or fallback to single image)
   const primaryImage = imageUrls[0] ||

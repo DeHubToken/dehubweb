@@ -395,7 +395,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
 function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
-  const imageUrls = buildFeedImageUrls(item.imageUrls);
+  const imageUrls = buildFeedImageUrls(item.imageUrls, undefined, (item as { imageSizes?: unknown }).imageSizes);
   const image = imageUrls?.[0] || buildImageUrl(item.tokenId, item.imageUrl);
   
   const rawAvatarPath = extractAvatarPath(item);
