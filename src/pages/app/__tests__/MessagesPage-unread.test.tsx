@@ -33,6 +33,7 @@ vi.mock('@/components/app/chat/NewMessageDrawer', () => ({ NewMessageDrawer: () 
 vi.mock('@/components/app/page-kit/PageKit', () => ({
   PageIsland: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   IslandAction: () => null,
+  usePhonePill: () => false,
 }));
 vi.mock('@/components/app/war/WarHudIcon', () => ({ BrandIcon: () => null }));
 vi.mock('@/components/app/AppState', () => ({ AppState: () => null }));
