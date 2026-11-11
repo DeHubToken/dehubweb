@@ -2464,7 +2464,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     </Drawer>
   );
 
-  // Day headings for the feed: everything unread sits under New, the rest by
+  // Day headings for the feed: everything unread leads with no heading, the rest by
   // when it happened.
   const feedGroupOf = (bundle: BundledNotification): 'new' | 'today' | 'week' | 'earlier' => {
     if (listedUnread(bundle)) return 'new';
@@ -2551,7 +2551,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       </div>
 
       {/* Notifications List */}
-      <PageBody frameClip={inDrawer}>
+      <PageBody frameClip={inDrawer} className={inDrawer ? 'pt-0' : undefined}>
         <div data-page-bento data-kit-section data-notification-list className="overflow-hidden">
           {isLoading ? (
             // Row skeletons that mirror the real list layout — a lone spinner
@@ -2581,7 +2581,8 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
               <AnimatePresence initial={false}>
                 {bundledNotifications.map((bundle, index) => {
                   const group = feedGroupOf(bundle);
-                  const showLabel = index === 0 || feedGroupOf(bundledNotifications[index - 1]) !== group;
+                  // Unread rows lead with no heading: anything at the top is new.
+                  const showLabel = group !== 'new' && (index === 0 || feedGroupOf(bundledNotifications[index - 1]) !== group);
                   return (
                   <motion.div
                     key={bundle.primary.id}
@@ -2589,7 +2590,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                     transition={{ type: 'spring', stiffness: 420, damping: 38 }}
                   >
                     {showLabel && (
-                      <div data-feed-group-label className="px-[18px] pb-1 pt-4 text-xs font-semibold uppercase tracking-[0.06em] text-zinc-500">
+                      <div data-feed-group-label className={`px-[18px] pb-1 ${index === 0 ? 'pt-1.5' : 'pt-4'} text-xs font-semibold uppercase tracking-[0.06em] text-zinc-500`}>
                         {feedGroupLabel(group)}
                       </div>
                     )}
