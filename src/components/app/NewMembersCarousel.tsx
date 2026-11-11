@@ -18,13 +18,17 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/NewMembersCarousel
  */
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useQueryClient } from '@tanstack/react-query';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+// Explore's one-line rows only: loaded when Explore asks for them, so the
+// home feed's copy of this row does not carry them on first paint.
+const FollowRow = lazy(() => import('@/components/app/FollowRow').then((m) => ({ default: m.FollowRow })));
+const ExploreListSection = lazy(() => import('@/components/app/explore/ExploreListSection').then((m) => ({ default: m.ExploreListSection })));
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -36,7 +40,12 @@ import type { SuggestedAccount } from '@/lib/api/dehub';
 interface NewMembersCarouselProps {
   /** Explore lists it among its sections: bigger title, no "See all" back to Explore. */
   surface?: 'feed' | 'explore';
+  /** Rows: Explore's clean list on phones (one line per person, 4 then See all). */
+  layout?: 'rail' | 'rows';
 }
+
+/** Rows shown before See all. */
+const ROWS_COLLAPSED = 4;
 
 /** The roster row in the shape the cover card draws. */
 function toAccount(member: NewMember): SuggestedAccount {
@@ -50,7 +59,7 @@ function toAccount(member: NewMember): SuggestedAccount {
   };
 }
 
-export function NewMembersCarousel({ surface = 'feed' }: NewMembersCarouselProps = {}) {
+export function NewMembersCarousel({ surface = 'feed', layout = 'rail' }: NewMembersCarouselProps = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -59,6 +68,7 @@ export function NewMembersCarousel({ surface = 'feed' }: NewMembersCarouselProps
   const queryClient = useQueryClient();
   const carouselRef = useRef<HTMLDivElement>(null);
   const [dismissed, setDismissed] = useState<ReadonlySet<string>>(() => new Set());
+  const [expanded, setExpanded] = useState(false);
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useNewMembers(walletAddress);
@@ -126,6 +136,51 @@ export function NewMembersCarousel({ surface = 'feed' }: NewMembersCarouselProps
   // "New members" while the newest of them actually is new; otherwise this is
   // simply the latest people to join.
   const title = isWithinNewWindow(members[0].joinedAt) ? _copy("copy.928d40b02992", { defaultValue: "New members" }) : _copy("copy.335e4a96e2dd", { defaultValue: "Latest members" });
+
+  if (layout === 'rows') {
+    const shown = expanded ? members : members.slice(0, ROWS_COLLAPSED);
+    return (
+      <Suspense fallback={null}>
+      <ExploreListSection
+        id="new-members"
+        icon="communities"
+        title={title}
+        action={members.length > ROWS_COLLAPSED ? (expanded ? _copy("settings.showLess", { defaultValue: "Show less" }) : _copy("feed.seeAll", { defaultValue: "See all" })) : undefined}
+        onAction={() => setExpanded((v) => !v)}
+        chevron={!expanded}
+        data-new-members
+        data-follow-cards
+        data-follow-surface="explore-rows"
+      >
+        {shown.map((member) => {
+          const requested = isRequested(member);
+          return (
+            <FollowRow
+              key={member.address}
+              user={toAccount(member)}
+              phase={isFollowed(member) || requested ? 'following' : undefined}
+              followedLabel={requested ? _copy("copy.2d9e28289fac", { defaultValue: "Requested" }) : undefined}
+              meta={joinedAgoLabel(member.joinedAt)}
+              onOpen={openProfile}
+              onFollow={handleFollow}
+            />
+          );
+        })}
+        {expanded && hasNextPage && (
+          <button
+            type="button"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="mt-1 flex h-10 w-full items-center justify-center gap-2 text-[13px] font-medium text-zinc-400"
+          >
+            {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin" />}
+            {_copy("common.loadMore", { defaultValue: "Load more" })}
+          </button>
+        )}
+      </ExploreListSection>
+      </Suspense>
+    );
+  }
 
   return (
     <section
