@@ -1132,7 +1132,7 @@ function ProfileSettings() {
       {/* Profile fields — label/value lines under the bio, links verified by rel="me" */}
       <ProfileFieldsSetting />
 
-      {/* Fediverse — the @username@dehub.io address Mastodon can follow */}
+      {/* Fediverse — the @username@riftn.com address Mastodon can follow */}
       <FediverseHandleSetting />
 
       {/* Connected apps — Mastodon apps signed in to this account */}

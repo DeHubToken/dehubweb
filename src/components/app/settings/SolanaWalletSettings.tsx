@@ -74,7 +74,7 @@ export function SolanaWalletSettings() {
         toast.error(t('settings.solanaNoPhantom', 'Phantom not found'), {
           description: t(
             'settings.solanaNoPhantomHint',
-            'Install the Phantom extension, or open dehub.io in the Phantom browser.',
+            'Install the Phantom extension, or open riftn.com in the Phantom browser.',
           ),
         });
         return;
