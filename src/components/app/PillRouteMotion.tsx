@@ -56,16 +56,16 @@ export function PillRouteMotion(): null {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     // A page that has not been opened yet mounts a few frames after the
-    // route changes (its code loads on demand), so wait for its pill.
+    // route changes (its code loads on demand), so wait for its pill. While it
+    // loads, phones show the page's empty pill skeleton in the same spot
+    // (PageSkeletons PhonePillSkeleton): the glide runs on that, and the real
+    // pill's contents fade in when the page lands, so the pill never jumps.
     let raf = 0;
     let frames = 0;
-    const run = () => {
-      const el = visiblePill();
-      if (!el || el === oldEl) {
-        if (++frames < 90) raf = requestAnimationFrame(run);
-        return;
-      }
-      const dy = from - el.getBoundingClientRect().top;
+    let skeleton: HTMLElement | null = null;
+    let skeletonTop = 0;
+    const glide = (el: HTMLElement, fromTop: number) => {
+      const dy = fromTop - el.getBoundingClientRect().top;
       if (Math.abs(dy) > 1 && Math.abs(dy) < 160) {
         // A page pill moves with the row under it (search, filters).
         const mover = el.closest<HTMLElement>('[data-kit-pill-outer]') ?? el;
@@ -74,11 +74,41 @@ export function PillRouteMotion(): null {
           { duration: 460, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
         );
       }
+    };
+    const fadeIn = (el: HTMLElement) => {
       const row = el.querySelector<HTMLElement>(':scope > div');
       row?.animate(
         [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }],
         { duration: 300, delay: 80, easing: 'ease-out', fill: 'backwards' },
       );
+    };
+    const isSkeleton = (el: HTMLElement) => !!el.closest('[data-pill-skeleton]');
+    const run = () => {
+      const el = visiblePill();
+      if (skeleton) {
+        // Follow the skeleton (it may still be gliding) until the page lands.
+        if (el === skeleton || !el || isSkeleton(el)) {
+          if (el) { skeleton = el; skeletonTop = el.getBoundingClientRect().top; }
+          if (++frames < 360) raf = requestAnimationFrame(run);
+          return;
+        }
+        glide(el, skeletonTop);
+        fadeIn(el);
+        return;
+      }
+      if (!el || el === oldEl) {
+        if (++frames < 90) raf = requestAnimationFrame(run);
+        return;
+      }
+      glide(el, from);
+      if (isSkeleton(el)) {
+        skeleton = el;
+        skeletonTop = el.getBoundingClientRect().top;
+        frames = 0;
+        raf = requestAnimationFrame(run);
+        return;
+      }
+      fadeIn(el);
     };
     run();
     return () => cancelAnimationFrame(raf);
