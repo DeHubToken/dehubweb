@@ -87,7 +87,7 @@ Yes, the platform is open source, and we are glad to support course material, gu
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T11:00:00.000Z',
   updatedAt: '2026-08-28T11:00:00.000Z',
-  tags: ['creator economy education', 'higher education', 'media studies', 'platform economics', 'digital ownership', 'web3 curriculum', 'dehub'],
+  tags: ['creator economy education', 'higher education', 'media studies', 'platform economics', 'digital ownership', 'web3 curriculum', 'riftn'],
   readingTime: 10,
   featured: false,
   status: 'published',

@@ -11,7 +11,7 @@ import Search from "@/components/ui/cut-icons/search";
 
 
 const TRENDING = [
-  { tag: '#DeHubDAO', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '2.4K' }); } },
+  { tag: '#RiftnDAO', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '2.4K' }); } },
   { tag: '#Web3Social', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '1.8K' }); } },
   { tag: '#DHBStaking', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '956' }); } },
   { tag: '#CreatorEconomy', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '743' }); } },

@@ -101,7 +101,7 @@ Keep the original files, off-platform, from day one. It is free, it takes minute
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T13:00:00.000Z',
   updatedAt: '2026-08-28T13:00:00.000Z',
-  tags: ['young creators', 'child influencers', 'creator parents', 'demonetisation', 'digital ownership', 'creator economy', 'dehub'],
+  tags: ['young creators', 'child influencers', 'creator parents', 'demonetisation', 'digital ownership', 'creator economy', 'riftn'],
   readingTime: 10,
   featured: false,
   status: 'published',

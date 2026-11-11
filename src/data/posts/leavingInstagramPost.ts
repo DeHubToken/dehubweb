@@ -97,7 +97,7 @@ Uploads can be minted on-chain to your wallet, so the ownership record does not 
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-27T13:00:00.000Z',
   updatedAt: '2026-08-27T13:00:00.000Z',
-  tags: ['instagram alternative', 'creator monetisation', 'web3 creators', 'leaving instagram', 'reels', 'watch-to-earn', 'dehub'],
+  tags: ['instagram alternative', 'creator monetisation', 'web3 creators', 'leaving instagram', 'reels', 'watch-to-earn', 'riftn'],
   readingTime: 8,
   featured: false,
   status: 'published',
