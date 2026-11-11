@@ -68,6 +68,13 @@ const loadHls = () => (hlsModule ??= import('hls.js'));
  */
 const METADATA_BUFFER_SECONDS = 4;
 const PLAYING_BUFFER_SECONDS = 30;
+/**
+ * `preload="auto"` while still paused: the next short, waiting for the swipe.
+ * A few seconds is an instant start; letting it read 30 seconds ahead had it
+ * competing with the short being watched, and on a phone connection the next
+ * one often still had nothing when the swipe landed.
+ */
+const WARM_BUFFER_SECONDS = 6;
 
 /** Set both ends of hls.js's read-ahead to `seconds`. */
 function capReadAhead(config: Pick<HlsConfig, 'maxBufferLength' | 'maxMaxBufferLength'>, seconds: number) {
@@ -158,6 +165,9 @@ export function setVideoSource(el: HTMLVideoElement, { src, hls, startLow = fals
     event.stopImmediatePropagation();
     fallBackToFile(el, session, `media-${el.error?.code ?? 0}`);
   };
+  // Pausing narrows the read-ahead again. Without it a short swiped away (or a
+  // feed card under the viewer) kept fetching up to 30 seconds and starved the
+  // short being swiped to.
   const onPlay = () => applyLoadPolicy(el, session);
   const onMetadata = () => {
     void checkLadderShape(el).then((wrong) => {
@@ -166,10 +176,12 @@ export function setVideoSource(el: HTMLVideoElement, { src, hls, startLow = fals
   };
   el.addEventListener('error', onError, true);
   el.addEventListener('play', onPlay);
+  el.addEventListener('pause', onPlay);
   el.addEventListener('loadedmetadata', onMetadata);
   session.unbind = () => {
     el.removeEventListener('error', onError, true);
     el.removeEventListener('play', onPlay);
+    el.removeEventListener('pause', onPlay);
     el.removeEventListener('loadedmetadata', onMetadata);
   };
 
@@ -238,10 +250,13 @@ export function setVideoSource(el: HTMLVideoElement, { src, hls, startLow = fals
 function applyLoadPolicy(el: HTMLVideoElement, session: Session) {
   const player = session.player;
   if (!player || !session.parsed || session.disposed) return;
-  const full = !el.paused || el.preload === 'auto';
-  if (!full && el.preload !== 'metadata') return;
-  capReadAhead(player.config, full ? PLAYING_BUFFER_SECONDS : METADATA_BUFFER_SECONDS);
-  if (!session.loading) {
+  const playing = !el.paused;
+  const wanted = playing || el.preload === 'auto' || el.preload === 'metadata';
+  // A ladder that has started loading keeps a cap even once it is not wanted:
+  // paused, it must stop reading ahead rather than run on to 30 seconds.
+  if (!wanted && !session.loading) return;
+  capReadAhead(player.config, playing ? PLAYING_BUFFER_SECONDS : el.preload === 'auto' ? WARM_BUFFER_SECONDS : METADATA_BUFFER_SECONDS);
+  if (wanted && !session.loading) {
     session.loading = true;
     player.startLoad(-1);
   }
