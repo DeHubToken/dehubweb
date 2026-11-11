@@ -13,7 +13,7 @@ from PIL import Image, ImageFilter
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'src', 'assets', 'badges')
 OUT = os.path.join(ROOT, 'small')
-SIZES = ((32, ''), (64, '@2x'), (96, '@3x'))
+SIZES = ((32, ''), (64, '-2x'), (96, '-3x'))
 
 
 def shrink(image, size):
