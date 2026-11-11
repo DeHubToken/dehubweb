@@ -43,7 +43,8 @@ function ShowcasePending({ anchor }: { anchor: HTMLElement | null }) {
   useLayoutEffect(() => {
     setBadgeShowcaseHandoff(artRef.current);
   });
-  const art = anchor?.querySelector<HTMLImageElement>('img[data-badge-icon]')?.currentSrc
+  // `src` is the full-size still; `currentSrc` may be the small one drawn by the name.
+  const art = anchor?.querySelector<HTMLImageElement>('img[data-badge-icon]')?.src
     || (anchor instanceof HTMLImageElement ? anchor.currentSrc : null);
   return createPortal(
     <div
