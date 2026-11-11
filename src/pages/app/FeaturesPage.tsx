@@ -47,7 +47,7 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, storageImage } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { supabase } from '@/integrations/supabase/client';
@@ -138,6 +138,10 @@ const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
  * always has; several tile so a multi-screenshot bug report stays scannable
  * without pushing the vote controls off screen.
  */
+/** Device px asked of the storage resizer for a request's pictures in the list. */
+const ATTACHMENT_LIST_WIDTH = 960;
+const ATTACHMENT_GRID_WIDTH = 640;
+
 /**
  * A single attachment, with its space reserved before it arrives.
  *
@@ -152,16 +156,20 @@ const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
 function LazyAttachmentImage({ url }: { url: string }) {
   const { t: _copy } = _useCopy();
   const [loaded, setLoaded] = useState(false);
+  // The box is 16rem tall at most, so a list-sized copy is plenty; the
+  // uploaded original (often a 1 MB screenshot) only loads if the resizer fails.
+  const [useOriginal, setUseOriginal] = useState(false);
+  const sized = useOriginal ? url : storageImage(url, ATTACHMENT_LIST_WIDTH);
   return (
     <div className={cn('relative w-full', !loaded && 'h-64 animate-pulse bg-white/[0.04]')}>
       <img
-        src={url}
+        src={sized}
         alt={_copy("copy.040d2b3689dd", { defaultValue: "Attachment" })}
         loading="lazy"
         onLoad={() => setLoaded(true)}
         // Errors must not strand the skeleton pulsing forever — settle the box
         // and let the browser show its own broken-image state.
-        onError={() => setLoaded(true)}
+        onError={() => { if (sized !== url) setUseOriginal(true); else setLoaded(true); }}
         className={cn(
           'w-full max-h-64 object-contain bg-black/30 transition-opacity duration-300',
           loaded ? 'opacity-100' : 'absolute inset-0 h-full opacity-0'
@@ -198,7 +206,8 @@ function FeatureAttachments({ feature }: { feature: FeatureRequest }) {
           ) : (
             <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
               <img
-                src={url}
+                src={storageImage(url, ATTACHMENT_GRID_WIDTH)}
+                onError={(e) => { if (e.currentTarget.src !== url) e.currentTarget.src = url; }}
                 alt={_copy("copy.9010b5b17d48", { defaultValue: "Attachment {{value1}} of {{value2}}", value1: index + 1, value2: urls.length })}
                 className="w-full h-full object-cover"
                 loading="lazy"

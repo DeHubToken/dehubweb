@@ -1053,8 +1053,9 @@ export default function ExplorePage() {
                 </div>
               ) : (
                 <>
-                  {/* Recent Searches Bento */}
-                  <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                  {/* Recent Searches Bento — only once there is a search to
+                      show; an empty box would take the top of the page. */}
+                  {recentSearches.length > 0 && <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                         <BrandIcon src={search3dIcon} alt={_copy("copy.27392df73ae0", { defaultValue: "Search explore icon" })} className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
@@ -1108,10 +1109,8 @@ export default function ExplorePage() {
                         ))}
                         </AnimatePresence>
                       </div>
-                    ) : (
-                      <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
-                    )}
-                  </div>
+                    ) : null}
+                  </div>}
 
                   {/* People to follow, as cover cards, the same row the feed
                       carries. Nothing renders while it loads or when there is
