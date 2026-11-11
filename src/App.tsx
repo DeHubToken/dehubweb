@@ -663,6 +663,9 @@ function AppContent() {
           <Route path="/requests" element={<Navigate to="/features" replace />} />
           {/* Renamed to /converter — kept as a redirect for anyone with the old link. */}
           <Route path="/yt-dlp" element={<Navigate to="/converter" replace />} />
+          {/* The app's sign-in help link points here; without it the address fell
+              to the username catch-all and showed a missing profile. */}
+          <Route path="/support" element={<Navigate to="/docs/contact" replace />} />
 
           {/* Direct APK download lander. Standalone (no AppLayout) — it is a
               single non-scrolling screen that owns the viewport, and it is

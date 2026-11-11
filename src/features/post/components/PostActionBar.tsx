@@ -267,7 +267,7 @@ export function PostActionBar({
               setEnhanceSheetOpen(false);
               setStyleView(false);
               onCloseModal?.();
-              navigate('/app/ai');
+              navigate('/app/assistant');
             }}
             className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >

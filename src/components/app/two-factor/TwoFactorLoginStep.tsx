@@ -120,7 +120,7 @@ export function TwoFactorLoginStep({ account, onSubmit, onCancel, previewMode, p
           {t('twoFactor.useAnotherShort', 'Different account')}
         </button>
       </div>
-      <a href="/support" className="block text-center text-xs text-white/40 transition-colors hover:text-white/70">
+      <a href="/docs/contact" className="block text-center text-xs text-white/40 transition-colors hover:text-white/70">
         {t('twoFactor.lostEverything', 'Lost your phone and your backup codes? Contact support')}
       </a>
     </div>
