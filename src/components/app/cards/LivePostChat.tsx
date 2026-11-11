@@ -221,7 +221,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
   // Pinned message state — prefer server-side is_pinned, fallback to local
   const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
@@ -438,7 +438,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.e00e9d5ec2e0", { defaultValue: "Sign in to send voice notes" }));
+      openLoginModal();
       return;
     }
     const toastId = 'livechat-voice-upload';
@@ -451,11 +451,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       console.error('[LiveChat] Voice upload failed:', err);
       toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
-  }, [isAuthenticated, send, _copy]);
+  }, [isAuthenticated, openLoginModal, send, _copy]);
 
   const handleSend = async () => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.048ff525a56b", { defaultValue: "Sign in to chat" }));
+      openLoginModal();
       return;
     }
     // Empty the box the moment the line goes into the chat. Waiting for the

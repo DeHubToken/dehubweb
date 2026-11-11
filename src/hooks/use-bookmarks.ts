@@ -441,7 +441,7 @@ export function useClearWatchHistory() {
  */
 export function useBookmarkPost(tokenId: string | number) {
   const { t: _copy } = _useCopy();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
   
   // Check if this post is in the bookmarks. Every card in every mounted feed
@@ -498,7 +498,7 @@ export function useBookmarkPost(tokenId: string | number) {
    */
   const toggleBookmark = (onSaved?: () => void) => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.f29b25efe45b", { defaultValue: "Please log in to bookmark" }));
+      openLoginModal();
       return;
     }
 
