@@ -181,3 +181,29 @@ DO $$ BEGIN
   EXCEPTION WHEN insufficient_privilege THEN NULL; END;
 END $$;
 RESET ROLE;
+
+-- Open to everyone: any wallet may own agents, but still only sees its own.
+\ir ../../supabase/migrations/20261111040000_agents_open_to_all.sql
+DO $$ BEGIN
+  IF NOT public.agent_owner_allowed('0x2222222222222222222222222222222222222222') THEN RAISE EXCEPTION 'Any wallet should own agents'; END IF;
+  IF public.agent_owner_allowed('maldoteth') OR public.agent_owner_allowed('') OR public.agent_owner_allowed(NULL) THEN RAISE EXCEPTION 'Non-wallet owner allowed'; END IF;
+END $$;
+SET ROLE anon;
+SELECT set_config('test.signed_wallet','0x1111111111111111111111111111111111111111',false);
+DO $$ BEGIN
+  IF (SELECT count(*) FROM public.get_my_agents())<>1 OR EXISTS(SELECT 1 FROM public.get_my_agents() WHERE name<>'other_agent') THEN RAISE EXCEPTION 'Opened owner saw someone else''s agents'; END IF;
+END $$;
+SELECT set_config('test.signed_wallet','',false);
+DO $$ BEGIN IF EXISTS(SELECT 1 FROM public.get_my_agents()) THEN RAISE EXCEPTION 'Unsigned caller listed agents'; END IF; END $$;
+RESET ROLE;
+SET ROLE service_role;
+DO $$ BEGIN
+  PERFORM public.reserve_agent_registration('0x3333333333333333333333333333333333333333','new_owner','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('d',64),1);
+  BEGIN
+    PERFORM public.reserve_agent_registration('0x3333333333333333333333333333333333333333','new_owner_two','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('e',64),1);
+    RAISE EXCEPTION 'No-badge owner exceeded one slot';
+  EXCEPTION WHEN SQLSTATE 'P0001' THEN
+    IF SQLERRM <> 'AGENT_OWNER_LIMIT' THEN RAISE; END IF;
+  END;
+END $$;
+RESET ROLE;
