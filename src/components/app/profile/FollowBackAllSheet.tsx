@@ -22,7 +22,8 @@ interface FollowBackAllSheetProps {
  * The small sheet "Follow back all" raises on phones: how many people, a tap to
  * confirm, progress, then a tick. It slides up inside the followers drawer
  * rather than opening a second vaul drawer, which would fight the open one for
- * focus and drag. Desktop asks with a toast instead (FollowersListDrawer).
+ * focus and drag. Desktop uses it too, centred in the panel: a toast sat
+ * outside the drawer, where its buttons could not be clicked.
  *
  * It never leaves on its own: every stage has a button, the result stays up
  * until it is tapped away, and a failure says so here with Try again. Closing
@@ -51,7 +52,7 @@ export function FollowBackAllSheet({ stage, count, completed, followed, failed, 
   const progress = count > 0 ? Math.min(100, Math.round((completed / count) * 100)) : 0;
 
   return (
-    <div data-follow-back-sheet={stage} data-vaul-no-drag className="absolute inset-0 z-30 flex flex-col justify-end">
+    <div data-follow-back-sheet={stage} data-vaul-no-drag className="absolute inset-0 z-30 flex flex-col justify-end md:justify-center">
       <button
         type="button"
         aria-label={t('follow.followBackNotNow', 'Not now')}
@@ -62,9 +63,9 @@ export function FollowBackAllSheet({ stage, count, completed, followed, failed, 
         role="dialog"
         aria-modal="true"
         aria-labelledby="follow-back-sheet-title"
-        className="relative mx-2 mb-2 flex flex-col items-center gap-4 rounded-[28px] border border-white/10 bg-zinc-950/85 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 text-center shadow-2xl backdrop-blur-2xl animate-in slide-in-from-bottom-8 fade-in duration-300"
+        className="relative mx-2 mb-2 md:mx-auto md:mb-0 md:w-full md:max-w-sm flex flex-col items-center gap-4 rounded-[28px] border border-white/10 bg-zinc-950/85 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 text-center shadow-2xl backdrop-blur-2xl animate-in slide-in-from-bottom-8 fade-in duration-300"
       >
-        <span aria-hidden className="h-1 w-9 rounded-full bg-white/25" />
+        <span aria-hidden className="h-1 w-9 rounded-full bg-white/25 md:hidden" />
         <span
           data-follow-back-icon
           className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-white/15 bg-white/[0.08] text-white"
