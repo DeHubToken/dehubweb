@@ -11,7 +11,7 @@ export function badgeSmallSrcSet(tier: string | null | undefined): string | unde
   if (!tier) return undefined;
   if (sets.has(tier)) return sets.get(tier);
   const base = '../assets/badges/small/' + tier.toLowerCase().replace(/ /g, '-');
-  const [x1, x2, x3] = [small[base + '.webp'], small[base + '@2x.webp'], small[base + '@3x.webp']];
+  const [x1, x2, x3] = [small[base + '.webp'], small[base + '-2x.webp'], small[base + '-3x.webp']];
   const set = x1 && x2 && x3 ? `${x1} 1x, ${x2} 2x, ${x3} 3x` : undefined;
   sets.set(tier, set);
   return set;
@@ -29,12 +29,12 @@ export function warmBadgeStills(): void {
   if (warmed || typeof window === 'undefined' || typeof Image === 'undefined') return;
   warmed = true;
   window.setTimeout(() => {
-    const tiers = new Set(Object.keys(small).map((path) => path.split('/').pop()!.replace(/(@\dx)?\.webp$/, '')));
+    const tiers = new Set(Object.keys(small).map((path) => path.split('/').pop()!.replace(/(-\dx)?\.webp$/, '')));
     for (const slug of tiers) {
       const base = '../assets/badges/small/' + slug;
       const image = new Image();
       image.decoding = 'async';
-      image.srcset = `${small[base + '.webp']} 1x, ${small[base + '@2x.webp']} 2x, ${small[base + '@3x.webp']} 3x`;
+      image.srcset = `${small[base + '.webp']} 1x, ${small[base + '-2x.webp']} 2x, ${small[base + '-3x.webp']} 3x`;
       kept.push(image);
     }
   }, 2500);
