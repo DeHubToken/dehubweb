@@ -968,7 +968,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
           <Reply className="h-3.5 w-3.5 shrink-0 text-white" />
           <div className="min-w-0 flex-1 text-[11px] leading-tight">
             <span className="font-semibold text-white">{replyTo.sender_display_name || replyTo.sender_username || replyTo.sender_address.slice(0, 8)}</span>
-            <p className="truncate text-zinc-400">{replyTo.content || _copy('copy.d357175cfe89', { defaultValue: 'Media' })}</p>
+            <p className="truncate text-zinc-400">{(!replyTo.message_type || replyTo.message_type === 'text') && replyTo.content ? replyTo.content : _copy('copy.d357175cfe89', { defaultValue: 'Media' })}</p>
           </div>
           <button type="button" onClick={() => setReplyTo(null)} aria-label={_copy('copy.19766ed6ccb2', { defaultValue: 'Cancel' })} className="shrink-0 p-0.5 text-zinc-400 hover:text-white">
             <X className="h-3.5 w-3.5" />
