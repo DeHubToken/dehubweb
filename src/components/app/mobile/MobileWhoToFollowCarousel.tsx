@@ -61,7 +61,7 @@ interface MobileWhoToFollowCarouselProps {
 export function MobileWhoToFollowCarousel({ surface = 'feed', rows }: MobileWhoToFollowCarouselProps = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
   const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();
   const followOverrides = useFollowOverrides();
@@ -173,7 +173,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed', rows }: MobileWhoT
 
   const handleFollow = useCallback((user: SuggestedAccount) => {
     if (!isAuthenticated) {
-      toast.error(_copy("copy.404bd6545a07", { defaultValue: "Please log in to follow users" }));
+      openLoginModal();
       return;
     }
 
@@ -211,7 +211,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed', rows }: MobileWhoT
         });
       },
     });
-  }, [isAuthenticated, followedUsers, followOverrides, phases, setPhase, leave, clearTimer, queryClient, unmarkFollowed, handleApiError, _copy]);
+  }, [isAuthenticated, openLoginModal, followedUsers, followOverrides, phases, setPhase, leave, clearTimer, queryClient, unmarkFollowed, handleApiError, _copy]);
   const retryRef = useRef(handleFollow);
   retryRef.current = handleFollow;
 

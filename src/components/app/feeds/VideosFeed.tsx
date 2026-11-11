@@ -452,7 +452,7 @@ export function VideosFeed({ showFilters = false, refreshKey = 0, searchQuery = 
   const navigate = useNavigate();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, openLoginModal } = useAuth();
   // Hoisted: useActiveFilterClass reads theme context, so it has to be called
   // unconditionally at the top, never inside a branch or a .map callback.
   const activeFilterClass = useActiveFilterClass();
@@ -493,14 +493,14 @@ export function VideosFeed({ showFilters = false, refreshKey = 0, searchQuery = 
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
+      openLoginModal();
       return;
     }
     // Re-tapping the active chip changes nothing, so it must not flash a loader.
     if (option.value === selectedSort.value) return;
     beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition, _copy]);
+  }, [isAuthenticated, openLoginModal, selectedSort.value, setSelectedSort, beginFilterTransition, _copy]);
 
   // Every other chip row goes through these, so each one arms the loader.
   const selectCategory = useCallback((value: string | null) => {

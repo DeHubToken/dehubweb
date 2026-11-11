@@ -55,8 +55,20 @@ export function NotificationsDrawer() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   useWarmNotificationsChunk();
+  const auth = useContext(AuthContext);
+  const authRef = useRef(auth);
+  authRef.current = auth;
   useEffect(() => {
-    const show = () => setOpen(true);
+    // Signed out, the bell asks them to sign in over the page they are on, and
+    // the sheet comes up once they have.
+    const show = () => {
+      const a = authRef.current;
+      if (a && !a.isAuthenticated && !a.isLoading) {
+        a.openLoginModal({ then: openNotificationsDrawer });
+        return;
+      }
+      setOpen(true);
+    };
     window.addEventListener('open-notifications-drawer', show);
     return () => window.removeEventListener('open-notifications-drawer', show);
   }, []);

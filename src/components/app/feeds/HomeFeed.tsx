@@ -924,7 +924,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     enabled: railsEnabled,
   });
 
-  const { walletAddress, isAuthenticated } = useAuth();
+  const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   // Set in Settings → Content, read here. A standing viewing preference, not a
   // per-visit filter, so it lives in localStorage and not the filter store.
   const [hideWatched] = useHideWatched();
@@ -985,7 +985,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // Handle sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
+      openLoginModal();
       return;
     }
     if (option.value === 'prompt') {
@@ -996,7 +996,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     // Re-tapping the active chip changes nothing, so it must not flash a loader.
     if (option.value === optimisticSort.value) return;
     setSelectedSort(option);
-  }, [isAuthenticated, optimisticSort.value, setSelectedSort, _copy]);
+  }, [isAuthenticated, openLoginModal, optimisticSort.value, setSelectedSort, _copy]);
 
   // Defer heavy filter-derived values so chip clicks paint instantly.
   // The chip buttons read `selectedSort`/`selectedCategories`/etc. directly (urgent),

@@ -120,6 +120,13 @@ export interface AuthContextType {
     intent?: 'login' | 'add-profile';
     /** A saved profile being signed back into, which the allowance already counts. */
     forProfileId?: string;
+    /**
+     * What to do once this sign-in finishes. Left out, the button tapped just
+     * before is pressed again (see lib/after-sign-in).
+     */
+    then?: () => void;
+    /** A page to open once this sign-in finishes. Survives redirect logins. */
+    path?: string;
   }) => void;
   closeLoginModal: () => void;
   /**
