@@ -156,20 +156,23 @@ html[data-theme="osaka"] .login-stack__logo {
 .login-stack__accent { color: inherit; }
 .login-stack__headline {
   --ls-sign: #fff;
-  --ls-sign-glow: rgba(255, 255, 255, 0.7);
+  --ls-sign-glow: rgba(255, 255, 255, 0.35);
 }
 html:not([data-theme="light"]):not([data-system-tone="light"]) .login-stack__headline {
   color: var(--ls-sign);
-  text-shadow: 0 0 2px var(--ls-sign-glow), 0 0 10px var(--ls-sign-glow), 0 0 18px var(--ls-sign-glow), 0 2px 8px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 0 1px var(--ls-sign-glow), 0 0 6px var(--ls-sign-glow), 0 0 12px var(--ls-sign-glow), 0 2px 8px rgba(0, 0, 0, 0.6);
 }
-html[data-theme="hazy"] .login-stack__headline { --ls-sign: #e4d2ff; --ls-sign-glow: #c9a7ff; }
-html[data-theme="osaka"] .login-stack__headline { --ls-sign: #ffc2e0; --ls-sign-glow: #ff6fb5; }
+html[data-theme="hazy"] .login-stack__headline { --ls-sign: #e4d2ff; --ls-sign-glow: rgba(201, 167, 255, 0.5); }
+html[data-theme="osaka"] .login-stack__headline { --ls-sign: #ffc2e0; --ls-sign-glow: rgba(255, 111, 181, 0.5); }
 
 .login-stack-scroll > .login-stack {
   flex: 1 0 200px;
   min-height: 200px;
   width: 100%;
   overflow: hidden;
+  /* Room under "and be happy." for the headline glow, which the clip above
+     would otherwise cut flat; the form's top margin gives the same back. */
+  padding-bottom: 14px;
 }
 .login-stack-scroll .login-stack__lanes {
   height: auto;
@@ -178,6 +181,7 @@ html[data-theme="osaka"] .login-stack__headline { --ls-sign: #ffc2e0; --ls-sign-
 }
 .login-stack-scroll > .login-stack-form {
   flex-shrink: 0;
+  margin-top: 6px;
   width: calc(100% - 28px);
   margin-left: auto;
   margin-right: auto;
