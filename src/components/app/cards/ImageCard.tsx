@@ -186,13 +186,20 @@ interface ImageCardProps {
  * before the image loads (CLS fix). Session-scoped, bounded by feed size.
  */
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
+import { hintedImageRatio } from '@/lib/image-size-hints';
 import { viewerShareUrl } from '@/lib/share-url';
 import { AltTextBadge } from './AltTextBadge';
 import { KeywordFilterGate } from './KeywordFilterGate';
 import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
-const imageAspectRatioCache = createMediaAspectCache(
+const measuredAspectCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
+// The size the API sent wins: it is there before anything loads, and never
+// changes, so the frame is right on first paint.
+const imageAspectRatioCache = {
+  get: (url: string) => hintedImageRatio(url) ?? measuredAspectCache.get(url),
+  set: (url: string, ratio: number) => measuredAspectCache.set(url, ratio),
+};
 function cacheAspectRatio(url: string, ratio: number) {
   imageAspectRatioCache.set(url, ratio);
 }
@@ -267,7 +274,7 @@ function ImageSlide({
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
   // the exact final height up front.
   const [measurement, setMeasurement] = useState<{ img: string; ratio: number }>();
-  const measuredRatio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img) ?? knownRatio;
+  const measuredRatio = hintedImageRatio(img) ?? (measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img) ?? knownRatio);
   const slideRef = useRef<HTMLDivElement>(null);
   // All slides share the row's vertical visibility: a late hidden neighbour
   // must not increase the carousel's height while its first photo is in view.
