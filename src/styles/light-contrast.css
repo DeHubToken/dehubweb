@@ -62,7 +62,8 @@ html[data-theme='light']:not(#_):not(#_):not(#_) [data-bottom-nav] > nav {
   -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
   backdrop-filter: blur(20px) saturate(1.4) !important;
   border-color: rgba(11, 11, 13, 0.08) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 20px -6px rgba(11, 11, 13, 0.12), 0 22px 44px -14px rgba(11, 11, 13, 0.16) !important;
+  /* Cast upward: a drop shadow under the bar is cut off by the screen edge on iPhones. */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 -1px 2px rgba(11, 11, 13, 0.04), 0 -6px 16px -6px rgba(11, 11, 13, 0.10), 0 -14px 32px -14px rgba(11, 11, 13, 0.14) !important;
 }
 
 /* Bright 500/600 text was written for black; on paper it reads at 2-3:1.
