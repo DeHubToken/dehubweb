@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { bindDrawerPullClose } from '@/hooks/use-drawer-pull-close';
+import { bindDrawerPullClose } from '@/lib/drawer-pull-close';
 
 /** A touch event at a given time, built by hand so the gesture's timing is exact. */
 function fire(el: HTMLElement, type: string, x: number, y: number, t: number) {
