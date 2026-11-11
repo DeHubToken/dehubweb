@@ -1,65 +1,102 @@
 import { slideOut } from '@/hooks/use-sheet-flick-close';
 
 /**
- * Pull a full-height list drawer down from anywhere on it to close it.
+ * Drag a full-height list drawer between two resting heights, and down to
+ * close it.
  *
- * Used with vaul's `handleOnly`, so this is the drawer's only drag. The rules
- * are there so a reader scrolling back up never closes the sheet by mistake:
+ * The sheet is the full screen tall. It rests lowered by a fifth of the
+ * screen ("part open", so the page above shows it is a drawer), or raised to
+ * fill the screen ("full"). The offset is the CSS `translate` property, so it
+ * composes with the `transform` vaul uses to slide the sheet in and out.
  *
- * - A pull only starts when the list was already at the top when the finger
- *   went down, and was not still gliding from a fling. A swipe that scrolls
- *   the list up and reaches the top part way through stays a scroll.
- * - Sideways swipes (the tab strip) and upward swipes are left alone.
- * - A tap on the dimmed page above the sheet closes it too.
- * - On release it closes when pulled past a quarter of the sheet, or pulled
- *   a clear distance with the finger still moving down. Anything less springs
- *   back to the top.
+ * Used with vaul's `handleOnly`, so this is the drawer's only drag:
+ *
+ * - Part open, any vertical drag moves the sheet: up to fill the screen, down
+ *   to close. The list does not scroll until the sheet is full.
+ * - Full, the list scrolls as usual. A pull down only moves the sheet when
+ *   the list was already at the top when the finger went down and was not
+ *   still gliding from a fling, so a swipe that scrolls back up and reaches
+ *   the top stays a scroll.
+ * - Released, the sheet settles at the nearest sensible height: a short or
+ *   stopped pull springs back; from full, a pull steps back to part open and
+ *   a long one closes; from part open, a pull past a quarter of the sheet or a
+ *   clear flick down closes.
+ * - Sideways swipes (the tab strip) are left alone, and a tap on the dimmed
+ *   page above the sheet closes it.
+ * - Focusing a text field (the search pill) fills the screen.
  */
 const SLOP = 6;
-/** px/ms the finger must still be moving down at release to flick it shut. */
+/** px/ms the finger must still be moving at release to count as a flick. */
 const FLICK_SPEED = 0.3;
 /** A flick also has to have moved the sheet this far. */
 const FLICK_MIN_PULL = 72;
-/** Pulled this share of the sheet's height closes on a slow release too. */
+/** Pulled this share of the visible sheet closes on a slow release too. */
 const CLOSE_SHARE = 0.25;
+/** Share of the screen the sheet sits lowered by when part open. */
+export const PART_OPEN_DROP = 0.2;
 /** A list scrolled this recently is still gliding from a fling. */
 const SCROLL_SETTLE_MS = 140;
 const SPEED_WINDOW_MS = 100;
-const SPRING_BACK = 'transform 0.45s cubic-bezier(0.32, 0.72, 0, 1)';
+const EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
 
 type Sample = { t: number; y: number };
 
-export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, close: () => void) {
+export type DrawerPullOptions = {
+  /**
+   * false: one resting height (the sheet's own), as a full sheet that only
+   * pulls down to close. Used by the bell's settings sheet.
+   */
+  snap?: boolean;
+};
+
+export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, close: () => void, { snap = true }: DrawerPullOptions = {}) {
   let lastScrollAt = 0;
   let mode: 'idle' | 'pending' | 'drag' | 'off' = 'idle';
   let startX = 0;
   let startY = 0;
-  let anchorY = 0;
-  let pulled = 0;
+  let atTop = true;
+  let expanded = !snap;
+  let offset = 0;
   let samples: Sample[] = [];
+
+  const partOpen = () => (snap ? Math.round(window.innerHeight * PART_OPEN_DROP) : 0);
+  const base = () => (expanded ? 0 : partOpen());
 
   const overlay = () => {
     const prev = sheet.previousElementSibling as HTMLElement | null;
     return prev?.hasAttribute('data-vaul-overlay') ? prev : null;
   };
+  const fadeFor = (y: number) => {
+    const visible = Math.max(1, (sheet.offsetHeight || window.innerHeight) - partOpen());
+    return Math.max(0, Math.min(1, 1 - (y - partOpen()) / visible));
+  };
   const place = (y: number) => {
     sheet.style.transition = 'none';
-    sheet.style.transform = `translate3d(0, ${y}px, 0)`;
+    sheet.style.translate = `0 ${y}px`;
     const o = overlay();
     if (o) {
       o.style.transition = 'none';
-      o.style.opacity = String(Math.max(0, 1 - y / (sheet.offsetHeight || window.innerHeight)));
+      o.style.opacity = String(fadeFor(y));
     }
   };
-  const springBack = () => {
-    sheet.style.transition = SPRING_BACK;
-    sheet.style.transform = 'translate3d(0, 0, 0)';
+  const settle = (full: boolean) => {
+    expanded = full || !snap;
+    if (!snap) {
+      // Nothing to toggle.
+    } else if (full) sheet.setAttribute('data-expanded', '');
+    else sheet.removeAttribute('data-expanded');
+    sheet.style.transition = `translate 0.45s ${EASE}, padding-top 0.45s ${EASE}`;
+    sheet.style.translate = `0 ${base()}px`;
     const o = overlay();
     if (o) {
-      o.style.transition = 'opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1)';
+      o.style.transition = `opacity 0.45s ${EASE}`;
       o.style.opacity = '1';
     }
+    if (!full) scroller.scrollTop = 0;
   };
+
+  // Rest part open from the first frame.
+  if (snap) sheet.style.translate = `0 ${partOpen()}px`;
 
   const onScroll = () => {
     lastScrollAt = performance.now();
@@ -67,19 +104,18 @@ export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, c
 
   const onStart = (e: TouchEvent) => {
     if (e.touches.length !== 1) {
-      if (mode === 'drag') springBack();
+      if (mode === 'drag') settle(expanded);
       mode = 'off';
       return;
     }
     const target = e.target as Element | null;
-    const atTop = scroller.scrollTop <= 0;
-    const settled = performance.now() - lastScrollAt > SCROLL_SETTLE_MS;
+    atTop = scroller.scrollTop <= 0 && performance.now() - lastScrollAt > SCROLL_SETTLE_MS;
     const blocked = !!target?.closest?.('[data-vaul-no-drag], input, textarea, select, [contenteditable="true"]');
-    mode = atTop && settled && !blocked ? 'pending' : 'off';
+    mode = blocked ? 'off' : 'pending';
     const t = e.touches[0];
     startX = t.clientX;
     startY = t.clientY;
-    pulled = 0;
+    offset = base();
     samples = [{ t: e.timeStamp, y: t.clientY }];
   };
 
@@ -90,24 +126,28 @@ export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, c
     if (mode === 'pending') {
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
-      // Decided on the first move that heads down: iOS Safari only lets the
-      // first touchmove stop the list's own scroll (and its rubber band), so
-      // waiting a few pixels left the list bouncing under the sheet.
-      if (dy > 0 && dy >= Math.abs(dx) && scroller.scrollTop <= 0) {
+      if (dx === 0 && dy === 0) return;
+      // Decided on the first move: iOS Safari only lets the first touchmove
+      // stop the list's own scroll (and its rubber band).
+      const vertical = Math.abs(dy) >= Math.abs(dx);
+      const takes = vertical && (!expanded || (dy > 0 && atTop && scroller.scrollTop <= 0));
+      if (takes) {
         mode = 'drag';
-        anchorY = startY;
-      } else if (Math.abs(dx) >= SLOP || dy <= -SLOP || dy > 0) {
-        mode = 'off';
+      } else if (!vertical && Math.abs(dx) < SLOP) {
         return;
       } else {
+        mode = 'off';
         return;
       }
     }
     if (e.cancelable) e.preventDefault();
-    pulled = Math.max(0, t.clientY - anchorY);
+    let y = base() + (t.clientY - startY);
+    // Past full, it gives a little and stops.
+    if (y < 0) y = y / 4;
+    offset = y;
     samples.push({ t: e.timeStamp, y: t.clientY });
     while (samples.length > 2 && e.timeStamp - samples[0].t > SPEED_WINDOW_MS) samples.shift();
-    place(pulled);
+    place(y);
   };
 
   const onEnd = (e: TouchEvent) => {
@@ -119,23 +159,36 @@ export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, c
     // A gap since the last move means the finger stopped before letting go.
     const idle = e.timeStamp - last.t;
     const speed = idle > 60 ? 0 : (last.y - first.y) / Math.max(1, last.t - first.t);
-    const height = sheet.offsetHeight || window.innerHeight;
-    const shut = pulled >= height * CLOSE_SHARE || (pulled >= FLICK_MIN_PULL && speed >= FLICK_SPEED);
-    if (!shut) {
-      springBack();
+    const mid = partOpen();
+    const visible = Math.max(1, (sheet.offsetHeight || window.innerHeight) - mid);
+    const belowMid = offset - mid;
+    const shut = belowMid >= visible * CLOSE_SHARE || (belowMid >= FLICK_MIN_PULL && speed >= FLICK_SPEED);
+    if (shut) {
+      slideOut(sheet);
+      const o = overlay();
+      if (o) {
+        o.style.transition = 'opacity 0.4s ease-out';
+        o.style.opacity = '0';
+      }
+      close();
       return;
     }
-    slideOut(sheet);
-    const o = overlay();
-    if (o) {
-      o.style.transition = 'opacity 0.4s ease-out';
-      o.style.opacity = '0';
+    if (!snap) {
+      settle(true);
+      return;
     }
-    close();
+    if (!expanded) {
+      // Up far enough, or flicked up: fill the screen.
+      const rose = mid - offset;
+      settle(rose >= 48 || (rose >= 16 && speed <= -FLICK_SPEED));
+      return;
+    }
+    // From full: a clear pull or flick down steps back to part open.
+    settle(!(offset >= mid / 2 || (offset >= FLICK_MIN_PULL && speed >= FLICK_SPEED)));
   };
 
   const onCancel = () => {
-    if (mode === 'drag') springBack();
+    if (mode === 'drag') settle(expanded);
     mode = 'idle';
   };
 
@@ -148,6 +201,13 @@ export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, c
   };
   scrim?.addEventListener('click', onScrimTap);
 
+  // Typing in the search field fills the screen, so the matches can scroll.
+  const onFocusIn = (e: FocusEvent) => {
+    const t = e.target as Element | null;
+    if (snap && !expanded && t?.matches?.('input, textarea')) settle(true);
+  };
+  sheet.addEventListener('focusin', onFocusIn);
+
   scroller.addEventListener('scroll', onScroll, { passive: true });
   sheet.addEventListener('touchstart', onStart, { passive: true });
   sheet.addEventListener('touchmove', onMove, { passive: false });
@@ -155,6 +215,7 @@ export function bindDrawerPullClose(sheet: HTMLElement, scroller: HTMLElement, c
   sheet.addEventListener('touchcancel', onCancel);
   return () => {
     scrim?.removeEventListener('click', onScrimTap);
+    sheet.removeEventListener('focusin', onFocusIn);
     scroller.removeEventListener('scroll', onScroll);
     sheet.removeEventListener('touchstart', onStart);
     sheet.removeEventListener('touchmove', onMove);

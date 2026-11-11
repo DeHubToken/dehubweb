@@ -349,7 +349,7 @@ const DrawerContent = React.forwardRef<
       {scrollable ? (
         /* Scroll inside the drawer: vaul's root has touch-action:none and an
            offscreen ::after background, neither belongs in a native scroller. */
-        <div className="min-h-0 flex-auto overflow-y-auto [touch-action:pan-y]">
+        <div data-drawer-scroll className="min-h-0 flex-auto overflow-y-auto [touch-action:pan-y]">
           {children}
         </div>
       ) : children}
