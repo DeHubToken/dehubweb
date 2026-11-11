@@ -121,6 +121,35 @@ describe('hls-vod', () => {
     expect(player.startLoad).toHaveBeenCalledTimes(1);
   });
 
+  it('keeps the next short to a short head start, and stops a paused short reading ahead', async () => {
+    const el = video();
+    el.preload = 'auto';
+    setVideoSource(el, { src: MP4, hls: freshLadder(), startLow: true });
+    await flush();
+    const [player] = instances;
+    player.emit(FakeHls.Events.MANIFEST_PARSED);
+    // Waiting for the swipe: enough to start at once, not 30 seconds that
+    // would compete with the short being watched.
+    expect(player.startLoad).toHaveBeenCalledTimes(1);
+    expect(player.config.maxBufferLength).toBe(6);
+
+    Object.defineProperty(el, 'paused', { value: false, configurable: true });
+    el.dispatchEvent(new Event('play'));
+    expect(player.config.maxBufferLength).toBe(30);
+
+    // Swiped away: it drops to metadata and pauses, and must stop fetching.
+    el.preload = 'metadata';
+    Object.defineProperty(el, 'paused', { value: true, configurable: true });
+    el.dispatchEvent(new Event('pause'));
+    expect(player.config.maxBufferLength).toBe(4);
+    expect(player.config.maxMaxBufferLength).toBe(4);
+
+    el.preload = 'none';
+    syncVideoLoad(el);
+    expect(player.config.maxBufferLength).toBe(4);
+    expect(player.startLoad).toHaveBeenCalledTimes(1);
+  });
+
   it('never restarts the download when the same post is asked for again', async () => {
     const el = video();
     const ladder = freshLadder();
