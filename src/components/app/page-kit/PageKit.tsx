@@ -83,6 +83,10 @@ export interface PageIslandProps {
 
 /** How far the search drawer's top runs up under the pill (the slot clips it). */
 const DRAWER_TUCK = 12;
+/** How far the open drawer reaches up behind the pill: past the pill's 12px
+ *  bottom corners, so its top corners hide under the pill's curve instead of
+ *  showing a notch where the two meet. */
+const DRAWER_BEHIND = 14;
 
 export function PageIsland({
   title,
@@ -136,7 +140,7 @@ export function PageIsland({
         <div
           data-feed-nav
           data-kit-pill
-          className="relative flex flex-col rounded-xl bg-zinc-900"
+          className="relative z-10 flex flex-col rounded-xl bg-zinc-900"
           style={{ overflowX: 'clip', overflowClipMargin: '8px' }}
         >
           <span data-nav-glass-backdrop aria-hidden="true" />
@@ -194,14 +198,16 @@ export function PageIsland({
         </div>
         {children ? (
           // The search slides out from under the pill as one full-width
-          // drawer in the pill's glass, like Home's new-posts drawer. Kept
-          // mounted while shut so a typed search survives closing it.
+          // drawer in the pill's glass, like Home's new-posts drawer. Its top
+          // runs up behind the pill past the pill's rounded corners, so the
+          // two meet cleanly. Kept mounted while shut so a typed search
+          // survives closing it.
           <motion.div
             data-kit-search-slot
             initial={false}
-            animate={{ height: drawerOpen ? 'auto' : 0 }}
+            animate={{ height: drawerOpen ? 'auto' : 0, marginTop: drawerOpen ? -DRAWER_BEHIND : 0 }}
             transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 36, mass: 0.8 }}
-            className="-mx-12 overflow-hidden px-12"
+            className="relative z-0 -mx-12 overflow-hidden px-12"
             aria-hidden={!drawerOpen}
             ref={(el: HTMLDivElement | null) => { if (el) el.toggleAttribute('inert', !drawerOpen); }}
           >
@@ -215,10 +221,10 @@ export function PageIsland({
                 data-feed-new-posts-chip
                 data-kit-search-drawer
                 className="relative px-2 pb-2"
-                style={{ marginTop: -DRAWER_TUCK, paddingTop: DRAWER_TUCK + 8 }}
+                style={{ marginTop: -DRAWER_TUCK, paddingTop: DRAWER_TUCK + DRAWER_BEHIND + 8 }}
               >
                 <span data-nav-glass-backdrop aria-hidden="true" />
-                <span data-feed-new-posts-shade aria-hidden="true" />
+                <span data-feed-new-posts-shade aria-hidden="true" style={{ top: DRAWER_TUCK + DRAWER_BEHIND }} />
                 <PillContext.Provider value>
                   <div className="relative z-10 space-y-2">{children}</div>
                 </PillContext.Provider>
