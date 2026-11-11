@@ -32,6 +32,7 @@ import { closeCommentsSplit } from '@/lib/comments-split';
 import { FeedSearchBar } from '@/components/app/navigation/FeedSearchBar';
 import { FeedSearchLens, useFeedSearchLens } from '@/components/app/navigation/FeedSearchLens';
 import { closeFeedSearch, getFeedSearchState, isFeedSearchTab, openFeedSearch, useFeedSearch } from '@/lib/feed-search';
+import { getDocumentScrollTop, scrollDocumentToSmooth, SCROLL_TOP_FIRST_PX } from '@/lib/document-scroll';
 import { useImagesFeedScrollView, requestImagesBackToCollage } from '@/lib/images-feed-mode';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
@@ -222,8 +223,10 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
       if (tabValue === activeTab) {
         // Same tab clicked: a searchable feed turns the pill into its search,
         // the others toggle their filters (the sliders button does both).
+        // Scrolled down, the first tap only glides the feed back to the top.
         if (isFeedSearchTab(tabValue)) {
           if (getFeedSearchState().open) closeFeedSearch();
+          else if (getDocumentScrollTop() > SCROLL_TOP_FIRST_PX) scrollDocumentToSmooth();
           else openFeedSearch();
         } else window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
       } else {
