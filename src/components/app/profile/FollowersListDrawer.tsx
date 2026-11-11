@@ -283,6 +283,8 @@ export function FollowersListDrawer({
   const [bulkFollowProgress, setBulkFollowProgress] = useState({ completed: 0, total: 0 });
   const [isFindingFollowBacks, setIsFindingFollowBacks] = useState(false);
   // Phone confirm sheet. Desktop asks with a toast instead.
+  /** Whether the phone confirm sheet is still up; closing it mid-run only hides it. */
+  const followBackSheetOpenRef = useRef(false);
   const [followBackSheet, setFollowBackSheet] = useState<{
     stage: FollowBackAllStage;
     candidates: UserListItem[];
@@ -546,6 +548,7 @@ export function FollowersListDrawer({
       setShowFollowBackAll(false);
       setIsFollowingBackAll(false);
       setIsFindingFollowBacks(false);
+      followBackSheetOpenRef.current = false;
       setFollowBackSheet(null);
       setFollowBackNudge(false);
       followBackAnnouncedRef.current = false;
@@ -591,10 +594,11 @@ export function FollowersListDrawer({
       setUsers(prev => prev.map(u =>
         u.address === user.address ? { ...u, isPending: true } : u
       ));
+      // Counted on the tap so the button, its shake and chime land with the click.
+      if (canFollowBackAll && user.followsYou) recordFollowBack();
+      else followBackStreakRef.current = 0;
       followUser(user.address)
         .then(() => {
-          if (canFollowBackAll && user.followsYou) recordFollowBack();
-          else followBackStreakRef.current = 0;
           toast.success(t('follow.requestSentTo', { name }));
         })
         .catch((error: unknown) => {
@@ -626,6 +630,7 @@ export function FollowersListDrawer({
     const wasFollowing = user.isFollowing === true;
     const isFollowBack = canFollowBackAll && user.followsYou && !wasFollowing;
     if (!isFollowBack) followBackStreakRef.current = 0;
+    else recordFollowBack();
     if (wasFollowing) followingSetRef.current?.delete(user.address.toLowerCase());
     else followingSetRef.current?.add(user.address.toLowerCase());
     setUsers(prev => prev.map(u =>
@@ -641,9 +646,6 @@ export function FollowersListDrawer({
           u.address === user.address ? { ...u, isFollowing: wasFollowing } : u
         ));
         if (!info.handled) handleApiError(error, t('follow.updateFailed'));
-      },
-      onSuccess: () => {
-        if (isFollowBack) recordFollowBack();
       },
     });
   };
@@ -859,19 +861,21 @@ export function FollowersListDrawer({
   }, [t]);
 
   const confirmFollowBackOnPhone = useCallback(async (candidates: UserListItem[]) => {
+    if (isFollowingBackAll) return;
+    followBackSheetOpenRef.current = true;
     setFollowBackSheet({ stage: 'working', candidates, followed: 0, failed: 0 });
     const result = await runFollowBackAll(candidates);
-    if (!result) {
-      setFollowBackSheet(null);
+    const ok = !!result && result.followed > 0;
+    // Closed while it worked: the sheet stays away and a toast says how it went.
+    if (!followBackSheetOpenRef.current) {
+      if (result) toastFollowBackResult(result);
+      else toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'), { id: 'follow-back-all' });
       return;
     }
-    if (result.followed === 0) {
-      setFollowBackSheet(null);
-      toast.error(t('follow.followBackAllFailed', 'Could not follow anyone back'));
-      return;
-    }
-    setFollowBackSheet({ stage: 'done', candidates, ...result });
-  }, [runFollowBackAll, t]);
+    setFollowBackSheet(ok
+      ? { stage: 'done', candidates, ...result! }
+      : { stage: 'failed', candidates, followed: 0, failed: candidates.length });
+  }, [isFollowingBackAll, runFollowBackAll, t, toastFollowBackResult]);
 
   /**
    * Tap: count who's left, then ask. A small sheet on phones, a toast with a
@@ -897,6 +901,7 @@ export function FollowersListDrawer({
     }
 
     if (isMobile) {
+      followBackSheetOpenRef.current = true;
       setFollowBackSheet({ stage: 'confirm', candidates, followed: 0, failed: 0 });
       return;
     }
@@ -921,7 +926,8 @@ export function FollowersListDrawer({
   }, [canFollowBackAll, currentUserAddress, findFollowBackCandidates, handleApiError, isFindingFollowBacks, isFollowingBackAll, isMobile, runFollowBackAll, t, toastFollowBackResult]);
 
   const closeFollowBackSheet = useCallback(() => {
-    setFollowBackSheet(current => (current?.stage === 'working' ? current : null));
+    followBackSheetOpenRef.current = false;
+    setFollowBackSheet(null);
   }, []);
 
   const followBackButtonVisible = canFollowBackAll && showFollowBackAll && (hasVisibleFollowBacks || hasMore || isFollowingBackAll || isFindingFollowBacks);
