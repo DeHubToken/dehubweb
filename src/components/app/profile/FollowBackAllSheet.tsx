@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import UserPlus from '@/components/ui/cut-icons/add-account';
 import Check from '@/components/ui/cut-icons/check';
@@ -6,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-export type FollowBackAllStage = 'confirm' | 'working' | 'done';
+export type FollowBackAllStage = 'confirm' | 'working' | 'done' | 'failed';
 
 interface FollowBackAllSheetProps {
   stage: FollowBackAllStage;
@@ -19,29 +18,29 @@ interface FollowBackAllSheetProps {
   onClose: () => void;
 }
 
-/** How long the "done" card stays before it tucks itself away. */
-const DONE_LINGER_MS = 2600;
-
 /**
  * The small sheet "Follow back all" raises on phones: how many people, a tap to
  * confirm, progress, then a tick. It slides up inside the followers drawer
  * rather than opening a second vaul drawer, which would fight the open one for
  * focus and drag. Desktop asks with a toast instead (FollowersListDrawer).
+ *
+ * It never leaves on its own: every stage has a button, the result stays up
+ * until it is tapped away, and a failure says so here with Try again. Closing
+ * it mid-run only hides it; the follows carry on. data-vaul-no-drag keeps a
+ * tap that wobbles from being read as a drag on the drawer underneath.
  */
 export function FollowBackAllSheet({ stage, count, completed, followed, failed, onConfirm, onClose }: FollowBackAllSheetProps) {
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (stage !== 'done') return;
-    const timer = setTimeout(onClose, DONE_LINGER_MS);
-    return () => clearTimeout(timer);
-  }, [stage, onClose]);
-
   const title = stage === 'done'
     ? t('follow.followedBackCount', { count: followed, defaultValue: 'Followed back {{count}} people' })
-    : t('follow.followBackConfirmTitle', { count, defaultValue: 'Follow back {{count}} people?' });
+    : stage === 'failed'
+      ? t('follow.followBackAllFailed', 'Could not follow anyone back')
+      : t('follow.followBackConfirmTitle', { count, defaultValue: 'Follow back {{count}} people?' });
 
-  const body = stage === 'done'
+  const body = stage === 'failed'
+    ? t('follow.followBackConfirmBody', 'They already follow you. Private accounts get a follow request.')
+    : stage === 'done'
     ? (failed > 0
       ? t('follow.followedBackSome', { defaultValue: 'Followed back {{followed}} people; {{failed}} failed', followed, failed })
       : t('follow.followBackDoneBody', 'They will see you in their followers.'))
@@ -52,12 +51,12 @@ export function FollowBackAllSheet({ stage, count, completed, followed, failed, 
   const progress = count > 0 ? Math.min(100, Math.round((completed / count) * 100)) : 0;
 
   return (
-    <div data-follow-back-sheet={stage} className="absolute inset-0 z-30 flex flex-col justify-end">
+    <div data-follow-back-sheet={stage} data-vaul-no-drag className="absolute inset-0 z-30 flex flex-col justify-end">
       <button
         type="button"
         aria-label={t('follow.followBackNotNow', 'Not now')}
         className="absolute inset-0 bg-black/45 animate-in fade-in duration-200"
-        onClick={stage === 'working' ? undefined : onClose}
+        onClick={onClose}
       />
       <div
         role="dialog"
@@ -70,7 +69,9 @@ export function FollowBackAllSheet({ stage, count, completed, followed, failed, 
           data-follow-back-icon
           className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-white/15 bg-white/[0.08] text-white"
         >
-          {stage === 'done'
+          {stage === 'working'
+            ? <Loader2 className="h-7 w-7 animate-spin" />
+            : stage === 'done'
             ? <Check className="h-8 w-8 animate-in zoom-in-50 duration-300" />
             : <UserPlus className="h-8 w-8" />}
         </span>
@@ -89,6 +90,21 @@ export function FollowBackAllSheet({ stage, count, completed, followed, failed, 
               </Button>
               <Button variant="ghost" className="w-full rounded-full" onClick={onClose}>
                 {t('follow.followBackNotNow', 'Not now')}
+              </Button>
+            </>
+          )}
+          {stage === 'working' && (
+            <Button variant="ghost" data-follow-back-hide className="w-full rounded-full" onClick={onClose}>
+              {t('common.close', 'Close')}
+            </Button>
+          )}
+          {stage === 'failed' && (
+            <>
+              <Button size="lg" data-follow-back-retry className="w-full rounded-full" onClick={onConfirm}>
+                {t('common.tryAgain', 'Try again')}
+              </Button>
+              <Button variant="ghost" className="w-full rounded-full" onClick={onClose}>
+                {t('common.close', 'Close')}
               </Button>
             </>
           )}
