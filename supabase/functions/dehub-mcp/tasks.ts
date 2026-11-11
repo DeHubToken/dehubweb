@@ -6,7 +6,7 @@ import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
 import { handleWorkspace, matchingTemplate } from './workspace.ts';
 import { agentSettings, writingContext } from './controls.ts';
 import { currentNews, newsReaction, newsTopicsFor, type NewsStory } from './news.ts';
-import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
+import { agentOwnerAllowed, agentTeamOwner, singleTargetPlan, TEAM_ONLY_MESSAGE, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
 export interface TaskTool {
@@ -277,6 +277,7 @@ export async function runTask(context: Context, req: Request, task: any) {
   const db = context.db();
   const agent = checked(await db.from("ai_agents").select("*").eq("id", task.agent_id).single());
   if (!agentOwnerAllowed(agent.human_owner_wallet) || agent.human_owner_wallet !== task.owner_wallet || !agent.is_active) throw new Error("Agent access is unavailable.");
+  if ((task.swarm_id || !singleTargetPlan(task.plan)) && !agentTeamOwner(task.owner_wallet)) throw new Error(TEAM_ONLY_MESSAGE);
   const token = await context.token(agent);
   if (!token) {
     checked(await db.from('ai_agent_tasks').update({ status: 'queued', next_run_at: new Date(Date.now() + 60000).toISOString(),
@@ -482,7 +483,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
   }
   const auth = await requireDeHubAuth(req);
   if (!auth.ok) return auth.response;
-  if (!agentOwnerAllowed(auth.wallet)) return json({ error: "Agents are in private preview." }, 403);
+  if (!agentOwnerAllowed(auth.wallet)) return json({ error: "Sign in with a wallet to use agents." }, 403);
   let input: Record<string, any>;
   const images: ProfileImages = {};
   if (req.headers.get('content-type')?.startsWith('multipart/form-data')) {
@@ -562,6 +563,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     if (!agent) return json({ error: "Select an active agent you own." }, 403);
     if (input.operation === "set_alive") {
       if (typeof input.alive !== "boolean") return json({ error: "Choose on or off." }, 400);
+      if (input.alive && !agentTeamOwner(auth.wallet)) return json({ error: "Alive mode is not open yet." }, 403);
       const result = await setSentient(db, agent, input.alive);
       if ("error" in result) return json(result, 503);
     }
@@ -572,6 +574,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     return json({ tasks });
   }
   if (input.operation === "create_swarm") {
+    if (!agentTeamOwner(auth.wallet)) return json({ error: "Group runs are not open yet. Give each agent its own task." }, 403);
     if (typeof input.prompt !== "string" || !input.prompt.trim() || input.prompt.length > 4000 || !/^[0-9a-f-]{36}$/i.test(input.request_id ?? "")) return json({ error: "A prompt and request ID are required." }, 400);
     if (!Array.isArray(input.agent_ids) || input.agent_ids.length < 2 || input.agent_ids.length > 25 ||
       input.agent_ids.some((id: unknown) => typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) ||
@@ -635,6 +638,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     let plan: TaskPlan;
     try { plan = await planPrompt(input.prompt.trim(), timezone, context.tools(agent.api_key, req)); }
     catch (error) { return json({ error: message(error) }, 422); }
+    if (!singleTargetPlan(plan) && !agentTeamOwner(auth.wallet)) return json({ error: TEAM_ONLY_MESSAGE }, 403);
     const template = await matchingTemplate(db, auth.wallet, input.template_id, input.prompt.trim());
     const task = checked(await db.from("ai_agent_tasks").insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: input.prompt.trim(), plan, workspace_template_id: template }).select("id").single());
     await wakeTasks(db);

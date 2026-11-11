@@ -40,7 +40,7 @@ function TaskHistory({ task, wallet }: { task: AgentTask; wallet: string }) {
   </details>;
 }
 
-export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { id: string; name: string; is_active: boolean }[] }) {
+export function AgentTasksPanel({ wallet, agents, team = false }: { wallet: string; agents: { id: string; name: string; is_active: boolean }[]; team?: boolean }) {
   const { t } = useTranslation();
   const client = useQueryClient();
   const [prompt, setPrompt] = useSurfaceDraft('agent-task-prompt', '');
@@ -92,7 +92,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   return <section id="agent-task-controls" data-kit-section className="space-y-5 rounded-2xl border border-white/20 bg-black/35 p-5 text-white backdrop-blur-xl">
     <div><h2 className="text-lg font-semibold text-white">{t('agents.tasks.title')}</h2><p className="text-sm leading-relaxed text-white/75">{t('agents.tasks.description')}</p></div>
     {active.length ? <>
-      {active.length > 1 && <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.mode')}>
+      {team && active.length > 1 && <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.mode')}>
         <Button type="button" size="sm" disabled={create.isPending} aria-pressed={!swarm} variant={!swarm ? 'default' : 'outline'} onClick={() => { setSwarm(false); setRequestId(crypto.randomUUID()); create.reset(); }}>{t('agents.tasks.oneAgent')}</Button>
         <Button type="button" size="sm" disabled={create.isPending} aria-pressed={swarm} variant={swarm ? 'default' : 'outline'} onClick={() => { setSwarm(true); setSelected(active.map(agent => agent.id)); setRequestId(crypto.randomUUID()); create.reset(); }}>{t('agents.tasks.swarm')}</Button>
       </div>}
@@ -124,10 +124,10 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
           <SelectContent>{active.map(agent => <SelectItem key={agent.id} value={agent.id}>@{agent.name}</SelectItem>)}</SelectContent>
         </Select>
       </div>}
-      <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.window.mode')}>
+      {team && <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.window.mode')}>
         <Button type="button" size="sm" disabled={create.isPending} aria-pressed={!windowMode} variant={!windowMode ? 'default' : 'outline'} onClick={() => { setWindowMode(false); changed(); }}>{t('agents.tasks.window.write')}</Button>
         <Button type="button" size="sm" disabled={create.isPending} aria-pressed={windowMode} variant={windowMode ? 'default' : 'outline'} onClick={() => { setWindowMode(true); changed(); }}>{t('agents.tasks.window.title')}</Button>
-      </div>
+      </div>}
       {windowMode ? <div className="space-y-4 rounded-xl border border-white/15 bg-black/20 p-4">
         <div className="space-y-2"><p className="text-sm font-medium text-white/85">{t('agents.tasks.window.period')}</p>
           <div className="flex flex-wrap gap-2">{WINDOW_PRESETS.map(value => <button key={value} type="button" aria-pressed={preset === value} disabled={create.isPending}

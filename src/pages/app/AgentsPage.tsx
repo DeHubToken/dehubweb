@@ -27,7 +27,7 @@ import Plus from "@/components/ui/cut-icons/add";
 
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';
-import { canManageAgents } from '@/lib/agent-access';
+import { canManageAgents, isAgentTeam } from '@/lib/agent-access';
 import { AgentActivity, AgentTasksPanel } from './AgentTasksPanel';
 import { AgentProfilePanel } from './AgentProfilePanel';
 import { AgentLifePanel } from './AgentLifePanel';
@@ -61,6 +61,7 @@ export default function AgentsPage() {
   const { t } = useTranslation();
   const { walletAddress, refreshSession, openLoginModal } = useAuth();
   const allowed = canManageAgents(walletAddress);
+  const team = isAgentTeam(walletAddress);
   const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [newAgentName, setNewAgentName] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentName", '');
@@ -267,7 +268,12 @@ export default function AgentsPage() {
       <div className="min-h-screen">
         <PageIsland back icon="assistant" title={t('agents.title')} />
         <PageBody>
-          <PageEmpty icon="assistant" title={t('agents.tasks.privateTitle')} body={t('agents.tasks.privateBody')} />
+          <PageEmpty
+            icon="assistant"
+            title={t('agents.connectToManage')}
+            body={t('agents.signInToCreate')}
+            action={<KitButton onClick={() => openLoginModal()}>{t('accounts.signIn')}</KitButton>}
+          />
         </PageBody>
       </div>
     );
@@ -305,7 +311,7 @@ export default function AgentsPage() {
         </div>
 
         <AgentWorkspacePanel wallet={walletAddress} />
-        <AgentTasksPanel wallet={walletAddress} agents={listedAgents ?? []} />
+        <AgentTasksPanel wallet={walletAddress} agents={listedAgents ?? []} team={team} />
 
         {agentAllowance && <p className="text-sm text-white/75">{t('agents.capacity', { used: agents?.length ?? 0, limit: agentAllowance.limit, badge: agentAllowance.badge ?? t('agents.noBadge') })}</p>}
 
@@ -418,7 +424,7 @@ export default function AgentsPage() {
                   {activityAgent === agent.id && <AgentActivity wallet={walletAddress} agentId={agent.id} lastActive={agent.last_active_at} />}
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
-                  <AgentLifePanel wallet={walletAddress} agentId={agent.id} />
+                  {team && <AgentLifePanel wallet={walletAddress} agentId={agent.id} />}
                   <AgentWelcomePanel agentName={agent.name} />
                   <details open={openConnections.has(agent.id)} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
                     <summary onClick={event => {
