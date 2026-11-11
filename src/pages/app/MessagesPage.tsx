@@ -19,6 +19,7 @@ import Fullscreen from "@/components/ui/cut-icons/fullscreen";
 import ExitFullscreen from "@/components/ui/cut-icons/exit-fullscreen";
 import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
 import { ChatTextSizeButton } from '@/components/app/chat/ChatTextSizeButton';
+import { ChatIconButton, ChatListTop, ChatMeDock, type ChatChromeLook } from '@/components/app/chat/FullScreenChatChrome';
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -223,6 +224,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const location = useLocation();
+  const chromeLook: ChatChromeLook = new URLSearchParams(location.search).get('look') === 'b' ? 'b' : 'a';
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
   // A conversation open on mobile reclaims the bottom-nav zone as well as the
@@ -734,6 +736,42 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
     );
   }
 
+  const fullscreenTop = fullscreen ? (
+    <ChatListTop
+      look={chromeLook}
+      title={_copy('fullscreenChat.title', { defaultValue: 'Chat' })}
+      search={(
+        <input
+          type="text"
+          data-fsc-search
+          placeholder={_copy('fullscreenChat.search', { defaultValue: 'Search chats' })}
+          aria-label={_copy('fullscreenChat.search', { defaultValue: 'Search chats' })}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="h-10 w-full bg-transparent pl-2.5 text-[15px] text-white placeholder:text-zinc-500 outline-none"
+        />
+      )}
+      searchActions={(
+        <>
+          <ChatIconButton label={_copy("copy.0e9161011702", { defaultValue: "Refresh" })} onClick={() => refetch()} data-messages-search-action="">
+            <RefreshCw className={isRefetching ? 'animate-spin' : ''} />
+          </ChatIconButton>
+          <ChatIconButton label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })} onClick={openNewMessage} data-messages-search-action="">
+            <Plus />
+          </ChatIconButton>
+        </>
+      )}
+      actions={(
+        <>
+          <ChatTextSizeButton className="rounded-full" />
+          <ChatIconButton label={_copy('fullscreenChat.exit', { defaultValue: 'Leave full screen' })} onClick={() => navigate('/app/messages')} data-chat-exit-fullscreen="">
+            <ExitFullscreen />
+          </ChatIconButton>
+        </>
+      )}
+    />
+  ) : null;
+
   const listColumn = (
       <div className={fullscreen ? 'h-full' : 'h-full lg:h-[calc(100dvh-32px)] max-h-full'}>
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
@@ -741,9 +779,9 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
             [data-page-bento] hook stays: the Osaka and Jungle `#app-root` class
             nets exclude on it, and without it every bg-zinc-8/9 descendant in
             here becomes a frosted rectangle. */}
-        <div data-page-bento data-bento-flat className="w-full h-full flex flex-col overflow-hidden">
+        <div data-page-bento data-bento-flat className="relative w-full h-full flex flex-col overflow-hidden">
           {/* Header */}
-          <PageIsland
+          {fullscreenTop ?? (<PageIsland
             className={fullscreen ? 'shrink-0 top-0 lg:top-0 px-2 pt-2' : 'shrink-0'}
             icon={<BrandIcon src={messagesBubbleIcon} alt={_copy("copy.04d7b4833927", { defaultValue: "Messages" })} className="h-8 w-8 object-contain" />}
             title={fullscreen ? _copy('fullscreenChat.title', { defaultValue: 'Chat' }) : t('messages.title')}
@@ -819,10 +857,10 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 )}
               </div>
             </div>
-          </PageIsland>
+          </PageIsland>)}
 
           {/* Conversation List */}
-          <div className={`flex-1 min-h-0 overflow-y-auto pt-3 ${fullscreen ? 'pb-4' : 'pb-[76px] lg:pb-0'}`}>
+          <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen ? (chromeLook === 'b' ? 'pt-1 pb-24' : 'pt-1 pb-4') : 'pt-3 pb-[76px] lg:pb-0'}`}>
             {/* Public Chat (pinned) */}
             <button
               onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
@@ -958,6 +996,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.3084651a3386", { defaultValue: "Searching users..." })}</div>
             )}
           </div>
+          {fullscreen && <ChatMeDock look={chromeLook} />}
         </div>
       </div>
   );
