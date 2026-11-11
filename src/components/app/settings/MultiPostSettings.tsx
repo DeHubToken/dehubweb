@@ -119,7 +119,10 @@ export function MultiPostSettings() {
       }
       window.location.href = url;
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t('multiPost.connectFailed', { platform: PLATFORM_NAMES[platform] }));
+      // The provider's reason comes back in English ("X (Twitter) requires a
+      // payment method..."); show our own words in the reader's language.
+      console.warn('[multipost] connect failed', platform, err);
+      toast.error(t('multiPost.connectFailed', { platform: PLATFORM_NAMES[platform] }));
       setConnecting(null);
     }
   };

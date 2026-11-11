@@ -8,7 +8,7 @@ import { SETTINGS_HEADING_CLASS, SETTINGS_INLINE_ACTION_CLASS } from './Settings
 
 /**
  * Settings → Profile → Fediverse. The address Mastodon (and every other
- * ActivityPub app) can follow this account at — @username@dehub.io. The
+ * ActivityPub app) can follow this account at — @username@riftn.com. The
  * federation itself is server-side (dehub-stream-backend src/activitypub);
  * private accounts and accounts without a username are not federated.
  */
@@ -17,7 +17,7 @@ export function FediverseHandleSetting() {
   const { user } = useAuth() as any;
   const username = String(user?.username || '').replace(/^@/, '');
   const isPrivate = !!(user?.isPrivate || user?.customs?.isPrivate);
-  const handle = username ? `@${username}@dehub.io` : '';
+  const handle = username ? `@${username}@riftn.com` : '';
 
   const copy = async () => {
     try {
