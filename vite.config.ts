@@ -430,9 +430,10 @@ export default defineConfig(({ mode }) => ({
     // Several WebP icons in src/assets/icons are under the 4 KB default and
     // would be inlined as data: URIs. BrandIcon and WarHudIcon pick the themed
     // replacement by matching the file name in the URL, which a data: URI no
-    // longer carries, so keep them as files. Everything else keeps the default.
+    // longer carries, so keep them as files. The small badge stills stay files
+    // too: a screen fetches only its own density. Everything else keeps the default.
     assetsInlineLimit: (filePath: string) =>
-      /[\\/]src[\\/]assets[\\/]icons[\\/][^\\/]+\.webp$/.test(filePath) ? false : undefined,
+      /[\\/]src[\\/]assets[\\/](icons|badges[\\/]small)[\\/][^\\/]+\.webp$/.test(filePath) ? false : undefined,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {

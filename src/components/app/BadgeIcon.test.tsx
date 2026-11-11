@@ -47,6 +47,16 @@ describe('badge hover playback', () => {
     expect(screen.getByRole('button').style.verticalAlign).toBe('baseline');
   });
 
+  it('offers the small still per screen density and keeps the full one as the source', () => {
+    badgeTier = 'Crab';
+    render(<BadgeIcon />);
+    const image = screen.getByRole('img');
+    expect(image.getAttribute('src')).toBe(badgeHoverArt('Crab')?.poster);
+    const set = image.getAttribute('srcset') ?? '';
+    expect(set.split(',').map(entry => entry.trim().split(' ')[1])).toEqual(['1x', '2x', '3x']);
+    expect(set).toContain('crab');
+    expect(image.getAttribute('loading')).toBeNull();
+  });
   it('sizes the idle image from its own transparent bounds', () => {
     badgeTier = 'Crab';
     render(<BadgeIcon />);
