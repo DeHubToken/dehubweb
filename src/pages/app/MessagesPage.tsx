@@ -736,7 +736,8 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
     );
   }
 
-  const fullscreenTop = fullscreen ? (
+  // Computers only: phones keep the pill header they already have.
+  const fullscreenTop = fullscreen && !phonePill ? (
     <ChatListTop
       look={chromeLook}
       title={_copy('fullscreenChat.title', { defaultValue: 'Chat' })}
@@ -860,7 +861,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
           </PageIsland>)}
 
           {/* Conversation List */}
-          <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen ? (chromeLook === 'b' ? 'pt-1 pb-24' : 'pt-1 pb-4') : 'pt-3 pb-[76px] lg:pb-0'}`}>
+          <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? (chromeLook === 'b' ? 'pt-1 pb-24' : 'pt-1 pb-4') : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
             {/* Public Chat (pinned) */}
             <button
               onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
@@ -996,7 +997,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.3084651a3386", { defaultValue: "Searching users..." })}</div>
             )}
           </div>
-          {fullscreen && <ChatMeDock look={chromeLook} />}
+          {fullscreen && !phonePill && <ChatMeDock look={chromeLook} />}
         </div>
       </div>
   );
