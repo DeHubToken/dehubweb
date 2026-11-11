@@ -90,7 +90,7 @@ Your uploads can be minted on-chain to your wallet, so the ownership record does
 ### Is Riftn only for crypto creators?
 
 No. Payouts settle in crypto, but the content does not have to be about crypto, the platform carries video, music, live streaming, images and text posts across every category. The token is the payment rail, not the subject matter.`,
-  bannerImage: '/media/creators-guide-leaving-tiktok-banner-riftn.png',
+  bannerImage: '/media/creators-guide-leaving-tiktok-banner-manrope.jpg',
   bannerImageAlt: 'A creator moving from TikTok to a Web3 platform they own on Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-27T11:00:00.000Z',

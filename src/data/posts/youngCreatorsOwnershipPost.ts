@@ -96,7 +96,7 @@ No. Sign-in works through Google, Apple, email or SMS with a wallet created in t
 ### What is the single most important step?
 
 Keep the original files, off-platform, from day one. It is free, it takes minutes, and it is the one thing that makes recovery possible after any of the failures described above.`,
-  bannerImage: '/media/young-creators-ground-you-own-banner-riftn.png',
+  bannerImage: '/media/young-creators-ground-you-own-banner-manrope.jpg',
   bannerImageAlt: 'A young creator publishing on ground they own rather than rent',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T13:00:00.000Z',
