@@ -18,15 +18,17 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/NewMembersCarousel
  */
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useQueryClient } from '@tanstack/react-query';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
-import { FollowRow } from '@/components/app/FollowRow';
-import { ExploreListSection } from '@/components/app/explore/ExploreListSection';
+// Explore's one-line rows only: loaded when Explore asks for them, so the
+// home feed's copy of this row does not carry them on first paint.
+const FollowRow = lazy(() => import('@/components/app/FollowRow').then((m) => ({ default: m.FollowRow })));
+const ExploreListSection = lazy(() => import('@/components/app/explore/ExploreListSection').then((m) => ({ default: m.ExploreListSection })));
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -138,6 +140,7 @@ export function NewMembersCarousel({ surface = 'feed', layout = 'rail' }: NewMem
   if (layout === 'rows') {
     const shown = expanded ? members : members.slice(0, ROWS_COLLAPSED);
     return (
+      <Suspense fallback={null}>
       <ExploreListSection
         id="new-members"
         icon="communities"
@@ -175,6 +178,7 @@ export function NewMembersCarousel({ surface = 'feed', layout = 'rail' }: NewMem
           </button>
         )}
       </ExploreListSection>
+      </Suspense>
     );
   }
 

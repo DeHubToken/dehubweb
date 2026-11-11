@@ -25,7 +25,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/mobile/MobileWhoToFollowCarousel
  */
 
-import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
+import { Suspense, lazy, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -33,8 +33,10 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { FollowCoverCard, suggestionName } from '@/components/app/FollowCoverCard';
-import { FollowRow } from '@/components/app/FollowRow';
-import { ExploreListSection } from '@/components/app/explore/ExploreListSection';
+// Explore's one-line rows only: loaded when Explore asks for them, so the
+// home feed's copy of this row does not carry them on first paint.
+const FollowRow = lazy(() => import('@/components/app/FollowRow').then((m) => ({ default: m.FollowRow })));
+const ExploreListSection = lazy(() => import('@/components/app/explore/ExploreListSection').then((m) => ({ default: m.ExploreListSection })));
 import { AuthenticationError, getSuggestedAccounts, getRankedSuggestions, type SuggestedAccount } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -254,6 +256,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed', layout = 'rail' }:
   if (layout === 'rows') {
     const shown = expanded ? filteredSuggestions : filteredSuggestions.slice(0, ROWS_COLLAPSED);
     return (
+      <Suspense fallback={null}>
       <ExploreListSection
         icon="subscriptions"
         title={_copy("copy.a94bfc8a15e8", { defaultValue: "Follow suggestions" })}
@@ -274,6 +277,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed', layout = 'rail' }:
           />
         ))}
       </ExploreListSection>
+      </Suspense>
     );
   }
 
