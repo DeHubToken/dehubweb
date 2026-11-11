@@ -46,6 +46,7 @@ import {
   useUnreadNotificationCount, 
   useMarkAllNotificationsAsRead, 
   useMarkNotificationAsRead,
+  prefetchNotificationsList,
   type DeHubNotification,
   type NotificationCategory,
 } from '@/hooks/use-notifications';
@@ -334,6 +335,32 @@ const API_BACKED_TYPES = new Set([
  * mark is one too.
  */
 const DEHUB_MARK_SRC = dehubMarkWhite;
+
+/**
+ * Calls `onReach` once its children come within a screen and a half of the
+ * scroller's bottom, so the next page is already there when the reader gets
+ * to the end. Watches the nearest scrolling ancestor (the bell drawer's
+ * sheet) or the page itself.
+ */
+function LoadMoreSentinel({ onReach, busy, children }: { onReach: () => unknown; busy: boolean; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reach = useRef(onReach);
+  reach.current = onReach;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || busy || typeof IntersectionObserver === 'undefined') return;
+    let root: HTMLElement | null = el.parentElement;
+    while (root && !/(auto|scroll)/.test(getComputedStyle(root).overflowY)) root = root.parentElement;
+    const height = root?.clientHeight || window.innerHeight;
+    const io = new IntersectionObserver(
+      (entries) => { if (entries.some((e) => e.isIntersecting)) void reach.current(); },
+      { root, rootMargin: `0px 0px ${Math.round(height * 1.5)}px 0px` },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [busy]);
+  return <div ref={ref} className="p-4 flex justify-center">{children}</div>;
+}
 
 /** The subset of a tab's types the API can filter on, or undefined for no server filter. */
 function apiTypesForTab(tab: NotificationTypeFilter): string[] | undefined {
@@ -1878,7 +1905,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   // filter below still runs, because it also covers the Supabase-backed types
   // and it keeps the list correct against an API that predates `types`.
   const activeApiTypes = useMemo(() => apiTypesForTab(activeTab), [activeTab]);
-  const { notifications: dehubNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { notifications: dehubNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isPlaceholderData } =
     useNotifications(undefined, activeApiTypes, { notifyOnNew: false });
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
@@ -1946,6 +1973,22 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     () => orderNotificationTabKeys(tabs.map(({ value }) => value), tabUnreadCounts, 'all'),
     [tabUnreadCounts],
   );
+
+  // Each tab's first page, fetched quietly once the page has settled, so
+  // switching tabs shows rows at once rather than waiting on a request.
+  const prefetchClient = useQueryClient();
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const id = window.setTimeout(() => {
+      // The leading tabs only: they are the ones with unread rows, and the
+      // ones a thumb reaches first.
+      for (const key of orderedTabKeys.slice(0, 6)) {
+        const types = apiTypesForTab(key);
+        if (types) void prefetchNotificationsList(prefetchClient, types).catch(() => {});
+      }
+    }, 1200);
+    return () => window.clearTimeout(id);
+  }, [isAuthenticated, orderedTabKeys, prefetchClient]);
   
   // Batch-avatar enrichment for fresh profile pictures
   // Module-level caches persist across navigations to prevent avatar flashing
@@ -2577,7 +2620,9 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
               <h3 className="text-white font-semibold text-lg mb-2">{t('notifications.noNotificationsYet')}</h3>
             </div>
           ) : (
-            <div data-notification-feed className="pb-2">
+            // Keyed by tab: switching tabs swaps the list at once, instead of
+            // every row springing from its old place to its new one.
+            <div key={activeTab} data-notification-feed className="pb-2">
               <AnimatePresence initial={false}>
                 {bundledNotifications.map((bundle, index) => {
                   const group = feedGroupOf(bundle);
@@ -2609,9 +2654,10 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                 })}
               </AnimatePresence>
               
-              {/* Load More */}
-              {hasNextPage && (
-                <div className="p-4 flex justify-center">
+              {/* More loads on its own a screen and a half before the end; the
+                  button stays as a fallback. */}
+              {hasNextPage && !isPlaceholderData && (
+                <LoadMoreSentinel onReach={fetchNextPage} busy={isFetchingNextPage}>
                   <Button
                     variant="ghost"
                     onClick={() => fetchNextPage()}
@@ -2623,7 +2669,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                     ) : null}
                     {t('notifications.loadMore')}
                   </Button>
-                </div>
+                </LoadMoreSentinel>
               )}
             </div>
           )}
