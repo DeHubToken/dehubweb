@@ -62,7 +62,7 @@ describe('badge hover playback', () => {
     render(<BadgeIcon />);
     expect(screen.getByRole('img').getAttribute('style')).toContain(String(128 / 96));
     fireEvent.pointerEnter(screen.getByRole('button'));
-    expect(document.querySelector('[data-badge-animation]')?.getAttribute('style')).toContain(String(128 / 109));
+    expect(document.querySelector('[data-badge-animation]')?.getAttribute('style')).toContain(String(128 / 96));
   });
   it('keeps the poster until decoding completes and starts fresh on the next hover', async () => {
     render(<BadgeIcon />);
@@ -115,6 +115,17 @@ describe('badge hover playback', () => {
     fireEvent.pointerLeave(badge);
     expect(screen.getByRole('img').getAttribute('src')).toBe(art.poster);
     expect(screen.getByRole('img').className).not.toContain('drop-shadow');
+  });
+
+  it('draws the animation in the same box as the still so hover never resizes the badge', () => {
+    render(<BadgeIcon badgeBalance={500000} />);
+    const still = screen.getByRole('img').getAttribute('style');
+    fireEvent.pointerEnter(screen.getByRole('button'));
+    const motion = document.querySelector('[data-badge-animation]')!.getAttribute('style')!;
+    for (const prop of ['width', 'height', 'left', 'top']) {
+      const read = (css: string) => css.match(new RegExp(`(?:^|;\\s*)${prop}:\\s*([^;]+)`))?.[1];
+      expect(read(motion)).toBe(read(still!));
+    }
   });
 
   it('keeps the still image without a glow when reduced motion is enabled', () => {
