@@ -63,7 +63,7 @@ export function ExploreCategoryWords({
   onChange: (id: string | null) => void;
 }) {
   const { t: _copy } = _useCopy();
-  const items = [{ id: null as string | null, name: _copy('copy.explore.forYou', { defaultValue: 'For you' }) }, ...categories.map((c) => ({ id: c.id as string | null, name: c.name }))];
+  const items = [{ id: null as string | null, name: _copy('copy.explore.forYou', { defaultValue: 'For you' }) }, ...categories.filter((c) => c.name.toLowerCase() !== 'all').map((c) => ({ id: c.id as string | null, name: c.name }))];
   return (
     <div data-explore-category-words data-fade-edges className="border-b border-zinc-800/60">
       <div className="flex gap-5 overflow-x-auto px-1 scrollbar-hide" role="tablist">
