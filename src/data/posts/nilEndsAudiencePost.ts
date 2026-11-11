@@ -103,7 +103,7 @@ No. They are where your reach is and you should keep using them. The argument is
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T12:00:00.000Z',
   updatedAt: '2026-08-28T12:00:00.000Z',
-  tags: ['NIL', 'college athletes', 'revenue sharing', 'creator monetisation', 'athlete branding', 'web3 creators', 'dehub'],
+  tags: ['NIL', 'college athletes', 'revenue sharing', 'creator monetisation', 'athlete branding', 'web3 creators', 'riftn'],
   readingTime: 10,
   featured: false,
   status: 'published',

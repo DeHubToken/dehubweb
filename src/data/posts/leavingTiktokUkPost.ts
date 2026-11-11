@@ -123,7 +123,7 @@ Generally, yes. HMRC treats crypto income and capital gains under existing tax r
   author: { name: 'Riftn Team' },
   publishedAt: '2026-04-23T11:00:00.000Z',
   updatedAt: '2026-04-23T11:00:00.000Z',
-  tags: ['tiktok alternative uk', 'creator monetisation', 'web3 creators', 'leaving tiktok', 'watch-to-earn', 'british crypto creators', 'dehub'],
+  tags: ['tiktok alternative uk', 'creator monetisation', 'web3 creators', 'leaving tiktok', 'watch-to-earn', 'british crypto creators', 'riftn'],
   readingTime: 10,
   featured: false,
   status: 'published',

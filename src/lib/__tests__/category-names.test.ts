@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeCategoryList, normalizeCategoryName } from '@/lib/category-names';
+import { normalizeCategoryList, normalizeCategoryName, renamedCategory } from '@/lib/category-names';
 
 describe('normalizeCategoryName', () => {
   it('drops leading hashtag and mention marks', () => {
@@ -22,5 +22,14 @@ describe('normalizeCategoryList', () => {
 
   it('dedupes case-insensitively and drops empties', () => {
     expect(normalizeCategoryList(['#All', 'all', '@', '', 'Music'])).toEqual(['All', 'Music']);
+  });
+});
+
+describe('renamedCategory', () => {
+  it('opens old DeHub tags as their Riftn names', () => {
+    expect(renamedCategory('DeHub')).toBe('riftn');
+    expect(renamedCategory('dehub-wave')).toBe('riftn-wave');
+    expect(renamedCategory('dehubbers')).toBe('rifters');
+    expect(renamedCategory('Music')).toBe('music');
   });
 });

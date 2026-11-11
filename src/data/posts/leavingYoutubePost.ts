@@ -101,7 +101,7 @@ Both. The platform carries long-form video, shorts, music, live streaming, image
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-27T12:00:00.000Z',
   updatedAt: '2026-08-27T12:00:00.000Z',
-  tags: ['youtube alternative', 'creator monetisation', 'web3 creators', 'leaving youtube', 'demonetisation', 'watch-to-earn', 'dehub'],
+  tags: ['youtube alternative', 'creator monetisation', 'web3 creators', 'leaving youtube', 'demonetisation', 'watch-to-earn', 'riftn'],
   readingTime: 9,
   featured: false,
   status: 'published',

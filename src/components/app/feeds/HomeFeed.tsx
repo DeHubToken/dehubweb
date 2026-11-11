@@ -1,4 +1,5 @@
 import { BoostedPostContext } from '@/components/app/cards/boosted-post';
+import { renamedCategory } from '@/lib/category-names';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface';
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -825,10 +826,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // same feedback as a chip tap without a second flag to keep in sync.
   useEffect(() => {
     const getCategoryId = (detail: unknown): string | null => {
-      if (typeof detail === 'string') return detail.toLowerCase();
+      if (typeof detail === 'string') return renamedCategory(detail);
       if (detail && typeof detail === 'object' && 'categoryId' in detail) {
         const value = (detail as { categoryId?: unknown }).categoryId;
-        return typeof value === 'string' ? value.toLowerCase() : null;
+        return typeof value === 'string' ? renamedCategory(value) : null;
       }
       return null;
     };
@@ -869,7 +870,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     const params = new URLSearchParams(window.location.search);
     const fromUrl = params.get('category');
     if (!fromUrl) return;
-    setSelectedCategories([fromUrl.toLowerCase()]);
+    setSelectedCategories([renamedCategory(fromUrl)]);
     params.delete('category');
     const query = params.toString();
     window.history.replaceState(
@@ -884,10 +885,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     const normalized = Array.from(new Set(
       (selectedCategories as unknown[])
         .map((cat) => {
-          if (typeof cat === 'string') return cat.toLowerCase();
+          if (typeof cat === 'string') return renamedCategory(cat);
           if (cat && typeof cat === 'object' && 'categoryId' in cat) {
             const value = (cat as { categoryId?: unknown }).categoryId;
-            return typeof value === 'string' ? value.toLowerCase() : null;
+            return typeof value === 'string' ? renamedCategory(value) : null;
           }
           return null;
         })

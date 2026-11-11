@@ -95,7 +95,7 @@ Treat the athlete's channel as an asset in the next contract rather than a risk 
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T10:00:00.000Z',
   updatedAt: '2026-08-28T10:00:00.000Z',
-  tags: ['sports media rights', 'athlete media', 'creator economy', 'fan engagement', 'sports business', 'web3 creators', 'dehub'],
+  tags: ['sports media rights', 'athlete media', 'creator economy', 'fan engagement', 'sports business', 'web3 creators', 'riftn'],
   readingTime: 10,
   featured: false,
   status: 'published',

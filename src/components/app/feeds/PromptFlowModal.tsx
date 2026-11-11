@@ -46,7 +46,7 @@ const SYNONYM_CLUSTERS: string[][] = [
   // Gaming / esports
   ['game', 'games', 'gaming', 'gamer', 'esports', 'esport', 'fortnite', 'minecraft', 'roblox', 'valorant', 'cod', 'callofduty', 'warzone', 'lol', 'leagueoflegends', 'dota', 'csgo', 'cs2', 'apex', 'pubg', 'overwatch', 'twitch', 'streamer', 'xbox', 'playstation', 'ps5', 'nintendo', 'switch', 'rpg', 'mmo', 'fps'],
   // Crypto / web3
-  ['crypto', 'cryptocurrency', 'btc', 'bitcoin', 'eth', 'ethereum', 'sol', 'solana', 'doge', 'dogecoin', 'shib', 'pepe', 'memecoin', 'altcoin', 'defi', 'nft', 'nfts', 'web3', 'blockchain', 'token', 'tokens', 'dex', 'dao', 'staking', 'yield', 'airdrop', 'wallet', 'metamask', 'trading', 'trader', 'chart', 'pump', 'dump', 'bull', 'bear', 'hodl', 'dhb', 'dehub'],
+  ['crypto', 'cryptocurrency', 'btc', 'bitcoin', 'eth', 'ethereum', 'sol', 'solana', 'doge', 'dogecoin', 'shib', 'pepe', 'memecoin', 'altcoin', 'defi', 'nft', 'nfts', 'web3', 'blockchain', 'token', 'tokens', 'dex', 'dao', 'staking', 'yield', 'airdrop', 'wallet', 'metamask', 'trading', 'trader', 'chart', 'pump', 'dump', 'bull', 'bear', 'hodl', 'dhb', 'dehub', 'riftn', 'rift'],
   // AI / tech
   ['ai', 'artificial', 'intelligence', 'ml', 'llm', 'gpt', 'chatgpt', 'openai', 'claude', 'anthropic', 'gemini', 'midjourney', 'stable', 'diffusion', 'tech', 'technology', 'software', 'coding', 'code', 'developer', 'dev', 'programming', 'startup', 'saas', 'computer', 'apple', 'iphone', 'android', 'google', 'microsoft', 'nvidia'],
   // Music
