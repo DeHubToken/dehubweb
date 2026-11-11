@@ -39,7 +39,7 @@ const EXIT_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
  * animation would also cancel a transition here. This one outranks the CSS
  * exit and keeps running however busy the page gets.
  */
-function slideOut(sheet: HTMLElement | null) {
+export function slideOut(sheet: HTMLElement | null) {
   if (!sheet || typeof sheet.animate !== 'function') return;
   const from = sheet.style.transform || 'translate3d(0, 0, 0)';
   // After vaul's release handling, which may set a spring-back transition:

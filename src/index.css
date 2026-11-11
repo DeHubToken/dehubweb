@@ -7073,10 +7073,36 @@ html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]:not(#_):
   [data-boost-lit] svg { animation: none; filter: drop-shadow(0 0 5px color-mix(in srgb, currentColor 50%, transparent)); }
 }
 
-/* Bell drawer (phones): the glass sheet already sits behind the pill, so the
-   page-gap strip above it would only read as a dark band under the handle. */
+/* Bell drawer (phones): the sheet itself carries no backdrop blur; its
+   overlay blurs the page behind instead (NotificationsDrawer). In Chrome a
+   blur inside a scrolling list that sits in a blurred sheet sees none of the
+   list, so the rows stayed sharp behind the pill and the strip below. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* No handle, so the pill's sticky strip is the top of the sheet. Rows
+   scrolling up past the pill blur out there instead of showing sharp in the
+   gap above it and beside it, fading off just under the pill. Behind the
+   pill (z-index -1 inside its sticky wrapper). */
 html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] [data-feed-nav-outer]::before {
-  display: none !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: calc(100% + 6px) !important;
+  background: rgb(9 9 11 / 0.3) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent) !important;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent) !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] [data-feed-nav-outer]::before {
+  background: rgb(249 248 244 / 0.6) !important;
 }
 
 /* Drawer handle on the paper sheets: the white bar vanishes on pale frost. */

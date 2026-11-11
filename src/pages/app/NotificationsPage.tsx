@@ -2476,7 +2476,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       {/* Header */}
       <div ref={islandHostRef} className="contents">
         <PageIsland
-          className={inDrawer ? 'top-0 lg:top-0' : undefined}
+          className={inDrawer ? 'top-0 lg:top-0 pt-2' : undefined}
           icon="notifications"
           title={<span aria-live="polite">{activeTabLabel}</span>}
           tabs={
