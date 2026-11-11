@@ -1,0 +1,135 @@
+/* Spotify cards (SpotifyCard.tsx), the corner bar and the profile grid tile.
+   The card sits on the theme's own surface; the cover's colours wash in
+   underneath, softly, so every song card takes on its own tint. */
+
+.spotify-card-wash {
+  position: absolute;
+  inset: -40%;
+  width: 180%;
+  height: 180%;
+  object-fit: cover;
+  filter: blur(36px) saturate(1.6);
+  opacity: 0.32;
+  pointer-events: none;
+  user-select: none;
+}
+html:is([data-theme='light'], [data-system-tone='light']) .spotify-card-wash { opacity: 0.22; }
+.spotify-bar .spotify-card-wash { opacity: 0.45; }
+
+.spotify-card-art { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35); }
+
+.spotify-play {
+  color: #000;
+  box-shadow: 0 0 0 4px rgba(30, 215, 96, 0.14), 0 6px 16px rgba(0, 0, 0, 0.28);
+}
+[data-playing] .spotify-play { box-shadow: 0 0 0 5px rgba(30, 215, 96, 0.2), 0 0 22px rgba(30, 215, 96, 0.35); }
+
+/* Progress: a thin rail, a filled part, and a knob that shows on touch/hover. */
+.spotify-track-rail,
+.spotify-track-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+}
+.spotify-track-rail { background: currentColor; opacity: 0.18; }
+.spotify-track-fill {
+  background: currentColor;
+  transform-origin: left center;
+  will-change: transform;
+}
+.spotify-track { color: #fff; }
+html:is([data-theme='light'], [data-system-tone='light']) [data-spotify-card] .spotify-track { color: #18181b; }
+.spotify-track[aria-disabled='true'] .spotify-track-rail { opacity: 0.12; }
+
+/* Equaliser: three bars. */
+.spotify-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+.spotify-eq i {
+  width: 2.5px;
+  height: 35%;
+  border-radius: 2px;
+  background: #1ed760;
+}
+.spotify-eq--on i { animation: spotify-eq 0.9s ease-in-out infinite; }
+.spotify-eq--on i:nth-child(2) { animation-delay: -0.3s; animation-duration: 0.75s; }
+.spotify-eq--on i:nth-child(3) { animation-delay: -0.55s; animation-duration: 1.05s; }
+@keyframes spotify-eq {
+  0%, 100% { height: 30%; }
+  50% { height: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotify-eq--on i { animation: none; height: 80%; }
+}
+
+/* Profile grid tile (GridCardTile SpotifyFace): a media tile, so dark in every
+   theme, like the audio tile beside it. */
+[data-profile-mixed-grid] .pmg-spotify { background: #0d0d10; color: #fff; }
+[data-profile-mixed-grid] .pmg-spotify .pmg-audio-cover { top: 15%; overflow: visible; }
+[data-profile-mixed-grid] .pmg-spotify .pmg-audio-cover > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+[data-profile-mixed-grid] .pmg-spotify-play {
+  position: absolute;
+  right: -0.9em;
+  bottom: -0.9em;
+  width: 4.2em;
+  height: 4.2em;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #1ed760;
+  box-shadow: 0 0 0 0.35em rgba(0, 0, 0, 0.35), 0 0.5em 1.2em rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.15s ease-out;
+}
+[data-profile-mixed-grid] .pmg-spotify-play:active { transform: scale(0.92); }
+[data-profile-mixed-grid] .pmg-spotify-play:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+[data-profile-mixed-grid] .pmg-spotify-play svg { width: 1.9em; height: 1.9em; }
+[data-profile-mixed-grid] .pmg-spotify[data-playing] .pmg-spotify-play { box-shadow: 0 0 0 0.35em rgba(30, 215, 96, 0.25), 0 0 1.6em rgba(30, 215, 96, 0.5); }
+[data-profile-mixed-grid] .pmg-spotify-text {
+  position: absolute;
+  left: 0.75em;
+  right: 0.75em;
+  bottom: 1.1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+}
+[data-profile-mixed-grid] .pmg-spotify-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 1.15em;
+  font-weight: 800;
+  min-width: 0;
+}
+[data-profile-mixed-grid] .pmg-spotify-title b { font-weight: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+[data-profile-mixed-grid] .pmg-spotify-title .spotify-eq { flex: none; height: 1em; }
+[data-profile-mixed-grid] .pmg-spotify-sub { font-size: 1em; font-weight: 600; color: rgba(255, 255, 255, 0.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+[data-profile-mixed-grid] .pmg-spotify-bar {
+  position: absolute;
+  left: 0.75em;
+  right: 0.75em;
+  bottom: 0.45em;
+  height: 0.3em;
+  border-radius: 1em;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+[data-profile-mixed-grid] .pmg-spotify-bar i {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: left center;
+  border-radius: inherit;
+}
+[data-profile-mixed-grid] .pmg-chip--spotify svg { fill: #1ed760; }

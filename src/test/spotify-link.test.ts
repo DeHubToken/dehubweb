@@ -29,3 +29,12 @@ describe('cleanSpotifyTitle', () => {
     expect(cleanSpotifyTitle('Never Gonna Give You Up')).toBe('Never Gonna Give You Up');
   });
 });
+
+describe('profile grid card for a Spotify post', () => {
+  it('turns a Spotify link into a playable Spotify tile, ahead of other links', async () => {
+    const { textCardOf } = await import('@/lib/grid-card');
+    expect(textCardOf({ content: 'listen https://example.com/x and https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC' }))
+      .toEqual({ kind: 'spotify', url: 'https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC' });
+    expect(textCardOf({ content: 'read https://example.com/x' })).toEqual({ kind: 'link', url: 'https://example.com/x' });
+  });
+});

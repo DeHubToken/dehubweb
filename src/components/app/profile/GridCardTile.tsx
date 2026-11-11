@@ -16,7 +16,7 @@
  * Comic, a watch-to-earn post) get the same pill: GridKindPill.
  */
 
-import type { ComponentType, ReactNode } from 'react';
+import { useEffect, useRef, type ComponentType, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNowStrict, format, isPast } from 'date-fns';
@@ -44,14 +44,27 @@ import { useInvitePreview } from '@/hooks/use-community-admin';
 import { getAccountByUsername } from '@/lib/api/dehub/users';
 import { getNFTInfo } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
-import { fetchLinkPreview, peekLinkPreview } from '@/lib/api/link-preview';
+import { fetchLinkPreview, peekLinkPreview, type LinkPreviewData } from '@/lib/api/link-preview';
 import { outsideImage } from '@/lib/outside-image';
 import { buildAvatarUrl, cdnImage, deviceWidth, storageImage } from '@/lib/media-url';
 import { resolveQuotedPostMedia } from '@/components/app/cards/QuotedPostEmbed';
 import { linkHost, type GridCardKind, type TextCard } from '@/lib/grid-card';
+import { parseSpotifyLink, type SpotifyLink } from '@/lib/spotify';
+import { spotifyPositionNow, useSpotifyOnScreen, useSpotifyProgress } from '@/lib/spotify-player';
+import {
+  PauseGlyph,
+  PlayGlyph,
+  SpotifyEq,
+  SpotifyLogo,
+  SpotifySpinner,
+  useSpotifyControls,
+  useSpotifyItem,
+} from '@/components/app/cards/SpotifyCard';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 type IconT = ComponentType<{ className?: string }>;
+
+const SpotifyIcon: IconT = ({ className }) => <SpotifyLogo className={className} />;
 
 const KIND: Record<GridCardKind, { key: string; label: string; Icon: IconT }> = {
   stage: { key: 'stage', label: 'Stage', Icon: Mic },
@@ -70,6 +83,7 @@ const KIND: Record<GridCardKind, { key: string; label: string; Icon: IconT }> = 
   short: { key: 'short', label: 'Short', Icon: Shorts },
   comic: { key: 'comic', label: 'Comic', Icon: Packs },
   earn: { key: 'earn', label: 'Earn', Icon: Coins },
+  spotify: { key: 'spotify', label: 'Spotify', Icon: SpotifyIcon },
 };
 
 /** The pill: what this tile is. `inline` sits in a text poster's flow instead of over a picture. */
@@ -77,7 +91,7 @@ export function GridKindPill({ kind, live, inline }: { kind: GridCardKind; live?
   const { t } = useTranslation();
   const { key, label, Icon } = KIND[kind];
   return (
-    <span className={`pmg-chip pmg-chip--kind${live ? ' pmg-chip--kind-live' : ''}${inline ? ' pmg-chip--inline' : ''}`}>
+    <span className={`pmg-chip pmg-chip--kind pmg-chip--${kind}${live ? ' pmg-chip--kind-live' : ''}${inline ? ' pmg-chip--inline' : ''}`}>
       {live ? <i className="pmg-kind-dot" /> : <Icon className="pmg-chip-icon" />}
       {live ? t('profile.gridCard.liveStage', 'Live stage') : t(`profile.gridCard.${key}`, label)}
     </span>
@@ -262,6 +276,76 @@ function LinkFace({ url, chip, fallback }: FaceProps & { url: string }) {
   );
 }
 
+/** Thin bar along the tile's foot while its song plays. */
+function SpotifyTileBar({ active }: { active: boolean }) {
+  const progress = useSpotifyProgress();
+  const fillRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const paint = () => {
+      const ratio = active && progress.duration ? Math.min(1, spotifyPositionNow(progress) / progress.duration) : 0;
+      if (fillRef.current) fillRef.current.style.transform = `scaleX(${ratio})`;
+    };
+    paint();
+    if (!active || !progress.playing) return;
+    const timer = window.setInterval(paint, 250);
+    return () => window.clearInterval(timer);
+  }, [active, progress]);
+  return <span className="pmg-spotify-bar" aria-hidden><i ref={fillRef} style={{ transform: 'scaleX(0)' }} /></span>;
+}
+
+/**
+ * A Spotify post in the grid: the cover over its own blur, like an audio
+ * tile, with a green Play that plays it right here. The rest of the tile
+ * still opens the post.
+ */
+function SpotifyFace({ url, link, chip, fallback }: FaceProps & { url: string; link: SpotifyLink }) {
+  const { data: preview } = useQuery({
+    queryKey: ['grid-link-preview', url],
+    queryFn: () => fetchLinkPreview(url),
+    initialData: () => peekLinkPreview(url) ?? undefined,
+    staleTime: 30 * 60_000,
+    retry: false,
+  });
+  if (!preview?.title) return <>{fallback}</>;
+  return <SpotifyFaceBody preview={preview} link={link} chip={chip} />;
+}
+
+function SpotifyFaceBody({ preview, link, chip }: { preview: LinkPreviewData; link: SpotifyLink; chip?: ReactNode }) {
+  const { t } = useTranslation();
+  const item = useSpotifyItem(preview, link);
+  const { isCurrent, isPlaying, isLoading, play } = useSpotifyControls(item);
+  const ref = useRef<HTMLSpanElement>(null);
+  useSpotifyOnScreen(ref, link.uri);
+  const image = outsideImage(preview.image);
+  const label = isPlaying ? t('spotify.pause', { defaultValue: 'Pause' }) : t('spotify.play', { defaultValue: 'Play' });
+  return (
+    <span ref={ref} data-on-media className="pmg-mini pmg-spotify" data-playing={isPlaying || undefined} data-spotify-tile>
+      {image ? <span className="pmg-audio-blur" style={{ backgroundImage: `url(${image})` }} /> : <span className="pmg-audio-blur pmg-audio-blur--empty" />}
+      <span className="pmg-audio-cover">
+        {image ? <img src={image} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" /> : <SpotifyLogo />}
+        <span
+          role="button"
+          tabIndex={0}
+          aria-label={`${label}: ${item.title}`}
+          data-keep-round
+          className="pmg-spotify-play"
+          onClick={play}
+          onPointerDown={(e) => e.stopPropagation()}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') play(e); }}
+        >
+          {isLoading ? <SpotifySpinner /> : isPlaying ? <PauseGlyph /> : <PlayGlyph />}
+        </span>
+      </span>
+      <span className="pmg-spotify-text">
+        <span className="pmg-spotify-title">{isCurrent && <SpotifyEq playing={isPlaying} />}<b>{item.title}</b></span>
+        <span className="pmg-spotify-sub">{item.subtitle}</span>
+      </span>
+      {isCurrent && <SpotifyTileBar active={isCurrent} />}
+      {chip ?? <GridKindPill kind="spotify" />}
+    </span>
+  );
+}
+
 function CommunityFace({ slug, chip, fallback }: FaceProps & { slug: string }) {
   const { t } = useTranslation();
   const { data: community } = useCommunity(slug);
@@ -348,6 +432,10 @@ export function GridCardFace({ card, tokenId, quotedPost, ...face }: GridCardTil
       return link?.username ? <ProfileFace {...face} username={link.username} /> : <>{face.fallback}</>;
     case 'link':
       return card.url ? <LinkFace {...face} url={card.url} /> : <>{face.fallback}</>;
+    case 'spotify': {
+      const song = parseSpotifyLink(card.url);
+      return card.url && song ? <SpotifyFace {...face} url={card.url} link={song} /> : <>{face.fallback}</>;
+    }
     case 'poll':
       return <PollFace {...face} tokenId={tokenId} />;
     default:
