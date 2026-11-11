@@ -3432,6 +3432,7 @@
     "statsLoadFailed": "Nepodarilo sa načítajúť údaje o stakingu"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Zdieľať odkaz",
     "pinnedMore": "Viac",
     "showFirst": "Zobraziť ako prvú",

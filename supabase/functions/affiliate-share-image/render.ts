@@ -72,7 +72,7 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
   const badgeY = 219 - badgeSize + ((badgeOptic?.bottomInset ?? 0) / 128) * badgeSize;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${opts.width}" height="${opts.height}" viewBox="0 0 ${opts.width} ${opts.height}" font-family="Inter, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="${opts.width}" height="${opts.height}" viewBox="0 0 ${opts.width} ${opts.height}" font-family="Manrope, Arial, sans-serif">
   <rect width="100%" height="100%" fill="#101113"/>
   <svg width="${opts.width}" height="${opts.height}" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid meet">
     <defs>

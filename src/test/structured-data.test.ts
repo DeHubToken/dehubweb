@@ -7,8 +7,7 @@
  * - No SoftwareApplication / WebApplication / MobileApplication anywhere: the
  *   Software App result requires a rating or review, none of these pages has
  *   one, and without it Search Console lists each as an invalid item.
- * - Stores are OnlineStore (Store is a LocalBusiness and needs an address),
- *   events carry a location and a real organizer, profiles are ProfilePage,
+ * - Events carry a location and a real organizer, profiles are ProfilePage,
  *   posts SocialMediaPosting, communities never an Organization, and the
  *   homepage drops the retired SearchAction.
  * - Declared og:image sizes are true: pictures go through the image transform
@@ -154,7 +153,7 @@ describe('edge-rendered pages', () => {
     network({});
     const { body } = await crawl('/docs/overview');
     const article = jsonLd(body).find((b) => b['@type'] === 'TechArticle')!;
-    expect(article.image).toBe('https://riftn.com/og/docs-overview.jpg?v=3');
+    expect(article.image).toBe('https://riftn.com/og/docs-overview.jpg?v=4');
     expect(article.author).toMatchObject({ '@type': 'Organization', name: 'Riftn' });
     expectValidTrail(body, 'https://riftn.com/docs/overview');
     expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Docs', 'Riftn Docs | Overview'.replace(/ (?:—|\|) Riftn( Docs)?$/, '')]);
@@ -164,7 +163,7 @@ describe('edge-rendered pages', () => {
     network({});
     const { body } = await crawl('/guides/best-decentralized-streaming-apps');
     const article = jsonLd(body).find((b) => b['@type'] === 'Article')!;
-    expect(article.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=3');
+    expect(article.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=4');
     expect(article.author).toMatchObject({ '@type': 'Organization' });
     expectValidTrail(body, 'https://riftn.com/guides/best-decentralized-streaming-apps');
   });
@@ -190,7 +189,7 @@ describe('edge-rendered pages', () => {
     expect(body).toContain('<link rel="canonical" href="https://riftn.com/stream">');
     expect(meta(body, 'og:title')).toContain('Stream on Riftn');
     expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/creators.jpg?v=3');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/creators.jpg?v=4');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
     const faq = nodes(jsonLd(body)).find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string; acceptedAnswer: { text: string } }[] };
@@ -303,25 +302,6 @@ describe('entity pages', () => {
     expect(res.status).toBe(404);
   });
 
-  it('marks a store as an OnlineStore with a declared 1200x630 card', async () => {
-    network({
-      'https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/stores': json([
-        { id: 'abcdef12-3456', name: 'Shop', description: 'Things', banner_url: `${STORAGE}/store-media/abc/banner.png` },
-      ]),
-    });
-    const { body } = await crawl('/stores/abcdef12-3456');
-    expect(types(body)).toContain('OnlineStore');
-    expect(types(body)).not.toContain('Store');
-    expect(meta(body, 'og:image')).toBe(
-      'https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io/_og/storage/store-media/abc/banner.png',
-    );
-    expect(meta(body, 'og:image:width')).toBe('1200');
-    expect(meta(body, 'og:image:height')).toBe('630');
-    expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expectValidTrail(body, 'https://riftn.com/stores/abcdef12-3456');
-    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Stores', 'Shop']);
-  });
-
   it('gives an online event a VirtualLocation, its creator as organizer and a status', async () => {
     network({
       'https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/community_events': json([
@@ -371,7 +351,7 @@ describe('entity pages', () => {
     expect(body).toContain('<meta name="robots" content="noindex, follow">');
     expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co: Built with Riftn Builder');
     expect(meta(body, 'og:description')).toBe('Collect tips.');
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/builder.jpg?v=3');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/builder.jpg?v=4');
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 

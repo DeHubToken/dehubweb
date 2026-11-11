@@ -244,7 +244,7 @@ For a like-for-like Twitter replacement, short posts, a familiar feed, a large a
 ## Try a decentralised network that pays you
 
 The fastest way to understand the difference is to use one. Explore the feed, tokenise an upload, put a price on your inbox, or go live at [riftn.com](https://riftn.com), open [the Riftn app](https://riftn.com/app) in your browser, or download it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Own your content, keep your audience, and get paid for the attention you already create.`,
-  bannerImage: '/media/best-decentralised-social-media-platforms-2026-banner-riftn.png',
+  bannerImage: '/media/best-decentralised-social-media-platforms-2026-banner-manrope.jpg',
   bannerImageAlt: 'Comparison of the best decentralised social media platforms in 2026 including Riftn, Bluesky, Farcaster, Lens and Mastodon',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-03-06T14:50:00.000Z',

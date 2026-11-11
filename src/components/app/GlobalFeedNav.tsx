@@ -17,7 +17,7 @@ import { isHomePath } from '@/lib/home-path';
 import Settings2 from "@/components/ui/cut-icons/settings";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
-import { FEED_TAB_ICON_SCALE, feedTabsFor } from '@/constants/app.constants';
+import { FEED_TAB_ICON_SCALE, feedTabIconTransform, feedTabsFor } from '@/constants/app.constants';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
@@ -32,6 +32,7 @@ import { closeCommentsSplit } from '@/lib/comments-split';
 import { FeedSearchBar } from '@/components/app/navigation/FeedSearchBar';
 import { FeedSearchLens, useFeedSearchLens } from '@/components/app/navigation/FeedSearchLens';
 import { closeFeedSearch, getFeedSearchState, isFeedSearchTab, openFeedSearch, useFeedSearch } from '@/lib/feed-search';
+import { getDocumentScrollTop, scrollDocumentToSmooth, SCROLL_TOP_FIRST_PX } from '@/lib/document-scroll';
 import { useImagesFeedScrollView, requestImagesBackToCollage } from '@/lib/images-feed-mode';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
@@ -222,8 +223,10 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
       if (tabValue === activeTab) {
         // Same tab clicked: a searchable feed turns the pill into its search,
         // the others toggle their filters (the sliders button does both).
+        // Scrolled down, the first tap only glides the feed back to the top.
         if (isFeedSearchTab(tabValue)) {
           if (getFeedSearchState().open) closeFeedSearch();
+          else if (getDocumentScrollTop() > SCROLL_TOP_FIRST_PX) scrollDocumentToSmooth();
           else openFeedSearch();
         } else window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
       } else {
@@ -361,7 +364,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
                     isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                   )}
                 >
-                  <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className="relative z-10 w-4 h-4 origin-center" style={{ transform: `scale(${FEED_TAB_ICON_SCALE[tab.value] ?? 1})` }} />
+                  <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className="relative z-10 w-4 h-4 origin-center" style={{ transform: feedTabIconTransform(tab.value) }} />
                 </button>
               );
             })}

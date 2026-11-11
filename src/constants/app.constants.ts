@@ -16,7 +16,6 @@ import Quote from "@/components/ui/cut-icons/quote";
 import Handshake from "@/components/ui/cut-icons/affiliate";
 
 import Blocks from "@/components/ui/cut-icons/apps";
-import Store from "@/components/ui/cut-icons/store";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import Image from "@/components/ui/cut-icons/images";
 import Video from "@/components/ui/cut-icons/video";
@@ -86,7 +85,6 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Hammer, label: 'Bounties', path: '/work' },
   { icon: Handshake, label: 'Affiliate', path: '/affiliate' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
-  { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: PieChart, label: 'Fractions', path: '/app/fractions' },
   { icon: AtSign, label: 'Usernames', path: '/usernames' },
   { icon: Users, label: 'Accounts', path: '/accounts' },
@@ -154,11 +152,23 @@ export const FEED_TAB_ICON_SCALE: Record<string, number> = {
   shorts: 1,
   images: 1.16,
   videos: 1.08,
-  text: 1,
   music: 1.09,
   live: 1,
   settings: 1.18,
 };
+
+// Quote marks sit short and wide, so an even scale big enough to reach the
+// row's height would make them the widest glyph. Stretch them taller instead.
+// Keep in sync with mobile's FEED_NAV_ICON_STRETCH.
+const FEED_TAB_ICON_STRETCH: Record<string, readonly [number, number]> = {
+  text: [1.22, 1.49],
+};
+
+/** CSS transform that sizes a home-tab glyph to match its neighbours. */
+export function feedTabIconTransform(tab: string): string {
+  const stretch = FEED_TAB_ICON_STRETCH[tab];
+  return stretch ? `scale(${stretch[0]}, ${stretch[1]})` : `scale(${FEED_TAB_ICON_SCALE[tab] ?? 1})`;
+}
 
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, get label() { return _translateCopy("copy.3a78695388b3", { defaultValue: "Home" }); }, value: 'home' },

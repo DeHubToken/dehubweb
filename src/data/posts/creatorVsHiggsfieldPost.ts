@@ -109,7 +109,7 @@ Provider prices move, and when they do, Riftn's per-job quotes move with them, t
 
 Every Riftn account starts with **1,400 DHB free on day one**, the 1,000 starter plus the first daily 400, and no card is required. That is a Veo 3.1 Fast video with change to spare, or a stack of premium images, and the daily 400 keeps arriving and banking either way. Head to [riftn.com/creator](/creator), sign in, and make something.
   `,
-  bannerImage: '/media/ai-creator-studio-banner-riftn.jpg',
+  bannerImage: '/media/ai-creator-studio-banner-manrope.jpg',
   bannerImageAlt: 'Riftn Creator, AI credits that never expire, with Veo, Seedance and Kling live',
   author: {
     name: 'Riftn Team',

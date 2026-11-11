@@ -3337,6 +3337,7 @@
     "statsLoadFailed": "स्टेकिङ्ग सङ्ख्या लोड गर्न नसक्यो"
   },
   "communities": {
+    "sortTop": "शीर्ष",
     "shareLink": "लिङ्क सेयर गर्नुहोस्",
     "pinnedMore": "थप",
     "showFirst": "पहिले देखाउनुहोस्",

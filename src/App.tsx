@@ -226,7 +226,6 @@ const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
-const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
 const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
 const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreatePage"));
 const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
@@ -796,8 +795,8 @@ function AppContent() {
               <Route path="events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
               <Route path="communities" element={null} />
               <Route path="fractions" element={null} />
-              <Route path="stores" element={null} />
-              <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
+              {/* Stores closed; old shop links land on Home. */}
+              <Route path="stores/*" element={<Navigate to="/app" replace />} />
               <Route path="usernames" element={null} />
               <Route path="nfts" element={<NftsRedirect />} />
               <Route path="accounts" element={null} />
@@ -860,7 +859,7 @@ function AppContent() {
                 time, each after someone noticed a shared dehub.io/<x> link
                 landing on the /:username catch-all and rendering the empty
                 profile of a user who does not exist. These are the ones that
-                had not had that moment yet — /stores, /fractions and
+                had not had that moment yet — /fractions and
                 /superpowers are public pages people link at, and the private
                 ones are what a support answer or a bookmark gets typed as.
                 All of these names are reserved in reserved-usernames.js, so
@@ -869,8 +868,7 @@ function AppContent() {
                 `/wallet` is deliberately absent: a real account registered
                 that handle in Feb 2026, and routing the bare path would take
                 their profile away. /app/wallet still works. */}
-            <Route path="/stores" element={null} />
-            <Route path="/stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
+            <Route path="/stores/*" element={<Navigate to="/app" replace />} />
             <Route path="/fractions" element={null} />
             <Route path="/planned" element={null} />
             <Route path="/superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />

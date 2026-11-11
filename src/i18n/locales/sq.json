@@ -3328,6 +3328,7 @@
     "statsLoadFailed": "Nuk mund të ngarkohen statistikat e staking"
   },
   "communities": {
+    "sortTop": "Kryesoret",
     "shareLink": "Ndaj linkun",
     "pinnedMore": "Më shumë",
     "showFirst": "Shfaq të parën",

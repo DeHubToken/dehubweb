@@ -402,8 +402,30 @@ function SpotifyGallery() {
         <div className="min-w-0 space-y-3"><h3>Post</h3>{links.map((url) => <FeedLinkPreviews key={url} text={url} />)}</div>
         <div className="min-w-0 space-y-3"><h3>Chat</h3>{links.slice(0, 1).map((url) => <ChatLinkPreviews key={url} content={url} />)}</div>
       </div>
+      <SpotifyGridGallery />
       {open && <RadioPlayerProvider><SpotifyMiniPlayer /></RadioPlayerProvider>}
     </section>
+  );
+}
+
+function SpotifyGridGallery() {
+  const qc = useQueryClient();
+  const [ready] = useState(() => {
+    for (const preview of GALLERY_SPOTIFY_PREVIEWS) qc.setQueryData(['grid-link-preview', preview.url], preview);
+    return true;
+  });
+  const entries = [
+    pillText('9116', 'On repeat all week https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC'),
+    pillText('9117', 'Still the best album ever made https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv'),
+    pillVideo('sp-video', 'Night ride through the city', pillArtB),
+  ] as unknown as MixedGridEntry[];
+  return (
+    <div className="space-y-2" data-spotify-grid-gallery>
+      <h3>Profile grid</h3>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        {ready && <div className="max-w-[360px]"><ProfileMixedGrid entries={entries} /></div>}
+      </AuthContext.Provider>
+    </div>
   );
 }
 
@@ -448,7 +470,7 @@ const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon a
 const SAMPLE_ARTICLE = {
   get title() { return _translateCopy("copy.b91b0545d5a2", { defaultValue: "Why we moved our streams on-chain" }); },
   summary: 'After two years of takedowns and payout freezes, here is what changed when our audience started paying us directly.',
-  cover: '/media/ai-creator-studio-banner-riftn.jpg',
+  cover: '/media/ai-creator-studio-banner-manrope.jpg',
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
     'Moving to Riftn was not about crypto. It was about owning the relationship with the people who watch us every night.',
@@ -2107,7 +2129,15 @@ const GRID_CARD_ENTRIES = [
   pillText('9113', 'We are on right now, pull up https://riftn.com/stages/2'),
   pillText('gc-plain', 'Sunday reset. Coffee, long walk, no notifications.'),
   pillText('9115', 'Read this before you buy anything https://riftn.com/app/post/5162'),
+  pillText('9116', 'On repeat all week https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC'),
+  pillText('9117', 'Still the best album ever made https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv'),
 ] as unknown as MixedGridEntry[];
+
+/** Spotify previews the gallery draws with no network (grid + Spotify section). */
+const GALLERY_SPOTIFY_PREVIEWS = [
+  { url: 'https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC', title: 'Never Gonna Give You Up', description: 'Rick Astley · Song · 1987', image: 'https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02255e131abc1410833be95673', siteName: 'Spotify' },
+  { url: 'https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv', title: 'The Dark Side of the Moon', description: 'Pink Floyd · Album · 1973', image: 'https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02db216ca805faf5fe35df4ee6', siteName: 'Spotify' },
+];
 
 /** What the cards above read, so the gallery draws them with no network. */
 function seedGridCards(qc: ReturnType<typeof useQueryClient>) {
@@ -2120,6 +2150,7 @@ function seedGridCards(qc: ReturnType<typeof useQueryClient>) {
   qc.setQueryData(['grid-link-preview', 'https://www.youtube.com/watch?v=gallery'], { url: 'https://www.youtube.com/watch?v=gallery', title: 'Full review: the 35mm that does it all', description: '', image: 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/7389-article-1.jpg', siteName: 'YouTube' });
   qc.setQueryData(['communities', 'slug', 'night-shooters'], { id: 'c1', slug: 'night-shooters', name: 'Night Shooters', banner_url: pillAbs(galleryCommunityArt), avatar_url: null, member_count: 1240 });
   qc.setQueryData(['store-listing', PILL_LISTING], { id: PILL_LISTING, store_id: PILL_STORE, title: 'A3 print: Rain City', price: 25, images: [pillAbs(pillArtB)], stores: { name: 'Marco prints' } });
+  for (const preview of GALLERY_SPOTIFY_PREVIEWS) qc.setQueryData(['grid-link-preview', preview.url], preview);
   qc.setQueryData(['single-post', '5162'], { tokenId: 5162, name: 'Ready to rock', description: '', minterDisplayName: 'Riftn', imageUrls: [pillAbs(pillArtE)], postType: 'feed-images' });
 }
 
@@ -2289,8 +2320,7 @@ function LockedChatGallery() {
         </div>
       </div>
       <div data-dm-safety-gallery className="mt-4 grid gap-2 pb-2 md:grid-cols-2">
-        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} peerSentLink />
-        <DmSafetyBanner peer={{ address: '0x2222222222222222222222222222222222222222', displayName: 'Tad' }} peerSentLink />
+        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} />
       </div>
     </section>
   );

@@ -15,6 +15,7 @@ vi.mock('@/hooks/use-messages', () => ({
   useUserSearchForDM: () => ({}),
   useDeleteConversation: () => ({}),
 }));
+vi.mock('@/hooks/use-chat-prefs', () => ({ useChatPrefs: () => ({ byId: new Map(), update: vi.fn() }), useClearChatHistory: () => vi.fn(), isArchived: () => false, isMuted: () => false }));
 vi.mock('@/hooks/use-public-chat-unread', () => ({ usePublicChatUnreadCount: () => 0, usePublicChatReading: vi.fn() }));
 vi.mock('@/hooks/use-dm-realtime', () => ({ useDMRealtime: vi.fn() }));
 vi.mock('@/hooks/use-draft', () => ({ useDraftText: () => '' }));

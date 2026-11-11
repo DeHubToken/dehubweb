@@ -1457,7 +1457,11 @@
     "giftBoost": "أهدِ دفعة",
     "markSection": "أقسام قابلة للتخطي",
     "copyFailed": "تعذّر نسخ الرابط",
-    "share": "مشاركة"
+    "share": "مشاركة",
+    "castToTv": "البث إلى التلفاز",
+    "castStarted": "يُعرض الآن على التلفاز",
+    "castUnsupported": "لا يمكن البث من هذا المتصفح. افتح Riftn في Chrome أو Safari لتشغيله على التلفاز.",
+    "castFailed": "تعذّر الوصول إلى التلفاز. تأكد أنه على شبكة Wi-Fi نفسها وحاول مجددًا."
   },
   "filters": {
     "sort": "ترتيب",
@@ -3578,6 +3582,7 @@
     "statsLoadFailed": "تعذر تحميل إحصائيات الستيكينغ"
   },
   "communities": {
+    "sortTop": "الأفضل",
     "shareLink": "مشاركة الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرض أولاً",

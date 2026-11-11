@@ -4,7 +4,7 @@
  * React Query hooks for managing user notifications.
  */
 
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery, type QueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery, type InfiniteData, type QueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,13 +33,35 @@ export const notificationKeys = {
  * useNotifications with no filters), so the list is current the moment it
  * mounts. Respects the list's staleTime, so a fresh cache costs nothing.
  */
-export function prefetchNotificationsList(queryClient: QueryClient): Promise<void> {
+export function prefetchNotificationsList(queryClient: QueryClient, types?: string[]): Promise<void> {
   return queryClient.prefetchInfiniteQuery({
-    queryKey: notificationKeys.list(undefined, undefined),
-    queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number, 30, undefined, false, undefined, false),
+    queryKey: notificationKeys.list(undefined, types),
+    queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number, PAGE_SIZE, undefined, false, types, false),
     initialPageParam: 1,
-    staleTime: 2 * 60 * 1000,
+    staleTime: LIST_STALE_MS,
   });
+}
+
+const PAGE_SIZE = 30;
+/** A list this fresh is shown as it is; older, it is shown and refreshed quietly behind. */
+const LIST_STALE_MS = 5 * 60 * 1000;
+/** Each tab's rows stay in memory this long after the page closes. */
+const LIST_KEEP_MS = 30 * 60 * 1000;
+
+type ListPage = Awaited<ReturnType<typeof getNotifications>>;
+
+/**
+ * A tab's first sight before its own request lands: the rows of that type
+ * already loaded in the unfiltered feed, so a tab opens filled instead of on
+ * a skeleton.
+ */
+function tabPlaceholder(queryClient: QueryClient, category: NotificationCategory | undefined, types: string[]) {
+  const all = queryClient.getQueryData<InfiniteData<ListPage>>(notificationKeys.list(category, undefined));
+  if (!all?.pages?.length) return undefined;
+  const wanted = new Set(types);
+  const items = all.pages.flatMap((p) => p?.items ?? []).filter((n) => n && wanted.has(n.type));
+  if (!items.length) return undefined;
+  return { pages: [{ items, totalCount: items.length, hasMore: false }], pageParams: [1] } satisfies InfiniteData<ListPage>;
 }
 
 /**
@@ -68,11 +90,13 @@ export function useNotifications(
   const { showNotification } = useBrowserNotifications();
   const prevIdsRef = useRef<Set<string>>(new Set());
 
+  const queryClient = useQueryClient();
   const query = useInfiniteQuery({
     queryKey: options?.filtered ? [...notificationKeys.list(category, types), 'filtered'] : notificationKeys.list(category, types),
     queryFn: async ({ pageParam = 1 }) => {
-      return getNotifications(pageParam, 30, category, false, types, !!options?.filtered);
+      return getNotifications(pageParam, PAGE_SIZE, category, false, types, !!options?.filtered);
     },
+    placeholderData: types?.length && !options?.filtered ? () => tabPlaceholder(queryClient, category, types) : undefined,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.hasMore) {
         return allPages.length + 1;
@@ -81,7 +105,8 @@ export function useNotifications(
     },
     initialPageParam: 1,
     enabled: isAuthenticated && (options?.enabled ?? true),
-    staleTime: 2 * 60 * 1000,
+    staleTime: LIST_STALE_MS,
+    gcTime: LIST_KEEP_MS,
     refetchInterval: 5 * 60 * 1000,
   });
 
@@ -181,6 +206,8 @@ export function useNotifications(
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage,
+    /** Showing the All feed's rows of this type while the tab's own request runs. */
+    isPlaceholderData: query.isPlaceholderData,
     refetch: query.refetch,
   };
 }

@@ -188,7 +188,7 @@ const OG_CARD_ROUTES = new Set([
   // `superpowers` art was rendered when the page shipped and was never added
   // here, so the file has been sitting in public/og unreferenced.
   'superpowers', 'converter', 'launchpad', 'stats',
-  'accounts', 'fractions', 'stores', 'events',
+  'accounts', 'fractions', 'events',
   'migrate-youtube',
   // Public app pages that unfurled as the homepage: the SPA had SEO for them,
   // the edge did not, so crawlers got the shell under a noindex.
@@ -199,7 +199,7 @@ const OG_CARD_ROUTES = new Set([
 /** Bump when the cards in public/og are re-rendered: X, Facebook, LinkedIn and
  *  Telegram cache a share image by its URL, so new art under the old URL keeps
  *  showing the old picture until their cache expires. */
-const OG_CARD_REV = '3';
+const OG_CARD_REV = '4';
 
 /** A route's own share card, or the shared one when it has none. */
 function shareImage(key) {
@@ -1888,14 +1888,6 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Fractions trade in tokens against open orders, so a holder can exit without asking the creator's permission and a buyer can build a position over time.</p>
 <p>Fractions are speculative and their value can fall to nothing. Nothing here is investment advice.</p>`,
   },
-  'stores': {
-    title: 'Stores | Riftn',
-    description: 'Browse and sell items on the Riftn peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens.',
-    heading: 'Riftn Stores',
-    bodyHtml: `<p>Stores are creator-run shops on Riftn. Anyone can open one and list digital goods, merch, art or services, priced in tokens and paid peer to peer.</p>
-<h2>The shop is part of the profile</h2>
-<p>A store sits beside the creator's posts rather than off on another site, so the audience that already follows the work is the audience that sees what is for sale.</p>`,
-  },
   'events': {
     // EventsPage ships `noindex`; the crawler variant matches it.
     noindex: true,
@@ -1975,7 +1967,7 @@ ${primaryNavHtml()}
 }
 
 // ==========================================================================
-// Stores, shop items and events — edge-rendered crawler HTML
+// Events and other entities — edge-rendered crawler HTML
 // ==========================================================================
 // These three route families used to fall straight through to the SPA, so a
 // shop item posted to X, WhatsApp or Telegram unfurled as the Riftn homepage:
@@ -3451,92 +3443,6 @@ function entityLooksThin({ name, description, image }) {
   return d.length < ENTITY_MIN_DESCRIPTION && !image;
 }
 
-function buildStoreHtml(store) {
-  const canonicalUrl = `${APP_URL}/stores/${store.id}`;
-  const name = store.name || 'Store';
-  const title = `${name} | Riftn Stores`;
-  const description = truncate(
-    store.description || `Shop ${name} on Riftn. Peer-to-peer commerce paid in tokens or USDC.`,
-    200,
-  );
-  const image = absolutize(store.banner_url || store.avatar_url);
-  return entityHtml({
-    canonicalUrl,
-    title,
-    description,
-    image,
-    ogType: 'profile',
-    noindex: entityLooksThin({ name: store.name, description: store.description, image }),
-    heading: name,
-    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/stores">Stores</a>`,
-    bodyHtml: `<p>${escHtml(description)}</p>`,
-    // OnlineStore, not Store: Store is a LocalBusiness, and Google reports a
-    // LocalBusiness without a street address as an error. These shops have no
-    // premises; OnlineStore is the Organization subtype for exactly that.
-    jsonLd: {
-      '@context': 'https://schema.org',
-      '@type': 'OnlineStore',
-      name,
-      description,
-      url: canonicalUrl,
-      ...(image ? { image } : {}),
-      parentOrganization: ORG_JSONLD,
-    },
-  });
-}
-
-function buildListingHtml(listing) {
-  const storeId = listing.store_id;
-  const canonicalUrl = `${APP_URL}/stores/${storeId}?listing=${listing.id}`;
-  const name = listing.title || 'Item';
-  const storeName = (listing.stores && listing.stores.name) || 'a Riftn store';
-  const price = Number(listing.price) || 0;
-  const currency = (listing.currency || 'USD').toUpperCase();
-  const title = `${name}, ${storeName} on Riftn`;
-  const description = truncate(
-    listing.description || `${name} from ${storeName}, on Riftn. Paid in tokens or USDC.`,
-    200,
-  );
-  const images = Array.isArray(listing.images) ? listing.images : [];
-  const image = absolutize(images[0]);
-  const inStock = listing.stock_quantity === null || Number(listing.stock_quantity) > 0;
-
-  return entityHtml({
-    canonicalUrl,
-    title,
-    description,
-    image,
-    ogType: 'product',
-    // A sold or withdrawn item is not something to leave in the index; the
-    // link still unfurls for anyone who shares it.
-    noindex: listing.status !== 'active' || entityLooksThin({ name: listing.title, description: listing.description, image }),
-    heading: name,
-    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
-    bodyHtml: `<p>${escHtml(description)}</p>
-<p><strong>${price.toLocaleString('en-US', { style: 'currency', currency: currency === 'DHB' ? 'USD' : currency })}</strong>${listing.is_digital ? ' · digital' : ''}${inStock ? '' : ' · sold out'}</p>`,
-    jsonLd: {
-      '@context': 'https://schema.org',
-      '@type': 'Product',
-      name,
-      description,
-      ...(image ? { image } : {}),
-      ...(listing.category ? { category: listing.category } : {}),
-      offers: {
-        '@type': 'Offer',
-        url: canonicalUrl,
-        price: String(price),
-        // DHB-denominated listings are still priced in USD in this column;
-        // schema.org wants a currency code it recognises.
-        priceCurrency: currency === 'DHB' ? 'USD' : currency,
-        availability: inStock
-          ? 'https://schema.org/InStock'
-          : 'https://schema.org/OutOfStock',
-        seller: { '@type': 'Organization', name: storeName },
-      },
-    },
-  });
-}
-
 /** The account that created an event, as the Person hosting it. */
 function eventOrganizerLd(event) {
   const username = String(event.creator_username || '').trim();
@@ -4565,7 +4471,7 @@ const SSR_STATIC_ROUTES = new Set([
   // router did not have. The router has it now: every /app child answers at the
   // bare path as well, so they canonicalize the same way as everything above
   // and their `path` overrides are gone.
-  'stores', 'fractions', 'superpowers', 'glossary',
+  'fractions', 'superpowers', 'glossary',
   'ads', 'buy',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
@@ -5039,8 +4945,8 @@ function shouldServeSSR(pathname) {
   if (pathname.includes('/post/')) return true;
   // Always SSR for community pages
   if (pathname.includes('/communities/')) return true;
-  // Stores, shop items and events — rendered at the edge below. Without these
-  // a shared listing unfurled as the SPA shell, i.e. as the homepage.
+  // Events — rendered at the edge below (old store links answer 404 there).
+  // Without these a shared event unfurled as the SPA shell, i.e. as the homepage.
   // The /app prefix is optional throughout: every one of these pages answers at
   // the bare path too, and a share link written the short way must get the same
   // card as the long one rather than the SPA shell.
@@ -5885,26 +5791,6 @@ const ENTITY_SITEMAPS = {
       return { loc: `${APP_URL}/app/communities/${encodeURIComponent(slug)}`, lastmod: c.updated_at, changefreq: 'daily', priority: '0.6', image: absolutize(c.avatar_url) };
     },
   }],
-  stores: [
-    {
-      query: () => 'stores?is_active=eq.true&select=id,name,banner_url,avatar_url,updated_at&order=created_at.asc&limit=5000',
-      entry: (s) => (s.name && String(s.name).trim()
-        ? { loc: `${APP_URL}/stores/${s.id}`, lastmod: s.updated_at, changefreq: 'weekly', priority: '0.5', image: absolutize(s.banner_url || s.avatar_url) }
-        : null),
-    },
-    {
-      // Items of live stores only. A sold or withdrawn item is noindex on its
-      // own page (buildListingHtml), and its store's page is gone with it.
-      query: () => 'store_listings?status=eq.active&select=id,store_id,images,updated_at,stores!inner(is_active)&stores.is_active=eq.true&order=created_at.asc&limit=5000',
-      entry: (l) => ({
-        loc: `${APP_URL}/stores/${l.store_id}?listing=${l.id}`,
-        lastmod: l.updated_at,
-        changefreq: 'weekly',
-        priority: '0.5',
-        image: absolutize(Array.isArray(l.images) ? l.images[0] : null),
-      }),
-    },
-  ],
   events: [{
     // Upcoming or still running. A past event is a dead listing even while
     // its page stays up.
@@ -6253,7 +6139,7 @@ async function handleRequest(request, env, ctx) {
     ['/web/legal/careers', '/jobs'],
     ['/web/news', '/docs/featured-in'],
     ['/web/learn', '/docs'],
-    ['/web/shop', '/stores'],
+    ['/web/shop', '/app'],
     ['/web/stream', '/videos'],
     ['/web/game', '/arcade'],
   ];
@@ -6985,7 +6871,7 @@ async function handleRequest(request, env, ctx) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
   }
-  const stageCard = pathname.match(/^\/_og\/stage\/v[1-5]\/([0-9a-fA-F-]{16,64})\.png$/);
+  const stageCard = pathname.match(/^\/_og\/stage\/v[1-6]\/([0-9a-fA-F-]{16,64})\.png$/);
   if (stageCard) {
     const { handleStageShareImage } = await import('./server/stage-share-image.js');
     return handleStageShareImage(request, env, ctx, stageCard[1], supabaseLookup);
@@ -7375,34 +7261,7 @@ async function handleRequest(request, env, ctx) {
     }));
   }
 
-  // Stores and shop items. `?listing=<id>` is the item; the bare path is the
-  // store. Read straight from PostgREST rather than through the ssr-seo
-  // function, which has never been redeployed and does not know these routes.
-  const storeMatch = cleanPath.match(/^\/(?:app\/)?stores\/([0-9a-fA-F-]{8,})$/);
-  if (storeMatch) {
-    const listingId = url.searchParams.get('listing');
-    if (listingId && /^[0-9a-fA-F-]{8,}$/.test(listingId)) {
-      const listing = await supabaseRow(
-        `store_listings?id=eq.${encodeURIComponent(listingId)}&select=*,stores(name)&limit=1`,
-      );
-      if (listing) {
-        return guard(new Response(buildListingHtml(listing), {
-          status: 200,
-          headers: listing.status === 'active'
-            ? blogHeaders
-            : { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
-        }));
-      }
-    }
-    const store = await supabaseLookup(
-      `stores?id=eq.${encodeURIComponent(storeMatch[1])}&select=id,name,description,banner_url,avatar_url&limit=1`,
-    );
-    if (store) {
-      return guard(new Response(buildStoreHtml(store), { status: 200, headers: blogHeaders }));
-    }
-    return entityMiss(store);
-  }
-  // Store ids are uuids, so anything else under /stores/ names no store.
+  // Stores closed: an old store or shop item link is gone for good.
   if (/^\/(?:app\/)?stores\/[^/]+$/.test(cleanPath)) return entityNotFound();
 
   // A shared Creator Flow. Public rows are readable with the anon key (RLS

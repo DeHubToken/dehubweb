@@ -1,5 +1,5 @@
 /**
- * Communities, stores, events, packs, creator flows, proposals and feature
+ * Communities, events, packs, creator flows, proposals and feature
  * requests all had crawler pages and no sitemap; the index stamped every child
  * with the day of the request; and any /sitemap-posts-<n>.xml started a
  * twenty-second feed walk. These pin the replacements: each entity sitemap
@@ -53,26 +53,6 @@ describe('entity sitemaps', () => {
     expect(WORKER).toContain("query: () => 'communities?is_private=eq.false");
   });
 
-  it('stores: named live stores and the active items of live stores', () => {
-    const xml = entitySitemapXml('stores', [
-      [
-        { id: 'aaaaaaaa-1111', name: 'Prints', banner_url: 'https://cdn.example/s.jpg?w=1&h=2', updated_at: '2026-08-01T00:00:00Z' },
-        { id: 'bbbbbbbb-2222', name: '  ', updated_at: '2026-08-02T00:00:00Z' },
-      ],
-      [{ id: 'cccccccc-3333', store_id: 'aaaaaaaa-1111', images: ['https://cdn.example/i.jpg'], updated_at: '2026-09-05T00:00:00Z' }],
-    ]);
-    parses(xml);
-    expect(locs(xml)).toEqual([
-      'https://riftn.com/stores/aaaaaaaa-1111',
-      'https://riftn.com/stores/aaaaaaaa-1111?listing=cccccccc-3333',
-    ]);
-    // Image URLs are escaped, or one ampersand invalidates the whole file.
-    expect(xml).toContain('<image:loc>https://cdn.example/s.jpg?w=1&amp;h=2</image:loc>');
-    expect(xml).toContain('<image:loc>https://cdn.example/i.jpg</image:loc>');
-    expect(WORKER).toContain("query: () => 'stores?is_active=eq.true");
-    expect(WORKER).toContain('store_listings?status=eq.active');
-  });
-
   it('events: public and upcoming only', () => {
     const xml = entitySitemapXml('events', [[{ event_number: 7, created_at: '2026-09-10T00:00:00Z' }]]);
     parses(xml);
@@ -110,7 +90,7 @@ describe('entity sitemaps', () => {
   });
 
   it('is a valid, empty urlset when a table has no rows', () => {
-    for (const kind of ['bounties', 'communities', 'stores', 'events', 'packs', 'flows', 'proposals', 'features']) {
+    for (const kind of ['bounties', 'communities', 'events', 'packs', 'flows', 'proposals', 'features']) {
       const xml = entitySitemapXml(kind, [[], []]);
       parses(xml);
       expect(locs(xml), kind).toEqual([]);

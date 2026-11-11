@@ -3397,6 +3397,7 @@
     "statsLoadFailed": "ステーキング統計の読み込みに失敗しました"
   },
   "communities": {
+    "sortTop": "トップ",
     "shareLink": "URLをシェア",
     "pinnedMore": "その他",
     "showFirst": "最初に表示",

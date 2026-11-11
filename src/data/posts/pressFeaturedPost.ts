@@ -42,7 +42,7 @@ We're proud of what the team and community have achieved to earn this attention,
 
 **Bring on the next headline.**
   `,
-  bannerImage: '/media/dehub-featured-in-press-banner.png',
+  bannerImage: '/media/dehub-featured-in-press-banner-manrope.jpg',
   bannerImageAlt: 'Riftn featured in the press, US Weekly, Yahoo Finance, Entrepreneur and Investing.com',
   author: {
     name: 'Riftn Team',

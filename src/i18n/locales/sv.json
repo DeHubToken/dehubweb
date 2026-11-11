@@ -3329,6 +3329,7 @@
     "statsLoadFailed": "Kunde inte ladda staking-statistik"
   },
   "communities": {
+    "sortTop": "Topp",
     "shareLink": "Dela länk",
     "pinnedMore": "Mer",
     "showFirst": "Visa först",

@@ -3322,6 +3322,7 @@
     "statsLoadFailed": "Стейкингийн статистикийг ачаалж чадсангүй"
   },
   "communities": {
+    "sortTop": "Шилдэг",
     "shareLink": "Холбоос хуваалцах",
     "pinnedMore": "Илүү",
     "showFirst": "Эхэнд харуулах",

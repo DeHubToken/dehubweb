@@ -74,7 +74,7 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmPollDialog } from './DmPollDialog';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
-import { DmSafetyBanner, hasLink } from './DmSafetyBanner';
+import { DmSafetyBanner } from './DmSafetyBanner';
 import { LockedMediaBubble } from './LockedMediaBubble';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -91,6 +91,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { CHAT_MENU_CONTENT, ChatOptionsDropdownItems, type ChatOptionsHandlers } from '@/components/app/chat/ChatOptionsMenu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -149,6 +150,12 @@ interface DirectMessageChatProps {
    * readable width on wide screens.
    */
   cozy?: boolean;
+  /**
+   * The full chat options (new window, archive, pin, mute, mark unread,
+   * clear history) for the three-dot menu. Block and delete stay this
+   * component's own.
+   */
+  options?: Omit<ChatOptionsHandlers, 'onBlock' | 'isBlocked' | 'onDelete'>;
 }
 
 /** Where a message sits in a run from one sender, for the cozy layout. */
@@ -1291,7 +1298,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
   return { pinnedMessageId, pinMessage, unpinMessage };
 }
 
-export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions, focusComposer = false, cozy = false }: DirectMessageChatProps) {
+export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions, focusComposer = false, cozy = false, options }: DirectMessageChatProps) {
   const { t: _copy } = _useCopy();
   const { user, walletAddress, openLoginModal } = useAuth();
   const { isBanned: accountBanned } = useBannedAccount();
@@ -1631,17 +1638,6 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
   const messagesRef = useRef(messages);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
-
-  // Any link from the other person brings up the scam warning above the thread.
-  const peerSentLink = useMemo(() => {
-    const ownAddress = walletAddress?.toLowerCase();
-    return messages.some(m => {
-      if (m.author === 'me') return false;
-      const sender = m.sender?.address?.toLowerCase();
-      if (sender && ownAddress && sender === ownAddress) return false;
-      return hasLink(m.content);
-    });
-  }, [messages, walletAddress]);
 
   const pinnedMessage = pinnedMessageId ? messages.find(m => m._id === pinnedMessageId) ?? null : null;
 
@@ -2467,7 +2463,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               <MoreVertical className={dock ? 'w-4 h-4' : 'w-5 h-5'} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+          <DropdownMenuContent align="end" data-chat-options-menu className={options ? CHAT_MENU_CONTENT : 'z-[150] bg-zinc-800 border-zinc-700'}>
             {isGroupChat && (
               <DropdownMenuItem
                 className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
@@ -2475,6 +2471,27 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               >
                 <Settings className="w-4 h-4 mr-2" />{_copy("copy.8e4622c03c80", { defaultValue: "Group Settings" })}</DropdownMenuItem>
             )}
+            {options ? (
+              <>
+                <ChatOptionsDropdownItems
+                  {...options}
+                  isBlocked={isBlocked}
+                  onBlock={handleToggleBlock}
+                  onDelete={() => setShowDeleteDialog(true)}
+                />
+                {myMessageFee > 0 && (
+                  <DropdownMenuItem
+                    className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+                    onClick={handleToggleFreeAccess}
+                    disabled={isFreeAccessProcessing}
+                  >
+                    <Gift className="w-4 h-4 mr-2" />
+                    {isFreeAccessGranted ? _copy("copy.f9c2e63a6dd5", { defaultValue: "Revoke Free Access" }) : _copy("copy.52f749af5cc6", { defaultValue: "Grant Free Access" })}
+                  </DropdownMenuItem>
+                )}
+              </>
+            ) : (
+              <>
             <DropdownMenuItem
               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
               onClick={handleToggleBlock}
@@ -2501,6 +2518,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               onClick={() => setShowDeleteDialog(true)}
             >
               <Trash2 className="w-4 h-4 mr-2" />{_copy("copy.9ccd1fb969eb", { defaultValue: "Delete Conversation" })}</DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
         {headerActions}
@@ -2585,7 +2604,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         </div>
       )}
 
-      <DmSafetyBanner peer={otherUser as any} peerSentLink={peerSentLink} />
+      <DmSafetyBanner peer={otherUser as any} />
 
       {/* Messages */}
       {isLoading ? (

@@ -3336,6 +3336,7 @@
     "statsLoadFailed": "ფსონების სტატისტიკის ჩატვირთვა ვერ მოხერხდა"
   },
   "communities": {
+    "sortTop": "საუკეთესო",
     "shareLink": "ბმულის გაზიარება",
     "pinnedMore": "მეტი",
     "showFirst": "პირველად ჩვენება",

@@ -98,7 +98,6 @@ describe('menu search — the query someone actually types', () => {
     expect(search('saved')).toContain('Bookmarks');
     expect(search('dark mode')).toContain('Settings');
     expect(search('referral')).toContain('Affiliate');
-    expect(search('shop')).toContain('Stores');
   });
 
   it('survives a typo once the word is long enough to be sure of', () => {
@@ -261,7 +260,7 @@ describe('menu search — the joins nothing else checks', () => {
   it('gives every destination something to be found by', () => {
     const keywords = NAV_KEYWORDS;
     for (const label of everyLabel) {
-      // Stages, Bounties, Affiliate and Stores read as themselves; what
+      // Stages, Bounties and Affiliate read as themselves; what
       // matters is that nothing is reachable by its exact name alone.
       expect(keywords[label]?.length, `"${label}" has no keywords`).toBeGreaterThan(0);
     }

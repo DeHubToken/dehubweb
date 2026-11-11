@@ -3333,6 +3333,7 @@
     "statsLoadFailed": "Nedařilo se načíst statistiky stakingu"
   },
   "communities": {
+    "sortTop": "Top",
     "shareLink": "Sdílet odkaz",
     "pinnedMore": "Více",
     "showFirst": "Zobrazit jako první",

@@ -3324,6 +3324,7 @@
     "statsLoadFailed": "Staking statistikalarını yükləmək mümkün deyildi"
   },
   "communities": {
+    "sortTop": "Ən yaxşı",
     "shareLink": "Linki paylaşın",
     "pinnedMore": "Daha çox",
     "showFirst": "Birinci göstər",

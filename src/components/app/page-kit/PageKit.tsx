@@ -52,6 +52,19 @@ export function usePhonePill() {
 /** True inside the phone pill, so tabs and actions draw in the home pill's style. */
 const PillContext = createContext(false);
 
+/**
+ * The home pill's measures, shared by every page's pill on phones: a 36px row
+ * (a 16px icon in 10px of padding), page icons at 18px (the size Home's tab
+ * glyphs draw at), and one 14px semibold line of text.
+ */
+export const PILL_ROW = 'min-h-9';
+export const PILL_LEAD_ICON = 'h-[18px] w-[18px]';
+export const PILL_TEXT = 'text-[14px] font-semibold leading-tight';
+/** A plain icon button in the pill (IslandAction's look), for triggers that
+ *  need their own element, like a dropdown. */
+export const PILL_ACTION_CLASS =
+  'relative flex shrink-0 items-center justify-center rounded-xl px-2.5 py-2.5 text-zinc-400 transition-colors disabled:opacity-40 [@media(hover:hover)]:hover:bg-white/5 [@media(hover:hover)]:hover:text-white [&_svg]:!h-4 [&_svg]:!w-4 [&_svg]:!text-current';
+
 type IconKey = Parameters<typeof ThemedIcon>[0]['icon'];
 
 export interface PageIslandProps {
@@ -145,7 +158,7 @@ export function PageIsland({
         >
           <span data-nav-glass-backdrop aria-hidden="true" />
           <PillContext.Provider value>
-            <div className="relative z-20 flex min-h-[40px] min-w-0 items-center">
+            <div className={cn('relative z-20 flex min-w-0 items-center', PILL_ROW)}>
               {back ? (
                 <button
                   type="button"
@@ -158,11 +171,11 @@ export function PageIsland({
                   <ArrowLeft className="relative z-10 h-4 w-4" />
                 </button>
               ) : icon ? (
-                <span data-kit-pill-lead className="flex shrink-0 items-center justify-center pl-2.5 pr-1.5">
+                <span data-kit-pill-lead className="flex shrink-0 items-center justify-center pl-3 pr-2">
                   {typeof icon === 'string' ? (
-                    <ThemedIcon icon={icon as IconKey} alt="" className="h-6 w-6 object-contain" />
+                    <ThemedIcon icon={icon as IconKey} alt="" className={cn(PILL_LEAD_ICON, 'object-contain')} />
                   ) : (
-                    <span className="flex h-6 w-6 items-center justify-center [&>*]:h-6 [&>*]:w-6">{icon}</span>
+                    <span className={cn('flex items-center justify-center [&>*]:h-[18px] [&>*]:w-[18px]', PILL_LEAD_ICON)}>{icon}</span>
                   )}
                 </span>
               ) : null}
@@ -177,7 +190,7 @@ export function PageIsland({
                   <div data-kit-pill-tabs-slot className="min-w-0 flex-1">{tabs}</div>
                 </>
               ) : (
-                <h1 data-kit-title className="min-w-0 flex-1 truncate px-1.5 text-[15px] font-semibold leading-tight text-white">{title}</h1>
+                <h1 data-kit-title className={cn('min-w-0 flex-1 truncate px-1 text-white', PILL_TEXT)}>{title}</h1>
               )}
               {actions || (children && !drawerControlled) ? (
                 <div data-kit-pill-actions className="flex shrink-0 items-center">
@@ -294,10 +307,7 @@ export function IslandAction({
         disabled={disabled}
         aria-label={label}
         title={label}
-        className={cn(
-          'relative flex shrink-0 items-center justify-center rounded-xl px-2.5 py-2.5 transition-colors disabled:opacity-40 [@media(hover:hover)]:hover:bg-white/5 [@media(hover:hover)]:hover:text-white [&_svg]:!h-4 [&_svg]:!w-4 [&_svg]:!text-current',
-          active ? 'text-white' : 'text-zinc-400',
-        )}
+        className={cn(PILL_ACTION_CLASS, active && 'text-white')}
       >
         {children}
       </button>
@@ -360,6 +370,9 @@ export function PageTabs<T extends string>({
     check();
     const ro = new ResizeObserver(check);
     ro.observe(el);
+    // The row keeps its size when a tab grows (a count arriving), so watch
+    // the tabs too or the tile stays the old tab's width.
+    for (const tab of Array.from(el.children)) ro.observe(tab);
     el.addEventListener('scroll', check, { passive: true });
     return () => { ro.disconnect(); el.removeEventListener('scroll', check); };
   }, [inPill, tabs.length, onScroll]);
@@ -407,8 +420,8 @@ export function PageTabs<T extends string>({
                     onChange(tab.id);
                   }}
                   className={cn(
-                    'relative z-10 flex flex-1 shrink-0 items-center justify-center rounded-xl py-2.5 text-[13px] font-semibold transition-colors',
-                    iconOnly ? 'min-w-[32px] px-2' : 'whitespace-nowrap px-3',
+                    'relative z-10 flex flex-1 shrink-0 items-center justify-center rounded-xl py-2.5 text-[14px] font-semibold leading-4 transition-colors',
+                    iconOnly ? (typeof tab.count === 'number' ? 'min-w-max whitespace-nowrap px-2.5' : 'min-w-[32px] px-2') : 'whitespace-nowrap px-3',
                     active ? 'text-white' : 'text-zinc-400 [@media(hover:hover)]:hover:text-white',
                   )}
                 >
@@ -419,7 +432,9 @@ export function PageTabs<T extends string>({
                   ) : null}
                   <span className={iconOnly ? 'sr-only' : 'relative z-10'}>{tab.label}</span>
                   {typeof tab.count === 'number' ? (
-                    <span data-kit-pill-count className="absolute right-1 top-1 z-20 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold leading-none text-black">{tab.count > 99 ? '99+' : tab.count}</span>
+                    // Beside the icon as plain text, as the app draws it; a white
+                    // dot over the icon hid the glyph and read as a red badge.
+                    <span data-kit-pill-count className="relative z-10 ml-1 text-[12px] font-semibold leading-none tabular-nums opacity-60">{tab.count > 99 ? '99+' : tab.count}</span>
                   ) : null}
                 </button>
               );

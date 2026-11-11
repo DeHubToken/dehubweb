@@ -3400,6 +3400,7 @@
     "statsLoadFailed": "Gagal memuat statistik staking"
   },
   "communities": {
+    "sortTop": "Teratas",
     "shareLink": "Bagikan tautan",
     "pinnedMore": "Lainnya",
     "showFirst": "Tampilkan pertama",

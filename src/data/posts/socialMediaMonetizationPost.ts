@@ -135,7 +135,7 @@ The platforms are no longer asking the same question. Instagram asks whether fan
 
 That is why "getting monetized" is no longer one milestone. It is a stack of product-specific gates, and the smartest creators treat the native payout as one line in a spreadsheet rather than the business itself. The rules above are the current map. Check the in-app dashboard before you build a year of work around any single number. These programs change faster than the pages that explain them.
   `,
-  bannerImage: '/media/social-media-monetization-2026-banner-riftn.jpg',
+  bannerImage: '/media/social-media-monetization-2026-banner-manrope.jpg',
   bannerImageAlt: 'Who pays and when: creator monetization rules across seven social platforms in 2026',
   author: {
     name: 'Riftn Team',

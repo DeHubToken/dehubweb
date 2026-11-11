@@ -3329,6 +3329,7 @@
     "statsLoadFailed": "Nem sikerült betölteni a staking statisztikákat"
   },
   "communities": {
+    "sortTop": "Legjobb",
     "shareLink": "Link megosztása",
     "pinnedMore": "Több",
     "showFirst": "Megjelenítés elsőként",

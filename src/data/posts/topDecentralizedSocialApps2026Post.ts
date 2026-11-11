@@ -782,7 +782,7 @@ The established apps here are real, working networks, many of them open source. 
 ## Try the #1 pick
 
 Open [riftn.com](https://riftn.com), browse the feed, go live, or post a feature request on [riftn.com/features](https://riftn.com/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-50-decentralized-social-apps-2026-banner-riftn.png',
+  bannerImage: '/media/top-50-decentralized-social-apps-2026-banner-manrope.jpg',
   bannerImageAlt: 'Top 50 decentralized social apps 2026, the DeSoc Index by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-25T20:00:00.000Z',

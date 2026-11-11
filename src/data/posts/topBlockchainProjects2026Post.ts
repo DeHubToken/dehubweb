@@ -240,7 +240,7 @@ See our sister ranking, the [Top 50 Decentralized Social Apps 2026](/guides/top-
 ## Build with Riftn
 
 Open [riftn.com](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-50-blockchain-projects-2026-banner-riftn.png',
+  bannerImage: '/media/top-50-blockchain-projects-2026-banner-manrope.jpg',
   bannerImageAlt: 'Top 50 blockchain projects 2026 ranked by GitHub activity, by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',

@@ -3313,6 +3313,7 @@
     "statsLoadFailed": "載入唔到投注統計資料"
   },
   "communities": {
+    "sortTop": "熱門",
     "shareLink": "分享連結",
     "pinnedMore": "多啲",
     "showFirst": "優先顯示",

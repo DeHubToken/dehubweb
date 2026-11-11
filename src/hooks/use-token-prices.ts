@@ -31,17 +31,16 @@ async function fetchTokenPrices(extraTokens?: { address: string; symbol: string 
 
 const STATIC_PRICE_DEFAULTS: TokenPrices = { DHB: 0.001, ETH: 0, BNB: 0, USDT: 1, USDC: 1, BTC: 0, WETH: 0, WBNB: 0 };
 
-/** Routes that actually display live token prices (wallet, staking, buy, stores). */
+/** Routes that actually display live token prices (wallet, staking, buy). */
 const PRICE_SURFACES = new Set([
   '/app/wallet', '/app/stake', '/stake', '/app/buy', '/buy',
-  '/app/stores', '/stores', '/app/fractions', '/fractions',
+  '/app/fractions', '/fractions',
   '/dao',
 ]);
 
 /**
- * True when the active route renders live USD prices. Store detail pages count,
- * and so does the post page: a live stream's product rail sits there and shows
- * a DHB figure for every item, on a page that can stay open for a whole
+ * True when the active route renders live USD prices. The post page counts:
+ * a live stream's product rail sits there and shows a DHB figure for every item, on a page that can stay open for a whole
  * broadcast. Without it the rail's prices are whatever they were on mount.
  */
 function isPriceSurface(pathname: string): boolean {
@@ -49,7 +48,7 @@ function isPriceSurface(pathname: string): boolean {
     PRICE_SURFACES.has(pathname) ||
     // Both spellings: every /app child answers at the bare path too, so a
     // prefix test that names only one of them goes quiet on half the traffic.
-    /^\/(?:app\/)?(?:stores|post)\//.test(pathname) ||
+    /^\/(?:app\/)?post\//.test(pathname) ||
     pathname.startsWith('/posts/')
   );
 }

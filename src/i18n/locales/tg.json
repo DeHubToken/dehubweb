@@ -3301,6 +3301,7 @@
     "statsLoadFailed": "Не удалось загрузку статистика"
   },
   "communities": {
+    "sortTop": "Беҳтарин",
     "shareLink": "Мубодилаи пайванд",
     "pinnedMore": "Бештар",
     "showFirst": "Аввал нишон додан",

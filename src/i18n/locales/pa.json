@@ -3325,6 +3325,7 @@
     "statsLoadFailed": "ਸਟੈਕਿੰਗ ਸਟੈਟਸ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ"
   },
   "communities": {
+    "sortTop": "ਸਿਖਰ",
     "shareLink": "ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ",
     "pinnedMore": "ਹੋਰ",
     "showFirst": "ਪਹਿਲਾਂ ਦਿਖਾਓ",

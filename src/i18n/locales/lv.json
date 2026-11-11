@@ -3327,6 +3327,7 @@
     "statsLoadFailed": "Nespēja izgūt stākšanas dati"
   },
   "communities": {
+    "sortTop": "Populārākās",
     "shareLink": "Nosūtīt saiti",
     "pinnedMore": "Vairāk",
     "showFirst": "Rādīt pirmo",

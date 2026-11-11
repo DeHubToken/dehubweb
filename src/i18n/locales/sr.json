@@ -3331,6 +3331,7 @@
     "statsLoadFailed": "Није могуће учитати статистике стакинга"
   },
   "communities": {
+    "sortTop": "Топ",
     "shareLink": "Подијели link",
     "pinnedMore": "Више",
     "showFirst": "Прикажи прво",

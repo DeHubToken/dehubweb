@@ -3344,6 +3344,7 @@
     "statsLoadFailed": "لم يتم تحميل إحصائيات الستيكنج"
   },
   "communities": {
+    "sortTop": "الأعلى",
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
     "showFirst": "اعرضه أولاً",

@@ -1060,7 +1060,9 @@ html, body {
 /* Hide any fixed-position empty elements that might cause gaps */
 body > iframe:not([src]),
 body > iframe[style*="height: 0"],
-body > div[style*="position: fixed"][style*="height: 0"] {
+/* Not Radix menus: a right-click menu's anchor is the click point, so its
+   wrapper carries --radix-popper-anchor-height: 0px and matched this. */
+body > div[style*="position: fixed"][style*="height: 0"]:not([data-radix-popper-content-wrapper]) {
   display: none !important;
 }
 
@@ -7098,12 +7100,10 @@ html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-overlay]
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-overlay]:has(+ [data-notifications-drawer]) {
   background-color: rgb(255 255 255 / 0.12) !important;
 }
-/* Dragged up to fill the screen: the pill clears the status bar and the
-   rounded corners square off against the screen edge. */
+/* Dragged up to fill the screen: the pill clears the status bar, and the
+   sheet keeps its rounded top so it still reads as a drawer. */
 html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-drawer][data-notifications-drawer][data-expanded] {
   padding-top: env(safe-area-inset-top, 0px);
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
 }
 /* No handle, so the pill's sticky strip is the top of the sheet. Rows
    scrolling up past the pill blur out there instead of showing sharp in the
@@ -7256,4 +7256,12 @@ html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(
 }
 @media (prefers-reduced-motion: reduce) {
   [data-fsc-chat-open] { animation: none; }
+}
+
+/* riftn.com/chat is a full-screen layer at z-70. Menus, dialogs and sheets
+   opened from it are portalled to <body> at z-50, so they opened BEHIND it
+   (the three-dot menu "did nothing"). While the page is up, lift them. */
+body:has(#app-root[data-fullscreen-chat]) > :is([data-radix-popper-content-wrapper], .fixed:not(#app-root)),
+body:has(#app-root[data-fullscreen-chat]) > :not(#root) > :is([data-radix-popper-content-wrapper], .fixed) {
+  z-index: 150 !important;
 }

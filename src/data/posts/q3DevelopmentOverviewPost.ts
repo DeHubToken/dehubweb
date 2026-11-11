@@ -186,7 +186,7 @@ Mobile cut v1.15.0 ([mobile #166](https://github.com/Riftn/riftn-mobile/pull/166
 
 The quarter is not over, and neither is the list. Q4 continues exactly where this leaves off: more stages, more arcade, deeper economy, shipped in the open, as always.
   `,
-  bannerImage: '/media/q3-development-overview-banner-riftn.png',
+  bannerImage: '/media/q3-development-overview-banner-manrope.jpg',
   bannerImageAlt: 'Q3 Development Overview - Riftn rocket banner',
   author: {
     name: 'Riftn Team',

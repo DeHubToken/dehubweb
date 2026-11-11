@@ -1457,7 +1457,11 @@
     "giftBoost": "Bir güçlendirme hediye et",
     "markSection": "Atlanabilir bölümler",
     "copyFailed": "Bağlantı kopyalanamadı",
-    "share": "Paylaş"
+    "share": "Paylaş",
+    "castToTv": "TV'ye yansıt",
+    "castStarted": "TV'nizde oynatılıyor",
+    "castUnsupported": "Bu tarayıcı yansıtma yapamıyor. TV'de izlemek için Riftn'i Chrome veya Safari'de açın.",
+    "castFailed": "TV'ye ulaşılamadı. Aynı Wi-Fi ağında olduğundan emin olup tekrar deneyin."
   },
   "filters": {
     "sort": "Sırala",
@@ -3570,6 +3574,7 @@
     "statsLoadFailed": "Staking istatistikleri yüklenemedi"
   },
   "communities": {
+    "sortTop": "En İyi",
     "shareLink": "Bağlantıyı paylaş",
     "pinnedMore": "Daha fazla",
     "showFirst": "Önce göster",

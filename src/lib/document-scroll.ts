@@ -52,3 +52,10 @@ export function scrollDocumentToSmooth(top: number = 0): void {
   document.documentElement.scrollTo?.(options);
   window.scrollTo(options);
 }
+
+/**
+ * How far down the page counts as "scrolled down" for a re-tap of the lit feed
+ * tab: past this, the first tap only glides back to the top; the next opens
+ * the feed search.
+ */
+export const SCROLL_TOP_FIRST_PX = 48;

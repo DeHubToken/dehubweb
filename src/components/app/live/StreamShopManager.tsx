@@ -26,7 +26,6 @@ import Store from "@/components/ui/cut-icons/store";
 
 import Plus from "@/components/ui/cut-icons/add";
 
-import { useNavigate } from 'react-router-dom';
 import { useMyListings } from '@/hooks/use-stores';
 import {
   useStreamProducts, useStreamProductActions, useStreamOrders, effectivePrice,
@@ -59,7 +58,6 @@ function AddProductSheet({ tokenId, attachedIds }: { tokenId: string | null; att
   const { attach } = useStreamProductActions(tokenId);
   const [open, setOpen] = useState(false);
   const [livePrices, setLivePrices] = useSurfaceDraft<Record<string, string>>("src/components/app/live/StreamShopManager.tsx:livePrices", {}, tokenId);
-  const navigate = useNavigate();
 
   // `any` matches how the rest of the stores surface types listing rows: the
   // generated Row types `images` as Json, which fights every consumer.
@@ -87,9 +85,6 @@ function AddProductSheet({ tokenId, attachedIds }: { tokenId: string | null; att
             <div className="text-center py-8 space-y-3">
               <Store className="w-8 h-8 mx-auto text-zinc-600" />
               <p className="text-sm text-zinc-400">{t('live.noListingsYet')}</p>
-              <Button size="sm" variant="outline" onClick={() => { setOpen(false); navigate('/app/stores'); }}>
-                {t('live.openYourStore')}
-              </Button>
             </div>
           ) : !available.length ? (
             <p className="text-sm text-zinc-400 text-center py-8">
