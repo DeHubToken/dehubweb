@@ -2778,6 +2778,68 @@ async function fetchAccountInfo(handle) {
   }
 }
 
+/** Short stable hash (FNV-1a, base36) used to version invite card image URLs. */
+function inviteCardTag(input) {
+  let h = 0x811c9dc5;
+  const text = String(input || '');
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(36);
+}
+
+/**
+ * Invite landings (/r/<CODE>). The deployed fn names the inviter from the
+ * share_name snapshot saved the last time they opened their invite page, and
+ * its card image URL never changes (…&v=6). X, Telegram and WhatsApp keep a
+ * card under its URL for days, so a rename, or a wallet that briefly belonged
+ * to another account, kept showing the old name (Mart's invite showed the
+ * blank "Brave Mercury" account, 2026-11). Here the title names the live
+ * profile, the image URL is versioned by the account, name, handle and photo,
+ * and a shared ?n=<tag> (src/lib/inviteLink.ts) is kept on og:url, so every
+ * change is a URL the platforms have never cached.
+ */
+export async function refreshReferralCard(html, pathname, requestUrl) {
+  const match = /^\/r\/([A-Za-z0-9]+)/.exec(pathname);
+  if (!match) return html;
+  const code = match[1].toUpperCase();
+  let out = html;
+  const rows = await supabaseRows(
+    `affiliate_codes?code=eq.${encodeURIComponent(code)}&active=eq.true&select=owner_address&limit=1`,
+  );
+  const owner = rows && rows[0] && typeof rows[0].owner_address === 'string' ? rows[0].owner_address : null;
+  const account = owner ? await fetchAccountInfo(owner) : null;
+  if (account) {
+    const live = (String(account.displayName || '').trim() || String(account.username || '').trim())
+      .replace(/^@+/, '')
+      .slice(0, 60);
+    const old = (out.match(/property="og:title" content="([^"]*?) invited you to Riftn/) || [])[1];
+    if (live && old != null) {
+      out = out.split(`${old} invited you to Riftn`).join(`${escFnAttr(live)} invited you to Riftn`);
+      const oldJson = escJsonText(decodeFnText(old));
+      out = out.split(`${oldJson} invited you to Riftn`).join(`${escJsonText(live)} invited you to Riftn`);
+    }
+    const tag = inviteCardTag(
+      [account._id, account.displayName, account.username, account.avatarImageUrl, account.coverImageUrl]
+        .map((v) => String(v == null ? '' : v))
+        .join('|'),
+    );
+    out = out.replace(
+      /(affiliate-share-image\?[^"'\s<]*?[?&](?:amp;)?v=)6(?![0-9A-Za-z-])/g,
+      (m, head) => `${head}7-${tag}`,
+    );
+  }
+  let linkTag = '';
+  try {
+    linkTag = (new URL(requestUrl).searchParams.get('n') || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 12);
+  } catch { /* no tag */ }
+  if (linkTag) {
+    out = out.split(`"${APP_URL}/r/${code}"`).join(`"${APP_URL}/r/${code}?n=${linkTag}"`);
+  }
+  return out;
+}
+
 /**
  * A creator who turned "Allow AI scraping" off (customs.aiScraping === 'deny',
  * see src/lib/ai-scraping.ts) gets the opt-out in the HTML crawlers are served:
@@ -7617,6 +7679,7 @@ async function handleRequest(request, env, ctx) {
     const isReferral = /^\/r\/[A-Za-z0-9]+/.test(pathname);
     const canonicalUrl = `${APP_URL}${canonicalizePath(pathname)}`;
     if (isReferral) {
+      html = await refreshReferralCard(html, pathname, request.url);
       if (!html.includes('og:url')) {
         html = html.replace('</head>', () => `<meta property="og:url" content="${request.url}"></head>`);
       }
