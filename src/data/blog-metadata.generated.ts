@@ -2988,6 +2988,31 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "is-riftn-the-same-as-dehub",
+    "slug": "is-riftn-the-same-as-dehub",
+    "title": "Is Riftn the Same as DeHub? What Changed and What Did Not",
+    "excerpt": "Yes. Riftn is the new name of DeHub. Here is what changed with the rename, what stayed exactly the same, and what to do if you still have a DeHub account or DHB.",
+    "content": "",
+    "bannerImage": "/media/is-riftn-the-same-as-dehub-banner-riftn.png",
+    "bannerImageAlt": "DeHub to Riftn, the same platform under a new name",
+    "author": {
+      "name": "Riftn Team"
+    },
+    "publishedAt": "2026-11-11T06:00:00.000Z",
+    "tags": [
+      "Riftn",
+      "DeHub",
+      "Rebrand",
+      "$RIFT",
+      "FAQ"
+    ],
+    "readingTime": 2,
+    "featured": false,
+    "status": "published",
+    "seoTitle": "Is Riftn the Same as DeHub? Yes, Here Is What Changed",
+    "seoDescription": "Riftn is the new name of DeHub, the open source, user-owned social network. Same team, same accounts, new name and address. What changed and what did not."
+  },
+  {
     "id": "you-will-own-everything-and-be-happy",
     "slug": "you-will-own-everything-and-be-happy",
     "title": "You Will Own Everything and Be Happy",
@@ -3676,30 +3701,29 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "you-will-own-everything-and-be-happy",
-  "slug": "you-will-own-everything-and-be-happy",
-  "title": "You Will Own Everything and Be Happy",
-  "excerpt": "The internet already runs on \"you'll own nothing and be happy\". We put the opposite on our front door. Here is what our tagline means and why it is ours.",
+  "id": "is-riftn-the-same-as-dehub",
+  "slug": "is-riftn-the-same-as-dehub",
+  "title": "Is Riftn the Same as DeHub? What Changed and What Did Not",
+  "excerpt": "Yes. Riftn is the new name of DeHub. Here is what changed with the rename, what stayed exactly the same, and what to do if you still have a DeHub account or DHB.",
   "content": "",
-  "bannerImage": "/media/you-will-own-everything-banner-riftn.png",
-  "bannerImageAlt": "You will own everything, and be happy, the Riftn tagline",
+  "bannerImage": "/media/is-riftn-the-same-as-dehub-banner-riftn.png",
+  "bannerImageAlt": "DeHub to Riftn, the same platform under a new name",
   "author": {
     "name": "Riftn Team"
   },
-  "publishedAt": "2026-11-11T04:00:00.000Z",
+  "publishedAt": "2026-11-11T06:00:00.000Z",
   "tags": [
     "Riftn",
-    "Ownership economy",
-    "Digital ownership",
-    "Creator economy",
+    "DeHub",
+    "Rebrand",
     "$RIFT",
-    "Open source"
+    "FAQ"
   ],
-  "readingTime": 6,
-  "featured": true,
+  "readingTime": 2,
+  "featured": false,
   "status": "published",
-  "seoTitle": "You Will Own Everything and Be Happy: What Riftn's Tagline Means",
-  "seoDescription": "The internet promised you'd own nothing and be happy. Riftn flips it: your posts, audience, earnings and account belong to you, on-chain. Here's what that means."
+  "seoTitle": "Is Riftn the Same as DeHub? Yes, Here Is What Changed",
+  "seoDescription": "Riftn is the new name of DeHub, the open source, user-owned social network. Same team, same accounts, new name and address. What changed and what did not."
 };
 
 export const excludedTitles: string[] = [
