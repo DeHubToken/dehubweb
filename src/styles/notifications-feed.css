@@ -92,3 +92,11 @@ html [data-feed-platform-mark]:not(#_):not(#_) {
   background-color: #000 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
+
+/* Phones: the first row sits right under the pill. The flat page-kit section
+   padding (18px) plus the row's own left a gap that read as empty space. */
+@media (max-width: 1023px) {
+  html [data-notification-list]:not(#_):not(#_):not(#_):not(#_) {
+    padding-top: 0.25rem !important;
+  }
+}
