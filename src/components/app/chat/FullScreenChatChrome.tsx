@@ -67,7 +67,7 @@ export function ChatListTop({
       <div
         data-page-bento
         data-fsc-search-pill
-        className="relative flex h-12 items-center gap-1 rounded-full bg-zinc-900 pl-4 pr-1.5"
+        className="relative flex h-12 items-center gap-1 rounded-2xl bg-zinc-900 pl-4 pr-1.5"
       >
         <span data-nav-glass-backdrop aria-hidden="true" />
         <Search className="relative z-10 h-[17px] w-[17px] shrink-0 text-zinc-400" />
@@ -106,7 +106,7 @@ export function ChatMeDock({ onOpenSettings }: { onOpenSettings?: () => void } =
       <div
         data-page-bento
         data-fsc-dock-pill
-        className="pointer-events-auto relative flex h-14 items-center gap-1 rounded-full bg-zinc-900 p-1.5"
+        className="pointer-events-auto relative flex h-14 items-center gap-1 rounded-2xl bg-zinc-900 p-1.5"
       >
         <span data-nav-glass-backdrop aria-hidden="true" />
         <button
@@ -128,7 +128,7 @@ export function ChatMeDock({ onOpenSettings }: { onOpenSettings?: () => void } =
                   type="button"
                   data-fsc-me
                   aria-label={profileLabel}
-                  className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 rounded-full py-1 pl-1 pr-3 transition-colors hover:bg-white/[0.07]"
+                  className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 rounded-xl py-1 pl-1 pr-3 transition-colors hover:bg-white/[0.07]"
                 >
                   <Avatar className="h-9 w-9 shrink-0 rounded-full">
                     {avatarSrc && <AvatarImage src={avatarSrc} alt="" className="rounded-full object-cover" />}
