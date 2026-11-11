@@ -153,7 +153,7 @@ for (const method of methodNames) {
 
     const id = original(translated, translatedOpts);
     if (LIVE_METHODS.has(method) && readerLanguage()) {
-      translateLiveToast(original, id, translated, wasTranslated, translatedOpts);
+      translateLiveToast(original as ToastFn, id, translated, wasTranslated, translatedOpts);
     }
     return id;
   };
