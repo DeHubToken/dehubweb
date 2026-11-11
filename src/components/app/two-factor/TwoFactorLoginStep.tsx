@@ -58,23 +58,19 @@ export function TwoFactorLoginStep({ account, onSubmit, onCancel, previewMode, p
   const name = account.username ? `@${account.username}` : account.displayName;
 
   return (
-    <div className="flex flex-col items-center gap-5" data-two-factor-login>
-      <div className="flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.06] py-1.5 pl-1.5 pr-4">
+    <div className="login-stack-method space-y-3" data-two-factor-login>
+      <div className="flex items-center justify-center gap-2 text-sm text-white/60">
         {account.avatarUrl ? (
-          <img src={account.avatarUrl} alt="" className="size-8 rounded-full object-cover" />
+          <img src={account.avatarUrl} alt="" className="size-6 rounded-full object-cover" />
         ) : (
-          <span className="grid size-8 place-items-center rounded-full bg-white/15 text-sm font-semibold text-white">
+          <span className="grid size-6 place-items-center rounded-full bg-white/15 text-xs font-semibold text-white">
             {(name ?? '?').replace('@', '').slice(0, 1).toUpperCase()}
           </span>
         )}
-        <span className="text-sm font-medium text-white">{name}</span>
+        <span>
+          {t('twoFactor.signingInAs', 'Signing in as')} <span className="font-medium text-white">{name}</span>
+        </span>
       </div>
-
-      <p className="max-w-[34ch] text-center text-sm text-white/60">
-        {mode === 'app'
-          ? t('twoFactor.loginBody', 'This account has two-step sign-in. Open your authenticator app and enter the code for Riftn.')
-          : t('twoFactor.loginBackupBody', 'Enter one of the backup codes you saved when you turned this on. Each code works once.')}
-      </p>
 
       {mode === 'app' ? (
         <TwoFactorCodeInput value={code} onChange={(v) => { setCode(v); setError(null); }} onComplete={(v) => submit(v)} disabled={busy} invalid={!!error} />
@@ -88,44 +84,45 @@ export function TwoFactorLoginStep({ account, onSubmit, onCancel, previewMode, p
           autoComplete="one-time-code"
           spellCheck={false}
           className={cn(
-            'h-14 rounded-xl border-white/10 bg-white/10 text-center font-mono text-xl tracking-[0.3em] text-white placeholder:text-white/30',
+            'h-14 rounded-2xl border-white/10 bg-white/10 text-center font-mono text-xl tracking-[0.3em] text-white placeholder:text-white/30',
             error && 'border-red-400/70',
           )}
         />
       )}
 
-      {error && <p role="alert" className="-mt-2 text-center text-sm text-red-400">{error}</p>}
-
-      <label className="flex w-full cursor-pointer items-center gap-3 px-1 text-sm text-white/70">
-        <input type="checkbox" checked={trustDevice} onChange={(e) => setTrustDevice(e.target.checked)} className="size-5 shrink-0 cursor-pointer rounded-md accent-white" />
-        {t('twoFactor.trustDevice', 'Don’t ask again on this device for 30 days')}
-      </label>
+      {error && <p role="alert" className="text-center text-sm text-red-400">{error}</p>}
 
       <button
         type="button"
         onClick={() => submit()}
         disabled={busy || (mode === 'app' ? code.length !== 6 : backupCode.replace(/[^a-z0-9]/gi, '').length < 8)}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white font-semibold text-black transition-opacity hover:bg-white/90 disabled:opacity-40"
+        className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-white text-base font-bold text-black transition-opacity hover:opacity-90 disabled:opacity-40"
       >
         {busy && <Loader2 className="size-4 animate-spin" />}
         {t('twoFactor.signIn', 'Sign in')}
       </button>
 
-      <div className="flex w-full flex-col items-center gap-3 text-sm">
+      <label className="flex cursor-pointer items-center justify-center gap-2.5 text-sm text-white/70">
+        <input type="checkbox" checked={trustDevice} onChange={(e) => setTrustDevice(e.target.checked)} className="size-4 shrink-0 cursor-pointer rounded accent-white" />
+        {t('twoFactor.trustDevice', 'Don’t ask again on this device for 30 days')}
+      </label>
+
+      <div className="flex items-center justify-center gap-3 pt-1 text-sm">
         <button
           type="button"
           onClick={() => { setMode(mode === 'app' ? 'backup' : 'app'); setError(null); }}
-          className="text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline"
+          className="text-white/80 underline-offset-4 transition-colors hover:text-white hover:underline"
         >
-          {mode === 'app' ? t('twoFactor.useBackup', 'Use a backup code instead') : t('twoFactor.useApp', 'Use my authenticator app')}
+          {mode === 'app' ? t('twoFactor.useBackupShort', 'Use a backup code') : t('twoFactor.useApp', 'Use my authenticator app')}
         </button>
-        <a href="/support" className="text-xs text-white/40 transition-colors hover:text-white/70">
-          {t('twoFactor.lostEverything', 'Lost your phone and your backup codes? Contact support')}
-        </a>
-        <button type="button" onClick={onCancel} className="text-xs text-white/40 transition-colors hover:text-white/70">
-          {t('twoFactor.useAnother', 'Sign in with a different account')}
+        <span className="h-3 w-px bg-white/20" aria-hidden />
+        <button type="button" onClick={onCancel} className="text-white/50 transition-colors hover:text-white/80">
+          {t('twoFactor.useAnotherShort', 'Different account')}
         </button>
       </div>
+      <a href="/support" className="block text-center text-xs text-white/40 transition-colors hover:text-white/70">
+        {t('twoFactor.lostEverything', 'Lost your phone and your backup codes? Contact support')}
+      </a>
     </div>
   );
 }

@@ -55,7 +55,7 @@ function Slot({ char, isActive, hasFakeCaret, invalid }: SlotProps & { invalid?:
     <div
       data-two-factor-slot
       className={cn(
-        'relative grid h-14 w-11 place-items-center rounded-xl border bg-white/10 text-2xl font-semibold tabular-nums text-white transition-colors',
+        'relative grid h-14 w-11 place-items-center rounded-2xl border bg-white/10 text-2xl font-semibold tabular-nums text-white transition-colors',
         invalid ? 'border-red-400/70' : isActive ? 'border-white/70 ring-2 ring-white/20' : 'border-white/10',
       )}
     >
