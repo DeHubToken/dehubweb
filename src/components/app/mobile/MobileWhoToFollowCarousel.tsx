@@ -33,10 +33,7 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { FollowCoverCard, suggestionName } from '@/components/app/FollowCoverCard';
-// Explore's one-line rows only: loaded when Explore asks for them, so the
-// home feed's copy of this row does not carry them on first paint.
-const FollowRow = lazy(() => import('@/components/app/FollowRow').then((m) => ({ default: m.FollowRow })));
-const ExploreListSection = lazy(() => import('@/components/app/explore/ExploreListSection').then((m) => ({ default: m.ExploreListSection })));
+const SuggestionRows = lazy(() => import('@/components/app/explore/SuggestionRows'));
 import { AuthenticationError, getSuggestedAccounts, getRankedSuggestions, type SuggestedAccount } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -58,15 +55,10 @@ type CardPhase = 'following' | 'leaving';
 interface MobileWhoToFollowCarouselProps {
   /** Explore lists it among its sections: no empty state there, no "See all" back to Explore. */
   surface?: 'feed' | 'explore';
-  /** Rows: Explore's clean list on phones (one line per person, 4 then See all). */
-  layout?: 'rail' | 'rows';
+  rows?: boolean;
 }
 
-/** Rows shown before See all. */
-const ROWS_COLLAPSED = 4;
-
-export function MobileWhoToFollowCarousel({ surface = 'feed', layout = 'rail' }: MobileWhoToFollowCarouselProps = {}) {
-  const [expanded, setExpanded] = useState(false);
+export function MobileWhoToFollowCarousel({ surface = 'feed', rows }: MobileWhoToFollowCarouselProps = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -253,33 +245,11 @@ export function MobileWhoToFollowCarousel({ surface = 'feed', layout = 'rail' }:
     );
   }
 
-  if (layout === 'rows') {
-    const shown = expanded ? filteredSuggestions : filteredSuggestions.slice(0, ROWS_COLLAPSED);
-    return (
-      <Suspense fallback={null}>
-      <ExploreListSection
-        icon="subscriptions"
-        title={_copy("copy.a94bfc8a15e8", { defaultValue: "Follow suggestions" })}
-        action={filteredSuggestions.length > ROWS_COLLAPSED ? (expanded ? _copy("settings.showLess", { defaultValue: "Show less" }) : _copy("feed.seeAll", { defaultValue: "See all" })) : undefined}
-        onAction={() => setExpanded((v) => !v)}
-        chevron={!expanded}
-        data-who-to-follow
-        data-follow-cards
-        data-follow-surface="explore-rows"
-      >
-        {shown.map((user) => (
-          <FollowRow
-            key={user.address}
-            user={user}
-            phase={phases.get(user.address)}
-            onOpen={handleUserClick}
-            onFollow={handleFollow}
-          />
-        ))}
-      </ExploreListSection>
-      </Suspense>
-    );
-  }
+  if (rows) return (
+    <Suspense fallback={null}>
+      <SuggestionRows users={filteredSuggestions} phases={phases} onOpen={handleUserClick} onFollow={handleFollow} />
+    </Suspense>
+  );
 
   return (
     // No data-discovery-section here: glass dresses that as a bento, and the

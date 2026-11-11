@@ -63,7 +63,7 @@ export function ExploreCategoryWords({
   onChange: (id: string | null) => void;
 }) {
   const { t: _copy } = _useCopy();
-  const items = [{ id: null as string | null, name: _copy('copy.explore.forYou', { defaultValue: 'For you' }) }, ...categories.filter((c) => c.name.toLowerCase() !== 'all').map((c) => ({ id: c.id as string | null, name: c.name }))];
+  const items = [{ id: null as string | null, name: _copy('filters.for-you', { defaultValue: 'For You' }) }, ...categories.filter((c) => c.name.toLowerCase() !== 'all').map((c) => ({ id: c.id as string | null, name: c.name }))];
   return (
     <div data-explore-category-words data-fade-edges className="border-b border-zinc-800/60">
       <div className="flex gap-5 overflow-x-auto px-1 scrollbar-hide" role="tablist">
@@ -180,7 +180,7 @@ export function ExplorePhoneHome({
       {recentSearches.length > 0 && (
         <ExploreListSection
           icon="search"
-          title={_copy('copy.explore.recent', { defaultValue: 'Recent searches' })}
+          title={_copy('bookmarks.recent', { defaultValue: 'Recent' })}
           action={_copy('explorePage.clearAll', { defaultValue: 'Clear all' })}
           onAction={onClearSearches}
           chevron={false}
@@ -219,7 +219,7 @@ export function ExplorePhoneHome({
           </AnimatePresence>
           {recentSearches.length > RECENT_COLLAPSED && (
             <button type="button" onClick={() => setRecentOpen((v) => !v)} className="mt-0.5 py-1.5 text-[13px] font-medium text-zinc-400">
-              {recentOpen ? showLess : _copy('copy.explore.moreRecent', { defaultValue: 'Show {{count}} more', count: recentSearches.length - RECENT_COLLAPSED })}
+              {recentOpen ? showLess : _copy('copy.a40947644c97', { defaultValue: '+{{value1}} more', value1: recentSearches.length - RECENT_COLLAPSED })}
             </button>
           )}
         </ExploreListSection>
@@ -249,9 +249,7 @@ export function ExplorePhoneHome({
                           {_copy('copy.c1f1c8819e33', { defaultValue: 'Boosted' })} ·
                         </>
                       )}
-                      {weekly
-                        ? _copy('copy.explore.postsThisWeek', { defaultValue: '{{value1}} posts this week', value1: compact(topic.post_count) })
-                        : _copy('copy.explore.postsCount', { defaultValue: '{{value1}} posts', value1: compact(topic.post_count) })}
+                      {_copy('copy.4f8701c79363', { defaultValue: '{{value1}} posts', value1: compact(topic.post_count) })}
                     </span>
                   </span>
                   <ChevronRight className="h-4 w-4 shrink-0 text-zinc-600" />
@@ -293,7 +291,7 @@ export function ExplorePhoneHome({
       {tickers.length > 0 && (
         <ExploreListSection
           icon="buy"
-          title={_copy('copy.explore.topTokens', { defaultValue: 'Top tokens' })}
+          title={_copy('copy.a039dfb9628b', { defaultValue: 'Tokens' })}
           action={tickers.length > TOKENS_COLLAPSED ? (tokensOpen ? showLess : seeAll) : undefined}
           onAction={() => setTokensOpen((v) => !v)}
           chevron={!tokensOpen}
@@ -316,8 +314,8 @@ export function ExplorePhoneHome({
         </ExploreListSection>
       )}
 
-      <MobileWhoToFollowCarousel surface="explore" layout="rows" />
-      <NewMembersCarousel surface="explore" layout="rows" />
+      <MobileWhoToFollowCarousel surface="explore" rows />
+      <NewMembersCarousel surface="explore" rows />
     </div>
   );
 }
