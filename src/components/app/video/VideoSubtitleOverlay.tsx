@@ -438,6 +438,14 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     el.textContent = `video::cue { font-size: ${sizePxValue}px; background: rgba(0,0,0,0.4); color: #fff; line-height: 1.3; }`;
   }, [sizePxValue]);
 
+  const filteredLangs = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return SUBTITLE_LANGUAGES;
+    return SUBTITLE_LANGUAGES.filter(
+      (l) => l.name.toLowerCase().includes(q) || l.code.toLowerCase().includes(q),
+    );
+  }, [query]);
+
   if (!numericId) return null;
 
   const buttonState: 'off' | 'on' | 'working' | 'loading' =
@@ -458,14 +466,6 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     }
     setEnabled((v) => !v);
   };
-
-  const filteredLangs = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return SUBTITLE_LANGUAGES;
-    return SUBTITLE_LANGUAGES.filter(
-      (l) => l.name.toLowerCase().includes(q) || l.code.toLowerCase().includes(q),
-    );
-  }, [query]);
 
   const langLabel =
     SUBTITLE_LANGUAGES.find((l) => l.code === lang)?.name ?? _copy("copy.88d759ea02ce", { defaultValue: "Original" });
