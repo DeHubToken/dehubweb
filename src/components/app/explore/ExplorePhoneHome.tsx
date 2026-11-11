@@ -314,8 +314,8 @@ export function ExplorePhoneHome({
         </ExploreListSection>
       )}
 
-      <MobileWhoToFollowCarousel surface="explore" layout="rows" />
-      <NewMembersCarousel surface="explore" layout="rows" />
+      <MobileWhoToFollowCarousel surface="explore" rows />
+      <NewMembersCarousel surface="explore" rows />
     </div>
   );
 }
