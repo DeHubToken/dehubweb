@@ -19,7 +19,12 @@ import Fullscreen from "@/components/ui/cut-icons/fullscreen";
 import ExitFullscreen from "@/components/ui/cut-icons/exit-fullscreen";
 import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
 import { ChatTextSizeButton } from '@/components/app/chat/ChatTextSizeButton';
-import { ChatIconButton, ChatListTop, ChatMeDock, type ChatChromeLook } from '@/components/app/chat/FullScreenChatChrome';
+import { ChatIconButton, ChatListTop, ChatMeDock } from '@/components/app/chat/FullScreenChatChrome';
+import { ChatRowContextMenu, type ChatOptionsHandlers } from '@/components/app/chat/ChatOptionsMenu';
+import { isArchived, isMuted, useChatPrefs, useClearChatHistory } from '@/hooks/use-chat-prefs';
+import type { ChatPref } from '@/lib/api/dehub/chat-prefs';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Archive, BellOff, Pin, ChevronLeft } from 'lucide-react';
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -102,12 +107,15 @@ export function ConversationItem({
   isSelected,
   onDelete,
   onBlock,
+  pref,
 }: {
   conversation: DeHubConversation;
   onClick: () => void;
   isSelected: boolean;
   onDelete: (conversation: DeHubConversation) => void;
   onBlock: (conversation: DeHubConversation) => void;
+  /** Your own pin / mute / marked-unread for this chat (full-screen chat). */
+  pref?: ChatPref;
 }) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -183,6 +191,11 @@ export function ConversationItem({
           {lastMessageTime && (
             <span className="text-zinc-500 text-sm ml-auto flex-shrink-0 tabular-nums">{lastMessageTime}</span>
           )}
+          {pref && isMuted(pref) && <BellOff data-chat-row-muted aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-zinc-500" />}
+          {pref?.pinnedAt && <Pin data-chat-row-pinned aria-hidden="true" className="h-3.5 w-3.5 shrink-0 rotate-45 text-zinc-500" />}
+          {pref?.markedUnread && !(conversation.unreadCount > 0) && (
+            <span data-count-badge data-chat-row-marked-unread aria-label="Unread" className="ml-1 h-2.5 w-2.5 shrink-0 rounded-full bg-white" />
+          )}
           {/* Count rides in the name row rather than welded to the avatar corner,
               matching the mobile app. White-on-near-black instead of red-500:
               the palette has no colour in it, and Osaka/Jungle still repaint
@@ -224,7 +237,6 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const location = useLocation();
-  const chromeLook: ChatChromeLook = new URLSearchParams(location.search).get('look') === 'b' ? 'b' : 'a';
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
   // A conversation open on mobile reclaims the bottom-nav zone as well as the
@@ -366,6 +378,50 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
     }
   }, [_copy]);
 
+  // Full-screen chat on a computer: your own pins, archive, mutes and
+  // "marked unread", plus the right-click menu on every row.
+  const richList = fullscreen && !phonePill;
+  const clearHistory = useClearChatHistory();
+  const { byId: chatPrefs, update: updateChatPref } = useChatPrefs();
+  const [showArchived, setShowArchived] = useState(false);
+  const [clearTarget, setClearTarget] = useState<DeHubConversation | null>(null);
+  const lastActivity = (c: DeHubConversation) => c.lastMessage?.createdAt || c.updatedAt;
+  const archivedConversations = richList
+    ? visibleConversations.filter(c => isArchived(chatPrefs.get(c.id), lastActivity(c)))
+    : [];
+  const pinnedAt = (c: DeHubConversation) => {
+    const at = chatPrefs.get(c.id)?.pinnedAt;
+    return at ? new Date(at).getTime() : 0;
+  };
+  const listedConversations = !richList
+    ? visibleConversations
+    : showArchived
+      ? archivedConversations
+      : visibleConversations
+          .filter(c => !isArchived(chatPrefs.get(c.id), lastActivity(c)))
+          .sort((a, b) => pinnedAt(b) - pinnedAt(a));
+  const chatOptionsFor = (conv: DeHubConversation): ChatOptionsHandlers => {
+    const peer = (conv.otherUser || conv.participants?.[0])?.address;
+    return {
+      pref: chatPrefs.get(conv.id),
+      // The server's unread count clears when the chat is opened; the menu
+      // only flips your own "marked unread" flag.
+      hasUnread: false,
+      onPref: (patch) => updateChatPref(conv.id, patch),
+      onOpenWindow: peer
+        ? () => { window.open(`/chat?with=${encodeURIComponent(peer)}`, `riftn-chat-${conv.id}`, 'popup,width=520,height=780'); }
+        : undefined,
+      onBlock: () => handleBlockConversationUser(conv),
+      onClearHistory: () => setClearTarget(conv),
+      onDelete: () => handleDeleteConversation(conv),
+    };
+  };
+  const openConversation = (conv: DeHubConversation) => {
+    setShowPublicChat(false);
+    setSelectedConversation({ ...conv, unreadCount: 0 });
+    if (chatPrefs.get(conv.id)?.markedUnread) updateChatPref(conv.id, { unread: false });
+  };
+
   // Get existing conversation addresses to filter search results
   const existingAddresses = new Set(
     (conversations || []).map(c => c.otherUser?.address?.toLowerCase()).filter(Boolean)
@@ -412,7 +468,15 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   // `?chat=public` is the same landing in a URL, which is all a push or an
   // email can carry: a mention in the public chat opens the room itself.
   useEffect(() => {
-    if (new URLSearchParams(location.search).get('chat') === 'public') setShowPublicChat(true);
+    const params = new URLSearchParams(location.search);
+    if (params.get('chat') === 'public') setShowPublicChat(true);
+    // `?with=<address>` opens that chat: what "Open in new window" links to.
+    const peer = params.get('with');
+    if (peer && /^0x[0-9a-fA-F]{40}$/.test(peer)) {
+      pendingDmRef.current = { address: peer };
+      pendingUserPromiseRef.current = getAccountInfo(peer).catch(() => null);
+      setPendingDmTrigger(prev => prev + 1);
+    }
   }, [location.search]);
 
   useEffect(() => {
@@ -705,6 +769,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       focusComposer={composerFocusFor === conversationIdentity(selectedConversation)}
       onBack={closeChat}
       cozy
+      options={richList ? (({ onBlock: _b, onDelete: _d, ...rest }) => rest)(chatOptionsFor(selectedConversation)) : undefined}
     />
   ) : null;
 
@@ -739,7 +804,6 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   // Computers only: phones keep the pill header they already have.
   const fullscreenTop = fullscreen && !phonePill ? (
     <ChatListTop
-      look={chromeLook}
       title={_copy('fullscreenChat.title', { defaultValue: 'Chat' })}
       search={(
         <input
@@ -861,7 +925,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
           </PageIsland>)}
 
           {/* Conversation List */}
-          <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? (chromeLook === 'b' ? 'pt-1 pb-24' : 'pt-1 pb-4') : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
+          <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? 'pt-1 pb-24' : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
             {/* Public Chat (pinned) */}
             <button
               onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
@@ -919,19 +983,47 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
             )}
 
             {/* Conversations */}
-            {!isLoading && !isError && visibleConversations.map((conv) => (
-              <ConversationItem
-                key={conv.id}
-                conversation={conv}
-                onClick={() => {
-                  setShowPublicChat(false);
-                  setSelectedConversation({ ...conv, unreadCount: 0 });
-                }}
-                isSelected={selectedConversation?.id === conv.id}
-                onDelete={handleDeleteConversation}
-                onBlock={handleBlockConversationUser}
-              />
-            ))}
+            {richList && showArchived && (
+              <button
+                type="button"
+                data-chat-archive-back
+                onClick={() => setShowArchived(false)}
+                className="flex w-full items-center gap-2 border-t border-white/[0.07] px-4 py-3 text-left text-[15px] font-semibold text-white hover:bg-white/[0.04]"
+              >
+                <ChevronLeft className="h-4 w-4 text-zinc-400" />
+                {_copy('chatMenu.archivedChats', { defaultValue: 'Archived chats' })}
+              </button>
+            )}
+            {!isLoading && !isError && listedConversations.map((conv) => {
+              const row = (
+                <ConversationItem
+                  key={conv.id}
+                  conversation={conv}
+                  onClick={() => openConversation(conv)}
+                  isSelected={selectedConversation?.id === conv.id}
+                  onDelete={handleDeleteConversation}
+                  onBlock={handleBlockConversationUser}
+                  pref={richList ? chatPrefs.get(conv.id) : undefined}
+                />
+              );
+              return richList ? (
+                <ChatRowContextMenu key={conv.id} {...chatOptionsFor(conv)}>
+                  <div data-chat-row>{row}</div>
+                </ChatRowContextMenu>
+              ) : row;
+            })}
+            {richList && !showArchived && archivedConversations.length > 0 && !searchQuery.trim() && (
+              <button
+                type="button"
+                data-chat-archive-open
+                onClick={() => setShowArchived(true)}
+                className="flex w-full items-center gap-3 border-t border-white/[0.07] px-4 py-3 text-left text-[14px] text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+              >
+                <Archive className="h-[18px] w-[18px]" />
+                <span className="flex-1">{_copy('chatMenu.archivedChats', { defaultValue: 'Archived chats' })}</span>
+                <span className="tabular-nums">{archivedConversations.length}</span>
+              </button>
+            )}
 
             {/* User search results (people not in existing conversations) */}
             {searchQuery.trim().length >= 2 && newUserResults.length > 0 && (
@@ -997,13 +1089,25 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.3084651a3386", { defaultValue: "Searching users..." })}</div>
             )}
           </div>
-          {fullscreen && !phonePill && <ChatMeDock look={chromeLook} />}
+          {fullscreen && !phonePill && <ChatMeDock />}
         </div>
       </div>
   );
 
   const dialogs = (
     <>
+      <AlertDialog open={!!clearTarget} onOpenChange={(open) => { if (!open) setClearTarget(null); }}>
+        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">{_copy('chatMenu.clearTitle', { defaultValue: 'Clear history?' })}</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">{_copy('chatMenu.clearBody', { defaultValue: 'Every message in this chat disappears for you. The other person keeps their copy.' })}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (clearTarget) void clearHistory(clearTarget); setClearTarget(null); }}>{_copy('chatMenu.clearHistory', { defaultValue: 'Clear history' })}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {/* Message Type Selector */}
       <NewMessageSelector
         open={showMessageSelector}
