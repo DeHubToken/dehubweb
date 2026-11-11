@@ -1647,7 +1647,11 @@
     "giftBoost": "Een boost cadeau doen",
     "markSection": "Overslaapbare secties",
     "copyFailed": "Kon link niet kopiëren",
-    "share": "Delen"
+    "share": "Delen",
+    "castToTv": "Casten naar tv",
+    "castStarted": "Speelt af op je tv",
+    "castUnsupported": "Deze browser kan niet casten. Open Riftn in Chrome of Safari om op je tv te kijken.",
+    "castFailed": "Kan de tv niet bereiken. Controleer of hij op hetzelfde wifi-netwerk zit en probeer het opnieuw."
   },
   "filters": {
     "sort": "Sorteren",

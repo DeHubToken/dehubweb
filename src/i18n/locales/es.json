@@ -1457,7 +1457,11 @@
     "giftBoost": "Regala un impulso",
     "markSection": "Secciones saltables",
     "copyFailed": "No se pudo copiar el enlace",
-    "share": "Compartir"
+    "share": "Compartir",
+    "castToTv": "Enviar a la TV",
+    "castStarted": "Reproduciendo en tu TV",
+    "castUnsupported": "Este navegador no puede enviar a la TV. Abre Riftn en Chrome o Safari para verlo en tu TV.",
+    "castFailed": "No se pudo conectar con la TV. Comprueba que esté en la misma Wi-Fi e inténtalo de nuevo."
   },
   "filters": {
     "sort": "Ordenar",
