@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Pin } from 'lucide-react';
 import Film from '@/components/ui/cut-icons/video';
+import Shorts from '@/components/ui/cut-icons/shorts';
 import Images from '@/components/ui/cut-icons/images';
 import Music from '@/components/ui/cut-icons/music';
 import MessageSquare from '@/components/ui/cut-icons/messages';
@@ -37,6 +38,8 @@ import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { PostBgLayer, postBgHostProps, useProfilePostBg } from './PostBackground';
 import { ArticleTileFace, useProfileArticleTile } from './ArticleTile';
 import { articleReadMinutes } from '@/lib/article-tile';
+import { GridCardFace, GridKindPill, GridPollProbe } from './GridCardTile';
+import { mediaCardOf, textCardOf, wordsWithoutLinks } from '@/lib/grid-card';
 import './profile-mixed-grid.css';
 
 /** One cell's worth of content. Optimistic posts arrive in the same shape. */
@@ -165,6 +168,7 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             const post = entry.data as ImagePost;
             const images = post.imageUrls?.length ? post.imageUrls : [post.image];
             const multi = images.length > 1;
+            const mediaKind = mediaCardOf(post);
             return (
               <button
                 key={entry.key}
@@ -176,10 +180,10 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
                 aria-label={post.caption || post.title || t('profile.tabs.images', 'Image')}
               >
                 <img src={tileImage(post.image)} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className={post.isPPV ? 'pmg-img pmg-img--locked' : 'pmg-img'} />
-                {(multi || pinChip) && <span className="pmg-shade" />}
+                {(multi || pinChip || mediaKind) && <span className="pmg-shade" />}
                 {multi && <Badge label={t('profile.multiPhoto', 'Photos')}><Images /></Badge>}
                 {post.isPPV && <span className="pmg-lock"><Lock /></span>}
-                {pinChip}
+                {pinChip ?? (mediaKind && <GridKindPill kind={mediaKind} />)}
               </button>
             );
           }
@@ -188,6 +192,7 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             const video = entry.data as VideoItem;
             const isLive = !!(video.isLiveNow || video.liveIsActive);
             const locked = !!(video.isPPV || video.isLocked) && !video.isUnlocked && !video.isOwner;
+            const mediaKind = mediaCardOf(video);
 
             if (video.isAudio) {
               const cover = video.thumbnail;
@@ -213,13 +218,13 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
                   <span className="pmg-chip pmg-chip--live"><i />{t('live.liveBadge', 'LIVE')}</span>
                 ) : (
                   <>
-                    <Badge label={video.isLivePost ? t('profile.tabs.live', 'Live') : t('profile.tabs.videos', 'Video')}>{video.isLivePost ? <Radio /> : <Film />}</Badge>
+                    <Badge label={video.isLivePost ? t('profile.tabs.live', 'Live') : video.isShort ? t('profile.gridCard.short', 'Short') : t('profile.tabs.videos', 'Video')}>{video.isLivePost ? <Radio /> : video.isShort ? <Shorts /> : <Film />}</Badge>
                     {!!video.duration && video.duration !== '0:00' && <span className="pmg-dur">{video.duration}</span>}
                   </>
                 )}
                 {!!video.views && video.views !== '0' && <span className="pmg-views">{video.views}</span>}
                 {locked && <span className="pmg-lock"><Lock /></span>}
-                {!isLive && pinChip}
+                {!isLive && (pinChip ?? (mediaKind && <GridKindPill kind={mediaKind} />))}
               </button>
             );
           }
@@ -259,17 +264,36 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             );
           }
 
-          const words = plainText(post.content || post.title);
-          return (
-            <button key={entry.key} type="button" data-tile="text" className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80)} {...(entry.isRepost ? {} : postBgHostProps(postBg))}>
-              {!entry.isRepost && <PostBgLayer bg={postBg} />}
+          const locked = !!post.isLocked && !post.isUnlocked && !post.isOwner;
+          // A post whose feed card is a stage, poll, event, link... is drawn as
+          // a small copy of that card (GridCardTile). Locked words stay hidden.
+          const card = locked ? null : textCardOf(post);
+          const words = plainText(card ? wordsWithoutLinks(post.content || post.title || '') : post.content || post.title);
+          const tokenId = Number(String(post.id).replace(/^[a-z]+-/, '')) || 0;
+          const poster = (pill?: ReactNode) => (
+            <>
               <Badge label={t('profile.tabs.posts', 'Post')}><MessageSquare /></Badge>
-              {pinChip ?? <span className="pmg-quote" aria-hidden>“</span>}
-              <span className="pmg-words">{post.isLocked && !post.isUnlocked && !post.isOwner ? <><Lock className="pmg-inline-lock" />{t('profile.lockedPost', 'Locked post')}</> : words}</span>
+              {pinChip ?? pill ?? <span className="pmg-quote" aria-hidden>“</span>}
+              <span className="pmg-words">{locked ? <><Lock className="pmg-inline-lock" />{t('profile.lockedPost', 'Locked post')}</> : words}</span>
               <span className="pmg-meta pmg-stats">
                 <span><MessageSquare />{compact(post.stats?.comments)}</span>
                 <span><ThumbsUp />{compact(post.stats?.likes)}</span>
               </span>
+            </>
+          );
+          if (card) {
+            return (
+              <button key={entry.key} type="button" data-tile="text" data-card={card.kind} className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80) || post.title || t('profile.tabs.posts', 'Post')}>
+                <GridCardFace card={card} tokenId={tokenId} quotedPost={post.quotedPost} words={words} chip={pinChip ?? undefined} fallback={poster(<GridKindPill kind={card.kind} inline />)} />
+              </button>
+            );
+          }
+          return (
+            <button key={entry.key} type="button" data-tile="text" className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80)} {...(entry.isRepost ? {} : postBgHostProps(postBg))}>
+              {!entry.isRepost && <PostBgLayer bg={postBg} />}
+              {locked || entry.isOptimistic || tokenId <= 0
+                ? poster()
+                : <GridPollProbe tokenId={tokenId} words={words} chip={pinChip ?? undefined} poster={poster()} fallback={poster(<GridKindPill kind="poll" inline />)} />}
             </button>
           );
         })}

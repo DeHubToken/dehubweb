@@ -364,6 +364,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     forKids: item.forKids,
     duetOf: duetOfPost(item as any),
     isLivePost: item.postType === 'live',
+    isShort: (item.postType as string) === 'short',
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
     livePlaybackId: item.stream?.playbackId,
