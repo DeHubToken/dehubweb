@@ -119,6 +119,12 @@ import { GeneratedStageCover } from '@/components/app/stages/GeneratedStageCover
 import { PastStageCard } from '@/components/app/stages/PastStageCard';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import galleryCover from '@/assets/banners/agent-marco_v.png';
+import pillArtA from '@/assets/banners/agent-ellaverse.png';
+import pillArtB from '@/assets/banners/agent-xluna.png';
+import pillArtC from '@/assets/banners/agent-sawyer.png';
+import pillArtD from '@/assets/banners/agent-notmaya.png';
+import pillArtE from '@/assets/banners/agent-jdot.png';
+import pillArtF from '@/assets/banners/agent-riooo.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
 import galleryCommunityLogo from '@/assets/avatars/vrgl.png';
@@ -1572,6 +1578,7 @@ export default function StateGalleryPage() {
         <PinnedProfileGallery />
         <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
         <ArticleTilesGallery initialLook={params.get('atile')} initiallyOpen={params.get('sheet') === 'article-tile'} />
+        <GridCardsGallery />
 
         <PollGallery />
         <LockedChatGallery />
@@ -2046,6 +2053,73 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
           onCancel={() => setOpen(false)}
           onSave={(id) => { setBgId(id); setOpen(false); }}
         />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+const PILL_AUTHOR = { id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false };
+const pillAgo = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
+const pillAbs = (src: string) => (typeof window === 'undefined' ? src : new URL(src, window.location.origin).href);
+const pillText = (id: string, content: string, extra: Record<string, unknown> = {}) => ({
+  key: id, type: 'post' as const,
+  data: { id, type: 'post', content, createdAt: pillAgo(1), author: PILL_AUTHOR, stats: { comments: 14, reposts: 2, likes: 181, dislikes: 0 }, ...extra },
+});
+const pillVideo = (id: string, title: string, thumbnail: string, extra: Record<string, unknown> = {}) => ({
+  key: id, type: 'video' as const,
+  data: { id, type: 'video', title, thumbnail, duration: '0:42', views: '2.4K', createdAt: pillAgo(2), author: PILL_AUTHOR, ...extra },
+});
+const pillImage = (id: string, image: string, extra: Record<string, unknown> = {}) => ({
+  key: id, type: 'image' as const,
+  data: { id, type: 'image', image, imageUrls: [image], caption: '', createdAt: pillAgo(3), author: PILL_AUTHOR, ...extra },
+});
+const PILL_STORE = '3f2a9c1e-77aa-4c1b-9d2e-1a2b3c4d5e6f';
+const PILL_LISTING = '9a8b7c6d-5e4f-4a3b-2c1d-0e9f8a7b6c5d';
+/** One of every grid post that carries a card in the feed, plus plain ones beside them. */
+const GRID_CARD_ENTRIES = [
+  pillText('9101', 'Town Hall inbound! Set your reminders and join us live. https://riftn.com/stages/1'),
+  pillVideo('gc-video', 'Night ride through the city', pillArtB),
+  pillText('9103', 'Which theme should we drop next?'),
+  pillVideo('gc-short', 'POV: first ride', pillArtC, { isShort: true }),
+  pillText('9105', 'This is exactly what I meant yesterday', {
+    isQuotePost: true,
+    quotedPost: { tokenId: 77, name: 'Night shots look better underexposed', description: '', minterDisplayName: 'Ella', imageUrls: [pillAbs(pillArtA)], postType: 'feed-images' },
+  }),
+  pillText('9106', 'Meetup Friday, rooftop, bring a camera https://riftn.com/app/events/12'),
+  pillText('9107', 'The best breakdown of the new lens I have seen https://www.youtube.com/watch?v=gallery'),
+  pillImage('gc-photo', pillArtF),
+  pillText('9109', 'Join the crew, we post every night https://riftn.com/communities/night-shooters'),
+  pillImage('gc-comic', pillArtA, { layout: 'comic', imageUrls: [pillArtA, pillArtB, pillArtC] }),
+  pillVideo('gc-earn', 'Watch to the end and earn', pillArtD, { bountyAmount: 1000 }),
+  pillText('9112', `Prints are back in stock https://riftn.com/app/stores/${PILL_STORE}?listing=${PILL_LISTING}`),
+  pillText('9113', 'We are on right now, pull up https://riftn.com/stages/2'),
+  pillText('gc-plain', 'Sunday reset. Coffee, long walk, no notifications.'),
+  pillText('9115', 'Read this before you buy anything https://riftn.com/app/post/5162'),
+] as unknown as MixedGridEntry[];
+
+/** What the cards above read, so the gallery draws them with no network. */
+function seedGridCards(qc: ReturnType<typeof useQueryClient>) {
+  const soon = new Date(Date.now() + 2 * 86_400_000);
+  soon.setHours(20, 0, 0, 0);
+  qc.setQueryData(['stage-by-id', 'short:1'], { id: 'gallery-stage-1', short_id: 1, title: 'Town Hall & AMA', status: 'scheduled', scheduled_at: soon.toISOString(), host_username: 'marco_v', cover_image_url: null });
+  qc.setQueryData(['stage-by-id', 'short:2'], { id: 'gallery-stage-2', short_id: 2, title: 'Late night radio', status: 'live', started_at: pillAgo(1), host_username: 'marco_v', speaker_count: 3, listener_count: 35, cover_image_url: null });
+  qc.setQueryData(['polls', 9103], { _id: 'p', tokenId: 9103, address: '0x', question: 'Which theme should we drop next?', options: [{ index: 0, text: 'Neon', voteCount: 58 }, { index: 1, text: 'Paper', voteCount: 27 }, { index: 2, text: 'Forest', voteCount: 15 }], totalVotes: 100, isActive: true, isMultipleChoice: false, createdAt: pillAgo(5) });
+  qc.setQueryData(['event-by-number', 12], { title: 'Rooftop photo walk', starts_at: new Date(Date.now() + 3 * 86_400_000).toISOString(), cover_image_url: pillAbs(pillArtD) });
+  qc.setQueryData(['grid-link-preview', 'https://www.youtube.com/watch?v=gallery'], { url: 'https://www.youtube.com/watch?v=gallery', title: 'Full review: the 35mm that does it all', description: '', image: 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/7389-article-1.jpg', siteName: 'YouTube' });
+  qc.setQueryData(['communities', 'slug', 'night-shooters'], { id: 'c1', slug: 'night-shooters', name: 'Night Shooters', banner_url: pillAbs(galleryCommunityArt), avatar_url: null, member_count: 1240 });
+  qc.setQueryData(['store-listing', PILL_LISTING], { id: PILL_LISTING, store_id: PILL_STORE, title: 'A3 print: Rain City', price: 25, images: [pillAbs(pillArtB)], stores: { name: 'Marco prints' } });
+  qc.setQueryData(['single-post', '5162'], { tokenId: 5162, name: 'Ready to rock', description: '', minterDisplayName: 'Riftn', imageUrls: [pillAbs(pillArtE)], postType: 'feed-images' });
+}
+
+/** Profile grid posts that carry a card: each tile is a small copy of its card (GridCardTile). */
+function GridCardsGallery() {
+  const qc = useQueryClient();
+  const [ready] = useState(() => { seedGridCards(qc); return true; });
+  return (
+    <section data-page-bento data-grid-cards-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Profile grid: posts with cards</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        {ready && <div className="max-w-[360px]"><ProfileMixedGrid entries={GRID_CARD_ENTRIES} /></div>}
       </AuthContext.Provider>
     </section>
   );

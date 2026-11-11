@@ -2058,6 +2058,25 @@
     "returnHome": "ارجع للبيت"
   },
   "profile": {
+    "gridCard": {
+      "stage": "المسرح",
+      "liveStage": "المسرح الحية",
+      "event": "حوادث",
+      "poll": "استطلاع",
+      "quote": "المقال",
+      "community": "مجتمع",
+      "shop": "المتجر",
+      "profile": "الملف الشخصي",
+      "film": "السينما",
+      "app": "تطبيق",
+      "proposal": "مخطوطة",
+      "short": "قصير",
+      "comic": "الكوميديا",
+      "earn": "تأتي",
+      "votes_one": "{{value}} تصويت",
+      "votes_other": "{{value}} تصويت",
+      "members_one": "عضو {{value}}"
+    },
     "viewGrid": "عرض الشبكة",
     "viewList": "قائمة العرض",
     "viewMode": "شوف",
