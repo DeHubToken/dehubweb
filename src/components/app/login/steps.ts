@@ -33,6 +33,10 @@ export type LoginStep =
   // optionally a picture and a reading language. Mandatory: the sheet will not
   // close while `requiresUsername` is set, so the only other way out is Log out.
   | 'profile'
+  // The account has two-step sign-in on: the server answered the login with a
+  // challenge instead of a session, and a code from the authenticator app (or
+  // a backup code) is owed before anything else happens.
+  | 'two-factor'
   | 'resuming';
 
 /** Identity choices share one form area; wallet security remains a focused step. */
