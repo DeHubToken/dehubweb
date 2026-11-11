@@ -176,6 +176,8 @@ export interface DeHubNFT {
   socialImageUrl?: string;
   imageUrl: string;
   imageUrls?: string[];
+  /** Each picture's size by file name, sent so cards can reserve their shape. */
+  imageSizes?: { f: string; w: number; h: number }[];
   videoUrl?: string;
   /** HLS master playlist key, on public posts with a rendition ready. See buildHlsUrl. */
   hlsUrl?: string;

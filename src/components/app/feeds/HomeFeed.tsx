@@ -453,7 +453,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
     const nftPostType = pinnedPost.postType || 'video';
     
     if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
-      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
+      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls, undefined, (pinnedPost as { imageSizes?: unknown }).imageSizes);
       const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
       const avatar = pinnedPost.minterAvatarUrl 
         ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'

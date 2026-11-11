@@ -6435,6 +6435,8 @@ async function handleRequest(request, env, ctx) {
     // this crawlers still read it as a username and served Not Found.
     '/requests': '/features',
     '/app/requests': '/features',
+    // The sign-in help link in the app opens /support.
+    '/support': '/docs/contact',
   };
   const spaTarget = SPA_REDIRECTS[trimmedPath.toLowerCase()];
   if (spaTarget) return redirect301(`${APP_URL}${spaTarget}`);

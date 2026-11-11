@@ -6,7 +6,10 @@ import { memo, useState, useEffect, useLayoutEffect, useRef, useCallback, useMem
 import { toast } from 'sonner';
 import { isDhb } from '@/components/app/DhbAmount';
 import { motion, useReducedMotion } from 'framer-motion';
-import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
+import { IslandAction, PageBody, PageIsland, PageTabs, usePhonePill } from '@/components/app/page-kit/PageKit';
+import { NotificationSearchLine, notificationMatches, type MeltFrom } from '@/components/app/notifications/NotificationSearchLine';
+import SearchIcon from '@/components/ui/cut-icons/search';
+import { useDrawerPullClose } from '@/hooks/use-drawer-pull-close';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
 import { AtSign, Loader2, AlertTriangle, Zap, Star, ShoppingBag, Scale, Siren, Award, ChevronDown, Filter as FilterIcon } from "lucide-react";
@@ -1787,8 +1790,17 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
+  // Phones: the search button turns the whole pill into a search box that
+  // filters the rows already loaded, as Home's pill does.
+  const phonePill = usePhonePill();
+  const [search, setSearch] = useState<{ query: string; from: MeltFrom } | null>(null);
+  const searchQuery = search?.query.trim().toLowerCase() ?? '';
   const reduceMotion = useReducedMotion();
   const isDesktopViewport = useIsDesktopViewport();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsSheetRef = useRef<HTMLDivElement>(null);
+  const closeSettings = useCallback(() => setSettingsOpen(false), []);
+  useDrawerPullClose(settingsSheetRef, null, settingsOpen && !isDesktopViewport, closeSettings, { snap: false });
 
   // In the bell drawer the island must not hide on scroll; the kit island
   // takes no data-nav-hide prop, so mark its outer element directly.
@@ -2133,8 +2145,9 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           const allowedTypes = filterTypeMap[activeTab];
           return allowedTypes ? allowedTypes.includes(n.type) : true;
         });
-    return filtered;
-  }, [activeTab, allNotifications]);
+    if (!searchQuery) return filtered;
+    return filtered.filter((n) => notificationMatches(n, searchQuery, enrichedAvatars));
+  }, [activeTab, allNotifications, searchQuery, enrichedAvatars]);
 
   // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
   // drip (one state update per resolved actor) doesn't recompute it every
@@ -2434,11 +2447,13 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       </SheetContent>
     </Sheet>
   ) : (
-    <Drawer>
+    // handleOnly: vaul's own drag lost the finger to the list's native scroll,
+    // so only a tap off closed it. The pull-close gesture drags it instead.
+    <Drawer open={settingsOpen} onOpenChange={setSettingsOpen} handleOnly animatedExit>
       <DrawerTrigger asChild>
         {settingsTrigger}
       </DrawerTrigger>
-      <DrawerContent glass hideHandle={false} scrollable data-notifications-page className="max-h-[85dvh]" aria-describedby={undefined}>
+      <DrawerContent ref={settingsSheetRef} glass hideHandle={false} scrollable data-notifications-page className="max-h-[85dvh]" aria-describedby={undefined}>
         <div className="px-4 pt-1 pb-[calc(1.5rem_+_env(safe-area-inset-bottom,0px))]">
           <DrawerTitle className="text-white text-lg font-bold flex items-center gap-2 pb-4">
             {settingsTitle}
@@ -2449,7 +2464,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     </Drawer>
   );
 
-  // Day headings for the feed: everything unread sits under New, the rest by
+  // Day headings for the feed: everything unread leads with no heading, the rest by
   // when it happened.
   const feedGroupOf = (bundle: BundledNotification): 'new' | 'today' | 'week' | 'earlier' => {
     if (listedUnread(bundle)) return 'new';
@@ -2479,11 +2494,32 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           className={inDrawer ? 'top-0 lg:top-0 pt-2' : undefined}
           icon="notifications"
           title={<span aria-live="polite">{activeTabLabel}</span>}
+          pillLine={phonePill && search ? (
+            <NotificationSearchLine
+              value={search.query}
+              from={search.from}
+              placeholder={t('notifications.searchPlaceholder', { defaultValue: 'Search notifications' })}
+              closeLabel={t('notifications.searchClose', { defaultValue: 'Close search' })}
+              onChange={(query) => setSearch((s) => (s ? { ...s, query } : s))}
+              onClose={() => setSearch(null)}
+            />
+          ) : undefined}
           tabs={
             <PageTabs
               beforeTabs={
                 <div className="flex shrink-0 items-center gap-1.5">
                   {settingsControl}
+                  {phonePill && (
+                    <IslandAction
+                      label={t('notifications.searchPlaceholder', { defaultValue: 'Search notifications' })}
+                      onClick={() => {
+                        const btn = islandHostRef.current?.querySelector('[data-notif-search-open]')?.closest('button')?.getBoundingClientRect();
+                        setSearch({ query: '', from: btn ? { left: btn.left, right: btn.right } : null });
+                      }}
+                    >
+                      <span data-notif-search-open className="flex"><SearchIcon className="h-[18px] w-[18px] text-white" /></span>
+                    </IslandAction>
+                  )}
                   <IslandAction
                     label={t('notifications.markAllRead')}
                     onClick={handleMarkAllAsRead}
@@ -2515,7 +2551,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       </div>
 
       {/* Notifications List */}
-      <PageBody frameClip={inDrawer}>
+      <PageBody frameClip={inDrawer} className={inDrawer ? 'pt-0' : undefined}>
         <div data-page-bento data-kit-section data-notification-list className="overflow-hidden">
           {isLoading ? (
             // Row skeletons that mirror the real list layout — a lone spinner
@@ -2531,6 +2567,10 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                 </div>
               ))}
             </div>
+          ) : notifications.length === 0 && searchQuery ? (
+            <p data-notification-search-empty className="p-8 text-center text-sm text-zinc-500">
+              {t('notifications.searchEmpty', { defaultValue: 'No notifications match' })}
+            </p>
           ) : notifications.length === 0 ? (
             <div className="p-8 flex flex-col items-center justify-center text-center">
               <ThemedIcon icon="notifications" alt="" className="w-14 h-14 object-contain mb-4 opacity-70" />
@@ -2541,7 +2581,8 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
               <AnimatePresence initial={false}>
                 {bundledNotifications.map((bundle, index) => {
                   const group = feedGroupOf(bundle);
-                  const showLabel = index === 0 || feedGroupOf(bundledNotifications[index - 1]) !== group;
+                  // Unread rows lead with no heading: anything at the top is new.
+                  const showLabel = group !== 'new' && (index === 0 || feedGroupOf(bundledNotifications[index - 1]) !== group);
                   return (
                   <motion.div
                     key={bundle.primary.id}
@@ -2549,7 +2590,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                     transition={{ type: 'spring', stiffness: 420, damping: 38 }}
                   >
                     {showLabel && (
-                      <div data-feed-group-label className="px-[18px] pb-1 pt-4 text-xs font-semibold uppercase tracking-[0.06em] text-zinc-500">
+                      <div data-feed-group-label className={`px-[18px] pb-1 ${index === 0 ? 'pt-1.5' : 'pt-4'} text-xs font-semibold uppercase tracking-[0.06em] text-zinc-500`}>
                         {feedGroupLabel(group)}
                       </div>
                     )}

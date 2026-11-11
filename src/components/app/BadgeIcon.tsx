@@ -3,7 +3,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * BadgeIcon — Reusable staking badge image with tooltip. A click opens the
  * badge showcase, flying the badge out of this spot.
  */
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -14,6 +14,7 @@ import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useInlineBadgeFont } from '@/hooks/use-inline-badge-font';
 import { badgePosterSit } from '@/lib/badge-poster-bounds';
+import { badgeSmallSrcSet, warmBadgeStills } from '@/lib/badge-small-art';
 
 function BadgeAnimation({ src, style, onError }: { src: string; style: CSSProperties; onError: () => void }) {
   const [ready, setReady] = useState(false);
@@ -92,6 +93,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const visualName = name ?? badgeNameFromAssetUrl(url);
   const art = badgeHoverArt(visualName);
   const originalStill = visualName === 'Killer Whale';
+  const fullStill = originalStill ? url : art?.poster ?? url;
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [failedAnimation, setFailedAnimation] = useState<string | null>(null);
@@ -104,7 +106,12 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // prepared under it. A finger does not: building a renderer between touch
   // and click held the tap's own response back, so touch and focus only make
   // sure the code is here.
-  const warmShowcase = (stage = false) => { void preloadBadgeShowcase(stage && metallic ? visualName : undefined).catch(() => {}); };
+  const warmShowcase = (stage = false) => {
+    void preloadBadgeShowcase(stage && metallic ? visualName : undefined).catch(() => {});
+    // The showcase opens on the full-size still; the name only drew a small one.
+    if (fullStill && typeof Image !== 'undefined') new Image().src = fullStill;
+  };
+  useEffect(warmBadgeStills, []);
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
@@ -181,11 +188,11 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             style={imageStyle}
             data-badge-icon
             src={poster}
+            srcSet={badgeSmallSrcSet(visualName)}
             alt={visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
             width={16}
             height={16}
-            loading="lazy"
-            decoding="async"
+            decoding="sync"
             className="relative block w-full h-full rounded-none bg-transparent object-contain peer-data-[ready=true]:opacity-0"
           />
         </span>

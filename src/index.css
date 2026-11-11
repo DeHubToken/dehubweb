@@ -7081,6 +7081,30 @@ html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+/* Liquid glass on every theme: the page behind blurred hard under a thin
+   theme tint (the theme's own float glass, made lighter), no paper texture
+   or solid theme slab. The themes' own overlay dims (paper wash, Osaka's
+   near-solid scrim) are replaced so the page reads through as frost. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-drawer][data-notifications-drawer] {
+  background-color: color-mix(in srgb, var(--float-glass) 78%, transparent) !important;
+  background-image: none !important;
+}
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-overlay]:has(+ [data-notifications-drawer]) {
+  background-color: rgb(0 0 0 / 0.15) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.6) !important;
+  backdrop-filter: blur(24px) saturate(1.6) !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-overlay]:has(+ [data-notifications-drawer]) {
+  background-color: rgb(255 255 255 / 0.12) !important;
+}
+/* Dragged up to fill the screen: the pill clears the status bar and the
+   rounded corners square off against the screen edge. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-vaul-drawer][data-notifications-drawer][data-expanded] {
+  padding-top: env(safe-area-inset-top, 0px);
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
 /* No handle, so the pill's sticky strip is the top of the sheet. Rows
    scrolling up past the pill blur out there instead of showing sharp in the
    gap above it and beside it, fading off just under the pill. Behind the
