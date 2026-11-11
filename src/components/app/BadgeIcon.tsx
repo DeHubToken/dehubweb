@@ -140,6 +140,9 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     };
   };
   const imageStyle = imageStyleFor(bounds);
+  // The hover animation opens on the hover poster, so the poster's artwork is
+  // what has to fill the still's box. Sizing by the whole motion envelope made
+  // that first frame smaller than the still: the badge shrank, then moved.
 
   if (!url) return null;
   const poster = originalStill ? url : art?.poster ?? url;
@@ -175,7 +178,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             openBadgeShowcase(visualName ?? null, e.currentTarget);
           }}
         >
-          {playing && <BadgeAnimation key={art.animation} src={art.animation} style={imageStyleFor(art.bounds)}
+          {playing && <BadgeAnimation key={art.animation} src={art.animation} style={imageStyleFor(art.posterBounds)}
             onError={() => setFailedAnimation(art.animation)} />}
           <img
             style={imageStyle}
