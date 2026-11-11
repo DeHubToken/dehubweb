@@ -1,5 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Suspense, useContext, useEffect, useState } from 'react';
+import { Suspense, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
@@ -9,6 +9,7 @@ import { preloadRoute } from '@/lib/route-preload';
 import { AuthContext } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { prefetchNotificationsList } from '@/hooks/use-notifications';
+import { useDrawerPullClose } from '@/hooks/use-drawer-pull-close';
 
 // Same loader as the /app/notifications route. A plain lazy() remembers a
 // failed chunk, and with no boundary of its own the throw replaced the whole
@@ -60,16 +61,21 @@ export function NotificationsDrawer() {
     return () => window.removeEventListener('open-notifications-drawer', show);
   }, []);
   useEffect(() => { setOpen(false); }, [location.pathname, location.search]);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const close = useCallback(() => setOpen(false), []);
+  useDrawerPullClose(sheetRef, scrollRef, open, close);
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      {/* Phone only (the bell routes to the page on desktop). A plain glass
-          sheet: the handle is the only chrome, and dragging it, or pulling down
-          from the top of the list, closes it. No close button, nothing above
-          the notifications' own header. */}
-      <DrawerContent glass hideHandle={false} data-notifications-drawer className="!mt-0 h-[calc(100dvh_-_env(safe-area-inset-top,0px)_-_10px)] !border-x-0 !border-b-0 flex flex-col" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <Drawer open={open} onOpenChange={setOpen} handleOnly animatedExit>
+      {/* Phone only (the bell routes to the page on desktop). A glass sheet
+          four fifths of the screen tall, so the page above shows it is a
+          drawer, with no handle and no close button: pulling down anywhere on
+          it closes it once the list is at the top (useDrawerPullClose), and
+          rows scrolling up under the header blur out behind it (index.css). */}
+      <DrawerContent ref={sheetRef} glass overlayClassName="backdrop-blur-[24px] backdrop-saturate-[1.6]" data-notifications-drawer className="!mt-0 h-[80dvh] max-h-[80dvh] !border-x-0 !border-b-0 flex flex-col" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <DrawerTitle className="sr-only">{_copy("copy.788011833a5a", { defaultValue: "Notifications" })}</DrawerTitle>
         <DrawerDescription className="sr-only">{_copy("copy.efe4bbcc61b3", { defaultValue: "Your notifications" })}</DrawerDescription>
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
+        <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
           <ErrorBoundary compact resetKey={String(open)} label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}>
             <Suspense fallback={<div role="status" className="p-4">{_copy("copy.eae12e0d3bab", { defaultValue: "Loading notifications…" })}</div>}>
               {open && <NotificationsPage inDrawer />}
