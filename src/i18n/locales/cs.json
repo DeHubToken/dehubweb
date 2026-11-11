@@ -439,6 +439,7 @@
     "gasSponsorshipFailed": "Tuto transakci se nepodařilo uhradit. Zkuste to prosím za chvíli."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Držte a přetáhněte libovolnou ikonu pro přeuspořádání",
     "reorderReset": "Reset",
     "reorderResetLong": "Resetovat pořadí menu",

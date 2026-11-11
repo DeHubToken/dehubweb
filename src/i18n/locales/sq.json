@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Ky transaksion nuk mund të mbulohej. Ju lutemi provoni sërish pas pak."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Mbaj dhe tërhiq çdo ikonë për të riorganizuar",
     "reorderReset": "Rivendos",
     "reorderResetLong": "Rivendos rendin e menusë",

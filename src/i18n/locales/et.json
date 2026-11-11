@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Seda tehingut ei õnnestunud katta. Proovige hetke pärast uuesti."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Hoia ja lohista ükskõik milline ikoon ümberkorraldamiseks",
     "reorderReset": "Esimene",
     "reorderResetLong": "Lähtesta menüü järjekord",

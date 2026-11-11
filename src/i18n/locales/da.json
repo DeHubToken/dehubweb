@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Denne transaktion kunne ikke betales for dig. Prøv igen om et øjeblik."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Hold og træk et ikon for at omarrangere",
     "reorderReset": "Nulstil",
     "reorderResetLong": "Nulstil menurækkefølge",

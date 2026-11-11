@@ -428,6 +428,7 @@
     "gasSponsorshipFailed": "نەکرا خەرجی ئەم مامەڵەیە بدرێت. تکایە پاش ماوەیەک هەوڵ بدەرەوە."
   },
   "nav": {
+    "launchpad": "لانسپد",
     "reorderHint": "किसी भी आइकन को दबाकर रखें और खींचकर क्रम बदलें",
     "reorderReset": "assistant",
     "reorderResetLong": "بازنشانی ترتیب منوی اصلی",

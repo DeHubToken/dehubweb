@@ -438,6 +438,7 @@
     "gasSponsorshipFailed": "Muamala huu haukuweza kugharimiwa. Tafadhali jaribu tena baada ya muda mfupi."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Shikilia na buruta ikoni yoyote ili kupanga upya",
     "reorderReset": "Weka upya",
     "reorderResetLong": "Weka upya mpangilio wa menyu",

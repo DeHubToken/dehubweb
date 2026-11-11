@@ -433,6 +433,7 @@
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "Halb und zieh jede Ikon, um neu anzuordnen.",
     "reorderReset": "Zrüggsetze",
     "reorderResetLong": "Reset Menü-Reihenfolge",

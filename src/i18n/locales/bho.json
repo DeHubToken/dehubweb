@@ -430,6 +430,7 @@
     "gasSponsorshipFailed": "ई लेनदेन के खरचा ना उठावल जा सकल। थोड़ी देर बाद कोसिस करीं।"
   },
   "nav": {
+    "launchpad": "लॉन्चपैड",
     "reorderHint": "Hold aur drag karke koi bhi icon ke rearrange kariं",
     "reorderReset": "रीसेट करीं",
     "reorderResetLong": "मेनू ऑर्डर समायोजित करें",

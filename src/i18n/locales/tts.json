@@ -413,6 +413,7 @@
     "gasSponsorshipFailed": "จ่ายค่าธรรมเนียมธุรกรรมนี้บ่ได้ ลองใหม่อีกเทื่อในบ่ดนนี้"
   },
   "nav": {
+    "launchpad": "Launchpad",
     "reorderHint": "กดค้างแล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
     "reorderReset": "รีเซ็ต",
     "reorderResetLong": "รีเซ็ตลำดับเมนู",

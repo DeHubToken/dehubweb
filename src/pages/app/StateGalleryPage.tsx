@@ -570,10 +570,22 @@ function LiveAvatarsGallery() {
  */
 function MenuReorderGallery() {
   const { t } = useTranslation();
-  const items = useMemo(() => filterNavItems(NAV_ITEMS, '', t, false), [t]);
+  // Type here to see the menu search exactly as the phone menu runs it.
+  const [query, setQuery] = useState('');
+  const items = useMemo(() => filterNavItems(NAV_ITEMS, query, t, false), [query, t]);
   return (
     <section data-page-bento data-menu-reorder-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-4">
-      <MobileMenuGrid items={items} currentPath="/app" notificationCount={3} messageCount={12} onNavigate={() => {}} />
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t('sidebar.searchMenu')}
+        aria-label={t('sidebar.searchMenu')}
+        data-menu-search
+        data-search-surface
+        className="mb-3 w-full h-[42px] px-4 rounded-xl bg-white/5 border border-white/10 text-[15px] text-white placeholder:text-zinc-500 outline-none focus:border-white/30"
+      />
+      <MobileMenuGrid items={items} searching={!!query.trim()} currentPath="/app" notificationCount={3} messageCount={12} onNavigate={() => {}} />
     </section>
   );
 }
