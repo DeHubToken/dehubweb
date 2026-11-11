@@ -80,6 +80,7 @@ import { isDhbListingQuery } from '@/lib/market/dhb-listing';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { scrollDocumentTo } from '@/lib/document-scroll';
+import { ExploreCategoryWords, ExplorePhoneHome } from '@/components/app/explore/ExplorePhoneHome';
 import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // Brand-related search terms where @d should be pinned first
@@ -997,8 +998,21 @@ export default function ExplorePage() {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-2"
             >
+              {/* Phones: the categories are a line of words under the pill,
+                  the lit one underlined. Desktop keeps its chip bento. */}
+              {phonePill && exploreCategories.length > 0 && (
+                <ExploreCategoryWords
+                  categories={exploreCategories}
+                  value={exploreCategoryId}
+                  onChange={(id) => {
+                    setExploreCategoryId(id);
+                    scrollDocumentTo(0);
+                  }}
+                />
+              )}
+
               {/* Category Carousel */}
-              {exploreCategories.length > 0 && (
+              {!phonePill && exploreCategories.length > 0 && (
                 <div data-page-bento className="bg-zinc-900 rounded-2xl p-1">
                   <div data-fade-edges>
                   <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
@@ -1051,10 +1065,16 @@ export default function ExplorePage() {
 
               {/* Category Browse Feed */}
               {exploreCategoryId ? (
-                <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                <div
+                  data-page-bento={phonePill ? undefined : true}
+                  className={phonePill ? 'pt-2' : 'bg-zinc-900 rounded-2xl p-4 sm:p-6'}
+                >
+                  {/* Phones name the category in the lit word above already. */}
+                  {!phonePill && (
                   <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
                     {exploreCategories.find(c => c.id === exploreCategoryId)?.name || exploreCategoryId}
                   </h2>
+                  )}
                   
                   {categoryBrowseFeed.isLoading ? (
                     <div className="flex items-center justify-center py-12">
@@ -1097,6 +1117,18 @@ export default function ExplorePage() {
                     </div>
                   )}
                 </div>
+              ) : phonePill ? (
+                <ExplorePhoneHome
+                  categories={exploreCategories}
+                  onCategory={(id) => {
+                    setExploreCategoryId(id);
+                    scrollDocumentTo(0);
+                  }}
+                  recentSearches={recentSearches}
+                  onSearch={setSearchQuery}
+                  onRemoveSearch={removeFromHistory}
+                  onClearSearches={clearHistory}
+                />
               ) : (
                 <>
                   {/* Recent Searches Bento — only once there is a search to

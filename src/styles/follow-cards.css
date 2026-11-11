@@ -107,7 +107,7 @@
 [data-follow-card] [data-fc-dismiss]:hover { opacity: 1; }
 [data-follow-card] [data-fc-dismiss]:active { transform: scale(0.86); }
 [data-follow-card] [data-fc-dismiss]:focus-visible,
-[data-follow-card] [data-fc-follow]:focus-visible { outline: 2px solid var(--fc-ink); outline-offset: 2px; }
+:is([data-follow-card], [data-follow-row]) [data-fc-follow]:focus-visible { outline: 2px solid var(--fc-ink); outline-offset: 2px; }
 
 [data-follow-card] [data-fc-avatar] {
   margin: -28px 0 0 var(--fc-pad);
@@ -154,7 +154,7 @@
 /* Follow: Riftn's chrome glass, squared off. A banded white sheen over the
    theme's accent, a bright top edge and a soft drop, the same family as the
    glass Button variant. --fc-btn picks the tint; light themes swap the ink. */
-[data-follow-card] [data-fc-follow] {
+:is([data-follow-card], [data-follow-row]) [data-fc-follow] {
   flex: 0 0 auto;
   display: inline-flex; align-items: center; gap: 4px;
   height: 32px; padding: 0 14px; border-radius: 10px;
@@ -174,9 +174,9 @@
   text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
   transition: transform 120ms ease, filter 150ms ease;
 }
-[data-follow-card] [data-fc-follow]:hover:not(:disabled) { filter: brightness(1.08); }
-[data-follow-card] [data-fc-follow]:active:not(:disabled) { transform: scale(0.96); }
-[data-follow-card][data-followed] [data-fc-follow] {
+:is([data-follow-card], [data-follow-row]) [data-fc-follow]:hover:not(:disabled) { filter: brightness(1.08); }
+:is([data-follow-card], [data-follow-row]) [data-fc-follow]:active:not(:disabled) { transform: scale(0.96); }
+:is([data-follow-card], [data-follow-row])[data-followed] [data-fc-follow] {
   background: var(--fc-btn-done); color: var(--fc-btn-done-ink); box-shadow: none; cursor: default;
   border-color: transparent; text-shadow: none;
   animation: fc-followed-pop 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -203,7 +203,7 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'])
   --fc-divider: transparent;
 }
 html[data-theme='minimal'] [data-follow-cards] { --fc-radius: 0px; --fc-cover-radius: 0px; }
-html[data-theme='minimal'] [data-follow-card] [data-fc-follow] { border-radius: 0; }
+html[data-theme='minimal'] :is([data-follow-card], [data-follow-row]) [data-fc-follow] { border-radius: 0; }
 
 /* Light: ink on white. System Light is System with data-system-tone. */
 html[data-theme='system'][data-system-tone='light'] [data-follow-cards],
@@ -274,7 +274,7 @@ html[data-theme='glass'] [data-follow-cards] {
 }
 /* The shared discovery-row rules in glass.css size [data-discovery-follow];
    this button keeps its own shape. */
-html[data-theme='glass'] [data-follow-card] [data-fc-follow] { width: auto; height: 32px; border-radius: 10px; }
+html[data-theme='glass'] :is([data-follow-card], [data-follow-row]) [data-fc-follow] { width: auto; height: 32px; border-radius: 10px; }
 
 /* ---------- Osaka: one neon accent, cyan stroke, nothing square ---------- */
 html[data-theme='osaka'] [data-follow-cards] {
@@ -323,7 +323,7 @@ html[data-theme='war'] [data-follow-card] :is([data-fc-handle], [data-fc-count],
 }
 /* Monospace runs wide: the count and button give up a little so neither clips. */
 html:is([data-theme='war'], [data-theme='hacker']) [data-follow-card] [data-fc-count] { font-size: 0.6875rem; }
-html:is([data-theme='war'], [data-theme='hacker']) [data-follow-card] [data-fc-follow] { padding: 0 12px; font-size: 0.75rem; }
+html:is([data-theme='war'], [data-theme='hacker']) :is([data-follow-card], [data-follow-row]) [data-fc-follow] { padding: 0 12px; font-size: 0.75rem; }
 
 /* ---------- Hacker: terminal green ---------- */
 html[data-theme='hacker'] [data-follow-cards] {
@@ -365,7 +365,7 @@ html[data-theme='jungle'] [data-follow-cards] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-follow-card], [data-follow-cards] [data-follow-card], [data-follow-card] [data-fc-follow] { transition: none; animation: none; }
+  [data-follow-card], [data-follow-cards] [data-follow-card], :is([data-follow-card], [data-follow-row]) [data-fc-follow] { transition: none; animation: none; }
 }
 
 /* Explore: the header sits with the page's other section titles. */
