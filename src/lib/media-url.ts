@@ -7,6 +7,7 @@
  * @module lib/media-url
  */
 
+import { noteImageSizes } from '@/lib/image-size-hints';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 
@@ -543,7 +544,10 @@ export function buildHlsUrl(path: string | null | undefined): string | undefined
 export function buildFeedImageUrls(
   apiImageUrls: string[] | undefined | null,
   width: number = DEFAULT_IMAGE_WIDTH,
+  /** The post's `imageSizes`, so its cards can reserve each photo's shape. */
+  sizes?: unknown,
 ): string[] | undefined {
+  if (sizes) noteImageSizes({ imageSizes: sizes });
   if (!apiImageUrls || apiImageUrls.length === 0) return undefined;
 
   return apiImageUrls.map((imgUrl) => {

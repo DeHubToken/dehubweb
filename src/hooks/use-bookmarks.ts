@@ -98,7 +98,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
 
 function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
   const id = String(nft.tokenId);
-  const imageUrls = buildFeedImageUrls(nft.imageUrls);
+  const imageUrls = buildFeedImageUrls(nft.imageUrls, undefined, (nft as { imageSizes?: unknown }).imageSizes);
   const image = imageUrls?.[0] || buildImageUrl(nft.tokenId, nft.imageUrl || nft.thumbnail_url);
   const avatar = nft.minterAvatarUrl 
     ? buildAvatarUrl(nft.minter, nft.minterAvatarUrl) || 'user'

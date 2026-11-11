@@ -1,4 +1,5 @@
 import { isKidsModeLocked } from "@/lib/kids-mode-lock";
+import { noteImageSizes } from '@/lib/image-size-hints';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Riftn CDN base URL for media assets
@@ -630,7 +631,9 @@ export async function apiCall<T>(
     throw apiError;
   }
 
-  return response.json();
+  const data = await response.json();
+  noteImageSizes(data);
+  return data;
 }
 
 // ── Authenticated multipart uploads ──
