@@ -81,7 +81,9 @@ export interface PageIslandProps {
   className?: string;
 }
 
-/** How far the search drawer's top runs up under the pill (the slot clips it). */
+/** How far the search drawer runs up behind the pill. The slot starts this far
+ *  up so its clip sits under the pill, not at its edge, and the drawer's top
+ *  corners stay hidden behind the pill's rounded bottom. */
 const DRAWER_TUCK = 12;
 
 export function PageIsland({
@@ -136,7 +138,7 @@ export function PageIsland({
         <div
           data-feed-nav
           data-kit-pill
-          className="relative flex flex-col rounded-xl bg-zinc-900"
+          className="relative z-10 flex flex-col rounded-xl bg-zinc-900"
           style={{ overflowX: 'clip', overflowClipMargin: '8px' }}
         >
           <span data-nav-glass-backdrop aria-hidden="true" />
@@ -199,9 +201,10 @@ export function PageIsland({
           <motion.div
             data-kit-search-slot
             initial={false}
-            animate={{ height: drawerOpen ? 'auto' : 0 }}
+            animate={{ height: drawerOpen ? 'auto' : DRAWER_TUCK }}
             transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 36, mass: 0.8 }}
             className="-mx-12 overflow-hidden px-12"
+            style={{ marginTop: -DRAWER_TUCK }}
             aria-hidden={!drawerOpen}
             ref={(el: HTMLDivElement | null) => { if (el) el.toggleAttribute('inert', !drawerOpen); }}
           >
@@ -215,7 +218,7 @@ export function PageIsland({
                 data-feed-new-posts-chip
                 data-kit-search-drawer
                 className="relative px-2 pb-2"
-                style={{ marginTop: -DRAWER_TUCK, paddingTop: DRAWER_TUCK + 8 }}
+                style={{ paddingTop: DRAWER_TUCK + 8 }}
               >
                 <span data-nav-glass-backdrop aria-hidden="true" />
                 <span data-feed-new-posts-shade aria-hidden="true" />
