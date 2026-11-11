@@ -35,7 +35,7 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
-import { getDocumentScrollTop, scrollDocumentTo, scrollDocumentToSmooth } from '@/lib/document-scroll';
+import { getDocumentScrollTop, scrollDocumentTo, scrollDocumentToSmooth, SCROLL_TOP_FIRST_PX } from '@/lib/document-scroll';
 import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/images-feed-mode';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { getLiteMode } from '@/hooks/use-connection-quality';
@@ -674,15 +674,16 @@ export default function HomePage() {
       return;
     }
     if (tabValue === activeTab) {
-      // Same tab clicked - scroll to top, and on a searchable feed open its search
-      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-      document.body.scrollTo({ top: 0, behavior: 'smooth' });
-      scrollDocumentToSmooth();
-      // Again with the search up (the lens leaves the tab tappable): close it.
-      if (isFeedSearchTab(tabValue)) {
-        if (getFeedSearchState().open) closeFeedSearch();
-        else openFeedSearch();
+      // Same tab clicked. With the search up (the lens leaves the tab
+      // tappable) it closes. Scrolled down, the first tap only glides the
+      // feed back to the top; at the top, a searchable feed opens its search.
+      if (isFeedSearchTab(tabValue) && getFeedSearchState().open) {
+        closeFeedSearch();
+        return;
       }
+      const scrolledDown = getDocumentScrollTop() > SCROLL_TOP_FIRST_PX;
+      scrollDocumentToSmooth();
+      if (!scrolledDown && isFeedSearchTab(tabValue)) openFeedSearch();
     } else {
       setEnableHomeTransition(true);
       // Auto-reset after animation completes to prevent stale transitions on page nav
@@ -1037,6 +1038,7 @@ export default function HomePage() {
   }, !isPostOverlayActive);
   const homeTabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
 
+  const homeTabTappedRef = useRef(false);
   const { isDragging: isHomeDragging, indicatorRef: homeIndicatorRef, handleDragStart: handleHomeDragStart, handleDragMove: handleHomeDragMove, handleDragEnd: handleHomeDragEnd } = useDragTabIndicator({
     tabRect: homeTabRect,
     tabLayerRef: homeTabLayerRef,
@@ -1050,7 +1052,10 @@ export default function HomePage() {
     isDraggingRef: homeIsDraggingRef,
     indicatorFixedHeightPx: 35,
     shrinkWidthByPercent: 5,
-    onTap: () => { if (!homeLongPress.fired.current) handleTabClick(activeTab); },
+    onTap: () => {
+      homeTabTappedRef.current = true;
+      if (!homeLongPress.fired.current) handleTabClick(activeTab);
+    },
     onDragEnd: () => {
       // Trigger spring transition after drag ends
       setEnableHomeTransition(true);
@@ -1063,8 +1068,10 @@ export default function HomePage() {
       // Scroll to top for the final settled tab. `window.scrollTo` alone does
       // nothing in this app — body is the scrolling element — so dragging
       // between tabs kept the outgoing tab's offset while tapping one (which
-      // goes through the helper) did not.
-      scrollDocumentTo(0);
+      // goes through the helper) did not. A plain tap already did its own
+      // (smooth) scroll in handleTabClick, so it is not jumped here.
+      if (homeTabTappedRef.current) homeTabTappedRef.current = false;
+      else scrollDocumentTo(0);
     },
   });
 
