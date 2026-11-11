@@ -770,7 +770,8 @@ export function useEditFeatureRequest() {
  * Only decides who sees the controls: the database's
  * feature_request_status_editor_wallets() is the real check.
  */
-const FEATURE_STATUS_EDITOR_WALLETS = ['0x9324840523a5d17dd12a2f11a9472e5a199c1937']; // maldoteth
+// maldoteth's wallet since the 2026-11-09 move (the old one was erased).
+const FEATURE_STATUS_EDITOR_WALLETS = ['0xec4e2c7417f781b35d830671f013b3b91f29ba64']; // maldoteth
 
 export function isFeatureStatusEditor(wallet: string | null | undefined): boolean {
   return !!wallet && FEATURE_STATUS_EDITOR_WALLETS.includes(wallet.toLowerCase());
