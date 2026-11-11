@@ -2289,8 +2289,7 @@ function LockedChatGallery() {
         </div>
       </div>
       <div data-dm-safety-gallery className="mt-4 grid gap-2 pb-2 md:grid-cols-2">
-        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} peerSentLink />
-        <DmSafetyBanner peer={{ address: '0x2222222222222222222222222222222222222222', displayName: 'Tad' }} peerSentLink />
+        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} />
       </div>
     </section>
   );
