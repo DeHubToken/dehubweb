@@ -419,84 +419,77 @@ export function HomeIntroPanel({
           </div>
         </div>
 
-        {/* --- featured in --------------------------------------------------
-            A marquee, not a static row. Four wordmarks at a legible size
-            overflow the narrow column this panel is built for — it is
-            container-queried down to ~320px — and letting them wrap turned a
-            one-line credential strip into a three-line block that pushed both
-            CTAs further off a small screen. Scrolling keeps it one line at
-            every width.
+        {/* Press strip and links on the left, QR on the right with its bottom
+            edge level with the links. The QR is desktop only (index.css hides
+            .dehub-intro-foot on phones, where this row stacks as before). */}
+        <div className="dehub-intro-tail mt-4 flex items-end gap-3">
+          <div className="min-w-0 flex-1">
+            {/* --- featured in --------------------------------------------------
+                A marquee, not a static row. Four wordmarks at a legible size
+                overflow the narrow column this panel is built for — it is
+                container-queried down to ~320px — and letting them wrap turned a
+                one-line credential strip into a three-line block that pushed both
+                CTAs further off a small screen. Scrolling keeps it one line at
+                every width.
 
-            The track holds the list TWICE and translates exactly -50%, which is
-            what makes the loop seamless. The second copy is aria-hidden and
-            untabbable so each outlet is announced and focused once, not twice.
+                The track holds the list TWICE and translates exactly -50%, which is
+                what makes the loop seamless. The second copy is aria-hidden and
+                untabbable so each outlet is announced and focused once, not twice.
 
-            Motion is CSS-only and pauses on hover; prefers-reduced-motion turns
-            it off entirely and hands the strip back as a normal scroller (see
-            index.css) — a permanently moving element is exactly what that
-            setting is for. */}
-        <div className="dehub-press mt-4">
-          <span
-            className="text-[11px] uppercase tracking-[0.12em] text-zinc-500"
-            style={{ fontFamily: MONO }}
-          >{_copy("copy.fa9a1cd7ddb3", { defaultValue: "// featured_in" })}</span>
-          {/* <nav>, not a div: this is a labelled set of links, and aria-label
-              on a generic element is ignored by most screen readers. */}
-          <nav className="dehub-press-viewport mt-2" aria-label={_copy("copy.f7a75b542419", { defaultValue: "Riftn in the press" })}>
-            <div className="dehub-press-track">
-              {[0, 1].map((copy) => (
-                <div
-                  key={copy}
-                  className="dehub-press-set"
-                  aria-hidden={copy === 1 ? 'true' : undefined}
-                >
-                  {PRESS.map((p) => (
-                    <a
-                      key={p.outlet}
-                      href={p.url}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      title={`${p.outlet} — ${p.reach}`}
-                      tabIndex={copy === 1 ? -1 : undefined}
-                      className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/50 transition-colors hover:text-white/85"
+                Motion is CSS-only and pauses on hover; prefers-reduced-motion turns
+                it off entirely and hands the strip back as a normal scroller (see
+                index.css) — a permanently moving element is exactly what that
+                setting is for. */}
+            <div className="dehub-press">
+              <span
+                className="text-[11px] uppercase tracking-[0.12em] text-zinc-500"
+                style={{ fontFamily: MONO }}
+              >{_copy("copy.fa9a1cd7ddb3", { defaultValue: "// featured_in" })}</span>
+              {/* <nav>, not a div: this is a labelled set of links, and aria-label
+                  on a generic element is ignored by most screen readers. */}
+              <nav className="dehub-press-viewport mt-2" aria-label={_copy("copy.f7a75b542419", { defaultValue: "Riftn in the press" })}>
+                <div className="dehub-press-track">
+                  {[0, 1].map((copy) => (
+                    <div
+                      key={copy}
+                      className="dehub-press-set"
+                      aria-hidden={copy === 1 ? 'true' : undefined}
                     >
-                      {p.outlet}
-                    </a>
+                      {PRESS.map((p) => (
+                        <a
+                          key={p.outlet}
+                          href={p.url}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          title={`${p.outlet} — ${p.reach}`}
+                          tabIndex={copy === 1 ? -1 : undefined}
+                          className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/50 transition-colors hover:text-white/85"
+                        >
+                          {p.outlet}
+                        </a>
+                      ))}
+                    </div>
                   ))}
                 </div>
-              ))}
+              </nav>
             </div>
-          </nav>
-        </div>
 
-        <nav aria-label={_copy("copy.1cf9b8eabf7f", { defaultValue: "Learn more about Riftn" })} className="dehub-intro-links mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
-          {LINKS.map((l) => (
-            <Link key={l.to} to={l.to} className="text-zinc-400 underline underline-offset-2 hover:text-white">
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Footer HUD: plain white Riftn wordmark bottom-left (no box), QR bottom-right.
-            The card stays a dark plate in every theme, so white reads everywhere. */}
-        <div className="dehub-intro-foot mt-5 flex items-end justify-between gap-4">
-          <img
-            src="/brand-kit/brand/riftn-wordmark-white-web.png"
-            alt="Riftn"
-            width={68}
-            height={20}
-            loading="lazy"
-            decoding="async"
-            className="dehub-intro-foot-mark mb-1 h-[20px] w-auto"
-          />
+            <nav aria-label={_copy("copy.1cf9b8eabf7f", { defaultValue: "Learn more about Riftn" })} className="dehub-intro-links mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[13px]">
+              {LINKS.map((l) => (
+                <Link key={l.to} to={l.to} className="text-zinc-400 underline underline-offset-2 hover:text-white">
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
           <img
             src="/brand-kit/brand/qr-riftn.png"
             alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to riftn.com" })}
-            width={56}
-            height={56}
+            width={48}
+            height={48}
             loading="lazy"
             decoding="async"
-            className="h-14 w-14 rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] p-1.5"
+            className="dehub-intro-foot h-12 w-12 shrink-0 rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] p-1.5"
           />
         </div>
       </div>
