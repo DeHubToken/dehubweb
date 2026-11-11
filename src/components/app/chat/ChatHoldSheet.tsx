@@ -52,6 +52,8 @@ function scrollParent(el: HTMLElement): HTMLElement | null {
 }
 
 const GAP = 12;
+/** A held line slid up with its whole list stops this far under the top of the screen (the top bar). */
+const TOP_BAR = 64;
 /** Up to five tiles sit in one row; six make two rows of three. */
 const columns = (n: number) => (n <= 5 ? n : n === 6 ? 3 : 4);
 /** The comments sheet keeps its height while a hold sheet is up. */
@@ -129,7 +131,19 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
       // in chat-hold.css) and, once the sheet closes, slides back. Scrolling
       // first jumped the list in one frame and then slid it again.
       const top = own ? own.getBoundingClientRect().top : 0;
-      const lift = Math.min(overlap, row.top - top - GAP);
+      const inside = row.top - top - GAP;
+      if (own && overlap > inside) {
+        // A short list (the live chat over the picture) has no room to lift
+        // the line inside its own box, so the newest lines stayed half under
+        // the sheet. Slide the whole box up instead, never past the top bar.
+        const lift = Math.min(overlap, row.top - TOP_BAR - GAP);
+        if (lift > 0) {
+          own.setAttribute('data-chat-hold-box', '');
+          own.style.setProperty('--chat-hold-box-lift', `${-lift}px`);
+        }
+        return;
+      }
+      const lift = Math.min(overlap, inside);
       if (lift > 0) holder.style.setProperty('--chat-hold-lift', `${-lift}px`);
     });
     return () => {
@@ -139,13 +153,16 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
       // list back in a single frame.
       holder.setAttribute('data-chat-holding', 'out');
       holder.style.setProperty('--chat-hold-lift', '0px');
+      holder.style.setProperty('--chat-hold-box-lift', '0px');
       const token = String(++releases);
       holder.dataset.chatHoldRelease = token;
       window.setTimeout(() => {
         if (holder.dataset.chatHoldRelease !== token) return;
         anchor.removeAttribute('data-chat-held');
         holder.removeAttribute('data-chat-holding');
+        holder.removeAttribute('data-chat-hold-box');
         holder.style.removeProperty('--chat-hold-lift');
+        holder.style.removeProperty('--chat-hold-box-lift');
         delete holder.dataset.chatHoldRelease;
       }, 320);
     };
