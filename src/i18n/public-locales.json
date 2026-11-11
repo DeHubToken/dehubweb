@@ -1,5 +1,5 @@
 {
-  "version": "4bb86c8a13bdc6a8",
+  "version": "d8dc33e51b97a45c",
   "routes": {
     "/": [
       "ar",
@@ -1024,6 +1024,13 @@
       "tr"
     ],
     "/guides/interactive-streaming-on-chain-live-streams-with-animated-tip": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/is-riftn-the-same-as-dehub": [
       "ar",
       "es",
       "fr",

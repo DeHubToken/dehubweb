@@ -2676,7 +2676,7 @@ export const en = {
     techSupport: 'Technical Support',
     followUs: 'Follow Us',
     q1: 'What is Riftn?',
-    a1: 'Riftn is a decentralised user owned alternative to legacy media apps such as X, Facebook, YouTube and Rumble, that utilises the advancements in blockchain technology to offer users a whole new world of possibilities.',
+    a1: 'Riftn, formerly called DeHub, is a decentralised user owned alternative to legacy media apps such as X, Facebook, YouTube and Rumble, that utilises the advancements in blockchain technology to offer users a whole new world of possibilities.',
     q2: 'What are Riftn tokens used for?',
     a2: 'Riftn tokens provide utility across the entire Riftn ecosystem including access to games and content, global transactions, tipping creators, purchasing on the NFT marketplace, governance voting, staking for rewards, and network security.',
     q3: "How does Riftn's governance system work?",
