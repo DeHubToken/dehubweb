@@ -142,6 +142,10 @@ const VideoSlideBody = memo(function VideoSlideBody({
   const thumbnail = useResolvedThumbnail(short.thumbnail);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const playableSrc = short.soundtrackUrl || (playbackSrc !== undefined ? playbackSrc || undefined : short.videoUrl);
+  // A short that mounts off screen (the next one) starts its ladder on the
+  // lowest rung, so its first segment is small and lands before the swipe;
+  // the player steps up once it plays.
+  const [startLow] = useState(() => !isActive);
   const playbackPhase = usePlaybackRecovery(videoRef, playableSrc, isActive, {
     component: 'ShortsViewer', postId: short.id,
     allowed: () => isActiveRef.current && !visualActivity.isCallBusy(),
@@ -271,6 +275,7 @@ const VideoSlideBody = memo(function VideoSlideBody({
     // A photo short's src is its soundtrack, and a gated short plays a signed
     // file; neither has a ladder.
     hlsSrc: short.soundtrackUrl || playbackSrc !== undefined ? undefined : short.hlsUrl,
+    startLow,
     poster: thumbnail,
     muted: isMuted,
     loop: isLooping,
