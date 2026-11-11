@@ -3196,7 +3196,19 @@
     "likersEmptyTitle": "Aún no hay me gusta",
     "likersEmptyBody": "Los me gusta de este comentario aparecerán aquí.",
     "anonymousLikes_one": "{{count}} me gusta de un titular de insignia anónimo",
-    "anonymousLikes_other": "{{count}} me gusta de titulares de insignias anónimos"
+    "anonymousLikes_other": "{{count}} me gusta de titulares de insignias anónimos",
+    "threadParts": {
+      "reorder": "Reordenar",
+      "reorderHint": "Arrastra las partes o usa las flechas y luego guarda.",
+      "save": "Guardar orden",
+      "saved": "Orden del hilo guardado",
+      "saveFailed": "No se pudo guardar el orden. Inténtalo de nuevo.",
+      "moveUp": "Subir",
+      "moveDown": "Bajar",
+      "dragPart": "Arrastra para mover la parte {{n}}",
+      "addPart": "Añadir al hilo",
+      "addPlaceholder": "Añade a tu hilo..."
+    }
   },
   "mintChain": {
     "title": "Publicación de menta",

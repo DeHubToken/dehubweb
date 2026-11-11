@@ -3386,7 +3386,19 @@
     "likersEmptyTitle": "Nog geen likes",
     "likersEmptyBody": "Likes op deze reactie verschijnen hier.",
     "anonymousLikes_one": "{{count}} like van een anonieme badgehouder",
-    "anonymousLikes_other": "{{count}} likes van anonieme badgehouders"
+    "anonymousLikes_other": "{{count}} likes van anonieme badgehouders",
+    "threadParts": {
+      "reorder": "Volgorde wijzigen",
+      "reorderHint": "Sleep de delen of gebruik de pijlen en sla daarna op.",
+      "save": "Volgorde opslaan",
+      "saved": "Volgorde van de thread opgeslagen",
+      "saveFailed": "De volgorde kon niet worden opgeslagen. Probeer het opnieuw.",
+      "moveUp": "Omhoog",
+      "moveDown": "Omlaag",
+      "dragPart": "Sleep om deel {{n}} te verplaatsen",
+      "addPart": "Toevoegen aan thread",
+      "addPlaceholder": "Voeg toe aan je thread..."
+    }
   },
   "mintChain": {
     "title": "Muntpaal",

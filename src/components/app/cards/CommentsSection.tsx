@@ -136,7 +136,7 @@ import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/a
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
-import { hasUnresolvedParent, previewReplies, recordCreatorLifts } from '@/lib/comment-threading';
+import { compareThreadParts, hasUnresolvedParent, previewReplies, recordCreatorLifts } from '@/lib/comment-threading';
 import { usePostDiscussionSettings, useCommonGroundCompletion } from '@/hooks/use-post-discussion-settings';
 import { useConversationCoach, COACH_MIN_CHARS } from '@/hooks/use-conversation-coach';
 import { useCoachEnabled } from '@/hooks/use-coach-enabled';
@@ -2117,7 +2117,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       const aAuthor = isAuthorThreadRoot(a.comment, author);
       const bAuthor = isAuthorThreadRoot(b.comment, author);
       if (aAuthor !== bAuthor) return aAuthor ? -1 : 1;
-      if (aAuthor) return a.comment.createdAt.getTime() - b.comment.createdAt.getTime();
+      if (aAuthor) return compareThreadParts(a.comment, b.comment);
       return rest(a, b);
     });
 
@@ -3476,7 +3476,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 <textarea
                   ref={inputRef}
                   data-vaul-no-drag
-                  placeholder={replyTo ? t('comments.replyPlaceholder', { name: replyTo.username }) : t('comments.composerPlaceholder')}
+                  placeholder={replyTo
+                    ? t('comments.replyPlaceholder', { name: replyTo.username })
+                    // The author's own straight comment is the next part of their thread.
+                    : isOwnThread && postAuthorAddress ? t('comments.threadParts.addPlaceholder') : t('comments.composerPlaceholder')}
                   value={newComment}
                   onChange={(e) => {
                     setNewComment(e.target.value);
