@@ -20,7 +20,6 @@ src/features/post/
 │   ├── PostContentArea.tsx   # Main content editor
 │   ├── PostMediaPreview.tsx  # Media preview grid
 │   ├── ScheduleSheet.tsx     # Schedule picker drawer
-│   └── VideoTrimmer.tsx      # Video trimming controls
 ├── hooks/
 │   └── usePostForm.ts        # Form state management hook
 ├── types/
