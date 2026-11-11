@@ -313,7 +313,7 @@ export default function AgentsPage() {
         <AgentWorkspacePanel wallet={walletAddress} />
         <AgentTasksPanel wallet={walletAddress} agents={listedAgents ?? []} team={team} />
 
-        {agentAllowance && <p className="text-sm text-white/75">{t('agents.capacity', { used: agents?.length ?? 0, limit: agentAllowance.limit, badge: agentAllowance.badge ?? t('agents.noBadge') })}</p>}
+        {agentAllowance && <p className="py-1 text-sm text-white/75">{t('agents.capacity', { used: agents?.length ?? 0, limit: agentAllowance.limit, badge: agentAllowance.badge ?? t('agents.noBadge') })}</p>}
 
         {/* Create new agent */}
         {isCreating ? (
