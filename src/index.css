@@ -6698,6 +6698,7 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
   .dehub-intro .dehub-intro-plate,
   .dehub-intro .dehub-intro-sub,
   .dehub-intro .dehub-intro-foot { display: none; }
+  .dehub-intro .dehub-intro-tail { display: block; margin-top: 0; }
   .dehub-intro .dehub-intro-hero {
     top: 54px; left: 50%; right: auto; width: 120px; height: 118px; opacity: 1;
     transform: translateX(-50%);
