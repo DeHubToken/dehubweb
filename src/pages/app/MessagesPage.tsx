@@ -160,6 +160,8 @@ export function ConversationItem({
     >
     <button
       onClick={onClick}
+      data-chat-list-row
+      data-selected={isSelected ? '' : undefined}
       className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${
         isSelected ? 'bg-white/[0.07]' : ''
       }`}
@@ -949,10 +951,11 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
           </PageIsland>)}
 
           {/* Conversation List */}
-          <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? 'pt-1 pb-24' : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
+          <div data-chat-list-scroll className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? 'pt-1 pb-24' : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
             {/* Public Chat (pinned) */}
             <button
               onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
+              data-chat-list-row
               data-selected={fullscreen && showPublicChat ? '' : undefined}
               className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${fullscreen && showPublicChat ? 'bg-white/[0.06]' : ''}`}
             >

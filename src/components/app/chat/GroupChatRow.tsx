@@ -22,6 +22,7 @@ export function GroupChatRow({ community, onClick }: { community: Community; onC
 
   return (
     <button
+      data-chat-list-row
       type="button"
       onClick={onClick}
       data-group-chat-row={kind}

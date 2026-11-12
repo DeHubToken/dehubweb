@@ -347,3 +347,27 @@ html[data-theme='glass'] [data-shorts-viewer] .viewer-control {
 @media (hover:hover) {
   html[data-theme='glass'] :is([data-glass-playback-control], [data-glass-playback-surface] button, [data-glass-mini-audio] button):hover { filter: brightness(1.12); }
 }
+
+/* Full-screen chat on computers: no lines in the chat list; every chat is its
+   own glass pill and the open one glows. Phones keep the plain list. */
+@media (min-width: 1024px) {
+  html[data-theme='glass'] [data-fsc-list] { border-right-color: transparent; }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-scroll] {
+    display: flex; flex-direction: column; gap: 6px; padding-inline: 12px;
+  }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-scroll] .border-t { border-top-color: transparent; }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-row]:not(#_) {
+    padding: 12px; border-radius: var(--glass-r-bento);
+    background: var(--glass-highlight), rgb(var(--glass-tint) / .34);
+    box-shadow: var(--glass-edge-flat); backdrop-filter: var(--glass-blur);
+    transition: background-color .15s, box-shadow .15s;
+  }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-row]:not(#_):hover {
+    background: linear-gradient(150deg, rgb(225 255 255 / .1), rgb(177 241 255 / .03)), rgb(var(--glass-tint) / .42);
+  }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-row][data-selected]:not(#_) {
+    background: linear-gradient(150deg, rgb(225 255 255 / .22), rgb(177 241 255 / .09)), rgb(20 86 100 / .5);
+    box-shadow: var(--glass-edge-flat), 0 0 22px -6px var(--tint-accent);
+  }
+  html[data-theme='glass'] [data-fsc-list] :is([data-chat-archive-open], [data-chat-archive-back]) { padding-inline: 12px; }
+}
