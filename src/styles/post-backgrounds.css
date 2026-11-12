@@ -71,6 +71,27 @@ html [data-profile-mixed-grid] .pmg-poster[data-pbg] { color: var(--pbg-ink); bo
 .pbg-velvet { background: radial-gradient(140% 100% at 50% 0%, #7c1733 0, #2b0610 72%); }
 .pbg-velvet::before { inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.07) 45%, transparent 60%); }
 .pbg-sorbet { background: linear-gradient(150deg, #ffd8c2 0, #ffc4d9 52%, #d9cbff 100%); }
+/* Profile Echo: a soft blur of the profile picture (--pbg-art, set by PostBgLayer), turned a different way per post. */
+.pbg-echo { background: #1c2028; }
+.pbg-echo::before { inset: -30%; background: var(--pbg-art, radial-gradient(40% 40% at 30% 30%, #e9b36b, transparent 70%), radial-gradient(45% 45% at 75% 35%, #3fb6a8, transparent 70%), radial-gradient(50% 50% at 55% 80%, #b0486e, transparent 70%), #2a2f3a) center / cover; filter: blur(18px) saturate(1.25); }
+.pbg-echo::after { inset: 0; background: linear-gradient(180deg, rgba(6,7,10,.38), rgba(6,7,10,.72)); }
+.pbg-echo[data-pbg-n='1']::before, .pbg-echo[data-pbg-n='5']::before { transform: rotate(120deg) scale(1.15); }
+.pbg-echo[data-pbg-n='2']::before, .pbg-echo[data-pbg-n='6']::before { transform: rotate(240deg) scale(1.15); }
+.pbg-echo[data-pbg-n='3']::before, .pbg-echo[data-pbg-n='7']::before { transform: scaleX(-1); }
+/* Colour Cards: one of eight gradients per post. */
+.pbg-cards { background: linear-gradient(150deg, #ff5f6d, #ffb157); }
+.pbg-cards[data-pbg-n='1'] { background: linear-gradient(150deg, #4b5bff, #b56bff); }
+.pbg-cards[data-pbg-n='2'] { background: linear-gradient(150deg, #00b894, #0a6cff); }
+.pbg-cards[data-pbg-n='3'] { background: linear-gradient(150deg, #f7367b, #7a3cff); }
+.pbg-cards[data-pbg-n='4'] { background: linear-gradient(150deg, #0e9f6e, #b6d94c); }
+.pbg-cards[data-pbg-n='5'] { background: linear-gradient(150deg, #ff7a18, #d6336c); }
+.pbg-cards[data-pbg-n='6'] { background: linear-gradient(150deg, #1f6feb, #22c1c3); }
+.pbg-cards[data-pbg-n='7'] { background: linear-gradient(150deg, #6d3bd2, #e0508f); }
+/* Pattern Deck: dots, lines or rings fading across a dark card, with a thin light line on top. */
+.pbg-deck { background: #0c0d10; box-shadow: inset 0 2px 0 rgba(174,191,206,.7); }
+.pbg-deck::before { inset: 0; opacity: .18; background: radial-gradient(circle, #fff 1px, transparent 1.4px) 0 0 / 9px 9px; -webkit-mask-image: linear-gradient(200deg, #000, transparent 75%); mask-image: linear-gradient(200deg, #000, transparent 75%); }
+.pbg-deck:is([data-pbg-n='1'], [data-pbg-n='4'], [data-pbg-n='7'])::before { background: repeating-linear-gradient(135deg, #fff 0 1px, transparent 1px 8px); -webkit-mask-image: linear-gradient(160deg, transparent 20%, #000); mask-image: linear-gradient(160deg, transparent 20%, #000); }
+.pbg-deck:is([data-pbg-n='2'], [data-pbg-n='5'])::before { background: repeating-radial-gradient(circle at 100% 0%, #fff 0 1px, transparent 1px 11px); -webkit-mask-image: linear-gradient(220deg, #000, transparent 80%); mask-image: linear-gradient(220deg, #000, transparent 80%); }
 .pbg-carbon {
   background-color: #141414;
   background-image: linear-gradient(27deg, #0e0e0e 5px, transparent 5px), linear-gradient(207deg, #0e0e0e 5px, transparent 5px), linear-gradient(27deg, #1d1d1d 5px, transparent 5px), linear-gradient(207deg, #1d1d1d 5px, transparent 5px), linear-gradient(90deg, #191919 10px, transparent 10px), linear-gradient(#1c1c1c 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #232323 75%, #232323);

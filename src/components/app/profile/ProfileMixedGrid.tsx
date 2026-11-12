@@ -36,6 +36,7 @@ import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { PostBgLayer, postBgHostProps, useProfilePostBg } from './PostBackground';
+import { postBgVariant } from '@/lib/post-backgrounds';
 import { ArticleTileFace, useProfileArticleTile } from './ArticleTile';
 import { articleReadMinutes } from '@/lib/article-tile';
 import { GridCardFace, GridKindPill, GridPollProbe } from './GridCardTile';
@@ -289,8 +290,8 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             );
           }
           return (
-            <button key={entry.key} type="button" data-tile="text" className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80)} {...(entry.isRepost ? {} : postBgHostProps(postBg))}>
-              {!entry.isRepost && <PostBgLayer bg={postBg} />}
+            <button key={entry.key} type="button" data-tile="text" className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80)} data-soft={postBgVariant(post.id, 3)} {...(entry.isRepost ? {} : postBgHostProps(postBg))}>
+              {!entry.isRepost && <PostBgLayer bg={postBg} seed={post.id} />}
               {locked || entry.isOptimistic || tokenId <= 0
                 ? poster()
                 : <GridPollProbe tokenId={tokenId} words={words} chip={pinChip ?? undefined} poster={poster()} fallback={poster(<GridKindPill kind="poll" inline />)} />}
