@@ -281,6 +281,7 @@ import { AccountAllowReactions } from '@/components/app/remix/AllowReactionsSwit
 import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
+import { SignedFollowsSetting } from '@/components/app/settings/SignedFollowsSetting';
 import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 
@@ -1138,6 +1139,9 @@ function ProfileSettings() {
 
       {/* Fediverse — the @username@riftn.com address Mastodon can follow */}
       <FediverseHandleSetting />
+
+      {/* Your follows, on chain — signed by the wallet, stamped on Base daily */}
+      <SignedFollowsSetting />
 
       {/* Connected apps — Mastodon apps signed in to this account */}
       <ConnectedAppsSetting />

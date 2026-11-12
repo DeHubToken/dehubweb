@@ -143,6 +143,7 @@ import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
 import { DmMessageBubble, CozyDayPill } from '@/components/app/chat/DirectMessageChat';
 import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
+import { SignedFollowsSetting } from '@/components/app/settings/SignedFollowsSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
 import { ProfileFieldsEditor, type FieldRow } from '@/components/app/settings/ProfileFieldsSetting';
@@ -1754,6 +1755,9 @@ export default function StateGalleryPage() {
 
         <PageKitGallery />
         <GithubLinkGallery />
+        <section data-page-bento data-signed-follows-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+          <SignedFollowsSetting />
+        </section>
         <ProfileFieldsGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
