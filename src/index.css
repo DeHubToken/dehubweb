@@ -7281,3 +7281,13 @@ html[data-theme="light"] .thread-part-num,
 html[data-system-tone="light"] .thread-part-num {
   background-color: rgb(0 0 0 / 0.07);
 }
+
+/* Warning and mature covers stay dark on paper themes, so their one button
+   keeps its white pill instead of the paper button fill. */
+html:is([data-theme="light"], [data-system-tone="light"]) [data-notice-gate] button[data-no-navigate]:not(#_):not(#_):not(#_) {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: transparent !important;
+  border-radius: 9999px !important;
+  box-shadow: none !important;
+}
