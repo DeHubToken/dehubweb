@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "shkarko aplikacionin, Android, iPhone, aplikacion mobil, instaloni, APK, aplikacion desktop, instaloni në kompjuter, Windows, Mac"
+    },
     "reorderHint": "Mbaj dhe tërhiq çdo ikonë për të riorganizuar",
     "reorderReset": "Rivendos",
     "reorderResetLong": "Rivendos rendin e menusë",
@@ -713,6 +716,10 @@
     "media": "Media",
     "language": "Gjuha",
     "languageDesc": "Zgjidh gjuhën e preferuar",
+    "desktopApp": "Aplikacion desktop",
+    "desktopAppDesc": "Instalo Riftn në këtë kompjuter. Ai hapet në dritaren e tij dhe përditësohet vetë.",
+    "desktopAppInstall": "Instalo",
+    "desktopAppInstalled": "Instaluar",
     "light": "E ndritshme",
     "minimal": "Minimal",
     "minimalLight": "Minimal E ndritshme",
@@ -11890,7 +11897,25 @@
     "shareX": "Shpërndaj në X",
     "shareFacebook": "Shpërndaj në Facebook",
     "shareTelegram": "Shpërndaj në Telegram",
-    "copyLink": "Kopjo lidhjen"
+    "copyLink": "Kopjo lidhjen",
+    "seoTitleAll": "Merr Aplikacionin Riftn: Desktop dhe Android APK",
+    "seoDescriptionAll": "Instalo Riftn në kompjuterin tënd me një klikim, ose anashkalo dyqanet dhe merr versionin më të fundit Android si APK të drejtpërdrejtë. Burim i hapur, rrjet social i pronës së përdoruesit.",
+    "shareTextAll": "Anashkalo dyqanet: merr Riftn në kompjuterin tënd, ose merr versionin më të fundit Android drejtpërdrejt.",
+    "tabsLabel": "Zgjidh pajisjen",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn në kompjuterin tënd.",
+    "desktopSubtitle": "Dritare e vet, ikonë e vet, dhe përditësohet vetë çdo herë që dërgojmë. Pa dyqan dhe asgjë për të shkarkuar.",
+    "install": "Instalo Riftn",
+    "installed": "Instaluar",
+    "installedHint": "Hap Riftn nga menuja e Fillimit, Dock ose lista e aplikacioneve.",
+    "inAppHint": "Ti tashmë përdor aplikacionin e instaluar.",
+    "desktopHint": "Shfletuesi yt pyet një herë, pastaj Riftn hapet në dritaren e tij.",
+    "howChromium": "Kliko ikonën e instalimit në fund të djathtë të shtyllës së adresës, pastaj Instaloni.",
+    "howSafari": "Në Safari, hap menu File dhe zgjidh Add to Dock.",
+    "howFirefox": "Firefox nuk mund të instalojë aplikacione. Hap këtë faqe në Chrome, Edge ose Safari për të instaluar Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Preferoni Microsoft Store? Merreni atje në vend të kësaj."
   },
   "postStage": {
     "back": "Kthehu prapa",

@@ -676,6 +676,10 @@
     "media": "Picture or video",
     "language": "Langwej",
     "languageDesc": "Choose the language wey you prefer",
+    "desktopApp": "Desktop app",
+    "desktopAppDesc": "Install Riftn on dis computer. E go open for its own window and e go update itself.",
+    "desktopAppInstall": "Install",
+    "desktopAppInstalled": "Installed",
     "light": "Lait",
     "minimal": "Simpul",
     "minimalLight": "Simpul Light",
@@ -11227,7 +11231,14 @@
     "shareX": "Share for X",
     "shareFacebook": "Share for Facebook",
     "shareTelegram": "Share for Telegram",
-    "copyLink": "Kopi link"
+    "copyLink": "Kopi link",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "install": "Install Riftn",
+    "installed": "Installed",
+    "inAppHint": "You don use di installed app.",
+    "desktopHint": "Your browser ask once, then Riftn open for itself window.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS"
   },
   "postStage": {
     "back": "Go bak",

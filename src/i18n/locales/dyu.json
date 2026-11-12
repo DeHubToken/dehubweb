@@ -702,6 +702,9 @@
     "media": "Kɔrɔbɔ",
     "language": "Kɔrɔbɔ",
     "languageDesc": "Kɔrɔbɔ kɛ",
+    "desktopApp": "Desktop app",
+    "desktopAppInstall": "Install",
+    "desktopAppInstalled": "Installed",
     "light": "Kɔrɔbɔ",
     "minimal": "Dɔgɔyalen",
     "minimalLight": "Dɔgɔyalen Kɔrɔbɔ",
@@ -11770,7 +11773,15 @@
     "shareX": "A tila X kan",
     "shareFacebook": "A tila Facebook kan",
     "shareTelegram": "A tila Telegram kan",
-    "copyLink": "Lien kopi"
+    "copyLink": "Lien kopi",
+    "tabsLabel": "Tɔ nɛ bɛɛ",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn ka taa ka fɛɛrɛ kɔmputa la",
+    "install": "Install Riftn",
+    "installed": "Installed",
+    "inAppHint": "I ye n’a fɛ ka taa ka fɔlɔ app ye.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS"
   },
   "postStage": {
     "back": "I ka kɔsegi ka na.",

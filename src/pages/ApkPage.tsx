@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Facebook } from "lucide-react";
 import Check from "@/components/ui/cut-icons/check";
@@ -12,11 +12,36 @@ import Send from "@/components/ui/cut-icons/send";
 
 import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";
-import dehubWordmark from "@/assets/dehub-wordmark-white.png";
+import {
+  getInstallState,
+  installHow,
+  isDesktopDevice,
+  isRunningInstalled,
+  promptInstall,
+  subscribeInstall,
+} from "@/lib/pwa-install";
+import { cn } from "@/lib/utils";
+import dehubWordmark from "@/assets/riftn-wordmark-flat-white.png";
 
 const PAGE_URL = "https://riftn.com/apk";
 const OG_IMAGE = "https://riftn.com/og/apk.jpg";
 const PLAY_URL = "https://play.google.com/store/apps/details?id=io.dehub.mobile";
+// The Microsoft Store listing of the same installed app. Empty until the
+// listing is live; the link below only renders once this is filled in.
+const MS_STORE_URL = "";
+
+type View = "desktop" | "android";
+
+/**
+ * One page for every way to get Riftn. A computer lands on the desktop view
+ * (install riftn.com as its own app window); a phone lands on the Android APK
+ * view. `?for=desktop` / `?for=android` picks one explicitly, so either can be
+ * linked to directly, and the pill at the top switches between them.
+ */
+function initialView(param: string | null): View {
+  if (param === "desktop" || param === "android") return param;
+  return isDesktopDevice() ? "desktop" : "android";
+}
 
 // The build is published as a GitHub release asset rather than shipped in
 // public/: at ~205 MB it is far past the 25 MiB per-file ceiling on Cloudflare
@@ -121,6 +146,42 @@ export default function ApkPage() {
   // a guess.
   const [release, setRelease] = useState<ReleaseInfo | null>(readCachedRelease);
   const [copied, setCopied] = useState(false);
+  const [params, setParams] = useSearchParams();
+  const [view, setView] = useState<View>(() => initialView(params.get("for")));
+  const installState = useSyncExternalStore(subscribeInstall, getInstallState, () => "manual" as const);
+  const [showHow, setShowHow] = useState(false);
+  const how = installHow();
+
+  const pickView = (next: View) => {
+    setView(next);
+    setShowHow(false);
+    const p = new URLSearchParams(params);
+    p.set("for", next);
+    setParams(p, { replace: true });
+  };
+
+  const onInstall = async () => {
+    if (installState === "ready") {
+      await promptInstall();
+      return;
+    }
+    // No browser dialog to open (Safari, Firefox, or Chrome before it offers
+    // one): point at the step the browser wants instead.
+    setShowHow(true);
+  };
+
+  const desktopHint =
+    installState === "installed"
+      ? isRunningInstalled()
+        ? t("apk.inAppHint")
+        : t("apk.installedHint")
+      : how === "safari"
+        ? t("apk.howSafari")
+        : how === "firefox"
+          ? t("apk.howFirefox")
+          : installState === "ready"
+            ? t("apk.desktopHint")
+            : t("apk.howChromium");
 
   // Read the version, size and date off the latest release so a new upload
   // updates the page on its own, and remember it for the next visit.
@@ -171,7 +232,7 @@ export default function ApkPage() {
     window.open(url, "_blank", "noopener,noreferrer,width=600,height=460");
 
   const encodedUrl = encodeURIComponent(PAGE_URL);
-  const encodedText = encodeURIComponent(t("apk.shareText"));
+  const encodedText = encodeURIComponent(t("apk.shareTextAll"));
 
   // Built from whatever is actually known. With no confirmed release this is
   // just "Android 8+" — the copy above already promises the latest version and
@@ -227,8 +288,8 @@ export default function ApkPage() {
       className="relative h-[100dvh] w-full overflow-hidden bg-black text-white [@media(max-height:600px)]:h-auto [@media(max-height:600px)]:min-h-[100dvh] [@media(max-height:600px)]:overflow-y-auto"
     >
       <SEOHead
-        title={t("apk.seoTitle")}
-        description={t("apk.seoDescription")}
+        title={t("apk.seoTitleAll")}
+        description={t("apk.seoDescriptionAll")}
         url={PAGE_URL}
         image={OG_IMAGE}
         jsonLd={jsonLd}
@@ -261,49 +322,126 @@ export default function ApkPage() {
           className="h-[clamp(1.25rem,3.2vh,2rem)] w-auto object-contain opacity-90"
         />
 
-        <div className="mt-[clamp(1rem,3.5vh,2rem)] inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-xl">
-          <span className="h-1.5 w-1.5 rounded-full bg-white" />
-          <span className="font-mono text-[10px] tracking-[0.18em] text-white/70 sm:text-[11px]">{_copy("copy.12cd58ea291d", { defaultValue: "//ANDROID_APK" })}</span>
+        {/* Device switch: computer or Android. */}
+        <div
+          role="tablist"
+          aria-label={t("apk.tabsLabel")}
+          className="mt-[clamp(1rem,3.5vh,2rem)] inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur-xl"
+        >
+          {(["desktop", "android"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              role="tab"
+              aria-selected={view === v}
+              onClick={() => pickView(v)}
+              className={cn(
+                "rounded-full px-3.5 py-1.5 font-mono text-[10px] tracking-[0.18em] transition-colors sm:text-[11px]",
+                view === v ? "bg-white text-black" : "text-white/60 hover:text-white",
+              )}
+            >
+              {v === "desktop" ? t("apk.tabDesktop") : t("apk.tabAndroid")}
+            </button>
+          ))}
         </div>
 
-        <h1 className="mt-[clamp(0.75rem,3vh,1.75rem)] max-w-[15ch] text-[clamp(2.25rem,min(9vw,8vh),4.5rem)] font-black italic leading-[0.95] tracking-tight">
-          {t("apk.title")}
-        </h1>
+        {view === "desktop" ? (
+          <>
+            <h1 className="mt-[clamp(0.75rem,3vh,1.75rem)] max-w-[15ch] text-[clamp(2.25rem,min(9vw,8vh),4.5rem)] font-black italic leading-[0.95] tracking-tight">
+              {t("apk.desktopTitle")}
+            </h1>
 
-        <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] max-w-[38ch] text-balance text-sm leading-relaxed text-white/60 sm:max-w-[46ch] sm:text-base">
-          {t("apk.subtitle")}
-        </p>
+            <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] max-w-[38ch] text-balance text-sm leading-relaxed text-white/60 sm:max-w-[46ch] sm:text-base">
+              {t("apk.desktopSubtitle")}
+            </p>
 
-        <a
-          href={release?.url ?? DOWNLOAD_URL}
-          className="group mt-[clamp(1.25rem,4vh,2.5rem)] inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-7 py-4 text-base font-bold backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:border-white/40 hover:bg-white/20 hover:shadow-[0_0_28px_rgba(255,255,255,0.22)] sm:px-9 sm:py-5 sm:text-lg"
-        >
-          <Download className="h-5 w-5 transition-transform duration-200 group-hover:translate-y-0.5" />
-          {t("apk.download")}
-        </a>
+            <button
+              type="button"
+              onClick={onInstall}
+              disabled={installState === "installed"}
+              className="group mt-[clamp(1.25rem,4vh,2.5rem)] inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-7 py-4 text-base font-bold backdrop-blur-xl transition-all duration-200 enabled:hover:scale-105 enabled:hover:border-white/40 enabled:hover:bg-white/20 enabled:hover:shadow-[0_0_28px_rgba(255,255,255,0.22)] disabled:cursor-default disabled:opacity-80 sm:px-9 sm:py-5 sm:text-lg"
+            >
+              {installState === "installed" ? (
+                <Check className="h-5 w-5" />
+              ) : (
+                <Download className="h-5 w-5 transition-transform duration-200 group-hover:translate-y-0.5" />
+              )}
+              {installState === "installed" ? t("apk.installed") : t("apk.install")}
+            </button>
 
-        <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] font-mono text-[11px] tracking-wider text-white/45 sm:text-xs">
-          {metaLine}
-        </p>
-        <p className="mt-1.5 max-w-[40ch] text-[11px] leading-relaxed text-white/35 sm:text-xs">
-          {t("apk.installHint")}
-        </p>
+            <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] font-mono text-[11px] tracking-wider text-white/45 sm:text-xs">
+              {t("apk.desktopMeta")}
+            </p>
+            <p
+              data-install-how={installState === "installed" ? "installed" : how}
+              className={cn(
+                "mt-1.5 max-w-[44ch] text-[11px] leading-relaxed transition-colors sm:text-xs",
+                showHow ? "text-white" : "text-white/35",
+              )}
+            >
+              {desktopHint}
+            </p>
 
-        <Link
-          to="/app"
-          className="mt-3 text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-white"
-        >
-          {t("apk.useInBrowser")}
-        </Link>
+            <Link
+              to="/app"
+              className="mt-3 text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-white"
+            >
+              {t("apk.useInBrowser")}
+            </Link>
 
-        <a
-          href={PLAY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-[clamp(1rem,3vh,1.75rem)] text-xs text-white/40 underline-offset-4 transition-colors hover:text-white/70 hover:underline"
-        >
-          {t("apk.googlePlay")}
-        </a>
+            {MS_STORE_URL ? (
+              <a
+                href={MS_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-[clamp(1rem,3vh,1.75rem)] text-xs text-white/40 underline-offset-4 transition-colors hover:text-white/70 hover:underline"
+              >
+                {t("apk.microsoftStore")}
+              </a>
+            ) : null}
+          </>
+        ) : (
+          <>
+          <h1 className="mt-[clamp(0.75rem,3vh,1.75rem)] max-w-[15ch] text-[clamp(2.25rem,min(9vw,8vh),4.5rem)] font-black italic leading-[0.95] tracking-tight">
+            {t("apk.title")}
+          </h1>
+
+          <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] max-w-[38ch] text-balance text-sm leading-relaxed text-white/60 sm:max-w-[46ch] sm:text-base">
+            {t("apk.subtitle")}
+          </p>
+
+          <a
+            href={release?.url ?? DOWNLOAD_URL}
+            className="group mt-[clamp(1.25rem,4vh,2.5rem)] inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-7 py-4 text-base font-bold backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:border-white/40 hover:bg-white/20 hover:shadow-[0_0_28px_rgba(255,255,255,0.22)] sm:px-9 sm:py-5 sm:text-lg"
+          >
+            <Download className="h-5 w-5 transition-transform duration-200 group-hover:translate-y-0.5" />
+            {t("apk.download")}
+          </a>
+
+          <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] font-mono text-[11px] tracking-wider text-white/45 sm:text-xs">
+            {metaLine}
+          </p>
+          <p className="mt-1.5 max-w-[40ch] text-[11px] leading-relaxed text-white/35 sm:text-xs">
+            {t("apk.installHint")}
+          </p>
+
+          <Link
+            to="/app"
+            className="mt-3 text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-white"
+          >
+            {t("apk.useInBrowser")}
+          </Link>
+
+          <a
+            href={PLAY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-[clamp(1rem,3vh,1.75rem)] text-xs text-white/40 underline-offset-4 transition-colors hover:text-white/70 hover:underline"
+          >
+            {t("apk.googlePlay")}
+          </a>
+          </>
+        )}
       </main>
 
       {/* Share row. Sits on the floor of the viewport so it never pushes the

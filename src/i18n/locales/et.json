@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "laadi alla rakendus, Android, iPhone, mobiilirakendus, installi, APK, töölauarakendus, installi arvutisse, Windows, Mac"
+    },
     "reorderHint": "Hoia ja lohista ükskõik milline ikoon ümberkorraldamiseks",
     "reorderReset": "Esimene",
     "reorderResetLong": "Lähtesta menüü järjekord",
@@ -713,6 +716,10 @@
     "media": "Meedia",
     "language": "Keel",
     "languageDesc": "Vali eelistatud keel",
+    "desktopApp": "Töölauarakendus",
+    "desktopAppDesc": "Installi Riftn sellel arvutil. See avaneb oma aknas ja uuendab ennast.",
+    "desktopAppInstall": "Installi",
+    "desktopAppInstalled": "Installeeritud",
     "light": "Hele",
     "minimal": "Minimalistlik",
     "minimalLight": "Minimalistlik Hele",
@@ -11894,7 +11901,25 @@
     "shareX": "Jaga X-is",
     "shareFacebook": "Jaga Facebookis",
     "shareTelegram": "Jaga Telegramis",
-    "copyLink": "Kopeeri link"
+    "copyLink": "Kopeeri link",
+    "seoTitleAll": "Hangi Riftni rakendus: töölauarakendus ja Android APK",
+    "seoDescriptionAll": "Installi Riftn oma arvutisse ühe klõpsuga või jäta poed vahele ja saa uusim Androidi versioon otse APK-na. Avatud lähtekood, kasutajapõhine sotsiaalmeedia.",
+    "shareTextAll": "Jäta poed vahele: saa Riftn oma arvutisse või haara uusim Androidi versioon otse.",
+    "tabsLabel": "Vali oma seade",
+    "tabDesktop": "TÖÖLAUA",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn sinu arvutis.",
+    "desktopSubtitle": "Oma aken, oma ikoon ja see uuendab ennast iga kord, kui me uue versiooni välja anname. Poode pole ja midagi alla laadida pole.",
+    "install": "Installi Riftn",
+    "installed": "Installeeritud",
+    "installedHint": "Ava Riftn oma Start-menüüst, Dockist või rakenduste loendist.",
+    "inAppHint": "Sa kasutad juba installitud rakendust.",
+    "desktopHint": "Sinu brauser küsib üks kord, siis avab Riftn oma aknas.",
+    "howChromium": "Klõpsa installimise ikoonil aadressiriba paremas otsas, siis Installi.",
+    "howSafari": "Safari's ava Faili menüü ja vali Lisa Docki.",
+    "howFirefox": "Firefox ei saa rakendusi installida. Ava see leht Chrome'is, Edge'is või Safari's, et installida Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Eelistad Microsoft Store'i? Hangi see sealt."
   },
   "postStage": {
     "back": "Mine tagasi",

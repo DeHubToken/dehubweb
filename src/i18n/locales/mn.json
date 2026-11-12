@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "Эхлүүлэх талбар",
+    "findWords": {
+      "getTheApp": "датаар татаж авах, Android, iPhone, мобайл апп, суулгах, APK, десктоп апп, компьютер дээр суулгах, Windows, Mac"
+    },
     "reorderHint": "Ямар ч дүрсийг байрлуулж, дахин тохируулахын тулд чирнэ үү",
     "reorderReset": "Дахин тохируулах",
     "reorderResetLong": "Цэсийн дарааллыг шинэчлэх",
@@ -711,6 +714,10 @@
     "media": "Медиа",
     "language": "Хэл",
     "languageDesc": "Өөрт тохирсон хэлээ сонгоно уу",
+    "desktopApp": "Десктоп апп",
+    "desktopAppDesc": "Энэ компьютер дээр Riftn суулга. Энэ өөрийн цонхонд нээгдэж өөрөө шинэчлэгдэнэ.",
+    "desktopAppInstall": "Суулгах",
+    "desktopAppInstalled": "Суулгасан",
     "light": "Гэрэлтэй",
     "minimal": "Минимал",
     "minimalLight": "Минимал Гэрэлтэй",
@@ -11864,7 +11871,24 @@
     "shareX": "X дээр хуваалцах",
     "shareFacebook": "Facebook дээр хуваалцах",
     "shareTelegram": "Telegram дээр хуваалцах",
-    "copyLink": "Холбоос хуулах"
+    "copyLink": "Холбоос хуулах",
+    "seoTitleAll": "Riftn Апп: Десктоп ба Android APK-г ав",
+    "seoDescriptionAll": "Нэг товч дээр өөрийн компьютер дээр Riftn суулга, эсвэл дэлгүүрүүдээс хойш үлдээж хамгийн сүүлийн Android бүтцийг шууд APK болгон ав. Нээлттэй эх, хэрэглэгчийн эзэмшсэн нийгмийн медиа.",
+    "shareTextAll": "Дэлгүүрүүдээс хойш үлдээ: өөрийн компьютер дээр Riftn ав, эсвэл хамгийн сүүлийн Android бүтцийг шууд ав.",
+    "tabsLabel": "Таны төхөөрөмжийг сонго",
+    "tabDesktop": "ДЕСКТОП",
+    "tabAndroid": "Андроид",
+    "desktopTitle": "Riftn таны компьютер дээр.",
+    "desktopSubtitle": "Өөрийн цонх, өөрийн дүрэм, бид илгээх бүр өөрөө шинэчлэгдэнэ. Дэлгүүргүй, татаж авах зүйл байхгүй.",
+    "install": "Riftn суулгах",
+    "installed": "Суулгасан",
+    "installedHint": "Riftn-ийг эхлэл цэс, Dock эсвэл апп жагсаалтаас нээнэ.",
+    "inAppHint": "Та одоо суулгасан аппыг ашиглаж байна.",
+    "desktopHint": "Таны браузер нэг удаа асууж, дараа Riftn өөрийн цонхонд нээгдэнэ.",
+    "howChromium": "Хаягийн мөрийн баруун төгсгөлд суулгах дүрэм дээр товч дарж, Суулгах.",
+    "howSafari": "Safari дээр File цэснээс Add to Dock сонго.",
+    "howFirefox": "Firefox апп суулгах боломжгүй. Chrome, Edge эсвэл Safari дээр энэ хуудсыг нээж Riftn суулга.",
+    "microsoftStore": "Microsoft Store-ийг илүүд үзэж байна уу? Тэндээс ав."
   },
   "postStage": {
     "back": "Буцах",

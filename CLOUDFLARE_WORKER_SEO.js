@@ -1462,9 +1462,9 @@ const MARKETING_PAGES = {
   // reads both from the releases API, but a crawler runs no JS, so these are
   // what a share card and a search result will carry.
   'apk': {
-    title: 'Download the Riftn APK: Latest Android Build',
-    description: 'Skip the stores and get the latest version of Riftn right here. Direct APK download for Android, open source, user-owned social media, no store account needed.',
-    heading: 'Download the Riftn APK',
+    title: 'Get the Riftn App: Desktop and Android APK',
+    description: 'Install Riftn on your computer in one click, or skip the stores and get the latest Android build as a direct APK. Open source, user-owned social media.',
+    heading: 'Get the Riftn App',
     // A WebPage about the app, not a SoftwareApplication: Google's Software
     // App result requires an aggregateRating or review, the APK has neither,
     // and without one Search Console lists the page as an invalid item.
@@ -1474,6 +1474,9 @@ const MARKETING_PAGES = {
       about: { '@type': 'Thing', name: 'Riftn for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
     },
     bodyHtml: `<p>Skip the stores and get the latest version of Riftn right here, straight from us, no store account and no waiting on a review queue.</p>
+<h2>On your computer</h2>
+<p>Install Riftn as a desktop app on Windows, Mac, Linux or ChromeOS. It opens in its own window and updates itself every time Riftn ships.</p>
+<h2>On Android</h2>
 <p><a href="https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a>, Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? Riftn is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },

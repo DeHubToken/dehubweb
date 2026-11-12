@@ -434,6 +434,9 @@
   },
   "nav": {
     "launchpad": "መእተዊ",
+    "findWords": {
+      "getTheApp": "ውርዲ ኣፕፕ፣ Android፣ iPhone፣ ሞባይል ኣፕፕ፣ ኣኽል፣ APK፣ ዴስክቶፕ ኣፕፕ፣ ኣኽል ኣብ ኮምፒተር፣ Windows፣ Mac"
+    },
     "reorderHint": "ንምልዋጥ ዝኾነ ኣዶ ሒዝካ ስዓቦ",
     "reorderReset": "ዳግም ምትካል",
     "reorderResetLong": "ናይ ምናሌ ቅደም ተከተል ዳግም ኣዳሉ",
@@ -698,6 +701,10 @@
     "media": "ሚድያ",
     "language": "ቋንቋ",
     "languageDesc": "ዝድለ ቋንቋኻ ምረጽ",
+    "desktopApp": "ዴስክቶፕ ኣፕፕ",
+    "desktopAppDesc": "ኣኽል Riftn ኣብዚ ኮምፒተር። ብሓደ መስኮት ይከፈት እዩ ንሱ ሓደ ግዜ ይሓድሽ።",
+    "desktopAppInstall": "ኣኽል",
+    "desktopAppInstalled": "ተኣኽለ",
     "light": "ብሩህ",
     "minimal": "ቀሊል",
     "minimalLight": "ቀሊል ብሩህ",
@@ -11776,7 +11783,25 @@
     "shareX": "ኣብ X ኣካፍል",
     "shareFacebook": "ኣብ Facebook ኣካፍል",
     "shareTelegram": "ኣብ Telegram ኣካፍል",
-    "copyLink": "ሊንክ ቅዳሕ"
+    "copyLink": "ሊንክ ቅዳሕ",
+    "seoTitleAll": "ሓብር Riftn ኣፕፕ፡ ዴስክቶፕን Android APKን",
+    "seoDescriptionAll": "ኣኽል Riftn ኣብ ኮምፒተርካ ብሓደ ግብዓት፣ ወይ ሱቅታት ተወሲኑ ዝቐርብ Android ብቕጥባር APK ወሰን። ክፍት ምንጪ፣ ተጠቃሚ ዝተወሰነ ማህበር ሚዲያ።",
+    "shareTextAll": "ሱቅታት ተወሲኑ፡ Riftn ኣብ ኮምፒተርካ ወይ ዝቐርብ Android ብቕጥባር ወሰን።",
+    "tabsLabel": "ምረጽ ዝተሓለወ መሳርሒካ",
+    "tabDesktop": "ዴስክቶፕ",
+    "tabAndroid": "አንድሮይድ",
+    "desktopTitle": "Riftn ኣብ ኮምፒተርካ።",
+    "desktopSubtitle": "ብሓደ መስኮት፣ ብሓደ ኢኮን፣ ንሱ ሓደ ግዜ ዝሓድሽ እዩ። ሱቅ የለን ወይ ንምውሳኽ የለን።",
+    "install": "ኣኽል Riftn",
+    "installed": "ተኣኽለ",
+    "installedHint": "ክፈት Riftn ካብ ስታርት ሜኑ፣ ዶክ ወይ ኣፕፕ ሊስት።",
+    "inAppHint": "ንሕና ተኣኽለ ኣፕፕ ተጠቐምካ።",
+    "desktopHint": "ብራውዘርካ ኣንደበት ይሕብር፣ ከምዚ Riftn ብሓደ መስኮት ይከፈት።",
+    "howChromium": "ጠቕሚ ኣይኮነን ኣብ ቀንዲ ኣድራሻ ባር ኣብ ትሕቲ ወደብ ኣይኮነን ኣኽል።",
+    "howSafari": "ኣብ Safari ፋይል ሜኑ ክፈትን ንደኽ ኣድልዎ ወይ ናብ Dock ኣእቱ።",
+    "howFirefox": "Firefox ኣፕፕታት ክንደይ ኣይከኣልን። እዚ ገጽ ኣብ Chrome፣ Edge ወይ Safari ክንደይ ኣኽል Riftn።",
+    "desktopMeta": "ወንድሮስ · ማክ · ሊኒክስ · ክሮሜ ኦስ",
+    "microsoftStore": "ምርጫ Microsoft Store? ኣብዚ ኣውርድ።"
   },
   "postStage": {
     "back": "ንድሕሪት ተመሊስካ",

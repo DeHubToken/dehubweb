@@ -438,6 +438,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "pobierz aplikację, Android, iPhone, aplikacja mobilna, zainstaluj, APK, aplikacja na pulpit, zainstaluj na komputerze, Windows, Mac"
+    },
     "reorderHint": "Przytrzymaj i przeciągnij dowolną ikonę, aby zmienić kolejność",
     "reorderReset": "Zresetuj",
     "reorderResetLong": "Resetuj kolejność menu",
@@ -712,6 +715,10 @@
     "media": "Multimedia",
     "language": "Język",
     "languageDesc": "Wybierz preferowany język",
+    "desktopApp": "Aplikacja na pulpit",
+    "desktopAppDesc": "Zainstaluj Riftn na tym komputerze. Otwiera się w własnym oknie i aktualizuje się samodzielnie.",
+    "desktopAppInstall": "Zainstaluj",
+    "desktopAppInstalled": "Zainstalowano",
     "light": "Jasny",
     "minimal": "Minimalistyczny",
     "minimalLight": "Minimalistyczny Jasny",
@@ -11996,7 +12003,25 @@
     "shareX": "Udostępnij na X",
     "shareFacebook": "Udostępnij na Facebooku",
     "shareTelegram": "Udostępnij na Telegramie",
-    "copyLink": "Kopiuj link"
+    "copyLink": "Kopiuj link",
+    "seoTitleAll": "Pobierz aplikację Riftn: Desktop i Android APK",
+    "seoDescriptionAll": "Zainstaluj Riftn na swoim komputerze jednym kliknięciem, lub pomiń sklepy i pobierz najnowszą wersję Androida jako bezpośredni APK. Otwarty kod, media społecznościowe własności użytkownika.",
+    "shareTextAll": "Pomiń sklepy: pobierz Riftn na swój komputer, lub pobierz najnowszą wersję Androida bezpośrednio.",
+    "tabsLabel": "Wybierz swoje urządzenie",
+    "tabDesktop": "PULPIT",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn na twoim komputerze.",
+    "desktopSubtitle": "Własne okno, własna ikona, i aktualizuje się za każdym razem, gdy wysyłamy. Brak sklepu i nic do pobrania.",
+    "install": "Zainstaluj Riftn",
+    "installed": "Zainstalowano",
+    "installedHint": "Otwórz Riftn z menu Start, Docka lub listy aplikacji.",
+    "inAppHint": "Już korzystasz z zainstalowanej aplikacji.",
+    "desktopHint": "Twój przeglądarka pyta raz, a potem Riftn otwiera się w własnym oknie.",
+    "howChromium": "Kliknij ikonę instalacji po prawej stronie paska adresu, a następnie Zainstaluj.",
+    "howSafari": "W Safari otwórz menu Plik i wybierz Dodaj do Docka.",
+    "howFirefox": "Firefox nie może instalować aplikacji. Otwórz tę stronę w Chrome, Edge lub Safari, aby zainstalować Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Preferujesz Microsoft Store? Pobierz go tam zamiast."
   },
   "postStage": {
     "back": "Wróć",

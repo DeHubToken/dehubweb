@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "လွှင့်တင်ရာနေရာ",
+    "findWords": {
+      "getTheApp": "အက်ပ်ကို ဒေါင်းလုတ်လုပ်ပါ၊ Android၊ iPhone၊ မိုဘိုင်းအက်ပ်၊ ထည့်သွင်းပါ၊ APK၊ ဒက်စ်တပ်အက်ပ်၊ ကွန်ပျူတာတွင် ထည့်သွင်းပါ၊ Windows၊ Mac"
+    },
     "reorderHint": "ပြန်လည်စီစဉ်ရန် မည်သည့်အိုင်ကွန်ကိုမဆို ကိုင် ၍ ဆွဲပါ",
     "reorderReset": "ပြန်သတ်မှတ်မည်",
     "reorderResetLong": "မီနူးအော်ဒါကို ပြန်သတ်မှတ်ပါ",
@@ -701,6 +704,10 @@
     "media": "မီဒီယာ",
     "language": "ဘာသာစကား",
     "languageDesc": "သင်နှစ်သက်သောဘာသာစကားကို ရွေးချယ်ပါ",
+    "desktopApp": "ဒက်စ်တပ်အပ်",
+    "desktopAppDesc": "Riftn ကိုဤကွန်ပျူတာတွင်တပ်ဆင်ပါ။ ၎င်းသည် မိမိ၏အကွက်တစ်ခုတွင်ဖွင့်ပြီး ကိုယ်တိုင်အပ်ဒိတ်လုပ်သည်။",
+    "desktopAppInstall": "တပ်ဆင်",
+    "desktopAppInstalled": "တပ်ဆင်ထားသည်",
     "light": "အလင်း",
     "minimal": "ရိုးရှင်း",
     "minimalLight": "ရိုးရှင်း အလင်း",
@@ -11849,7 +11856,22 @@
     "shareX": "X တွင် မျှဝေရန်",
     "shareFacebook": "Facebook တွင် မျှဝေရန်",
     "shareTelegram": "Telegram တွင် မျှဝေရန်",
-    "copyLink": "လင့်ခ် ကူးယူရန်"
+    "copyLink": "လင့်ခ် ကူးယူရန်",
+    "seoTitleAll": "Riftn App ကိုရယူပါ: Desktop နှင့် Android APK",
+    "tabsLabel": "သင့်စက်ကိရိယာကိုရွေးပါ",
+    "tabDesktop": "အလုပ်ခန်း",
+    "tabAndroid": "အန်ဒရိုင်း",
+    "desktopTitle": "သင့်ကွန်ပျူတာတွင် Rift ကိုသွင်းပါ။",
+    "install": "Riftn ကို တပ်ဆင်ပါ",
+    "installed": "တပ်ဆင်ထားသည်",
+    "installedHint": "သင့် Start မီနူး၊ Dock သို့မဟုတ် app စာရင်းမှ Open Riftn ကို ဖွင့်ပါ။",
+    "inAppHint": "သင်သည် ထည့်သွင်းထားသော အက်ပ်ကို အသုံးပြုနေပါသည်။",
+    "desktopHint": "သင့် browser သည် တစ်ခါတစ်ရံ မေးမြန်းပြီးနောက် Riftn ကို မိမိ၏ တစ်ခုတည်းသော ဝင်းဒိုးတွင် ဖွင့်ပါမည်။",
+    "howChromium": "လိပ်စာဘား၏ ညာဘက်ဆုံးတွင်ရှိသော ထည့်သွင်းရန်အိုင်ကွန်ကို နှိပ်ပြီး Install ကို နှိပ်ပါ။",
+    "howSafari": "Safari တွင် File မီနူးကို ဖွင့်ပြီး Add to Dock ကိုရွေးပါ။",
+    "howFirefox": "Firefox သည် apps များကို တပ်ဆင်နိုင်ခြင်းမရှိပါ။ Chrome, Edge သို့မဟုတ် Safari တွင် ဤစာမျက်နှာကို ဖွင့်ပြီး Riftn ကို တပ်ဆင်ပါ။",
+    "desktopMeta": "ဝင်းဒိုးစ် · မက် · လင်ကစ် · ခရိုမိုအိုအက်စ်",
+    "microsoftStore": "Microsoft Store ကို ပREFER လုပ်သလား? အဲဒီမှာယူပါ။"
   },
   "postStage": {
     "back": "ပြန်သွားရန်",

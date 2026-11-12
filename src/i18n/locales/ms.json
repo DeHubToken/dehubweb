@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "muat turun aplikasi, Android, iPhone, aplikasi mudah alih, pasang, APK, aplikasi desktop, pasang di komputer, Windows, Mac"
+    },
     "reorderHint": "Tahan dan seret sebarang ikon untuk menyusun semula",
     "reorderReset": "Tetapkan semula",
     "reorderResetLong": "Tetapkan semula pesanan menu",
@@ -713,6 +716,10 @@
     "media": "Media",
     "language": "Bahasa",
     "languageDesc": "Pilih bahasa pilihan anda",
+    "desktopApp": "Aplikasi desktop",
+    "desktopAppDesc": "Pasang Riftn pada komputer ini. Ia dibuka dalam tetingkap sendiri dan mengemas kini dirinya sendiri.",
+    "desktopAppInstall": "Pasang",
+    "desktopAppInstalled": "Telah dipasang",
     "light": "Cerah",
     "minimal": "Minimal",
     "minimalLight": "Minimal Cerah",
@@ -12150,7 +12157,25 @@
     "shareX": "Kongsi di X",
     "shareFacebook": "Kongsi di Facebook",
     "shareTelegram": "Kongsi di Telegram",
-    "copyLink": "Salin pautan"
+    "copyLink": "Salin pautan",
+    "seoTitleAll": "Dapatkan Aplikasi Riftn: Desktop dan Android APK",
+    "seoDescriptionAll": "Pasang Riftn pada komputer anda dalam satu klik, atau lompati kedai dan dapatkan versi Android terkini sebagai APK terus. Sumber terbuka, media sosial milik pengguna.",
+    "shareTextAll": "Lompati kedai: dapatkan Riftn pada komputer anda, atau dapatkan versi Android terkini terus.",
+    "tabsLabel": "Pilih peranti anda",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn pada komputer anda.",
+    "desktopSubtitle": "Tetingkap sendiri, ikon sendiri, dan ia mengemas kini dirinya sendiri setiap kali kami menghantar. Tiada kedai dan tiada apa-apa untuk dimuat turun.",
+    "install": "Pasang Riftn",
+    "installed": "Telah dipasang",
+    "installedHint": "Buka Riftn dari menu Mula, Dock atau senarai aplikasi anda.",
+    "inAppHint": "Anda sudah menggunakan aplikasi yang dipasang.",
+    "desktopHint": "Pelayar anda meminta sekali, kemudian Riftn dibuka dalam tetingkap sendiri.",
+    "howChromium": "Klik ikon pasang di hujung kanan bar alamat, kemudian Pasang.",
+    "howSafari": "Di Safari, buka menu Fail dan pilih Tambah ke Dock.",
+    "howFirefox": "Firefox tidak dapat memasang aplikasi. Buka halaman ini di Chrome, Edge atau Safari untuk memasang Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Mahukan Microsoft Store? Dapatkannya di sana sahaja."
   },
   "postStage": {
     "back": "Kembali",

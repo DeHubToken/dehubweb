@@ -433,6 +433,9 @@
   },
   "nav": {
     "launchpad": "ලෝන්ච්පෑඩ්",
+    "findWords": {
+      "getTheApp": "ඇප් එක බාගන්න, Android, iPhone, ජංගම ඇප්, ස්ථාපනය, APK, ඩෙස්ක්ටොප් ඇප්, පරිගණකයේ ස්ථාපනය, Windows, Mac"
+    },
     "reorderHint": "නැවත සැකසීමට ඕනෑම අයිකනයක් රඳවාගෙන අදින්න",
     "reorderReset": "යළි සකසන්න",
     "reorderResetLong": "මෙනු ඇණවුම යළි සකසන්න",
@@ -697,6 +700,10 @@
     "media": "මාධ්‍ය",
     "language": "භාෂාව",
     "languageDesc": "ඔබ කැමති භාෂාව තෝරන්න",
+    "desktopApp": "ඩෙස්ක්ටොප් ඇප්",
+    "desktopAppDesc": "මෙම පරිගණකයේ Riftn ස්ථාපනය කරන්න. එය තමන්ගේ වින්ඩෝවකින් විවෘතවී, ස්වයංක්‍රීයව යාවත්කාලීන වේ.",
+    "desktopAppInstall": "ස්ථාපනය",
+    "desktopAppInstalled": "ස්ථාපිත",
     "light": "ආලෝකමය",
     "minimal": "සරල",
     "minimalLight": "සරල ආලෝකමය",
@@ -11807,7 +11814,25 @@
     "shareX": "X හි බෙදාගන්න",
     "shareFacebook": "Facebook හි බෙදාගන්න",
     "shareTelegram": "Telegram හි බෙදාගන්න",
-    "copyLink": "සබැඳිය පිටපත් කරන්න"
+    "copyLink": "සබැඳිය පිටපත් කරන්න",
+    "seoTitleAll": "Riftn ඇප් ලබා ගන්න: ඩෙස්ක්ටොප් සහ Android APK",
+    "seoDescriptionAll": "ඔබේ පරිගණකයේ Riftn එකක් ක්ලික්කෙන් ස්ථාපනය කරන්න, හෝ වෙළඳපොළන්ගෙන් පස්සේ නවතම Android build එකක් සෘජු APK ලෙස ලබා ගන්න. විවෘත මූලාශ්‍ර, පරිශීලක-මල්ලි සමාජ මාධ්‍ය.",
+    "shareTextAll": "වෙළඳපොළන්ගෙන් පස්වීම: ඔබේ පරිගණකයේ Riftn ලබා ගන්න, හෝ නවතම Android build එක සෘජුව ලබා ගන්න.",
+    "tabsLabel": "ඔබේ උපාංගය තෝරන්න",
+    "tabDesktop": "ඩෙස්ක්ටොප්",
+    "tabAndroid": "ඇන්ඩ්‍රොයිඩ්",
+    "desktopTitle": "Riftn ඔබේ පරිගණකයේ.",
+    "desktopSubtitle": "ඔහුගේම වින්ඩෝව, ඔහුගේම ලකුණ, සහ අපි යැවූ සෑම වතාවක්ම ස්වයංක්‍රීයව යාවත්කාලීන වේ. වෙළඳපොළක් නැත, බාගත කිරීමට කිසිවක් නැත.",
+    "install": "Riftn ස්ථාපනය කරන්න",
+    "installed": "ස්ථාපිත",
+    "installedHint": "ඔබේ Start menu, Dock හෝ ඇප් ලැයිස්තුවෙන් Riftn විවෘත කරන්න.",
+    "inAppHint": "ඔබ දැනටමත් ස්ථාපිත ඇප් භාවිතා කරමින් සිටී.",
+    "desktopHint": "ඔබේ බ්‍රවුසරය එක වරක් ඉල්ලා, පසුව Riftn තමන්ගේ වින්ඩෝවකින් විවෘත වේ.",
+    "howChromium": "ලිපිනයේ දකුණු අගයේ ස්ථාපන ලකුණ ක්ලික් කරන්න, පසුව ස්ථාපනය කරන්න.",
+    "howSafari": "Safari හි, File menu විවෘත කර Add to Dock තෝරන්න.",
+    "howFirefox": "Firefox ඇප්ස් ස්ථාපනය කළ නොහැක. Chrome, Edge හෝ Safari හි මෙම පිටුව විවෘත කර Riftn ස්ථාපනය කරන්න.",
+    "desktopMeta": "වින්ඩෝස් · මැක් · ලිනක්ස් · ක්‍රෝම්ඔඑස්",
+    "microsoftStore": "Microsoft Store කැමතිද? එහිදී ලබා ගන්න."
   },
   "postStage": {
     "back": "ආපසු යන්න",

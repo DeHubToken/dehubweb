@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "descarrega l'aplicació, Android, iPhone, aplicació mòbil, instal·la, APK, aplicació d'escriptori, instal·la a l'ordinador, Windows, Mac"
+    },
     "reorderHint": "Mantingues i arrossega qualsevol icona per reorganitzar",
     "reorderReset": "Reset",
     "reorderResetLong": "Restableix l'ordre del menú",
@@ -713,6 +716,10 @@
     "media": "Multimèdia",
     "language": "Idioma",
     "languageDesc": "Tria el teu idioma preferit",
+    "desktopApp": "Aplicació d'escriptori",
+    "desktopAppDesc": "Instal·la Riftn a aquest ordinador. S'obre en la seva pròpia finestra i es actualitza automàticament.",
+    "desktopAppInstall": "Instal·la",
+    "desktopAppInstalled": "Instal·lat",
     "light": "Clar",
     "minimal": "Minimalista",
     "minimalLight": "Minimalista Clar",
@@ -11896,7 +11903,25 @@
     "shareX": "Comparteix a X",
     "shareFacebook": "Comparteix a Facebook",
     "shareTelegram": "Comparteix a Telegram",
-    "copyLink": "Copiar enllaç"
+    "copyLink": "Copiar enllaç",
+    "seoTitleAll": "Obtén l'aplicació Riftn: Desktop i Android APK",
+    "seoDescriptionAll": "Instal·la Riftn al teu ordinador amb un sol clic, o salta les botigues i obtén l'última versió d'Android com a APK directe. Codi obert, xarxa social de propietat dels usuaris.",
+    "shareTextAll": "Salta les botigues: obtén Riftn al teu ordinador, o agafa l'última versió d'Android directament.",
+    "tabsLabel": "Tria el teu dispositiu",
+    "tabDesktop": "ESCRIPTORI",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn al teu ordinador.",
+    "desktopSubtitle": "La seva pròpia finestra, el seu propi icona, i es actualitza automàticament cada vegada que llançem una nova versió. Sense botiga i sense res a descarregar.",
+    "install": "Instal·la Riftn",
+    "installed": "Instal·lat",
+    "installedHint": "Obre Riftn des del teu menú Inici, Dock o llista d'aplicacions.",
+    "inAppHint": "Ja estàs utilitzant l'aplicació instal·lada.",
+    "desktopHint": "El teu navegador demana una vegada, després Riftn s'obre en la seva pròpia finestra.",
+    "howChromium": "Fes clic a la icona d'instal·lació a l'extrem dret de la barra d'adreces, després Instal·la.",
+    "howSafari": "A Safari, obre el menú Fitxer i tria Afegeix al Dock.",
+    "howFirefox": "Firefox no pot instal·lar aplicacions. Obre aquesta pàgina a Chrome, Edge o Safari per instal·lar Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Prefereixes la Microsoft Store? Obtingues-la allà en comptes."
   },
   "postStage": {
     "back": "Enrere",

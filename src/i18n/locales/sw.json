@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "pakua programu, Android, iPhone, programu ya simu, weka, APK, programu ya kompyuta, weka kwenye kompyuta, Windows, Mac"
+    },
     "reorderHint": "Shikilia na buruta ikoni yoyote ili kupanga upya",
     "reorderReset": "Weka upya",
     "reorderResetLong": "Weka upya mpangilio wa menyu",
@@ -713,6 +716,10 @@
     "media": "Vyombo vya Habari",
     "language": "Lugha",
     "languageDesc": "Chagua lugha unayopendelea",
+    "desktopApp": "Programu ya kompyuta",
+    "desktopAppDesc": "Weka Riftn kwenye kompyuta hii. Inafunguliwa katika dirisha lake mwenyewe na inasasisha mwenyewe.",
+    "desktopAppInstall": "Weka",
+    "desktopAppInstalled": "Imewekwa",
     "light": "Mwanga",
     "minimal": "Rahisi",
     "minimalLight": "Rahisi Mwanga",
@@ -11884,7 +11891,25 @@
     "shareX": "Shiriki kwenye X",
     "shareFacebook": "Shiriki kwenye Facebook",
     "shareTelegram": "Shiriki kwenye Telegram",
-    "copyLink": "Nakili kiungo"
+    "copyLink": "Nakili kiungo",
+    "seoTitleAll": "Pata programu ya Riftn: Desktop na Android APK",
+    "seoDescriptionAll": "Weka Riftn kwenye kompyuta yako kwa bondele mmoja, au epuka maduka na kupata toleo la hivi karibuni la Android kama APK moja kwa moja. Chanzo wazi, mtandao wa kijamii unaomilikiwa na mtumiaji.",
+    "shareTextAll": "Epuka maduka: pata Riftn kwenye kompyuta yako, au chukua toleo la hivi karibuni la Android moja kwa moja.",
+    "tabsLabel": "Chagua kifaa chako",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn kwenye kompyuta yako.",
+    "desktopSubtitle": "Dirisha lake mwenyewe, alama yake mwenyewe, na inasasisha kila wakati tunapotuma. Hakuna duka na hakuna kitu cha kupakua.",
+    "install": "Weka Riftn",
+    "installed": "Imewekwa",
+    "installedHint": "Fungua Riftn kutoka kwenye menyu ya Start, Dock au orodha ya programu.",
+    "inAppHint": "Unatumia tayari programu iliyowekwa.",
+    "desktopHint": "Kibrowser chako kinauliza mara moja, kisha Riftn inafunguliwa katika dirisha lake mwenyewe.",
+    "howChromium": "Bonyeza alama ya kuweka kwenye mwisho wa kulia wa barua ya anwani, kisha Weka.",
+    "howSafari": "Katika Safari, fungua menyu ya Faili na chagua Ongeza kwenye Dock.",
+    "howFirefox": "Firefox hawezi kuweka programu. Fungua ukurasa huu katika Chrome, Edge au Safari ili kuweka Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Unapendelea Duka la Microsoft? Pata hapo badala yake."
   },
   "postStage": {
     "back": "Rudi nyuma",

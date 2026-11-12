@@ -134,6 +134,7 @@ import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
 import { GettingStartedSetting } from '@/components/app/settings/GettingStartedSetting';
+import { DesktopAppSetting } from '@/components/app/settings/DesktopAppSetting';
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import type { SocialPlatform, VerifiedSocialAccount } from '@/lib/social-reach';
 import { SocialConnectControl, useOwnSocialReach } from '@/components/app/settings/SocialReachConnect';
@@ -2699,6 +2700,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
             action={<LanguageSelector />}
           />
           <GettingStartedSetting />
+          <DesktopAppSetting />
         </div>
       </div>
 

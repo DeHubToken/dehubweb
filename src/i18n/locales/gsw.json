@@ -434,6 +434,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "download d'App, Android, iPhone, Mobile-App, installiere, APK, Desktop-App, installiere uf em Computer, Windows, Mac"
+    },
     "reorderHint": "Halb und zieh jede Ikon, um neu anzuordnen.",
     "reorderReset": "Zrüggsetze",
     "reorderResetLong": "Reset Menü-Reihenfolge",
@@ -698,6 +701,10 @@
     "media": "Medie",
     "language": "Sprach",
     "languageDesc": "Wähl dini bevorzugti Sprach",
+    "desktopApp": "Desktop-App",
+    "desktopAppDesc": "Installier Riftn uf däm Computer. Si öffnet sich i ihrem eigene Fenster und aktualisiert sich selber.",
+    "desktopAppInstall": "Installiere",
+    "desktopAppInstalled": "Installiert",
     "light": "Hell",
     "minimal": "Minimal",
     "minimalLight": "Minimal Hell",
@@ -11860,7 +11867,25 @@
     "shareX": "Uf X teile",
     "shareFacebook": "Uf Facebook teile",
     "shareTelegram": "Uf Telegram teile",
-    "copyLink": "Link kopiere"
+    "copyLink": "Link kopiere",
+    "seoTitleAll": "Hol dir d'Riftn-App: Desktop und Android-APK",
+    "seoDescriptionAll": "Installier Riftn uf dim Computer mit einem Klick, oder überspring d'Stores und hol dir d'letschte Android-Build als direkte APK. Open Source, nutzer-eigene Social Media.",
+    "shareTextAll": "Überspring d'Stores: hol Riftn uf dim Computer, oder schnapp dir d'letschte Android-Build direkt.",
+    "tabsLabel": "Wähl dis Gerät",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn uf dim Computer.",
+    "desktopSubtitle": "Sein eige Fenster, sini eige Icon, und si aktualisiert sich jedes Mal, wenn mir en neue Version veröffentliche. Ke Store und nüt zum Download.",
+    "install": "Installier Riftn",
+    "installed": "Installiert",
+    "installedHint": "Öffne Riftn vom Start-Menü, Dock oder App-Liste.",
+    "inAppHint": "Du nutzt scho d'installierte App.",
+    "desktopHint": "Dini Browser fragt einisch, denn öffnet Riftn sich i ihrem eigene Fenster.",
+    "howChromium": "Klick uf s'Installations-Icon am rechte Endi vo de Adresszeile, denn Installiere.",
+    "howSafari": "Im Safari, öppne s'File-Menü und wähl \"Add to Dock\".",
+    "howFirefox": "Firefox cha kei Apps installiere. Öffne die Seite i Chrome, Edge oder Safari zum Riftn installiere.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Bevorzuge de Microsoft Store? Hol's dir dort statt."
   },
   "postStage": {
     "back": "Geh zrugg",

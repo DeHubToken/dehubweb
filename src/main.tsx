@@ -9,6 +9,7 @@ import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { isChunkLoadError, recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
+import "./lib/pwa-install"; // Catch the browser's one-time install offer for the Install Riftn button.
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installTapPendingLogo } from "./lib/tap-pending-logo";
 import { installFocusKeys } from "./lib/focus-keys";
