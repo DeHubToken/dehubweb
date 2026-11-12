@@ -3215,7 +3215,8 @@
       "moveDown": "تحريك لأسفل",
       "dragPart": "اسحب لتحريك الجزء {{n}}",
       "addPart": "أضف إلى السلسلة",
-      "addPlaceholder": "أضف إلى سلسلتك..."
+      "addPlaceholder": "أضف إلى سلسلتك...",
+      "label": "سلسلة · {{count}} أجزاء"
     }
   },
   "mintChain": {

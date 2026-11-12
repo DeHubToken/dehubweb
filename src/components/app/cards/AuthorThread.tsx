@@ -3,7 +3,10 @@
  * =============
  * The X-style thread under a post on its own page: every straight comment the
  * post's author left on their own post (not a reply to somebody else) renders
- * here, connected to the card above it by a thread line, newest last.
+ * here, in the author's order. A "Thread · N parts" marker sits right under
+ * the post's buttons and one line runs from it through every part's avatar
+ * (and on into "Add to thread" for the author), so the parts read as the post
+ * carrying on rather than as comments.
  *
  * These same comments are hidden from the comments list below (CommentsSection
  * receives `postAuthorAddress` and drops them), so each entry exists exactly
@@ -11,7 +14,7 @@
  * which is what the share action copies and what a tap on the row opens.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,6 +23,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 
 import Share2 from "@/components/ui/cut-icons/feedshare";
 import AddIcon from "@/components/ui/cut-icons/add";
+import ChatIcon from "@/components/ui/cut-icons/chat";
 import SortIcon from "@/components/ui/cut-icons/sort";
 
 import { motion } from 'framer-motion';
@@ -243,6 +247,7 @@ function ThreadEntry({
       <button
         onClick={(e) => { e.stopPropagation(); onProfile(entry.username); }}
         className="flex-shrink-0 relative z-10"
+        data-thread-avatar
         aria-label={t('feed.viewProfile', { name: entry.displayName || entry.username })}
       >
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
@@ -554,6 +559,30 @@ export function AuthorThread({ tokenId, authorAddress, highlightId }: AuthorThre
   const [reordering, setReordering] = useState(false);
   const addToThread = useAddToThread();
   const isAuthor = !!walletAddress && !!authorAddress && authorAddress.toLowerCase() === walletAddress.toLowerCase();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [line, setLine] = useState<{ ringTop: number; ringBottom: number; end: number } | null>(null);
+
+  // The line's stops, measured: the marker's ring, then the author's "+" or
+  // else the last part's avatar. Parts change height as text wraps or embeds
+  // load, so it follows the block's size.
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap || entries.length === 0 || reordering) { setLine(null); return; }
+    const measure = () => {
+      const top = wrap.getBoundingClientRect().top;
+      const ring = wrap.querySelector<HTMLElement>('[data-thread-ring]');
+      const avatars = wrap.querySelectorAll<HTMLElement>('[data-thread-avatar]');
+      const end = wrap.querySelector<HTMLElement>('[data-thread-plus]') ?? avatars[avatars.length - 1];
+      if (!ring || !end) return;
+      const r = ring.getBoundingClientRect();
+      const next = { ringTop: r.top - top, ringBottom: r.bottom - top, end: end.getBoundingClientRect().top - top };
+      setLine((prev) => (prev && prev.ringTop === next.ringTop && prev.ringBottom === next.ringBottom && prev.end === next.end ? prev : next));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [entries.length, isAuthor, reordering]);
 
   // Fewer than two parts leaves nothing to put in order.
   useEffect(() => { if (entries.length < 2) setReordering(false); }, [entries.length]);
@@ -572,15 +601,24 @@ export function AuthorThread({ tokenId, authorAddress, highlightId }: AuthorThre
   }
 
   return (
-    <div className="relative mt-1 mb-1">
+    <div ref={wrapRef} className="relative mt-1 mb-1">
       {entries.length > 0 && (
         <>
-          {/* The thread line — runs through the avatar column, tying the entries
-              to each other and visually to the post card above. */}
-          <div
-            className="absolute left-[19px] top-2 bottom-2 w-px bg-white/[0.14]"
-            aria-hidden
-          />
+          {/* The bridge: the line leaves the post's buttons, passes the
+              marker, and runs through every part's avatar. Two segments so
+              the marker's ring stays see-through on glass themes. */}
+          {line && (
+            <>
+              <div className="author-thread-line absolute left-[15px] top-0 w-[2px] rounded-full bg-white/[0.22]" style={{ height: line.ringTop }} aria-hidden />
+              <div className="author-thread-line absolute left-[15px] w-[2px] rounded-full bg-white/[0.22]" style={{ top: line.ringBottom, height: Math.max(0, line.end - line.ringBottom) }} aria-hidden />
+            </>
+          )}
+          <div className="relative flex items-center gap-2 h-9 pl-1">
+            <span data-thread-ring className="author-thread-ring w-6 h-6 rounded-full border-[1.5px] border-white/[0.22] flex items-center justify-center text-white/60">
+              <ChatIcon className="w-3 h-3" aria-hidden />
+            </span>
+            <span className="text-xs font-semibold text-white/60">{t('comments.threadParts.label', { count: entries.length + 1 })}</span>
+          </div>
           <div className="flex flex-col">
             {entries.map((entry) => (
               <ThreadEntry
@@ -608,7 +646,7 @@ export function AuthorThread({ tokenId, authorAddress, highlightId }: AuthorThre
             onClick={addToThread}
             className="inline-flex items-center gap-1.5 h-8 pl-2 pr-3 rounded-full text-[13px] font-medium text-white/75 hover:text-white hover:bg-white/10 transition-colors"
           >
-            <span className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
+            <span data-thread-plus className="author-thread-ring w-6 h-6 rounded-full border-[1.5px] border-white/[0.22] flex items-center justify-center">
               <AddIcon className="w-3.5 h-3.5" />
             </span>
             {t('comments.threadParts.addPart')}

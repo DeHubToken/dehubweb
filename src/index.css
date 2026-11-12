@@ -7268,6 +7268,16 @@ html[data-theme="light"] .thread-part-row[data-reorder-dragging],
 html[data-system-tone="light"] .thread-part-row[data-reorder-dragging] {
   background-color: rgb(255 255 255);
 }
+/* The thread line and its rings (AuthorThread) are white hairlines on dark;
+   paper themes get the same weight in black. */
+html[data-theme="light"] .author-thread-line,
+html[data-system-tone="light"] .author-thread-line {
+  background-color: rgb(0 0 0 / 0.18);
+}
+html[data-theme="light"] .author-thread-ring,
+html[data-system-tone="light"] .author-thread-ring {
+  border-color: rgb(0 0 0 / 0.18);
+}
 html[data-theme="light"] .thread-part-num,
 html[data-system-tone="light"] .thread-part-num {
   background-color: rgb(0 0 0 / 0.07);

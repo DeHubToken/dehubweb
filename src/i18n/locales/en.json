@@ -3195,7 +3195,8 @@
       "moveDown": "Move down",
       "dragPart": "Drag to move part {{n}}",
       "addPart": "Add to thread",
-      "addPlaceholder": "Add to your thread..."
+      "addPlaceholder": "Add to your thread...",
+      "label": "Thread · {{count}} parts"
     },
     "attachImage": "Attach image",
     "attachMedia": "Attach a photo, video or audio",
