@@ -267,7 +267,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "demonetisation",
       "digital ownership",
       "creator economy",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 10,
     "featured": false,
@@ -295,7 +295,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "creator monetisation",
       "athlete branding",
       "web3 creators",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 10,
     "featured": false,
@@ -323,7 +323,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "platform economics",
       "digital ownership",
       "web3 curriculum",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 10,
     "featured": false,
@@ -351,7 +351,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "fan engagement",
       "sports business",
       "web3 creators",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 10,
     "featured": false,
@@ -379,7 +379,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "leaving instagram",
       "reels",
       "watch-to-earn",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 8,
     "featured": false,
@@ -407,7 +407,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "leaving youtube",
       "demonetisation",
       "watch-to-earn",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 9,
     "featured": false,
@@ -434,7 +434,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "web3 creators",
       "leaving tiktok",
       "watch-to-earn",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 9,
     "featured": false,
@@ -682,7 +682,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "leaving tiktok",
       "watch-to-earn",
       "british crypto creators",
-      "riftn"
+      "dehub"
     ],
     "readingTime": 10,
     "featured": false,
