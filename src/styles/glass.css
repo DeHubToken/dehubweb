@@ -348,20 +348,25 @@ html[data-theme='glass'] [data-shorts-viewer] .viewer-control {
   html[data-theme='glass'] :is([data-glass-playback-control], [data-glass-playback-surface] button, [data-glass-mini-audio] button):hover { filter: brightness(1.12); }
 }
 
-/* Full-screen chat on computers: no lines in the chat list; every chat is its
-   own glass pill and the open one glows. Phones keep the plain list. */
+/* Full-screen chat on computers: no lines in the chat list. Pinned chats sit
+   as round glass bubbles under the search; every other chat is a slim glass
+   pill with a round avatar, and the open one glows. Phones keep the plain list. */
 @media (min-width: 1024px) {
   html[data-theme='glass'] [data-fsc-list] { border-right-color: transparent; }
   html[data-theme='glass'] [data-fsc-list] [data-chat-list-scroll] {
-    display: flex; flex-direction: column; gap: 6px; padding-inline: 12px;
+    display: flex; flex-direction: column; gap: 4px; padding-inline: 12px;
   }
   html[data-theme='glass'] [data-fsc-list] [data-chat-list-scroll] .border-t { border-top-color: transparent; }
   html[data-theme='glass'] [data-fsc-list] [data-chat-list-row]:not(#_) {
-    padding: 12px; border-radius: var(--glass-r-bento);
+    padding: 8px 12px 8px 8px; border-radius: var(--glass-r-bento);
     background: var(--glass-highlight), rgb(var(--glass-tint) / .34);
     box-shadow: var(--glass-edge-flat); backdrop-filter: var(--glass-blur);
     transition: background-color .15s, box-shadow .15s;
   }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-row] :is(.w-12.h-12, .rounded-lg:has(> .w-12.h-12)):not(#_) {
+    width: 40px; height: 40px; border-radius: 999px;
+  }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-list-row] .w-12.h-12 > img.w-8 { width: 24px; height: 24px; }
   html[data-theme='glass'] [data-fsc-list] [data-chat-list-row]:not(#_):hover {
     background: linear-gradient(150deg, rgb(225 255 255 / .1), rgb(177 241 255 / .03)), rgb(var(--glass-tint) / .42);
   }
@@ -370,4 +375,16 @@ html[data-theme='glass'] [data-shorts-viewer] .viewer-control {
     box-shadow: var(--glass-edge-flat), 0 0 22px -6px var(--tint-accent);
   }
   html[data-theme='glass'] [data-fsc-list] :is([data-chat-archive-open], [data-chat-archive-back]) { padding-inline: 12px; }
+
+  html[data-theme='glass'] [data-fsc-list] [data-chat-pin-strip] { display: flex; margin-inline: -12px; }
+  html[data-theme='glass'] [data-fsc-list]:has([data-chat-pin-strip]) [data-chat-row][data-pinned] { display: none; }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-pin-avatar] {
+    box-shadow: var(--glass-edge-flat), 0 0 0 3px rgb(225 255 255 / .12);
+  }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-pin]:hover [data-chat-pin-avatar] {
+    box-shadow: var(--glass-edge-flat), 0 0 0 3px rgb(225 255 255 / .24);
+  }
+  html[data-theme='glass'] [data-fsc-list] [data-chat-pin][data-selected] [data-chat-pin-avatar] {
+    box-shadow: var(--glass-edge-flat), 0 0 0 3px rgb(150 245 255 / .55), 0 0 22px -4px var(--tint-accent);
+  }
 }

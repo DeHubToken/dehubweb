@@ -64,6 +64,7 @@ import { toast } from 'sonner';
 import { LiveRipple } from '@/components/app/LiveRipple';
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
+import { ChatPinStrip } from '@/components/app/chat/ChatPinStrip';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { chatsFromMemberships } from '@/lib/community-kinds';
 
@@ -411,6 +412,10 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       : visibleConversations
           .filter(c => !isArchived(chatPrefs.get(c.id), lastActivity(c)))
           .sort((a, b) => pinnedAt(b) - pinnedAt(a));
+  // Glass, full screen on computers: pinned chats ride as bubbles above the list.
+  const pinStrip = richList && fullscreen && !phonePill && !showArchived && !searchQuery.trim()
+    ? listedConversations.filter(c => pinnedAt(c) > 0)
+    : [];
   const chatOptionsFor = (conv: DeHubConversation): ChatOptionsHandlers => {
     const peer = (conv.otherUser || conv.participants?.[0])?.address;
     return {
@@ -952,6 +957,12 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
 
           {/* Conversation List */}
           <div data-chat-list-scroll className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? 'pt-1 pb-24' : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
+            <ChatPinStrip
+              conversations={pinStrip}
+              selectedId={selectedConversation?.id}
+              optionsFor={chatOptionsFor}
+              onOpen={openConversation}
+            />
             {/* Public Chat (pinned) */}
             <button
               onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
@@ -1035,7 +1046,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
               );
               return richList ? (
                 <ChatRowContextMenu key={conv.id} {...chatOptionsFor(conv)}>
-                  <div data-chat-row>{row}</div>
+                  <div data-chat-row data-pinned={pinnedAt(conv) > 0 ? '' : undefined}>{row}</div>
                 </ChatRowContextMenu>
               ) : row;
             })}
