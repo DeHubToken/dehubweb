@@ -39,6 +39,7 @@ import "./styles/post-stage.css";
 import "./styles/live-audience.css";
 import "./styles/system-immersive.css";
 import "./styles/system-light.css";
+import "./styles/system-rim.css";
 import "./styles/light-desktop-panels.css";
 import "./styles/text-readability.css";
 import "./styles/light-contrast.css";
