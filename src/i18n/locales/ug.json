@@ -435,6 +435,9 @@
   },
   "nav": {
     "launchpad": "Lansman platformi",
+    "findWords": {
+      "getTheApp": "ئەپنى چۈشۈرۈش، Android، iPhone، موبايل ئەپ، ئورنىتىش، APK، ئۈستەلئۈستى ئەپ، كومپيۇتېرغا ئورنىتىش، Windows، Mac"
+    },
     "reorderHint": "ھەرقانداق بەلگىنى تۇتۇپ قايتىدىن ئورۇنلاشتۇرۇش ئۈچۈن يۆتكەش",
     "reorderReset": "ئەسلىگە كەلتۈرۈش",
     "reorderResetLong": "تىزىملىكنى قايتىدىن تەڭشەش",
@@ -699,6 +702,10 @@
     "media": "ۋاسىتە",
     "language": "تىل",
     "languageDesc": "مايىل تىلىڭىزنى تاللاڭ",
+    "desktopApp": "ئۈستەلئۈستى ئەپ",
+    "desktopAppDesc": "بۇ كومپيۇتېرغا Riftn نى ئورنىتىڭ. ئۇ ئۆزىنىڭ كۆزنەكىدە ئېچىلىدۇ ۋە ئۆزىنى يېڭىلايدۇ.",
+    "desktopAppInstall": "ئورنىتىش",
+    "desktopAppInstalled": "ئورنىتىلدى",
     "light": "يورۇق",
     "minimal": "ئاددىي",
     "minimalLight": "ئاددىي يورۇق",
@@ -11811,7 +11818,25 @@
     "shareX": "X دا ھەمبەھىرلەش",
     "shareFacebook": "Facebook تا ھەمبەھىرلەش",
     "shareTelegram": "Telegram دا ھەمبەھىرلەش",
-    "copyLink": "ئۇلانمىنى كۆچۈرۈش"
+    "copyLink": "ئۇلانمىنى كۆچۈرۈش",
+    "seoTitleAll": "Riftn ئەپىنى ئېلىڭ: ئۈستەلئۈستى ۋە Android APK",
+    "seoDescriptionAll": "Riftn نى كومپيۇتېرىڭىزغا بىر بىسىش ئارقىلىق ئورنىتىڭ، ياكى دۇكانلارنى ئۆتكۈزۈپ ئەڭ يېڭى Android قۇرۇلمىسىنى بىۋاسىتە APK سۈپىتىدە ئېلىڭ. ئېنىق مەنبە، ئىشلەتكۈچىگە خاس سوتسىيال مىدىيا.",
+    "shareTextAll": "دۇكانلارنى ئۆتكۈزۈش: Riftn نى كومپيۇتېرىڭىزغا ئېلىڭ، ياكى ئەڭ يېڭى Android قۇرۇلمىسىنى بىۋاسىتە ئېلىڭ.",
+    "tabsLabel": "ئۈسكۈنىڭىزنى تاللاڭ",
+    "tabDesktop": "ئۈستەلئۈستى",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn نى كومپيۇتېرىڭىزدا.",
+    "desktopSubtitle": "ئۇ ئۆزىنىڭ كۆزنەكى، ئۆزىنىڭ سىنبەلگە، ۋە ھەر قېتىم بىز يەتكۈزگەندە ئۆزىنى يېڭىلايدۇ. دۇكان يوق، يۈكلەش ھېچقانداق ئىش يوق.",
+    "install": "Riftn نى ئورنىتىش",
+    "installed": "ئورنىتىلدى",
+    "installedHint": "Start menyusidan, Dock ياكى ئەپ تىزىملىكىدىن Riftn نى ئېچىڭ.",
+    "inAppHint": "ئېلىپ بېرىلگەن ئەپنى ئاللىقاچان ئىشلىتىۋاتىسىز.",
+    "desktopHint": "تور كۆرگۈچ سىزدىن بىر قېتىم سورايدۇ، ئاندىن Riftn ئۆزىنىڭ كۆزنەكىدە ئېچىلىدۇ.",
+    "howChromium": "ئادرېس بارىنىڭ ئوڭ تەرەپىدىكى ئورنىتىش سىنبەلگىسىنى بىسىپ، ئاندىن ئورنىتىشنى تاللاڭ.",
+    "howSafari": "Safari دا File menyusini ئېچىپ Add to Dock نى تاللاڭ.",
+    "howFirefox": "Firefox ئەپنى ئورنىتىشقا بولمايدۇ. Riftn نى ئورنىتىش ئۈچۈن بۇ بەتنى Chrome، Edge ياكى Safari دا ئېچىڭ.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Microsoft Store نى ياخشى كۆرسىڭىز؟ ئۇ يەردە ئېلىپ بېرىڭ."
   },
   "postStage": {
     "back": "كەينىگە قايتىش",

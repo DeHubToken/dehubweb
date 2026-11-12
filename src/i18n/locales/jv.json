@@ -430,6 +430,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "unduh aplikasi, Android, iPhone, aplikasi seluler, pasang, APK, aplikasi desktop, pasang ing komputer, Windows, Mac"
+    },
     "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang",
     "reorderReset": "Reset",
     "reorderResetLong": "Kembalikan urutan menu",
@@ -694,6 +697,10 @@
     "media": "Media",
     "language": "Basa",
     "languageDesc": "Pilih basa sing kowe seneng",
+    "desktopApp": "Aplikasi desktop",
+    "desktopAppDesc": "Pasang Riftn ing komputer iki. Iku mbukak ing jendhela dhewe lan nganyari dhewe.",
+    "desktopAppInstall": "Pasang",
+    "desktopAppInstalled": "Pasang",
     "light": "Padhang",
     "minimal": "Minimal",
     "minimalLight": "Minimal Padhang",
@@ -11814,7 +11821,25 @@
     "shareX": "Bagikake ing X",
     "shareFacebook": "Bagikake ing Facebook",
     "shareTelegram": "Bagikake ing Telegram",
-    "copyLink": "Kopi pranala"
+    "copyLink": "Kopi pranala",
+    "seoTitleAll": "Entuk Aplikasi Riftn: Desktop lan Android APK",
+    "seoDescriptionAll": "Pasang Riftn ing komputer sampeyan kanthi siji klik, utawa skip toko lan entuk versi Android paling anyar minangka APK langsung. Sumber terbuka, media sosial sing dikuwasani pangguna.",
+    "shareTextAll": "Skip toko: entuk Riftn ing komputer sampeyan, utawa njupuk versi Android paling anyar langsung.",
+    "tabsLabel": "Pilih piranti sampeyan",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn ing komputer sampeyan.",
+    "desktopSubtitle": "Iku jendhela dhewe, ikon dhewe, lan nganyari dhewe saben wektu kita ngirim. Ora ana toko lan ora ana sing kudu diunduh.",
+    "install": "Pasang Riftn",
+    "installed": "Pasang",
+    "installedHint": "Bukak Riftn saka menu Start, Dock utawa dhaptar aplikasi.",
+    "inAppHint": "Sampeyan wis nggunakake aplikasi sing wis dipasang.",
+    "desktopHint": "Browser sampeyan takon sakali, banjur Riftn mbukak ing jendhela dhewe.",
+    "howChromium": "Klik ikon pasang ing sisih tengen bar alamat, banjur Pasang.",
+    "howSafari": "Ing Safari, bukak menu File lan pilih Tambah menyang Dock.",
+    "howFirefox": "Firefox ora bisa masang aplikasi. Bukak kaca iki ing Chrome, Edge utawa Safari kanggo masang Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Pilih Microsoft Store? Entuk ing kono tinimbang."
   },
   "postStage": {
     "back": "Mbalik",

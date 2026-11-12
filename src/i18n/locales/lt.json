@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Paleisties skydelis",
+    "findWords": {
+      "getTheApp": "Atsisiųskite programą, Android, iPhone, mobilioji programa, įdiegkite, APK, desktopo programa, įdiegkite kompiuterį, Windows, Mac"
+    },
     "reorderHint": "Laikykite ir vilkite bet kurią piktogramą, kad pertvarkytumėte",
     "reorderReset": "Nustatyti iš naujo",
     "reorderResetLong": "Atkurti meniu tvarką",
@@ -713,6 +716,10 @@
     "media": "Medija",
     "language": "Kalba",
     "languageDesc": "Pasirinkite pageidaujamą kalbą",
+    "desktopApp": "Darbastalio programa",
+    "desktopAppDesc": "Įdiek Riftn šiuo kompiuteriu. Jis atsidaro savo langelyje ir atnaujina save.",
+    "desktopAppInstall": "Įdiegti",
+    "desktopAppInstalled": "Instaliuotas",
     "light": "Šviesi",
     "minimal": "Minimalistinė",
     "minimalLight": "Minimalistinė Šviesi",
@@ -11896,7 +11903,24 @@
     "shareX": "Bendrinti per X",
     "shareFacebook": "Bendrinti per Facebook",
     "shareTelegram": "Bendrinti per Telegram",
-    "copyLink": "Kopijuoti nuorodą"
+    "copyLink": "Kopijuoti nuorodą",
+    "seoTitleAll": "Atsisiųskite Riftn programėlę: Desktop ir Android APK",
+    "seoDescriptionAll": "Įdiekite Riftn savo kompiuteryje vienu paspaudimu arba praleiskite parduotuves ir gaukite naujausią Android versiją tiesiogiai kaip APK. Atviro kodo, vartotojo valdomas socialinis tinklas.",
+    "shareTextAll": "Praleiskite parduotuves: atsisiųskite Riftn į savo kompiuterį arba tiesiogiai įsigykite naujausią Android versiją.",
+    "tabsLabel": "Pasirinkite savo įrenginį",
+    "tabDesktop": "darbalaukis",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn savo kompiuteryje.",
+    "desktopSubtitle": "Jis turi savo langą, savo piktogramą, ir atnaujina save kiekvieną kartą, kai išsiunčiame. Nėra parduotuvės ir nieko atsisiųsti.",
+    "install": "Įdiegti Riftn",
+    "installed": "Instaliuotas",
+    "installedHint": "Atidarykite Riftn iš savo Pradžios meniu, Dokelio ar programų sąrašo.",
+    "inAppHint": "Jūs jau naudojate įdiegtą programą.",
+    "desktopHint": "Jūsų naršyklė paklausia vieną kartą, tada Riftn atsidaro savo langelyje.",
+    "howChromium": "Spustelėkite įdiegimo piktogramą dešinėje adreso juostos galūnėje, tada Įdiegti.",
+    "howSafari": "Safari, atidarykite Failo meniu ir pasirinkite Pridėti į Dock.",
+    "howFirefox": "Firefox negali įdiegti programų. Atidarykite šią puslapį Chrome, Edge ar Safari, kad įdiegtumėte Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS"
   },
   "postStage": {
     "back": "Grįžti",

@@ -438,6 +438,9 @@
   },
   "nav": {
     "launchpad": "İşəsalma paneli",
+    "findWords": {
+      "getTheApp": "tətbiqi yükləyin, Android, iPhone, mobil tətbiq, quraşdır, APK, masaüstü tətbiq, kompüterdə quraşdır, Windows, Mac"
+    },
     "reorderHint": "Dəstək və simvolları yerinə yetirmək üçün tutaraq sırala bilərsiniz.",
     "reorderReset": "Sıfırla",
     "reorderResetLong": "Menyu sifarişini sıfırla",
@@ -712,6 +715,10 @@
     "media": "Mətbuat",
     "language": "Dil",
     "languageDesc": "Tercih etdiyiniz dili seçin",
+    "desktopApp": "Masaüstü tətbiq",
+    "desktopAppDesc": "Riftn-i bu kompüterə quraşdırın. Öz pəncərəsində açılır və özünü yeniləyir.",
+    "desktopAppInstall": "Quraşdır",
+    "desktopAppInstalled": "Quraşdırılıb",
     "light": "İşıqlı",
     "minimal": "Minimal",
     "minimalLight": "Minimal İşıqlı",
@@ -11884,7 +11891,25 @@
     "shareX": "X-də paylaş",
     "shareFacebook": "Facebook-da paylaş",
     "shareTelegram": "Telegram-da paylaş",
-    "copyLink": "Keçidi kopyala"
+    "copyLink": "Keçidi kopyala",
+    "seoTitleAll": "Riftn Tətbiqini əldə edin: Masaüstü və Android APK",
+    "seoDescriptionAll": "Riftn-i bir kliklə kompüterinizə quraşdırın, ya da mağazalardan imtina edin və ən son Android versiyasını birbaşa APK kimi alın. Açıq mənbə, istifadəçi sahibliyi sosial media.",
+    "shareTextAll": "Mağazalardan imtina edin: Riftn-i kompüterinizdə əldə edin, ya da ən son Android versiyasını birbaşa alın.",
+    "tabsLabel": "Cihazınızı seçin",
+    "tabDesktop": "MASAÜSTÜ",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn kompüterinizdə.",
+    "desktopSubtitle": "Öz pəncərəsi, öz ikonu və hər dəfə yeniləndikdə özünü yeniləyir. Mağaza yoxdur və yükləmək üçün heç nə yoxdur.",
+    "install": "Riftn-i quraşdır",
+    "installed": "Quraşdırılıb",
+    "installedHint": "Riftn-i Başlat menyusundan, Dock-dan və ya tətbiq siyahısından açın.",
+    "inAppHint": "Siz artıq quraşdırılmış tətbiqdən istifadə edirsiniz.",
+    "desktopHint": "Brauzeriniz bir dəfə soruşur, sonra Riftn öz pəncərəsində açılır.",
+    "howChromium": "Ünvan çubuğunun sağ ucundakı quraşdırma ikonuna klikləyin, sonra Quraşdır.",
+    "howSafari": "Safari-də Fayl menyusunu açın və Dock-a əlavə et seçin.",
+    "howFirefox": "Firefox tətbiqləri quraşdıra bilmir. Bu səhifəni Chrome, Edge və ya Safari-də açın ki, Riftn-i quraşdırasınız.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Microsoft Store-u üstün tutursunuz? Oradan alın."
   },
   "postStage": {
     "back": "Geri qayıt",

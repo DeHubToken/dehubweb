@@ -428,6 +428,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "download app ɗin, Android, iPhone, mobile app, shigar, APK, desktop app, shigar a kwamfuta, Windows, Mac"
+    },
     "reorderHint": "Riƙe da jawo kowane icon don sake tsarawa",
     "reorderReset": "Sake saitawa",
     "reorderResetLong": "Sake saita umarnin menu",
@@ -702,6 +705,10 @@
     "media": "Kafofin watsa labaru",
     "language": "Harshe",
     "languageDesc": "Zaɓi harshen da kake so",
+    "desktopApp": "Desktop app",
+    "desktopAppDesc": "Shigar da Riftn a wannan kwamfutar. Yana buɗewa a taga nasa kuma yana sabunta kansa.",
+    "desktopAppInstall": "Shigar",
+    "desktopAppInstalled": "An shigar",
     "light": "Haske",
     "minimal": "Mai sauƙi",
     "minimalLight": "Mai sauƙi Haske",
@@ -11828,7 +11835,25 @@
     "shareX": "Raba a X",
     "shareFacebook": "Raba a Facebook",
     "shareTelegram": "Raba a Telegram",
-    "copyLink": "Kwafi hanyar haɗi"
+    "copyLink": "Kwafi hanyar haɗi",
+    "seoTitleAll": "Samu Riftn App: Desktop da Android APK",
+    "seoDescriptionAll": "Shigar da Riftn a kwamfutarka da danna ɗaya, ko ka tsallake kantuna ka samu sabon ginin Android a matsayin APK kai tsaye. Buɗe tushen, kafofin sada zumunta na mallakar mai amfani.",
+    "shareTextAll": "Tsallake kantuna: samu Riftn a kwamfutarka, ko ɗauki sabon ginin Android kai tsaye.",
+    "tabsLabel": "Zaɓi na’urar ka",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn a kwamfutarka.",
+    "desktopSubtitle": "Taga nasa, gumar nasa, kuma yana sabunta kansa duk lokacin da muka fitar da sabo. Babu kantin sayarwa kuma babu abin da za a sauke.",
+    "install": "Shigar da Riftn",
+    "installed": "An shigar",
+    "installedHint": "Buɗe Riftn daga menu na Fara, Dock ko jerin apps.",
+    "inAppHint": "Kuna riga kuna amfani da app ɗin da aka shigar.",
+    "desktopHint": "Mai bincikenku yana tambaya sau ɗaya, sannan Riftn yana buɗewa a taga nasa.",
+    "howChromium": "Danna gumar shigar a ƙarshen dama na sandar adireshi, sannan Shigar.",
+    "howSafari": "A Safari, buɗe menu na File ka zaɓi Add to Dock.",
+    "howFirefox": "Firefox ba zai iya shigar da apps ba. Buɗe wannan shafi a Chrome, Edge ko Safari don shigar da Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Kana son Microsoft Store? Samu shi a can maimakon haka."
   },
   "postStage": {
     "back": "Koma baya",

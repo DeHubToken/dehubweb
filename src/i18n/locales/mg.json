@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "download ny app, Android, iPhone, mobile app, install, APK, desktop app, install amin'ny computer, Windows, Mac"
+    },
     "reorderHint": "Tazony ary zarao izay kisary hanamboarana",
     "reorderReset": "Averina",
     "reorderResetLong": "Hamerina ny filaharan'ny tolotra",
@@ -701,6 +704,10 @@
     "media": "Fitaovana",
     "language": "Fiteny",
     "languageDesc": "Safidio ny fiteny tianao",
+    "desktopApp": "Desktop app",
+    "desktopAppDesc": "Install Riftn amin'ity computer ity. Mivoaka ao amin'ny varavarankely manokana azy ary manavao tena izy.",
+    "desktopAppInstall": "Install",
+    "desktopAppInstalled": "Installed",
     "light": "Mazava",
     "minimal": "Tsotra",
     "minimalLight": "Tsotra Mazava",
@@ -11887,7 +11894,25 @@
     "shareX": "Zarao amin'ny X",
     "shareFacebook": "Zarao amin'ny Facebook",
     "shareTelegram": "Zarao amin'ny Telegram",
-    "copyLink": "Adikao ny rohy"
+    "copyLink": "Adikao ny rohy",
+    "seoTitleAll": "Makà ny Riftn App: Desktop sy Android APK",
+    "seoDescriptionAll": "Install Riftn amin'ny computer-nao amin'ny tsindry iray, na esory ny fivarotana ary makà ny kinova Android farany ho APK mivantana. Open source, media sosialy an'ny mpampiasa.",
+    "shareTextAll": "Esory ny fivarotana: makà Riftn amin'ny computer-nao, na raiso mivantana ny kinova Android farany.",
+    "tabsLabel": "Safidio ny fitaovanao",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn amin'ny computer-nao.",
+    "desktopSubtitle": "Varavarankely manokana, kisary manokana, ary manavao tena izy isaky ny mandefa izahay. Tsy misy fivarotana ary tsy misy zavatra halefa.",
+    "install": "Install Riftn",
+    "installed": "Installed",
+    "installedHint": "Sokafy ny Riftn avy amin'ny Start menu, Dock na lisitry ny app.",
+    "inAppHint": "Efa mampiasa ny app napetraka ianao.",
+    "desktopHint": "Mangataka indray mandeha ny navigateur-nao, avy eo misokatra ao amin'ny varavarankely manokana ny Riftn.",
+    "howChromium": "Tsindrio ny kisary install eo amin'ny farany havanana amin'ny bara adiresy, avy eo Install.",
+    "howSafari": "Ao amin'ny Safari, sokafy ny menio File ary safidio Add to Dock.",
+    "howFirefox": "Tsy afaka mametraka app i Firefox. Sokafy ity pejy ity ao amin'ny Chrome, Edge na Safari mba hametraka Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Prefer ny Microsoft Store? Makà azy any amin'izany fa tsy eto."
   },
   "postStage": {
     "back": "Miverena any aoriana",
