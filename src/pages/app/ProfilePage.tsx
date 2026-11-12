@@ -63,7 +63,7 @@ import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButto
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
-import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { ProfilePostBgContext, ProfilePostBgArtContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
 import { mergePostBg, parsePostBg, postBgById } from '@/lib/post-backgrounds';
 import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/profile/ArticleTile';
 import { articleReadMinutes, mergeArticleTile, parseArticleTile, type ArticleTileLook } from '@/lib/article-tile';
