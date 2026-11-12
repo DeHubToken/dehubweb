@@ -3207,7 +3207,8 @@
       "moveDown": "Bajar",
       "dragPart": "Arrastra para mover la parte {{n}}",
       "addPart": "Añadir al hilo",
-      "addPlaceholder": "Añade a tu hilo..."
+      "addPlaceholder": "Añade a tu hilo...",
+      "label": "Hilo · {{count}} partes"
     }
   },
   "mintChain": {

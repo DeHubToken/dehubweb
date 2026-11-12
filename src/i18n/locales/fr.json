@@ -3211,7 +3211,8 @@
       "moveDown": "Descendre",
       "dragPart": "Faites glisser pour déplacer la partie {{n}}",
       "addPart": "Ajouter au fil",
-      "addPlaceholder": "Ajoutez à votre fil..."
+      "addPlaceholder": "Ajoutez à votre fil...",
+      "label": "Fil · {{count}} parties"
     }
   },
   "mintChain": {
