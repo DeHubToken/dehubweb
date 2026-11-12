@@ -2584,6 +2584,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             whatever gate the post actually has, rather than replacing it. */}
         {contentWarning.hidden ? (
           <ContentWarningGate
+            text={contentWarning.text}
             preview={thumbnail}
             onReveal={contentWarning.reveal}
             className="w-full h-full rounded-lg [&>img]:h-full [&>img]:max-h-none"

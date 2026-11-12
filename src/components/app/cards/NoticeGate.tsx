@@ -28,7 +28,7 @@ interface NoticeGateProps {
 export function NoticeGate({ preview, icon, label, description, action, onReveal, tone = 'amber', className }: NoticeGateProps) {
   const colors = TONES[tone];
   return (
-    <div data-media-full data-notice-gate className={cn('relative rounded-2xl overflow-hidden bg-zinc-900', className)}>
+    <div data-media-full data-notice-gate data-keep-dark className={cn('relative rounded-2xl overflow-hidden bg-zinc-900', className)}>
       {preview ? (
         <img
           src={preview}
@@ -38,14 +38,16 @@ export function NoticeGate({ preview, icon, label, description, action, onReveal
           loading="lazy"
         />
       ) : (
-        <div aria-hidden="true" className="w-full h-full min-h-[14rem] bg-gradient-to-br from-zinc-800 via-zinc-900 to-black" />
+        // Inline, not utility classes: paper themes repaint zinc gradients light,
+        // and this cover has to stay dark under its white text in every theme.
+        <div aria-hidden="true" className="w-full h-full min-h-[14rem]" style={{ background: 'linear-gradient(to bottom right, #27272a, #18181b, #000)' }} />
       )}
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/45 px-6 text-center">
-        <div className="mb-1 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%]">
+        <div className="mb-1 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 backdrop-blur-[24px] backdrop-saturate-[180%]" style={{ backgroundColor: 'rgb(0 0 0 / 0.4)' }}>
           <span className={cn('flex h-6 w-6 items-center justify-center', colors.icon)}>{icon}</span>
         </div>
         <span className={cn('rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em]', colors.pill)}>{label}</span>
-        <p className="max-w-xs text-sm font-medium text-white/85">{description}</p>
+        <p className="max-w-xs whitespace-pre-line break-words text-sm font-medium text-white/85">{description}</p>
         <button
           type="button"
           data-no-navigate
