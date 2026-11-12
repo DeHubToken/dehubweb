@@ -3204,7 +3204,19 @@
     "likersEmptyTitle": "لا توجد إعجابات بعد",
     "likersEmptyBody": "ستظهر الإعجابات على هذا التعليق هنا.",
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
-    "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
+    "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين",
+    "threadParts": {
+      "reorder": "إعادة الترتيب",
+      "reorderHint": "اسحب الأجزاء أو استخدم الأسهم، ثم احفظ.",
+      "save": "حفظ الترتيب",
+      "saved": "تم حفظ ترتيب السلسلة",
+      "saveFailed": "تعذّر حفظ الترتيب. حاول مرة أخرى.",
+      "moveUp": "تحريك لأعلى",
+      "moveDown": "تحريك لأسفل",
+      "dragPart": "اسحب لتحريك الجزء {{n}}",
+      "addPart": "أضف إلى السلسلة",
+      "addPlaceholder": "أضف إلى سلسلتك..."
+    }
   },
   "mintChain": {
     "title": "منشور النعناع",

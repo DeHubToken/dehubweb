@@ -6,6 +6,7 @@ import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/p
 import type { ArticleTileLook } from '@/lib/article-tile';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
+import { AuthorThread } from '@/components/app/cards/AuthorThread';
 import { postBgById } from '@/lib/post-backgrounds';
 import type { TextPost as GalleryTextPost } from '@/types/feed.types';
 import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
@@ -442,6 +443,64 @@ function PredictionGallery() {
         <div><h3>{_copy("copy.396c3cb18f81", { defaultValue: "Feed" })}</h3><FeedLinkPreviews text={text} /></div>
         <div><h3>{_copy("copy.ccca18175753", { defaultValue: "Conversation" })}</h3><ChatLinkPreviews content={text} /></div>
       </div>
+    </section>
+  );
+}
+
+/** An author's thread under their post, as the author sees it (Add to thread, Reorder) and as a reader does. */
+const GALLERY_THREAD_AUTHOR = '0x9a11e2y0000000000000000000000000000000a1';
+const GALLERY_THREAD_ROWS = [
+  'First, the why: most creator tools take a cut of every tip. Ours takes none.',
+  'Second, the how: tips settle on chain in seconds, straight to your wallet.',
+  'Third, what is next: tipped comments with a message, already live on Home.',
+].map((content, i) => ({
+  id: String(880001 + i),
+  tokenId: 990001,
+  address: GALLERY_THREAD_AUTHOR,
+  content,
+  imageUrl: null,
+  replyIds: [],
+  parentId: null,
+  createdAt: new Date(Date.now() - (3 - i) * 3_600_000).toISOString(),
+  updatedAt: new Date(Date.now() - (3 - i) * 3_600_000).toISOString(),
+  likeCount: 12 - i * 3,
+  writor: { username: 'marco_v', displayName: 'Marco V' },
+}));
+const GALLERY_THREAD_AUTHOR_AUTH = {
+  isAuthenticated: true,
+  walletAddress: GALLERY_THREAD_AUTHOR,
+  user: null,
+  openLoginModal: () => {},
+} as unknown as AuthContextType;
+
+function AuthorThreadGallery() {
+  const qc = useQueryClient();
+  const [ready] = useState(() => {
+    for (const viewer of [GALLERY_THREAD_AUTHOR.toLowerCase(), '']) {
+      qc.setQueryData(['comments', '990001', 'author-thread', viewer], GALLERY_THREAD_ROWS);
+    }
+    return true;
+  });
+  const post = {
+    ...GALLERY_TEXT_POSTS[0],
+    id: '990001',
+    content: 'Why we built tipping with zero fees. A thread:',
+    author: { ...GALLERY_TEXT_POSTS[0].author, id: GALLERY_THREAD_AUTHOR },
+  } as GalleryTextPost;
+  if (!ready) return null;
+  return (
+    <section data-author-thread-gallery className="mb-5 grid gap-4 md:grid-cols-2">
+      {([['author', GALLERY_THREAD_AUTHOR_AUTH], ['reader', GALLERY_AUTH]] as const).map(([who, auth]) => (
+        <AuthContext.Provider key={who} value={auth}>
+          <div data-author-thread-view={who} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">{who}</h2>
+            <GalleryPostCard
+              post={post}
+              threadSlot={<AuthorThread tokenId="990001" authorAddress={GALLERY_THREAD_AUTHOR} />}
+            />
+          </div>
+        </AuthContext.Provider>
+      ))}
     </section>
   );
 }
@@ -1579,6 +1638,7 @@ export default function StateGalleryPage() {
 
         {params.get('predictions') === '1' && <PredictionGallery />}
         {params.get('spotify') === '1' && <SpotifyGallery />}
+        {params.get('thread') === '1' && <AuthorThreadGallery />}
 
         <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
 

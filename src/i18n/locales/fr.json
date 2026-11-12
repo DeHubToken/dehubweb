@@ -3200,7 +3200,19 @@
     "likersEmptyTitle": "Aucun j'aime pour l'instant",
     "likersEmptyBody": "Les j'aime de ce commentaire apparaîtront ici.",
     "anonymousLikes_one": "{{count}} j'aime d'un détenteur de badge anonyme",
-    "anonymousLikes_other": "{{count}} j'aime de détenteurs de badges anonymes"
+    "anonymousLikes_other": "{{count}} j'aime de détenteurs de badges anonymes",
+    "threadParts": {
+      "reorder": "Réorganiser",
+      "reorderHint": "Faites glisser les parties ou utilisez les flèches, puis enregistrez.",
+      "save": "Enregistrer l'ordre",
+      "saved": "Ordre du fil enregistré",
+      "saveFailed": "Impossible d'enregistrer l'ordre. Réessayez.",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "dragPart": "Faites glisser pour déplacer la partie {{n}}",
+      "addPart": "Ajouter au fil",
+      "addPlaceholder": "Ajoutez à votre fil..."
+    }
   },
   "mintChain": {
     "title": "Poste de menthe",

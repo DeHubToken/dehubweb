@@ -3196,7 +3196,19 @@
     "likersEmptyTitle": "Henüz beğeni yok",
     "likersEmptyBody": "Bu yorumun beğenileri burada görünecek.",
     "anonymousLikes_one": "Anonim rozet sahibinden {{count}} beğeni",
-    "anonymousLikes_other": "Anonim rozet sahiplerinden {{count}} beğeni"
+    "anonymousLikes_other": "Anonim rozet sahiplerinden {{count}} beğeni",
+    "threadParts": {
+      "reorder": "Yeniden sırala",
+      "reorderHint": "Bölümleri sürükleyin ya da okları kullanın, sonra kaydedin.",
+      "save": "Sırayı kaydet",
+      "saved": "Akış sırası kaydedildi",
+      "saveFailed": "Sıra kaydedilemedi. Tekrar deneyin.",
+      "moveUp": "Yukarı taşı",
+      "moveDown": "Aşağı taşı",
+      "dragPart": "{{n}}. bölümü taşımak için sürükleyin",
+      "addPart": "Akışa ekle",
+      "addPlaceholder": "Akışına ekle..."
+    }
   },
   "mintChain": {
     "title": "Darphane postası",

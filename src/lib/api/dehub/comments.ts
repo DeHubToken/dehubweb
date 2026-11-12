@@ -43,6 +43,8 @@ export interface ApiCommentResponse {
    * minutes. The API sorts a pinned comment above an anchored one.
    */
   isPinned?: boolean;
+  /** Where the post's creator placed this part of their thread (Reorder). Absent when never placed. */
+  threadPos?: number;
   /**
    * A top-level comment the post's creator has replied to somewhere in its
    * thread. The API sorts these under the pin, the anchor and the tipped
@@ -205,6 +207,15 @@ export async function pinComment(commentId: string | number): Promise<{
   return apiCall("/api/pin_comment", {
     method: "POST",
     body: { commentId: Number(commentId) },
+    requiresAuth: true,
+  });
+}
+
+/** Save the order of the parts of your own thread, first to last. Creator only. */
+export async function setThreadOrder(tokenId: string | number, ids: string[]): Promise<{ result: boolean }> {
+  return apiCall("/api/thread_order", {
+    method: "POST",
+    body: { tokenId: Number(tokenId), ids },
     requiresAuth: true,
   });
 }

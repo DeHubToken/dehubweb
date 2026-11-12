@@ -31,6 +31,17 @@ function row(over: Partial<ApiCommentResponse> & { id: string; createdAt: string
 }
 
 describe('author thread entries', () => {
+  it('reads parts in the order the author placed them, unplaced parts after in posting order', () => {
+    const rows = [
+      row({ id: '1', createdAt: '2026-01-01T00:01:00Z', threadPos: 2 }),
+      row({ id: '2', createdAt: '2026-01-01T00:02:00Z', threadPos: 0 }),
+      row({ id: '3', createdAt: '2026-01-01T00:03:00Z', threadPos: 1 }),
+      row({ id: '5', createdAt: '2026-01-01T00:05:00Z' }),
+      row({ id: '4', createdAt: '2026-01-01T00:04:00Z' }),
+    ];
+    expect(selectAuthorThreadEntries(rows, AUTHOR).map(r => r.id)).toEqual(['2', '3', '1', '4', '5']);
+  });
+
   it('takes the author\'s opening run, whatever order the rows arrive in', () => {
     const rows = [
       row({ id: '3', createdAt: '2026-01-01T00:03:00Z', address: OTHER }),

@@ -11,13 +11,16 @@
  * which is what the share action copies and what a tap on the row opens.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import Trash2 from "@/components/ui/cut-icons/delete";
 
 import Share2 from "@/components/ui/cut-icons/feedshare";
+import AddIcon from "@/components/ui/cut-icons/add";
+import SortIcon from "@/components/ui/cut-icons/sort";
 
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -38,7 +41,9 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { TranslatableText } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from './DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
-import { reactToComment, deleteComment } from '@/lib/api/dehub';
+import { reactToComment, deleteComment, setThreadOrder, type ApiCommentResponse } from '@/lib/api/dehub';
+import { useDragReorder } from '@/hooks/use-drag-reorder';
+import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import {
   applyReactionDelta,
   isPositiveReaction,
@@ -379,37 +384,247 @@ function ThreadEntry({
   );
 }
 
+/**
+ * The author putting their thread in order. Hold (touch) or press and drag
+ * (mouse) a part to move it, or use its arrows; nothing is sent until Save.
+ * The server takes the listed parts in this order and reads any other part of
+ * theirs after them (lib/comment-threading compareThreadParts).
+ */
+function ThreadReorder({
+  entries,
+  tokenId,
+  authorAddress,
+  onClose,
+}: {
+  entries: Comment[];
+  tokenId: string;
+  authorAddress: string;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const [ids, setIds] = useState(() => entries.map((e) => e.id));
+  const [saving, setSaving] = useState(false);
+  const byId = useMemo(() => new Map(entries.map((e) => [e.id, e])), [entries]);
+  const { order, draggingId, itemProps, animateNextChange } = useDragReorder({
+    ids,
+    onCommit: setIds,
+    disabled: saving,
+    holdMs: 220,
+    liftScale: 1.02,
+  });
+  const changed = ids.some((id, i) => id !== entries[i]?.id);
+
+  const move = (id: string, delta: number) => {
+    const from = ids.indexOf(id);
+    if (from < 0 || from + delta < 0 || from + delta >= ids.length) return;
+    // The two parts glide past each other instead of jumping.
+    animateNextChange();
+    setIds((current) => {
+      const from = current.indexOf(id);
+      const to = from + delta;
+      if (from < 0 || to < 0 || to >= current.length) return current;
+      const next = [...current];
+      next.splice(from, 1);
+      next.splice(to, 0, id);
+      return next;
+    });
+  };
+
+  const save = async () => {
+    if (!changed) { onClose(); return; }
+    setSaving(true);
+    const author = authorAddress.toLowerCase();
+    const place = (rows?: ApiCommentResponse[]) => rows?.map((row) => {
+      if (row.parentId || row.address?.toLowerCase() !== author) return row;
+      const pos = ids.indexOf(String(row.id));
+      return { ...row, threadPos: pos >= 0 ? pos : undefined };
+    });
+    // The thread reads in its new order the moment Save is pressed.
+    queryClient.setQueriesData<ApiCommentResponse[]>({ queryKey: ['comments', tokenId, 'author-thread'] }, place);
+    try {
+      await setThreadOrder(tokenId, ids);
+      toast.success(t('comments.threadParts.saved'));
+      onClose();
+    } catch {
+      toast.error(t('comments.threadParts.saveFailed'));
+      setSaving(false);
+    } finally {
+      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+    }
+  };
+
+  return (
+    <div className="mt-2 mb-1" data-no-navigate onClick={(e) => e.stopPropagation()}>
+      <p className="text-zinc-400 text-xs mb-2 px-1">{t('comments.threadParts.reorderHint')}</p>
+      <div className="flex flex-col gap-1.5">
+        {order.map((id, index) => {
+          const entry = byId.get(id);
+          if (!entry) return null;
+          const lifted = draggingId === id;
+          return (
+            <div
+              key={id}
+              {...itemProps(id)}
+              className={cn(
+                'thread-part-row flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/[0.05] pl-2 pr-1 py-2 cursor-grab touch-pan-y',
+                lifted && 'cursor-grabbing bg-white/[0.12] shadow-lg shadow-black/40',
+              )}
+            >
+              <span
+                className="thread-part-num flex-shrink-0 w-6 h-6 rounded-full bg-white/[0.1] text-white/80 text-[11px] font-semibold flex items-center justify-center tabular-nums"
+                aria-hidden
+              >
+                {index + 1}
+              </span>
+              <p className="flex-1 min-w-0 text-zinc-200 text-sm leading-snug line-clamp-2 break-words">
+                {entry.text?.trim() || (entry.imageUrl ? '🖼' : '…')}
+              </p>
+              <div className="flex items-center flex-shrink-0">
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => move(id, -1)}
+                  disabled={index === 0 || saving}
+                  className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
+                  aria-label={`${t('comments.threadParts.moveUp')} (${index + 1})`}
+                >
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => move(id, 1)}
+                  disabled={index === order.length - 1 || saving}
+                  className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
+                  aria-label={`${t('comments.threadParts.moveDown')} (${index + 1})`}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                <span className="w-7 h-8 flex items-center justify-center text-white/45" title={t('comments.threadParts.dragPart', { n: index + 1 })} aria-hidden>
+                  <GripVertical className="w-4 h-4" />
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex items-center justify-end gap-2 mt-2.5">
+        <button
+          type="button"
+          onClick={onClose}
+          disabled={saving}
+          className="h-8 px-3.5 rounded-full text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+        >
+          {t('common.cancel')}
+        </button>
+        <button
+          type="button"
+          onClick={() => { void save(); }}
+          disabled={saving}
+          className="h-8 px-4 rounded-full text-sm font-semibold bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-60"
+        >
+          {t('comments.threadParts.save')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** Bring up the comment box to write the next part of your thread. */
+function useAddToThread() {
+  const stage = usePostStage();
+  return () => {
+    if (stage) {
+      stage.openComments();
+      return;
+    }
+    const box = document.querySelector<HTMLTextAreaElement>('[data-comment-composer] textarea');
+    if (!box) return;
+    box.focus({ preventScroll: true });
+    box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  };
+}
+
 export function AuthorThread({ tokenId, authorAddress, highlightId }: AuthorThreadProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { entries } = useAuthorThread(tokenId, authorAddress, walletAddress);
+  const [reordering, setReordering] = useState(false);
+  const addToThread = useAddToThread();
+  const isAuthor = !!walletAddress && !!authorAddress && authorAddress.toLowerCase() === walletAddress.toLowerCase();
 
-  if (entries.length === 0) return null;
+  // Fewer than two parts leaves nothing to put in order.
+  useEffect(() => { if (entries.length < 2) setReordering(false); }, [entries.length]);
+
+  if (entries.length === 0 && !isAuthor) return null;
+
+  if (reordering && isAuthor && authorAddress) {
+    return (
+      <ThreadReorder
+        entries={entries}
+        tokenId={tokenId}
+        authorAddress={authorAddress}
+        onClose={() => setReordering(false)}
+      />
+    );
+  }
 
   return (
     <div className="relative mt-1 mb-1">
-      {/* The thread line — runs through the avatar column, tying the entries
-          to each other and visually to the post card above. */}
-      <div
-        className="absolute left-[19px] top-2 bottom-2 w-px bg-white/[0.14]"
-        aria-hidden
-      />
-      <div className="flex flex-col">
-        {entries.map((entry) => (
-          <ThreadEntry
-            key={entry.id}
-            entry={entry}
-            tokenId={tokenId}
-            isOwn={
-              !!walletAddress &&
-              !!entry.address &&
-              entry.address.toLowerCase() === walletAddress.toLowerCase()
-            }
-            highlighted={highlightId === entry.id}
-            onProfile={(username) => navigate(`/${username}`)}
+      {entries.length > 0 && (
+        <>
+          {/* The thread line — runs through the avatar column, tying the entries
+              to each other and visually to the post card above. */}
+          <div
+            className="absolute left-[19px] top-2 bottom-2 w-px bg-white/[0.14]"
+            aria-hidden
           />
-        ))}
-      </div>
+          <div className="flex flex-col">
+            {entries.map((entry) => (
+              <ThreadEntry
+                key={entry.id}
+                entry={entry}
+                tokenId={tokenId}
+                isOwn={
+                  !!walletAddress &&
+                  !!entry.address &&
+                  entry.address.toLowerCase() === walletAddress.toLowerCase()
+                }
+                highlighted={highlightId === entry.id}
+                onProfile={(username) => navigate(`/${username}`)}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      {/* The author's own tools: write the next part, and (with two or more)
+          put the parts in order. Readers never see this row. */}
+      {isAuthor && (
+        <div className="relative flex items-center gap-1 pl-1 pt-0.5" data-no-navigate onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={addToThread}
+            className="inline-flex items-center gap-1.5 h-8 pl-2 pr-3 rounded-full text-[13px] font-medium text-white/75 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <span className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
+              <AddIcon className="w-3.5 h-3.5" />
+            </span>
+            {t('comments.threadParts.addPart')}
+          </button>
+          {entries.length >= 2 && (
+            <button
+              type="button"
+              onClick={() => setReordering(true)}
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[13px] font-medium text-white/75 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <SortIcon className="w-4 h-4" />
+              {t('comments.threadParts.reorder')}
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

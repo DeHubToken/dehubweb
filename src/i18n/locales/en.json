@@ -3185,6 +3185,18 @@
     "stopRecording": "Stop",
     "replyPlaceholder": "Reply to @{{name}}...",
     "composerPlaceholder": "Type here",
+    "threadParts": {
+      "reorder": "Reorder",
+      "reorderHint": "Drag the parts, or use the arrows, then save.",
+      "save": "Save order",
+      "saved": "Thread order saved",
+      "saveFailed": "Couldn't save the order. Try again.",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "dragPart": "Drag to move part {{n}}",
+      "addPart": "Add to thread",
+      "addPlaceholder": "Add to your thread..."
+    },
     "attachImage": "Attach image",
     "attachMedia": "Attach a photo, video or audio",
     "attachUnsupported": "Attach a photo, a video or an audio file.",

@@ -8,9 +8,28 @@
 
 import type { ApiCommentResponse } from '@/lib/api/dehub';
 
+interface ThreadPart {
+  threadPos?: number | null;
+  createdAt: string | Date;
+}
+
+/**
+ * Reading order of two parts of an author's thread. A part the author placed
+ * (Reorder, `threadPos`) reads by that place, ahead of every part never
+ * placed; those keep posting order. The API sorts the same way.
+ */
+export function compareThreadParts(a: ThreadPart, b: ThreadPart): number {
+  const aPlaced = typeof a.threadPos === 'number';
+  const bPlaced = typeof b.threadPos === 'number';
+  if (aPlaced && bPlaced) return (a.threadPos as number) - (b.threadPos as number);
+  if (aPlaced !== bPlaced) return aPlaced ? -1 : 1;
+  return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+}
+
 /**
  * The author's own thread: every straight comment the author left on their own
- * post (not a reply to anybody), oldest first, read like an X thread. These
+ * post (not a reply to anybody), in the author's order (compareThreadParts),
+ * read like an X thread. These
  * render in the block under the card on the post page and are dropped from the
  * comments list, where the author's remaining straight comments lead the list
  * in the same order.
@@ -33,7 +52,7 @@ export function selectAuthorThreadEntries(
 
   const oldestFirst = rows
     .filter(row => !row.parentId && row.address?.toLowerCase() === author)
-    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    .sort(compareThreadParts);
 
   const entries: ApiCommentResponse[] = [];
   for (const row of oldestFirst) {
