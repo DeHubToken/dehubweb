@@ -7235,15 +7235,6 @@ html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(
   }
 }
 
-/* Full-screen chat (/chat). A soft dot pattern behind the thread so bubbles
-   read as objects on a surface; it follows the theme's own text colour, so
-   light and dark themes both get a faint version of themselves. */
-[data-chat-wallpaper] {
-  background-image: radial-gradient(color-mix(in srgb, currentColor 9%, transparent) 1px, transparent 1.4px);
-  background-size: 22px 22px;
-  background-position: 11px 11px;
-}
-
 /* Phones: the open chat slides in over the list instead of appearing. */
 @media (max-width: 767px) {
   [data-fsc-chat-open] {
