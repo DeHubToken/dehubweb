@@ -50,6 +50,8 @@ describe('post media presentation', () => {
     expect(noticeGate).toContain('<div data-media-full');
     expect(matureGate).toContain('<NoticeGate');
     expect(contentWarningGate).toContain('<NoticeGate');
+    // The creator's own warning line is what viewers read on the cover.
+    expect(contentWarningGate).toContain('description={own ||');
     expect(styles).toContain('[data-feed-item].rounded-xl [data-media-full]');
     expect(styles).toContain('[data-feed-item].rounded-2xl [data-media-full]');
   });

@@ -112,3 +112,20 @@ export function reportPostEvent(tokenId: string | number | null | undefined, typ
   if (!Number.isInteger(id) || id <= 0) return;
   sendPostStatsBeacon('event', { tokenId: id, type });
 }
+
+/** One post against the creator's usual post, for the % on its view button. */
+export interface PostVsUsual {
+  /** Difference in percent; null when there's nothing fair to say yet. */
+  pct: number | null;
+  people: number;
+  usual: number | null;
+}
+
+/** Several of the caller's own posts in one call. Others' posts are left out. */
+export async function getVsUsual(tokenIds: Array<string | number>): Promise<Record<string, PostVsUsual>> {
+  const res = await apiCall<{ result: Record<string, PostVsUsual> }>(
+    `/api/post-stats/vs-usual?ids=${tokenIds.map((id) => encodeURIComponent(String(id))).join(',')}`,
+    { requiresAuth: true },
+  );
+  return res.result ?? {};
+}

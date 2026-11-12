@@ -1322,6 +1322,12 @@ html[data-theme='osaka']
   backdrop-filter: none !important;
 }
 
+/* Except the blurred still behind a warning or mature cover: that blur is what
+   keeps the post hidden until the person chooses to open it. */
+html[data-theme='osaka'] [data-notice-gate] > img[aria-hidden='true'] {
+  filter: blur(40px) !important;
+}
+
 /* Only a MEDIA FRAME gets the opaque backing. [data-keep-dark] used to be in
    here too, which made it useless as a general opt-out: the one hook available
    for "don't theme me" turned every translucent overlay chip that used it into

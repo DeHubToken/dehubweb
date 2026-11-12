@@ -6,6 +6,7 @@ import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/p
 import type { ArticleTileLook } from '@/lib/article-tile';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
+import { ContentWarningGate } from '@/components/app/cards/ContentWarningGate';
 import { AuthorThread } from '@/components/app/cards/AuthorThread';
 import { postBgById } from '@/lib/post-backgrounds';
 import type { TextPost as GalleryTextPost } from '@/types/feed.types';
@@ -1427,6 +1428,10 @@ function PostStatsGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   const [seeded] = useState(() => {
     queryClient.setQueryData(['post-stats', '777'], SAMPLE_POST_STATS);
     queryClient.setQueryData(['post-stats-best-times'], SAMPLE_BEST_TIMES);
+    // The % on the view button: ahead of usual, behind, and about the same.
+    queryClient.setQueryData(['post-vs-usual', '777'], { pct: 42, people: 1240, usual: 873 });
+    queryClient.setQueryData(['post-vs-usual', '778'], { pct: -18, people: 716, usual: 873 });
+    queryClient.setQueryData(['post-vs-usual', '779'], { pct: 3, people: 899, usual: 873 });
     return true;
   });
   const [open, setOpen] = useState(initiallyOpen);
@@ -1434,7 +1439,11 @@ function PostStatsGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   return (
     <section data-post-stats-gallery className="mb-5 max-w-xl">
       <h2 className="mb-3 text-sm font-semibold">Post stats</h2>
-      <PostMetadata timestamp="2d" viewCount="1.2K" tokenId="777" isOwnPost />
+      <div className="flex flex-col gap-2" data-post-vs-usual-gallery>
+        <PostMetadata timestamp="2d" viewCount="1.2K" tokenId="777" isOwnPost />
+        <PostMetadata timestamp="3d" viewCount="716" tokenId="778" isOwnPost />
+        <PostMetadata timestamp="5d" viewCount="899" tokenId="779" isOwnPost />
+      </div>
       <Button className="mt-3" onClick={() => setOpen(true)}>Quick Peek</Button>
       <PostStatsSheet open={open} onOpenChange={setOpen} tokenId="777" />
       <div className="mt-4" data-post-stats-gallery-panel>
@@ -1670,6 +1679,7 @@ export default function StateGalleryPage() {
         <StreamerArtworkGallery />
 
         <PinnedProfileGallery />
+        <ContentWarningGallery />
         <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
         <TextTilesGallery />
         <ArticleTilesGallery initialLook={params.get('atile')} initiallyOpen={params.get('sheet') === 'article-tile'} />
@@ -2101,6 +2111,19 @@ const GALLERY_TEXT_POSTS: GalleryTextPost[] = [
   author: { id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false },
   stats: { comments: 12 + i * 7, reposts: i, likes: 140 + i * 53, dislikes: 0 },
 }) as GalleryTextPost);
+
+/** Content warning cover: the creator's own line, and the stock notice when a warning has none. */
+function ContentWarningGallery() {
+  return (
+    <section data-page-bento data-content-warning-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Content warning</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div data-cw-own><ContentWarningGate text="Flashing lights and loud sound in the first 10 seconds" preview={galleryAvatar} onReveal={() => {}} /></div>
+        <div data-cw-fallback><ContentWarningGate onReveal={() => {}} /></div>
+      </div>
+    </section>
+  );
+}
 
 /** Profile text-post backgrounds: the owner's hold-to-pick picker, phone grid tiles and a desktop card. */
 function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: string | null; initiallyOpen: boolean }) {
