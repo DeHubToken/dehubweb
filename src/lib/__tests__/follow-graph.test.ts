@@ -12,6 +12,7 @@ vi.mock('@/lib/api/dehub/core', () => ({
 }));
 vi.mock('@/lib/connection-source', () => ({ readConnectionSource: () => 'web3auth' }));
 vi.mock('@/lib/smart-wallet', () => ({ getEoaProvider: () => ({}) }));
+vi.mock('@/lib/contracts/aa-utils', () => ({ getActiveProvider: async () => ({ provider: { request: async ({ method }: { method: string }) => (method === 'eth_accounts' ? [W] : walletSign()) } }) }));
 const walletSign = vi.fn(async () => '0xsig');
 vi.mock('@/lib/dm-e2ee/signer', () => ({ signEncryptionMessage: () => walletSign() }));
 

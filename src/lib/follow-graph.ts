@@ -76,10 +76,10 @@ async function followKey(wallet: string, mayAsk: boolean) {
   write(KEY(wallet), { pk, ok: false });
   const account = privateKeyToAccount(pk);
   const issuedAt = new Date();
+  const message = keyMessage(wallet, account.address.toLowerCase(), issuedAt);
   let signature: string;
   try {
-    const { signEncryptionMessage } = await import('@/lib/dm-e2ee/signer');
-    signature = await signEncryptionMessage(keyMessage(wallet, account.address.toLowerCase(), issuedAt), wallet, source === 'wagmi' ? 'wagmi' : 'web3auth');
+    signature = source === 'wagmi' ? await externalSign(message, wallet) : await smartAccountSign(message, wallet);
   } catch {
     if (source === 'wagmi') write(DECLINED(wallet), Date.now());
     return null;
@@ -90,6 +90,35 @@ async function followKey(wallet: string, mayAsk: boolean) {
   if (!r?.status) return null;
   write(KEY(wallet), { pk, ok: true });
   return account;
+}
+
+async function externalSign(message: string, wallet: string): Promise<string> {
+  const { signEncryptionMessage } = await import('@/lib/dm-e2ee/signer');
+  return signEncryptionMessage(message, wallet, 'wagmi');
+}
+
+/**
+ * Built-in wallet: the account is a Safe owned by the in-app key, so the OK is
+ * signed by the Safe (ERC-1271/6492, checked on Base by the backend), the same
+ * way sign-in is. Falls back to the owner key when the account is the key itself.
+ */
+async function smartAccountSign(message: string, wallet: string): Promise<string> {
+  const hex = `0x${Array.from(new TextEncoder().encode(message), b => b.toString(16).padStart(2, '0')).join('')}`;
+  const { getActiveProvider } = await import('@/lib/contracts/aa-utils');
+  const { provider } = await getActiveProvider(8453);
+  const accounts = (await provider.request({ method: 'eth_accounts' })) as string[];
+  const from = accounts?.[0]?.toLowerCase();
+  if (from !== wallet) {
+    const { signEncryptionMessage } = await import('@/lib/dm-e2ee/signer');
+    return signEncryptionMessage(message, wallet, 'web3auth');
+  }
+  try {
+    return (await provider.request({ method: 'personal_sign', params: [hex, from] })) as string;
+  } catch (e) {
+    const error = e as { code?: number; message?: string };
+    if (error?.code !== -32602 && !/invalid params|invalid parameters/i.test(error?.message ?? '')) throw e;
+    return (await provider.request({ method: 'personal_sign', params: [from, hex] })) as string;
+  }
 }
 
 async function upload(wallet: string, account: ReturnType<typeof privateKeyToAccount>, items: Pending[]) {
