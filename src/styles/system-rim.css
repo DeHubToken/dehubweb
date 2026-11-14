@@ -77,18 +77,50 @@
 /* Screens at 100%-175% zoom (most Windows and Linux monitors). A 1px rim on a
    curve can only light whole pixels there, so the rounded corners stepped
    and the 1px top highlight on the selected pills thinned into a hook at
-   each corner. A 1px soft glow under the rim fills the gaps between the
-   steps and the highlight is feathered by half a pixel, so the corners read
-   smooth. Retina screens draw the curve finely already and are unchanged. */
+   each corner. Here the rim is one masked ring on ::after, 1.5px wide and a
+   touch fainter: wide enough to shade smoothly round the curve, and the same
+   weight to the eye. The 1px border it replaces is handed back as padding on
+   the panels that have none of their own, so nothing moves. The pill
+   highlights are feathered by half a pixel. Retina screens draw the curve
+   finely already and are unchanged. */
 @media (min-width: 1024px) and (max-resolution: 1.75dppx), (min-width: 1024px) and (-webkit-max-device-pixel-ratio: 1.75) {
   html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-side-panel] {
-    box-shadow: 0 -8px 30px -22px rgb(var(--rim-a) / 0.35), 0 0 1px rgb(var(--rim-a) / 0.3) !important;
+    background: linear-gradient(180deg, var(--rim-fill-top), var(--rim-fill-bottom)) !important;
+    border-width: 0 !important;
   }
   html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-desktop-right-rail] [data-search-bento] {
-    box-shadow: 0 0 1px rgb(var(--rim-a) / 0.3) !important;
+    background: linear-gradient(180deg, var(--rim-fill-top), var(--rim-fill-bottom)) !important;
+    border-width: 0 !important;
+    padding: 1px;
   }
-  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) :is([data-feed-nav], [data-kit-island]) {
-    box-shadow: 0 0 1px rgb(var(--rim-a) / 0.3);
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-side-panel]:is([data-sidebar-glass-surface], :has(> [data-side-panel-tabs])) {
+    padding: 1px;
+  }
+  /* The ring needs a positioned box to hang on; panels that already set
+     their own position keep it. */
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-side-panel]:not(.relative):not(.absolute):not(.fixed):not(.sticky) {
+    position: relative;
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-side-panel]::after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    padding: 1.5px;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(150deg, rgb(var(--rim-a) / 0.55), rgb(var(--rim-b) / 0.2) 30%, rgb(255 255 255 / 0.05) 55%, rgb(255 255 255 / 0.04) 72%, rgb(var(--rim-c) / 0.37));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-desktop-right-rail] [data-search-bento]::after {
+    background: linear-gradient(100deg, rgb(var(--rim-a) / 0.55), rgb(var(--rim-b) / 0.2) 30%, rgb(255 255 255 / 0.05) 55%, rgb(255 255 255 / 0.05) 72%, rgb(var(--rim-c) / 0.37));
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) :is([data-feed-nav], [data-kit-island])::after {
+    padding: 1.5px;
+    background: linear-gradient(100deg, rgb(var(--rim-a) / 0.57), rgb(var(--rim-b) / 0.2) 30%, rgb(255 255 255 / 0.06) 55%, rgb(255 255 255 / 0.06) 72%, rgb(var(--rim-c) / 0.38));
   }
   html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-sidebar-active-indicator] {
     box-shadow: inset 0 1px 1px -0.5px rgb(255 255 255 / 0.22), 0 0 1px rgb(var(--rim-a) / 0.25) !important;
