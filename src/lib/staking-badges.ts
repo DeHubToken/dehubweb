@@ -13,8 +13,6 @@ import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
 import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.webp';
 import KillerWhaleBadge from '@/assets/badges/Killer Whale.webp';
 import BlueWhaleBadge from '@/assets/badges/Blue Whale.webp';
-export { default as riftnGoldBadge } from '@/assets/badges/Megalodon-riftn.png';
-import riftnGold from '@/assets/badges/Megalodon-riftn.png';
 import MegalodonBadge from '@/assets/badges/Megalodon.webp';
 
 const BADGE_IMAGES: Record<string, string> = {
@@ -84,12 +82,7 @@ export function getBadgeUrl(
 ): string | null {
   const badge = getBadgeName(badgeBalance, username, context);
   if (!badge) return null;
-  return holderImage(badge, username ?? context?.username);
-}
-
-function holderImage(tier: string, username?: string | null) {
-  return tier === 'Megalodon' && username?.trim().replace(/^@/, '').toLowerCase() === 'riftn'
-    ? riftnGold : BADGE_IMAGES[tier] || null;
+  return BADGE_IMAGES[badge] || null;
 }
 
 /** The badge art for a tier name, for surfaces that already know the tier. */
@@ -115,7 +108,7 @@ export function getBadgeInfo(
   if (!name) return { name: null, imageUrl: null, minStake: minBadgeThreshold(scale) };
   return {
     name,
-    imageUrl: holderImage(name, username ?? context?.username),
+    imageUrl: BADGE_IMAGES[name] || null,
     minStake: badgeThreshold(name, scale) ?? minBadgeThreshold(scale),
   };
 }
@@ -177,7 +170,7 @@ export function getBadgeStanding(
 
   return {
     tier,
-    imageUrl: tier ? holderImage(tier, context?.username) : null,
+    imageUrl: tier ? BADGE_IMAGES[tier] ?? null : null,
     index,
     balance,
     currentThreshold,
