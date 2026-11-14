@@ -181,7 +181,14 @@ serve(async (req) => {
   if (limited) return limited;
 
   try {
-    const { imageUrl, targetLang = 'en' } = await req.json();
+    const body = await req.json();
+    const targetLang = body.targetLang ?? 'en';
+    // Clients send the link they are showing, which for feed photos is a
+    // resized copy (/cdn-cgi/image/<options>/<original>). The vision model
+    // cannot open those, so read the original it points at.
+    const imageUrl = typeof body.imageUrl === 'string'
+      ? body.imageUrl.replace(/^https:\/\/[^/]+\/cdn-cgi\/image\/[^/]+\/(?=https?:\/\/)/, '')
+      : body.imageUrl;
 
     if (!imageUrl) {
       return new Response(
