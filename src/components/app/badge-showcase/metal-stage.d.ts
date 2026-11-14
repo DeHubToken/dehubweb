@@ -12,6 +12,8 @@ export interface MetalOptions {
     hero: () => MetalBox;
     interactionElement?: HTMLElement;
     reducedMotion?: boolean;
+    /** A themed look around the badge: see BADGE_LOOKS. */
+    look?: string | null;
     onTap?: () => void;
     onMiss?: () => void;
     onInteract?: () => void;

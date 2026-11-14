@@ -22,7 +22,7 @@ import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { MetalStage } from './metal-stage';
 import { acquireMetalStage } from './metal-warmup';
 import { ThemeStage } from './theme-stage';
-import { badgeWorld } from '@/lib/badge-world';
+import { badgeLook, badgeWorld } from '@/lib/badge-world';
 import { badgeShowcaseHandoff, badgeShowcaseJustOpened } from '@/lib/badge-showcase';
 
 export interface ShowcaseEntry {
@@ -123,8 +123,11 @@ export function ShowcaseShell({
   // Light themes recolour dialogs for a white page; the showcase is a dark
   // stage in every theme, so it opts out (see SHOWCASE_CSS).
   const keepDark = themeChoice === 'light' || themeChoice === SYSTEM_LIGHT ? true : undefined;
-  const [metallic] = useState(() => badgeAnimationStyle(theme) === 'metallic');
-  const [world] = useState(() => badgeWorld(theme));
+  // An opened badge is the 3D badge dressed for the theme. A promotion keeps
+  // its own ceremony: the themed scene, or the sticker's glitter.
+  const [look] = useState(() => (intro ? null : badgeLook(theme)));
+  const [metallic] = useState(() => badgeAnimationStyle(theme) === 'metallic' || !!look);
+  const [world] = useState(() => (look ? null : badgeWorld(theme)));
   const cinematic = metallic || !!world;
   const reduceMotion = !!useReducedMotion();
   const count = entries.length;
@@ -330,6 +333,13 @@ export function ShowcaseShell({
         interactionElement: stageBoxRef.current!,
         reducedMotion: reduceMotion,
         onError: fail,
+      }) : look ? new MetalStage(canvas, {
+        ...handlersForStage,
+        look,
+        hero: () => heroBox() ?? { x: 0, y: 0, size: 1 },
+        interactionElement: stageBoxRef.current!,
+        reducedMotion: reduceMotion,
+        onError: fail,
       }) : metallic ? await acquireMetalStage(canvas, {
         ...handlersForStage,
         hero: () => heroBox() ?? { x: 0, y: 0, size: 1 },
@@ -371,7 +381,7 @@ export function ShowcaseShell({
     };
   // The material and opening geometry belong to this presentation's initial theme.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, originIndex, cinematic, metallic, world]);
+  }, [items, originIndex, cinematic, metallic, world, look]);
 
   useEffect(() => {
     if (!stickerOn || phase !== 'open') return;
@@ -645,6 +655,7 @@ export function ShowcaseShell({
       aria-modal="true"
       data-keep-dark={keepDark}
       data-badge-world={world ?? undefined}
+      data-badge-look={look ?? undefined}
       data-badge-phase={phase}
       aria-label={dialogLabel(index)}
       tabIndex={-1}
@@ -674,7 +685,7 @@ export function ShowcaseShell({
         style={{ opacity: open ? 1 : 0 }}
       />
 
-      {cinematic && <div className={`pointer-events-none absolute inset-0 ${world ? 'z-[5]' : 'z-[15]'}`} style={{ opacity: glFailed ? 0 : 1 }}>
+      {cinematic && <div className={`pointer-events-none absolute inset-0 ${world || look ? 'z-[5]' : 'z-[15]'}`} style={{ opacity: glFailed ? 0 : 1 }}>
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
       </div>}
 
