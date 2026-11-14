@@ -67,10 +67,17 @@ it('lets the scroll timeline own fast scrolling and cancels it on unmount', () =
   expect(frames[frames.length - 1]?.transform).toBe('translateY(11200px)');
   expect(content.dataset.feedSwallowDriver).toBe('scroll-transform');
   expect(content.style.clipPath).toBe('');
-  expect(cutLayer.style.clipPath).toBe('inset(112.00px 0 0 0)');
+  // Shift + overflow clip, never clip-path: clip-path is a backdrop root and
+  // would stop every frosted card inside from blurring the theme canvas.
+  expect(cutLayer.style.clipPath).toBe('');
+  expect(cutLayer.style.translate).toBe('0 112.00px');
+  expect(cutLayer.style.overflow).toBe('clip');
+  expect((cutLayer.firstElementChild as HTMLElement).style.translate).toBe('0 -112.00px');
   act(() => window.dispatchEvent(new Event('scroll')));
   expect(callbacks).toHaveLength(0);
   hook.unmount();
+  expect(cutLayer.style.translate).toBe('');
+  expect(cutLayer.style.overflow).toBe('');
   expect(cancel).toHaveBeenCalledTimes(2);
   expect(content.dataset.feedSwallowDriver).toBeUndefined();
 });
