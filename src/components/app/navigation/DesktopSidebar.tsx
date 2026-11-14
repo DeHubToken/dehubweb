@@ -576,7 +576,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             6.5px above the panel, so both land in the wash with the panel's
             bright glass rim right underneath and stop being legible. The hook
             lets index.css drop the cast for the collapsed rail only. */}
-        <motion.div ref={sidePanelRef} data-side-panel data-sidebar-glass-surface data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden flex flex-col">
+        <motion.div ref={sidePanelRef} data-side-panel data-sidebar-glass-surface data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[9px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden flex flex-col">
           <div data-sidebar-glass-backdrop aria-hidden="true" />
           {/* Menu search — revealed by scrolling the list, retracted when it
               returns to the top. Animated through grid-template-rows so the
@@ -946,7 +946,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              isCollapsed ? "text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
+              // leading-5: 13.5px text inherits a 20.25px line, which made the
+              // button 46.25px tall and left the nav bento above it ending on a
+              // quarter pixel, so its bottom corners blurred at 100% zoom.
+              isCollapsed ? "text-[13.5px] leading-5" : "py-[7px] lg:py-3 text-[13.5px] leading-5"
             )}>
               {isAuthenticated ? (
                  <>

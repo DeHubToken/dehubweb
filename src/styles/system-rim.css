@@ -73,3 +73,27 @@
     background: linear-gradient(to top, var(--rim-fill-bottom), rgb(13 13 16 / 0.6) 40%, transparent) !important;
   }
 }
+
+/* Screens at 100%-175% zoom (most Windows and Linux monitors). A 1px rim on a
+   curve can only light whole pixels there, so the rounded corners stepped
+   and the 1px top highlight on the selected pills thinned into a hook at
+   each corner. A 1px soft glow under the rim fills the gaps between the
+   steps and the highlight is feathered by half a pixel, so the corners read
+   smooth. Retina screens draw the curve finely already and are unchanged. */
+@media (min-width: 1024px) and (max-resolution: 1.75dppx), (min-width: 1024px) and (-webkit-max-device-pixel-ratio: 1.75) {
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-side-panel] {
+    box-shadow: 0 -8px 30px -22px rgb(var(--rim-a) / 0.35), 0 0 1px rgb(var(--rim-a) / 0.3) !important;
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-desktop-right-rail] [data-search-bento] {
+    box-shadow: 0 0 1px rgb(var(--rim-a) / 0.3) !important;
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) :is([data-feed-nav], [data-kit-island]) {
+    box-shadow: 0 0 1px rgb(var(--rim-a) / 0.3);
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-sidebar-active-indicator] {
+    box-shadow: inset 0 1px 1px -0.5px rgb(255 255 255 / 0.22), 0 0 1px rgb(var(--rim-a) / 0.25) !important;
+  }
+  html[data-theme='system']:not([data-system-tone='light']):not(#_):not(#_):not(#_) [data-feed-nav-indicator] {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.2), inset 0 1px 1px -0.5px rgb(255 255 255 / 0.45), inset 0 -1px 1px -0.5px rgb(255 255 255 / 0.12), 0 0 1px rgb(255 255 255 / 0.25) !important;
+  }
+}

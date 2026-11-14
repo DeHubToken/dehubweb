@@ -36,7 +36,7 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
             does render it is the thing that person came back for. */}
         <GettingStartedBento />
         <TabbedSidePanel />
-        <div className="relative -mt-[4.2px]">
+        <div className="relative -mt-[4px]">
           <WhatsHappening />
         </div>
       </div>
