@@ -2281,7 +2281,12 @@
     "loadFailed": "Impossible de charger les demandes"
   },
   "auth": {
-    "loginRequired": "Connexion requise"
+    "loginRequired": "Connexion requise",
+    "accountDeleted": "Ce compte a été supprimé. Vous pouvez vous réinscrire avec un nouveau compte.",
+    "accountDeletedHours_one": "Ce compte a été supprimé. Vous pourrez vous réinscrire avec le même e-mail ou téléphone dans environ {{count}} heure.",
+    "accountDeletedHours_other": "Ce compte a été supprimé. Vous pourrez vous réinscrire avec le même e-mail ou téléphone dans environ {{count}} heures.",
+    "accountDeletedDays_one": "Ce compte a été supprimé. Vous pourrez vous réinscrire avec le même e-mail ou téléphone dans environ {{count}} jour.",
+    "accountDeletedDays_other": "Ce compte a été supprimé. Vous pourrez vous réinscrire avec le même e-mail ou téléphone dans environ {{count}} jours."
   },
   "messages": {
     "newDrawer": {
@@ -2500,7 +2505,24 @@
     "sortMostLiked": "Les plus aimés",
     "searchThisChannel": "Rechercher dans ce canal",
     "searchResultCount": "1 résultat pour \"{{query}}\"",
-    "searchResultCountPlural": "{{count}} résultats pour \"{{query}}\""
+    "searchResultCountPlural": "{{count}} résultats pour \"{{query}}\"",
+    "sortCustom": "Ordre personnalisé",
+    "sortCustomShort": "Personnalisé",
+    "arrangeButton": "Organiser les publications",
+    "arrange": {
+      "title": "Organisez vos publications",
+      "hint": "Faites glisser vos publications dans l'ordre souhaité. Les visiteurs verront cet ordre en premier.",
+      "drag": "Faire glisser pour déplacer",
+      "toTop": "Placer tout en haut",
+      "save": "Enregistrer l'ordre",
+      "saving": "Enregistrement...",
+      "saved": "Votre ordre est enregistré",
+      "reset": "Revenir aux plus récentes d'abord",
+      "resetDone": "Les plus récentes d'abord, à nouveau",
+      "saveFailed": "Impossible d'enregistrer votre ordre. Veuillez réessayer.",
+      "loadFailed": "Impossible de charger vos publications. Fermez ceci et réessayez.",
+      "empty": "Rien à organiser pour l'instant. Publiez d'abord quelque chose."
+    }
   },
   "tv": {
     "seoTitle": "Télévision en direct: Chaînes gratuites du monde entier",

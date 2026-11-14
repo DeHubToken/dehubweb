@@ -68,6 +68,7 @@ import { fetchTelegramLoginConfig, startTelegramLogin, takeStoredTelegramResult,
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { isMidSessionUnlock } from '@/lib/session-unlock';
 import { authenticateProfileSession, SupabaseSessionMissingError } from '@/lib/profile-login';
+import { ACCOUNT_DELETED_CODE } from '@/lib/deleted-account';
 import { advanceAuthTrace, beginAuthTrace, clearAuthTrace, readAuthTrace } from '@/lib/auth-trace';
 import { isSessionForEmail } from '@/lib/magic-link-session';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
@@ -144,6 +145,8 @@ function authErrorText(error: unknown, fallback: string): string {
   const message = typeof raw === 'string' ? raw.trim() : '';
   if (!message) return fallback;
   if (error instanceof AuthCopyError) return message;
+  // Already in the reader's language (lib/deleted-account).
+  if ((error as { code?: unknown } | null)?.code === ACCOUNT_DELETED_CODE) return message;
   return readsEnglish() ? message : fallback;
 }
 

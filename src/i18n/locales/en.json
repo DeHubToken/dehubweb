@@ -2281,6 +2281,11 @@
     "loadFailed": "Couldn't load requests"
   },
   "auth": {
+    "accountDeleted": "This account was deleted. You can sign up again as a new account.",
+    "accountDeletedHours_one": "This account was deleted. You can sign up again with the same email or phone in about {{count}} hour.",
+    "accountDeletedHours_other": "This account was deleted. You can sign up again with the same email or phone in about {{count}} hours.",
+    "accountDeletedDays_one": "This account was deleted. You can sign up again with the same email or phone in about {{count}} day.",
+    "accountDeletedDays_other": "This account was deleted. You can sign up again with the same email or phone in about {{count}} days.",
     "loginRequired": "Log in required"
   },
   "messages": {
@@ -2498,6 +2503,23 @@
     "sortMostViewed": "Most viewed",
     "sortLikes": "Likes",
     "sortMostLiked": "Most liked",
+    "sortCustom": "Custom order",
+    "sortCustomShort": "Custom",
+    "arrangeButton": "Arrange posts",
+    "arrange": {
+      "title": "Arrange your posts",
+      "hint": "Drag your posts into the order you want. Visitors see this order first.",
+      "drag": "Drag to move",
+      "toTop": "Move to top",
+      "save": "Save order",
+      "saving": "Saving...",
+      "saved": "Your order is saved",
+      "reset": "Back to newest first",
+      "resetDone": "Back to newest first",
+      "saveFailed": "Could not save your order. Please try again.",
+      "loadFailed": "Could not load your posts. Close this and try again.",
+      "empty": "Nothing to arrange yet. Post something first."
+    },
     "searchThisChannel": "Search this channel",
     "searchResultCount": "1 result for \"{{query}}\"",
     "searchResultCountPlural": "{{count}} results for \"{{query}}\""

@@ -7,6 +7,7 @@ import { deviceHeaders } from '@/lib/device-id';
 import { requestSession } from './session-request';
 import { TWO_FACTOR_REQUIRED_CODE } from '@/lib/two-factor-login';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { ACCOUNT_DELETED_CODE, deletedAccountMessage } from '@/lib/deleted-account';
 
 export interface UsernameCheckResponse {
   status: boolean;
@@ -152,6 +153,9 @@ export async function authenticateWallet(
     const errorData = await response.json().catch(() => ({}));
     if (errorData.code === WALLET_SIGNUP_BLOCKED_CODE) {
       throw new WalletSignupBlockedError(errorData.message || errorData.error_message);
+    }
+    if (errorData.code === ACCOUNT_DELETED_CODE) {
+      throw Object.assign(new Error(deletedAccountMessage(errorData.signupAfter)), { code: errorData.code, status: response.status });
     }
     throw Object.assign(new Error(errorData.message || errorData.error || _translateCopy("copy.93821eb7ce8c", { defaultValue: "Authentication failed" })), { code: errorData.code, status: response.status });
   }
@@ -314,6 +318,9 @@ export async function authenticateWithSupabaseSession(
     }
     if (code === 'PROFILE_LINK_MISMATCH') {
       throw new ProfileLinkMismatchError(errorData.message as string | undefined);
+    }
+    if (code === ACCOUNT_DELETED_CODE) {
+      throw Object.assign(new Error(deletedAccountMessage(errorData.signupAfter as string | undefined)), { code, status: response.status });
     }
     throw new Error(
       (errorData.message as string) || (errorData.error as string) || _translateCopy("copy.93821eb7ce8c", { defaultValue: "Authentication failed" }),

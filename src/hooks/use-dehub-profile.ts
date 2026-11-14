@@ -67,6 +67,8 @@ export interface ProfileData {
   isPrivate?: boolean;
   /** Hides badge/financial details and disables Riftn payments to this account. */
   hideBadgeAndBalance?: boolean;
+  /** The creator arranged their posts in their own order; profiles open in it. */
+  hasCustomOrder?: boolean;
   /**
    * This viewer asked to be served mature posts. Only meaningful on your own
    * profile — it is a viewing preference, not something about the account.
@@ -163,6 +165,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     isPending: user.isPending ?? user.isFollowRequestPending,
     isPrivate: user.isPrivate ?? (customs?.isPrivate === 'true' || customs?.isPrivate === true),
     hideBadgeAndBalance: user.hideBadgeAndBalance === true,
+    hasCustomOrder: !!(user as { profileOrderAt?: string | null }).profileOrderAt,
     showMatureContent: user.showMatureContent === true,
     youBlocked: user.youBlocked ?? false,
     blockedYou: user.blockedYou ?? false,
@@ -298,7 +301,7 @@ export function useDeHubProfileByUsername(username?: string, enabled = true) {
 }
 
 /** Orderings a visitor can put a creator's own content in. */
-export type ProfileSortMode = 'newest' | 'oldest' | 'views' | 'likes';
+export type ProfileSortMode = 'newest' | 'oldest' | 'views' | 'likes' | 'custom';
 
 /** What /api/feed wants for each mode. `asc` flips the whole sort rule server-side. */
 export const PROFILE_SORT_PARAMS: Record<ProfileSortMode, { sortBy: string; sortOrder: 'asc' | 'desc' }> = {
@@ -306,6 +309,8 @@ export const PROFILE_SORT_PARAMS: Record<ProfileSortMode, { sortBy: string; sort
   oldest: { sortBy: 'createdAt', sortOrder: 'asc' },
   views: { sortBy: 'views', sortOrder: 'desc' },
   likes: { sortBy: 'likes', sortOrder: 'desc' },
+  // The creator's own arrangement (PUT /api/profile-order). Newest first when they have none.
+  custom: { sortBy: 'custom', sortOrder: 'desc' },
 };
 
 /**
