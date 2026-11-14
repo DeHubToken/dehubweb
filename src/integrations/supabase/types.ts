@@ -4431,7 +4431,6 @@ export type Database = {
           status: string
           status_note: string | null
           title: string
-          title_auto: boolean
           updated_at: string
           vote_count: number
         }
@@ -4452,7 +4451,6 @@ export type Database = {
           status?: string
           status_note?: string | null
           title: string
-          title_auto?: boolean
           updated_at?: string
           vote_count?: number
         }
@@ -4473,7 +4471,6 @@ export type Database = {
           status?: string
           status_note?: string | null
           title?: string
-          title_auto?: boolean
           updated_at?: string
           vote_count?: number
         }
