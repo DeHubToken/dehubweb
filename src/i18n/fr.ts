@@ -2724,7 +2724,6 @@ export const fr = {
   communityGuidelines: {
     title: 'Charte de la communauté',
     lastUpdated: 'Dernière mise à jour :',
-    lastUpdatedDate: '26 août 2026',
     intro: 'Riftn est une plateforme décentralisée appartenant aux utilisateurs, mais ce n\'est pas un endroit sans règles. Ces directives définissent ce qui est autorisé et ce qui ne l\'est pas, comment signaler le contenu et ce qui se passe après un signalement. La politique est définie par la gouvernance communautaire ; l\'application est effectuée rapidement par des modérateurs désignés.',
     notAllowed: 'Ce qui n\'est pas autorisé',
     notAllowedText: 'Le contenu et le comportement suivants sont interdits sur Riftn, y compris les publications, les commentaires, les flux, les messages, les profils et les noms d\'utilisateur :',
@@ -2732,7 +2731,6 @@ export const fr = {
     notAllowedItem2: 'Matériel pédopornographique, ou toute représentation sexualisée de mineurs. Cela est signalé aux autorités compétentes et entraîne une suppression permanente immédiate',
     notAllowedItem3: 'Incitation à la violence, menaces de violence ou glorification de l\'extrémisme violent et du terrorisme',
     notAllowedItem4: 'Harcèlement, intimidation et abus ciblés, y compris les empilements coordonnés',
-    notAllowedItem5: 'Discours de haine, y compris les attaques contre des personnes fondées sur la race, l\'origine ethnique, l\'origine nationale, la religion, le handicap, la maladie, le sexe, l\'identité de genre ou l\'orientation sexuelle',
     notAllowedItem6: 'Doxxing ou publication des informations privées d\'une autre personne sans son consentement',
     notAllowedItem7: 'Spam, manipulation de l\'engagement, réseaux de robots et inflation artificielle des vues, des votes ou des récompenses',
     notAllowedItem8: 'Usurpation d\'identité d\'une autre personne, créateur, marque ou projet',
@@ -2755,7 +2753,11 @@ export const fr = {
     appealsText: 'Si vous pensez qu\'une décision de modération était erronée, elle peut faire l\'objet d\'un appel par le biais de la gouvernance communautaire. La gouvernance définit les politiques que les modérateurs appliquent et peut examiner ou annuler les décisions individuelles. L\'application, cependant, est immédiate — le contenu reste bas pendant qu\'un appel est examiné.',
     contactText: 'Les questions concernant ces directives ou les rapports nécessitant une attention urgente peuvent être envoyés à dev@dehub.io.',
 
-    "contact": "Contact"
+    "contact": "Contact",
+    notAllowedItem5: 'Discours haineux ciblé : attaquer, menacer ou déshumaniser une personne ou un groupe en raison de sa race, de son appartenance ethnique, de son origine nationale, de sa religion, de son handicap, de sa maladie, de son sexe, de son identité de genre ou de son orientation sexuelle',
+    lastUpdatedDate: '14 novembre 2026',
+    freeSpeech: 'Liberté d\'expression',
+    freeSpeechText: 'Riftn est conçu pour la liberté d\'expression. Les opinions, les débats, la satire et les critiques d\'idées, de croyances, de religions et de politiques sont tous les bienvenus, y compris les points de vue avec lesquels d\'autres personnes ne sont pas d\'accord. La règle relative aux discours haineux concerne les attaques ciblées contre des personnes, et non contre des opinions. En fin de compte, c’est la communauté qui décide de ce qui constitue un discours haineux ciblé et qui modère la plateforme de manière décentralisée, par l’intermédiaire de modérateurs élus par la communauté et de votes de gouvernance. Le signalement, le blocage et la mise en sourdine restent accessibles à tous.',
   },
   adTools: {
     budgetCalculatorTitle: 'Calculateur de budget de campagne',

@@ -2021,7 +2021,6 @@ export const zu = {
   communityGuidelines: {
     title: 'Iziqondiso Zomphakathi',
     lastUpdated: 'Kugcine ukubuyekezwa:',
-    lastUpdatedDate: '26 Oktoba 2026',
     intro: 'I-Riftn iyipulatifomu ehlukanisiwe, ephethwe ngumsebenzisi, kodwa akuyona indawo engenayo imithetho. Lezi ziqondiso zichaza lokho okuvunyelwe nokungavunyelwe, indlela yokubika okusunguliwe, nokuthi kwenzekani ngemva kokuba umbiko wenziwe. Inqubomgomo isethwe ukuphathwa komphakathi; ukuphoqelelwa kwenziwa ngokushesha ngabaphathi abaqokiwe.',
     notAllowed: 'Okungavunyelwe',
     notAllowedText: 'Okuqukethwe nokuziphatha okulandelayo akuvunyelwe noma kuphi ku-Riftn, okuhlanganisa amaphosti, amakhomenti, ukusakaza, imiyalezo, amaphrofayili namagama abasebenzisi:',
@@ -2029,7 +2028,6 @@ export const zu = {
     notAllowedItem2: 'Izinto zokuhlukunyezwa kwezingane ngokocansi, noma noma yikuphi ukuboniswa kwezingane ngokocansi. Lokhu kubikwa kuziphathimandla ezifanele futhi kuphumela ekususeni unomphela ngokushesha',
     notAllowedItem3: 'Ukugqugquzela ubudlova, izinsongo zobudlova, noma ukukhazimulisa ukweqisa okunobudlova nobuphekula',
     notAllowedItem4: 'Ukuhlukunyezwa, ukuhlukunyezwa nokuhlukunyezwa okuhlosiwe, okuhlanganisa izinqwaba ezihlanganisiwe',
-    notAllowedItem5: 'Inkulumo enenzondo, ehlanganisa ukuhlaselwa kwabantu ngokusekelwe ebuhlangeni, ubuzwe, imvelaphi yobuzwe, inkolo, ukukhubazeka, izifo, ubulili, ubulili noma ukuthambekela kobulili',
     notAllowedItem6: 'Ukwenza noma ukushicilela imininingwane eyimfihlo yomunye umuntu ngaphandle kwemvume yakhe',
     notAllowedItem7: 'Ugaxekile, ukukhwabanisa ukuzibandakanya, amanethiwekhi we-bot, kanye nokwehla kwamandla emali okuzenzela kokubukwa, amavoti noma imivuzo',
     notAllowedItem8: 'Ukulingisa omunye umuntu, umsunguli, ibhrendi noma iphrojekthi',
@@ -2052,6 +2050,10 @@ export const zu = {
     contactText: 'Imibuzo mayelana nalezi ziqondiso, noma imibiko edinga ukunakekelwa okuphuthumayo, ingathunyelwa ku-dev@dehub.io.',
     contact: 'Xhumana Nathi',
     reportingItem3: 'Ungathulisa i-akhawunti ukuze uyisuse kokudla kwakho ngaphandle kokuyibhloka',
+    notAllowedItem5: 'Ukukhuluma okubi okuhlosiwe: ukuhlasela, ukuhlasela noma ukunciphisa umuntu noma iqembu ngenxa yobuhlanga, isiko, umphakathi, inkolo, ukulimala, isifo, ubulili, ubuqotho bokuziphatha noma ukuxhumana kwengqondo.',
+    lastUpdatedDate: '14 Novemba 2026',
+    freeSpeech: 'Ikhono lokukhuluma',
+    freeSpeechText: 'Riftn yakhiwe ukuze kube ukukhuluma okukhululekile. Imibono, ingxoxo, ukucula kanye nokuhlaziywa kwemibono, imikhosi, izinkolo kanye nepolitiki kuyamukelwa, kuhlanganise nemibono yabanye abangavumelani nayo. Umthetho wokukhuluma okubi uhlanganisa ukuhlasela okuqondile kubantu, hhayi imibono. Ekugcineni, umphakathi uyinquma ukuthi yini eyokuthi kube ukukhuluma okubi okuqondile futhi uphatha i-platform ngendlela engahlangene, ngokusebenzisa abaphathi abathathwa umphakathi kanye nemvume yokuphatha. Ukubika, ukuvimbela kanye nokucisha kusebenza kubo bonke.',
   },
   privacyPolicy: {
     title: 'Umthetho Wobumfihlo',

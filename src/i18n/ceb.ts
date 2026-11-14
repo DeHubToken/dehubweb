@@ -2490,7 +2490,6 @@ export const ceb = {
   communityGuidelines: {
     title: 'Mga Panudlo sa Komunidad',
     lastUpdated: 'Katapusan nga gi-update:',
-    lastUpdatedDate: '26 Agosto 2026',
     intro: 'Ang Riftn usa ka desentralisado, platform nga gipanag-iya sa gumagamit, apan dili kini usa ka lugar nga wala \'y mga lagda. Ang kini nga mga panudlo nagtakda kung unsa ang gitugotan ug dili gitugotan, kung giunsa ang pagreport sa sulud, ug kung unsa ang mahitabo pagkahuman sa paghimo sa usa ka ulat. Ang palisiya gitakda sa pagdumala sa komunidad; ang pagpatuman gipatuman dayon sa gitudlo nga mga moderator.',
     notAllowed: 'Unsa ang Dili Gitugotan',
     notAllowedText: 'Ang mosunud nga sulud ug pamatasan gidili bisan diin sa Riftn, lakip ang mga post, komento, sapa, mensahe, profile ug username:',
@@ -2498,7 +2497,6 @@ export const ceb = {
     notAllowedItem2: 'Materyal nga sekswal nga pag-abuso sa bata, o bisan unsang sekswal nga paghulagway sa mga menor de edad. Kini gitaho sa may kalabutan nga mga awtoridad ug moresulta sa diha-diha nga permanente nga pagtangtang',
     notAllowedItem3: 'Pag-aghat sa kapintasan, mga hulga sa kapintasan, o paghimaya sa mapintas nga ekstremismo ug terorismo',
     notAllowedItem4: 'Pagpanghasi, pagpanghasi ug pag-target nga pag-abuso, lakip ang koordinado nga mga pile-on',
-    notAllowedItem5: 'Ang sinultian sa pagdumot, lakip ang mga pag-atake sa mga tawo nga gibase sa rasa, etniko, nasyonal nga gigikanan, relihiyon, pagkabaldado, sakit, sekso, identidad sa gender o oryentasyong sekswal',
     notAllowedItem6: 'Doxxing o pagmantala sa pribado nga kasayuran sa laing tawo nga wala ang ilang pagtugot',
     notAllowedItem7: 'Spam, pagmaniobra sa pakiglambigit, mga network sa bot, ug artipisyal nga inflation sa mga panan-aw, boto o gantimpala',
     notAllowedItem8: 'Pagsundog sa laing tawo, tiglalang, tatak o proyekto',
@@ -2521,6 +2519,10 @@ export const ceb = {
     appealsText: 'Kung nagtuo ka nga ang usa ka desisyon sa pag-moderate sayup, mahimo kini maapelar pinaagi sa pagdumala sa komunidad. Ang pagdumala nagtakda sa pagpatuman sa mga moderator sa palisiya ug mahimong repasuhon o balihon ang tagsatagsa nga mga desisyon. Ang pagpatuman, bisan pa, diha-diha dayon — ang sulud nagpabilin samtang gikonsiderar ang usa ka pag-apelar.',
     contact: 'Kontak',
     contactText: 'Ang mga pangutana bahin sa kini nga mga panudlo, o mga ulat nga nanginahanglan dinalian nga atensyon, mahimong ipadala sa dev@dehub.io.',
+    notAllowedItem5: 'Gitumong nga sinultihan nga nagpukaw ug pagdumot: pag-atake, paghulga o pag-ubos sa pagkatawo sa usa ka tawo o grupo tungod sa ilang kaliwatan, etnisidad, nasod nga gigikanan, relihiyon, kakulangan, sakit, sekso, pagkatawo sa gender o oryentasyon sa sekso',
+    lastUpdatedDate: 'Nobiyembre 14, 2026 -',
+    freeSpeech: 'Kagawasan sa Pagsulti',
+    freeSpeechText: 'Ang Riftn gihimo alang sa kagawasan sa pagpadayag. Ang mga opinyon, debate, satire ug pagsaway sa mga ideya, pagtuo, relihiyon ug politika tanan gidawat, lakip ang mga panglantaw nga dili uyon ang uban. Ang lagda sa makapasakit nga sinultihan naglangkob sa gintumong nga mga pag-atake sa mga tawo, dili sa mga panglantaw. Sa kataposan, ang komunidad mao ang mohukom kon unsa ang giisip nga gipuntirya nga hate speech ug mao ang mag-moderate sa plataporma sa usa ka desentralisado nga paagi, pinaagi sa mga moderator nga gipili sa komunidad ug mga boto sa pagdumala. Ang pagreport, pag-block ug pag-mute magpabilin nga anaa alang sa tanan.',
   },
   adTools: {
     budgetCalculatorTitle: 'Calculator sa Badyet sa Kampanya',

@@ -2305,7 +2305,6 @@ export const lv = {
   communityGuidelines: {
     title: 'Kopienas vadlīnijas',
     lastUpdated: 'Pēdējoreiz atjaunināts:',
-    lastUpdatedDate: '2026. gada 26. augusts',
     intro: 'Riftn ir decentralizēta, lietotājam piederoša platforma, taču tā nav vieta bez noteikumiem. Šajās vadlīnijās ir izklāstīts, kas ir un kas nav atļauts, kā ziņot par saturu un kas notiek pēc ziņojuma sagatavošanas. Politiku nosaka kopienas pārvaldība; izpildi nekavējoties veic iecelti moderatori.',
     notAllowed: 'Kas nav atļauts',
     notAllowedText: 'Jebkurā Riftn vietnē ir aizliegts šāds saturs un uzvedība, tostarp ziņas, komentāri, straumes, ziņojumi, profili un lietotājvārdi:',
@@ -2313,7 +2312,6 @@ export const lv = {
     notAllowedItem2: 'Materiāls par seksuālu vardarbību pret bērniem vai jebkāds seksualizēts nepilngadīgo attēlojums. Par to tiek ziņots attiecīgajām iestādēm, un tas noved pie tūlītējas neatgriezeniskas noņemšanas',
     notAllowedItem3: 'Kūdīšana uz vardarbību, vardarbības draudi vai vardarbīga ekstrēmisma un terorisma slavināšana',
     notAllowedItem4: 'Uzmākšanās, iebiedēšana un mērķtiecīga vardarbība, tostarp koordinēti uzpūšanās gadījumi',
-    notAllowedItem5: 'Naida runa, tostarp uzbrukumi cilvēkiem rases, etniskās piederības, nacionālās izcelsmes, reliģijas, invaliditātes, slimības, dzimuma, dzimuma identitātes vai seksuālās orientācijas dēļ',
     notAllowedItem6: 'Doxxing vai citas personas privātās informācijas publicēšana bez tās piekrišanas',
     notAllowedItem7: 'Surogātpasts, iesaistīšanās manipulācijas, botu tīkli un mākslīga viedokļu, balsu vai atlīdzību palielināšana',
     notAllowedItem8: 'Citas personas, radītāja, zīmola vai projekta personificēšana',
@@ -2336,6 +2334,10 @@ export const lv = {
     appealsText: 'Ja uzskatāt, ka mērenības lēmums bija nepareizs, to var pārsūdzēt, izmantojot kopienas pārvaldību. Pārvaldība nosaka politikas moderatoru izpildi un var pārskatīt vai atcelt atsevišķus lēmumus. Tomēr izpilde ir tūlītēja — saturs paliek ierobežots, kamēr tiek izskatīta pārsūdzība.',
     contact: 'Kontaktinformācija',
     contactText: 'Jautājumus par šīm vadlīnijām vai ziņojumus, kuriem steidzami jāpievērš uzmanība, var nosūtīt uz dev@dehub.io.',
+    notAllowedItem5: 'Mērķtiecīga naida runa: uzbrukšana, draudējums vai dehumanizēšana personai vai grupai sakarā ar viņu rasi, etnisko piederību, nacionālo izcelsmi, reliģiju, invaliditāti, slimību, dzimumu, dzimumidentitāti vai seksuālo orientāciju.',
+    lastUpdatedDate: '2026. gada 14. novembris',
+    freeSpeech: 'Brīvā runa',
+    freeSpeechText: 'Riftn ir izveidots brīvai runai. Viedokļi, debates, satīra un kritika par idejām, ticējumiem, reliģijām un politiku ir visi laipni gaidīti, ieskaitot skatījumus, ar kuriem citi nesaskaņojas. Naida runas noteikums aptver mērķtiecīgus uzbrukumus cilvēkiem, nevis uzskatiem. Galu galā kopiena nosaka, kas tiek uzskatīts par mērķtiecīgu naida runu, un regulē platformu decentralizētā veidā, caur kopienas izvēlētiem moderatoriem un pārvaldes balsojumiem. Ziņošana, bloķēšana un klusinašana paliek pieejama ikvienam.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampaņas budžeta kalkulators',

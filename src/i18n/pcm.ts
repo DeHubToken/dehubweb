@@ -2330,6 +2330,8 @@ export const pcm = {
     disclaimer: 'Disclaimer',
   },
   communityGuidelines: {
+    notAllowedItem5: 'Hate speech wey dey target pipo: to attack, threaten or treat person or group like say dem no be human because of dem race, ethnicity, di country wey dem come from, religion, disability, sickness, sex, gender identity or sexual orientation',
+    freeSpeechText: 'Riftn na for free speech. Opinion, argument, satire and to criticise ideas, belief, religion and politics, all of dem dey welcome, even views wey oda pipo no gree with. Di hate speech rule na for attack wey dey target pipo, no be for views. At di end, na di community go decide wetin be targeted hate speech, and dem go moderate di platform for decentralized way, through moderators wey di community elect and governance vote. Report, block and mute still dey for everybody.',
     adultContentText: 'Explicit pornography no dey allowed for Riftn and we go remove am. Nudity wey no explicit and mature themes dey allowed, but you must mark dem as mature wit di content rating control wen you dey post, so oda users and age-appropriate filters fit handle am well. To dey fail to mark mature content again and again na breach of dis guidelines by itself.',
     contactText: 'Questions about dis guidelines, or reports wey need urgent attention, you fit send dem to dev@dehub.io.',
     intro: 'Riftn na decentralized platform wey users own, but e no be place wey no get rules. Dis guidelines dey explain wetin dey allowed and wetin no dey allowed, how to report content, and wetin go happen afta person make report. Na community governance dey set di policy; designated moderators dey enforce am quick-quick.',
@@ -2337,7 +2339,6 @@ export const pcm = {
     notAllowedItem2: 'Child sexual abuse material, or any sexual picture or video of pikin wey never reach age. We dey report dis one to di authorities wey concern and e go lead to permanent removal immediately',
     notAllowedItem3: 'To ginger violence, to threaten violence, or to praise violent extremism and terrorism',
     notAllowedItem4: 'Harassment, bullying and abuse wey target person, including wen plenty pipo plan to gang up on person',
-    notAllowedItem5: 'Hate speech, including to attack pipo because of dem race, ethnicity, di country wey dem come from, religion, disability, sickness, sex, gender identity or sexual orientation',
     notAllowedItem6: 'Doxxing or to publish anoda person private information without dem permission',
     notAllowedItem8: 'To pretend say you be anoda person, creator, brand or project',
     notAllowedItem9: 'Malware, phishing links, wallet drainers, and scam or fraud money schemes',
@@ -2352,7 +2353,6 @@ export const pcm = {
     whatHappensNextItem4: 'Illegal material go reach di correct authorities wen law require am',
     title: 'Community Guidelines',
     lastUpdated: 'Last updated:',
-    lastUpdatedDate: '26 August 2026',
     notAllowedItem1: 'Illegal content like any bad thing, or content dat help illegal activity.',
     notAllowedItem7: 'Spam, fake engagement, bot network, and fake increase wey people dey see, vote, or get reward for.',
     reportingText: 'Reporting dey take few tap, na from content itself wey you go do it.',
@@ -2363,6 +2363,8 @@ export const pcm = {
     adultContent: 'Adult Content',
     reporting: 'How to Report',
     contact: 'Contact',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Free Speech',
   },
   brandGuidelines: {
     title: 'Brand Guidelines',

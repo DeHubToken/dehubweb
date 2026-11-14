@@ -2305,7 +2305,6 @@ export const no = {
   communityGuidelines: {
     title: 'Retningslinjer for fellesskapet',
     lastUpdated: 'Sist oppdatert:',
-    lastUpdatedDate: '26. august 2026',
     intro: 'Riftn er en desentralisert, brukereid plattform, men det er ikke et sted uten regler. Disse retningslinjene angir hva som er og ikke er tillatt, hvordan innhold rapporteres, og hva som skjer etter at en rapport er gjort. Retningslinjene er fastsatt av fellesskapets styring; håndheving utføres raskt av utpekte moderatorer.',
     notAllowed: 'Hva som ikke er tillatt',
     notAllowedText: 'Følgende innhold og oppførsel er forbudt hvor som helst på Riftn, inkludert innlegg, kommentarer, strømmer, meldinger, profiler og brukernavn:',
@@ -2313,7 +2312,6 @@ export const no = {
     notAllowedItem2: 'Materiale med seksuelt misbruk av barn, eller seksualiserte skildringer av mindreårige. Dette rapporteres til relevante myndigheter og resulterer i umiddelbar permanent fjerning.',
     notAllowedItem3: 'Oppfordring til vold, trusler om vold eller glorifisering av voldelig ekstremisme og terrorisme',
     notAllowedItem4: 'Trakassering, mobbing og målrettet misbruk, inkludert koordinerte pågripelser',
-    notAllowedItem5: 'Hatefulle ytringer, inkludert angrep på personer basert på rase, etnisitet, nasjonal opprinnelse, religion, funksjonshemming, sykdom, kjønn, kjønnsidentitet eller seksuell legning',
     notAllowedItem6: 'Doxing eller publisering av en annen persons private informasjon uten deres samtykke',
     notAllowedItem7: 'Spam, manipulering av engasjement, botnettverk og kunstig inflasjon av visninger, stemmer eller belønninger',
     notAllowedItem8: 'Etterligning av en annen person, skaper, merkevare eller prosjekt',
@@ -2336,6 +2334,10 @@ export const no = {
     appealsText: 'Hvis du mener at en modereringsavgjørelse var feil, kan den ankes gjennom fellesskapets styring. Styring bestemmer hvilke retningslinjer moderatorene håndhever, og kan gjennomgå eller omgjøre individuelle avgjørelser. Håndhevingen skjer imidlertid umiddelbart – innholdet forblir nede mens en anke vurderes.',
     contact: 'Kontakt',
     contactText: 'Spørsmål om disse retningslinjene, eller rapporter som trenger øyeblikkelig oppmerksomhet, kan sendes til dev@dehub.io.',
+    notAllowedItem5: 'Målrettet hatprat: angrep, trusler eller dehumanisering av en person eller gruppe på grunn av deres rase, etnisitet, nasjonale opprinnelse, religion, funksjonshemming, sykdom, kjønn, kjønnsidentitet eller seksuell orientering',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Fri tale',
+    freeSpeechText: 'Riftn er bygget for ytringsfrihet. Meninger, debatt, satire og kritikk av ideer, tro, religioner og politikk er alle velkomne, inkludert syn som andre er uenige i. Hatemeldingsregelen dekker målrettede angrep på personer, ikke meninger. Til slutt bestemmer fellesskapet hva som teller som målrettet hatytring og modererer plattformen på en desentralisert måte, gjennom fellesskapsvalgte moderatorer og styringsavstemninger. Rapportering, blokkering og demping er fortsatt tilgjengelig for alle.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampanjebudsjettkalkulator',

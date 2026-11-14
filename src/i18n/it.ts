@@ -2505,7 +2505,6 @@ export const it = {
   communityGuidelines: {
     title: 'Regole della Community',
     lastUpdated: 'Ultimo aggiornamento:',
-    lastUpdatedDate: '26 agosto 2026',
     intro: 'Riftn è una piattaforma decentralizzata di proprietà degli utenti, ma non è un luogo senza regole. Queste linee guida stabiliscono cosa è consentito e cosa non è consentito, come segnalare i contenuti e cosa succede dopo che è stata effettuata una segnalazione. La politica è stabilita dalla governance della community; l\'applicazione viene effettuata tempestivamente da moderatori designati.',
     notAllowed: 'Cosa non è consentito',
     notAllowedText: 'I seguenti contenuti e comportamenti sono vietati ovunque su Riftn, inclusi post, commenti, stream, messaggi, profili e nomi utente:',
@@ -2513,7 +2512,6 @@ export const it = {
     notAllowedItem2: 'Materiale pedopornografico o qualsiasi rappresentazione sessualizzata di minori. Questo viene segnalato alle autorità competenti e comporta l\'immediata rimozione permanente',
     notAllowedItem3: 'Incitamento alla violenza, minacce di violenza o glorificazione dell\'estremismo violento e del terrorismo',
     notAllowedItem4: 'Molestie, bullismo e abusi mirati, tra cui pali coordinati',
-    notAllowedItem5: 'Incitamento all\'odio, compresi gli attacchi a persone basati su razza, etnia, origine nazionale, religione, disabilità, malattia, sesso, identità di genere o orientamento sessuale',
     notAllowedItem6: 'Doxxing o pubblicazione di informazioni private di un\'altra persona senza il suo consenso',
     notAllowedItem7: 'Spam, manipolazione del coinvolgimento, reti di bot e inflazione artificiale di visualizzazioni, voti o ricompense',
     notAllowedItem8: 'Impersonazione di un\'altra persona, creator, brand o progetto',
@@ -2536,6 +2534,10 @@ export const it = {
     appealsText: 'Se ritieni che una decisione di moderazione sia sbagliata, puoi presentare ricorso attraverso la governance della community. La governance stabilisce i criteri che i moderatori applicano e possono rivedere o invertire le singole decisioni. L\'applicazione, tuttavia, è immediata: il contenuto rimane inattivo mentre viene preso in considerazione un ricorso.',
     contact: 'Contatti',
     contactText: 'Domande su queste linee guida o segnalazioni che richiedono attenzione urgente possono essere inviate a dev@dehub.io.',
+    notAllowedItem5: 'Incitamento all\'odio mirato: attaccare, minacciare o disumanizzare una persona o un gruppo a causa della loro razza, etnia, origine nazionale, religione, disabilità, malattia, sesso, identità di genere o orientamento sessuale',
+    lastUpdatedDate: '14 novembre 2026',
+    freeSpeech: 'Libertà di espressione',
+    freeSpeechText: 'Riftn è pensato per la libertà di espressione. Opinioni, dibattiti, satira e critiche di idee, convinzioni, religioni e politica sono tutti benvenuti, comprese le opinioni con cui gli altri non sono d\'accordo. La regola sull\'incitamento all\'odio riguarda gli attacchi mirati alle persone, non alle opinioni. In ultima analisi, è la community a decidere cosa rientra nella definizione di incitamento all\'odio mirato e a moderare la piattaforma in modo decentralizzato, attraverso moderatori eletti dalla community e votazioni di governance. Le funzioni di segnalazione, blocco e disattivazione dell\'audio rimangono a disposizione di tutti.',
   },
   adTools: {
     budgetCalculatorTitle: 'Calcolatore del budget della campagna',

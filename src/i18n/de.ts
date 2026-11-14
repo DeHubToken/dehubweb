@@ -2531,7 +2531,6 @@ export const de = {
   communityGuidelines: {
     title: 'Community Guidelines',
     lastUpdated: 'Zuletzt aktualisiert:',
-    lastUpdatedDate: '26. August 2026',
     intro: 'Riftn ist eine dezentrale, nutzergeführte Plattform, aber es ist kein Ort ohne Regeln. Diese Richtlinien legen fest, was erlaubt ist und was nicht, wie Inhalte gemeldet werden und was passiert, nachdem ein Bericht erstellt wurde. Die Richtlinie wird von der Community-Governance festgelegt; die Durchsetzung erfolgt zeitnah durch benannte Moderatoren.',
     notAllowed: 'Was nicht erlaubt ist',
     notAllowedText: 'Die folgenden Inhalte und Verhaltensweisen sind überall auf Riftn verboten, einschließlich Beiträge, Kommentare, Streams, Nachrichten, Profile und Benutzernamen:',
@@ -2539,7 +2538,6 @@ export const de = {
     notAllowedItem2: 'Material über sexuellen Missbrauch von Kindern oder eine sexualisierte Darstellung von Minderjährigen. Dies wird den zuständigen Behörden gemeldet und führt zu einer sofortigen dauerhaften Entfernung',
     notAllowedItem3: 'Anstiftung zu Gewalt, Androhung von Gewalt oder Verherrlichung von gewalttätigem Extremismus und Terrorismus',
     notAllowedItem4: 'Belästigung, Mobbing und gezielter Missbrauch, einschließlich koordinierter Stapel',
-    notAllowedItem5: 'Hassreden, einschließlich Angriffe auf Menschen aufgrund von Rasse, ethnischer Zugehörigkeit, nationaler Herkunft, Religion, Behinderung, Krankheit, Geschlecht, Geschlechtsidentität oder sexueller Orientierung',
     notAllowedItem6: 'Doxxing oder Veröffentlichung der privaten Informationen einer anderen Person ohne deren Zustimmung',
     notAllowedItem7: 'Spam, Engagement-Manipulation, Bot-Netzwerke und künstliche Inflation von Ansichten, Stimmen oder Belohnungen',
     notAllowedItem8: 'Imitation einer anderen Person, eines anderen Erstellers, einer anderen Marke oder eines anderen Projekts',
@@ -2562,6 +2560,10 @@ export const de = {
     appealsText: 'Wenn du der Meinung bist, dass eine Moderationsentscheidung falsch war, kann sie über die Community-Governance angefochten werden. Governance setzt die Richtlinienmoderatoren durch und kann einzelne Entscheidungen überprüfen oder rückgängig machen. Die Durchsetzung erfolgt jedoch sofort — der Inhalt bleibt unten, während ein Einspruch geprüft wird.',
     contact: 'Kontakt',
     contactText: 'Fragen zu diesen Richtlinien oder Berichte, die dringend bearbeitet werden müssen, können an dev@dehub.io gesendet werden.',
+    notAllowedItem5: 'Zielgerichtete Hassrede: Angriffe, Drohungen oder Entmenschlichung einer Person oder Gruppe wegen ihrer Rasse, ethnischen Herkunft, nationalen Herkunft, Religion, Behinderung, Krankheit, des Geschlechts, der Geschlechtsidentität oder sexuellen Orientierung.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Meinungsfreiheit',
+    freeSpeechText: 'Riftn ist für die Meinungsfreiheit konzipiert. Meinungen, Debatten, Satire und Kritik an Ideen, Überzeugungen, Religionen und Politik sind alle willkommen, einschließlich Ansichten, denen andere nicht zustimmen. Die Regel zu Hassrede erstreckt sich auf gezielte Angriffe auf Personen, nicht auf Meinungen. Letztendlich entscheidet die Community, was als gezielte Hetze gilt, und moderiert die Plattform auf dezentrale Weise durch von der Community gewählte Moderatoren und Abstimmungen über die Governance. Meldungen, Blockierungen und Stummschaltungen stehen weiterhin allen zur Verfügung.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampagnenbudget-Rechner',

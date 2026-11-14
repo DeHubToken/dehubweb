@@ -2305,7 +2305,6 @@ export const ms = {
   communityGuidelines: {
     title: 'Garis Panduan Komuniti',
     lastUpdated: 'Kemas kini terakhir:',
-    lastUpdatedDate: '26 Ogos 2026',
     intro: 'Riftn adalah platform milik pengguna yang terdesentralisasi, tetapi ia bukan tempat tanpa peraturan. Garis panduan ini menetapkan perkara yang dibenarkan dan tidak dibenarkan, cara melaporkan kandungan, dan apa yang berlaku selepas laporan dibuat. Dasar ditetapkan oleh tadbir urus komuniti; penguatkuasaan dijalankan dengan segera oleh moderator yang ditetapkan.',
     notAllowed: 'Apa yang Tidak Dibenarkan',
     notAllowedText: 'Kandungan dan tingkah laku berikut dilarang di mana-mana sahaja di Riftn, termasuk hantaran, komen, strim, mesej, profil dan nama pengguna:',
@@ -2313,7 +2312,6 @@ export const ms = {
     notAllowedItem2: 'Materi kekerasan seksual terhadap kanak-kanak, atau sebarang penggambaran seksualisasi terhadap kanak-kanak. Ini dilaporkan kepada pihak berkuasa yang berkaitan dan mengakibatkan penghapusan segera dan kekal.',
     notAllowedItem3: 'Hasutan terhadap keganasan, ancaman keganasan, atau pemuliaan ekstremisme ganas dan keganasan',
     notAllowedItem4: 'Gangguan, buli dan penderaan yang disasarkan, termasuk timbunan yang diselaraskan',
-    notAllowedItem5: 'Ucapan kebencian, termasuk serangan terhadap orang berdasarkan bangsa, etnik, negara asal, agama, kecacatan, penyakit, seks, identiti jantina atau orientasi seksual',
     notAllowedItem6: 'Doxxing atau menyiarkan maklumat peribadi orang lain tanpa persetujuan mereka',
     notAllowedItem7: 'Spam, manipulasi penglibatan, rangkaian bot, dan inflasi buatan pandangan, undian atau ganjaran',
     notAllowedItem8: 'Penyamaran orang, pengkarya, jenama atau projek lain',
@@ -2336,6 +2334,10 @@ export const ms = {
     appealsText: 'Jika anda percaya keputusan kesederhanaan adalah salah, ia boleh dirayu melalui tadbir urus komuniti. Tadbir urus menetapkan moderator dasar menguatkuasakan dan boleh menyemak atau membalikkan keputusan individu. Penguatkuasaan, bagaimanapun, adalah serta-merta — kandungan kekal lemah sementara rayuan dipertimbangkan.',
     contact: 'Hubungi',
     contactText: 'Soalan mengenai garis panduan ini, atau laporan yang memerlukan perhatian segera, boleh dihantar ke dev@dehub.io.',
+    notAllowedItem5: 'Penyebaran kebencian yang disasarkan: menyerang, mengancam atau menurunkan manusia seseorang atau kumpulan kerana bangsa, etnik, asal negara, agama, kecacatan, penyakit, jantina, identiti gender atau orientasi seksual mereka',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Kebebasan Berbicara',
+    freeSpeechText: 'Riftn dibina untuk kebebasan bersuara. Pendapat, perdebatan, satir dan kritikan idea, kepercayaan, agama dan politik semuanya dialu-alukan, termasuk pandangan yang tidak disetujui orang lain. Peraturan ucapan kebencian merangkumi serangan terarah terhadap orang, bukan pandangan. Akhirnya komuniti menentukan apa yang dianggap ucapan kebencian terarah dan mengawasi platform secara terdesentralisasi, melalui moderator yang dipilih oleh komuniti dan undi tadbir urus. Melaporkan, menyekat dan mematikan bunyi tetap tersedia untuk semua orang.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kalkulator Bajet Kempen',

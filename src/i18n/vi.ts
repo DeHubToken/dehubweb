@@ -1985,7 +1985,6 @@ export const vi = {
   communityGuidelines: {
     title: 'Hướng dẫn cho cộng đồng',
     lastUpdated: 'Cập nhật lần cuối:',
-    lastUpdatedDate: 'Ngày 26 tháng 8 năm 2026',
     intro: 'Riftn là một nền tảng phi tập trung, thuộc sở hữu của người dùng, nhưng nó không phải là một nơi không có quy tắc. Những hướng dẫn này đưa ra những gì được phép và không được phép, cách báo cáo nội dung và những gì sẽ xảy ra sau khi báo cáo được thực hiện. Chính sách được thiết lập bởi ban quản trị cộng đồng; việc thực thi được thực hiện kịp thời bởi các thẩm tra viên được chỉ định.',
     notAllowed: 'Những gì không được phép',
     notAllowedText: 'Nội dung và hành vi sau đây bị cấm ở bất kỳ đâu trên Riftn, bao gồm các bài đăng, nhận xét, luồng, tin nhắn, hồ sơ và tên người dùng:',
@@ -1993,7 +1992,6 @@ export const vi = {
     notAllowedItem2: 'Tài liệu lạm dụng tình dục trẻ em, hoặc bất kỳ mô tả tình dục nào về trẻ vị thành niên. Điều này được báo cáo cho các cơ quan có liên quan và dẫn đến việc loại bỏ vĩnh viễn ngay lập tức',
     notAllowedItem3: 'Kích động bạo lực, đe dọa bạo lực hoặc tôn vinh chủ nghĩa cực đoan và khủng bố bạo lực',
     notAllowedItem4: 'Quấy rối, bắt nạt và lạm dụng có chủ đích, bao gồm cả việc phối hợp',
-    notAllowedItem5: 'Ngôn từ kích động thù địch, bao gồm các cuộc tấn công vào mọi người dựa trên chủng tộc, dân tộc, nguồn gốc quốc gia, tôn giáo, khuyết tật, bệnh tật, giới tính, bản dạng giới hoặc khuynh hướng tình dục',
     notAllowedItem6: 'Doxxing hoặc xuất bản thông tin cá nhân của người khác mà không có sự đồng ý của họ',
     notAllowedItem7: 'Thư rác, thao túng tương tác, mạng bot và lạm phát quan điểm, phiếu bầu hoặc phần thưởng nhân tạo',
     notAllowedItem8: 'Mạo danh người khác, người sáng tạo, thương hiệu hoặc dự án khác',
@@ -2016,6 +2014,10 @@ export const vi = {
     appealsText: 'Nếu bạn cho rằng quyết định kiểm duyệt là sai, bạn có thể khiếu nại thông qua quản trị cộng đồng. Quản trị đặt các nhà điều hành chính sách thực thi và có thể xem xét hoặc đảo ngược các quyết định cá nhân. Tuy nhiên, việc thực thi sẽ được thực hiện ngay lập tức — nội dung sẽ được giữ nguyên trong khi xem xét khiếu nại.',
     contact: 'Liên hệ',
     contactText: 'Bạn có thể gửi câu hỏi về các hướng dẫn này hoặc báo cáo cần chú ý khẩn cấp đến dev@dehub.io.',
+    notAllowedItem5: 'Bạo lực kỳ thị có mục tiêu: tấn công, đe dọa hoặc làm mất nhân phẩm một người hoặc nhóm vì chủng tộc, dân tộc, nguồn gốc quốc gia, tôn giáo, khuyết tật, bệnh tật, giới tính, nhận dạng giới hoặc xu hướng tình dục của họ',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Ngôn luận tự do',
+    freeSpeechText: 'Riftn được xây dựng cho tiếng nói tự do. Quan điểm, tranh luận, châm biếm và phê bình các ý tưởng, niềm tin, tôn giáo và chính trị đều được chào đón, bao gồm cả những quan điểm mà người khác không đồng ý. Quy tắc phát ngôn thù hận bao gồm các cuộc tấn công nhắm vào người, không phải quan điểm. Cuối cùng, cộng đồng quyết định những gì được coi là phát ngôn thù hận nhắm mục tiêu và điều chỉnh nền tảng theo cách phi tập trung, thông qua các nhà điều hành được cộng đồng bầu chọn và các cuộc bỏ phiếu quản trị. Việc báo cáo, chặn và tắt tiếng vẫn có sẵn cho mọi người.',
   },
   privacyPolicy: {
     title: 'Chính sách quyền riêng tư',

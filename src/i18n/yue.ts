@@ -2020,7 +2020,6 @@ export const yue = {
   },
   communityGuidelines: {
     lastUpdated: '上次更新：',
-    lastUpdatedDate: '2026年8月26號',
     intro: 'Riftn 係一個去中心化、用戶擁有嘅平台，但係佢唔係一個冇規則嘅地方。呢啲指引規定咗啲咩係允許同唔允許嘅，點樣報告內容，同埋報告完之後會發生啲咩事。政策係由社區治理制定；執行係由指定嘅主持人及時進行。',
     notAllowed: '唔准嘅嘢',
     notAllowedText: '喺 Riftn 嘅任何地方都禁止以下內容同行為，包括帖子、留言、串流、訊息、個人檔案同用戶名：',
@@ -2028,7 +2027,6 @@ export const yue = {
     notAllowedItem2: '兒童性虐待材料，或者任何對未成年人嘅性描繪。呢個會向相關機關報告，並且會立即被永久移除',
     notAllowedItem3: '煽動暴力、威脅暴力，或者榮耀暴力極端主義同恐怖主義',
     notAllowedItem4: '騷擾、欺凌同有針對性嘅虐待，包括協調嘅堆疊',
-    notAllowedItem5: '仇恨言論，包括基於種族、族裔、國籍、宗教、殘疾、疾病、性別、性別認同或性取向對人嘅攻擊',
     notAllowedItem6: '喺未經其他人同意嘅情況下，用人身攻擊或者發佈其他人嘅私人資料',
     notAllowedItem7: '垃圾內容、互動操縱、機器人網絡，同埋人為嘅觀看次數、票數或者獎勵膨脹',
     notAllowedItem8: '冒充另一個人、創作者、品牌或者項目',
@@ -2052,6 +2050,10 @@ export const yue = {
     contact: '聯絡',
     contactText: '有關呢啲指引嘅問題，或者需要緊急關注嘅報告，可以傳送去 dev @ dehub . io 。',
     title: '社區守則',
+    notAllowedItem5: '針對性仇恨言論：因種族、族裔、國籍、宗教、殘障、疾病、性別、性別認同或性取向攻擊、威脅或非人化個人或團體',
+    lastUpdatedDate: '2026年11月14號',
+    freeSpeech: '自由言論',
+    freeSpeechText: 'Riftn係建基於自由言論。各種意見、辯論、諷刺及對思想、信念、宗教及政治的批評都歡迎，包括他人不認同的觀點。仇恨言論規則只針對針對個人的攻擊，而非觀點。最終由社群決定何為針對性仇恨言論，並透過由社群選出的管理員及治理投票以去中央化方式管理平台。舉報、封鎖及靜音功能對所有人開放。',
   },
   privacyPolicy: {
     title: '私隱政策',

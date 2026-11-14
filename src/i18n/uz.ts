@@ -2021,7 +2021,6 @@ export const uz = {
   communityGuidelines: {
     title: 'Jamiyat qoidalari',
     lastUpdated: 'Oxirgi yangilanish:',
-    lastUpdatedDate: '2026-yil 26-avgust',
     intro: 'Riftn markazlashtirilmagan, foydalanuvchilarga tegishli platforma, ammo u qoidalarsiz joy emas. Ushbu ko&#39;rsatmalar nimaga ruxsat berilishi va nimaga ruxsat berilmasligini, kontent haqida qanday xabar berishni va hisobot berilgandan keyin nima sodir bo&#39;lishini belgilaydi. Siyosat jamoatchilik boshqaruvi tomonidan belgilanadi; ijro tayinlangan moderatorlar tomonidan tezkor ravishda amalga oshiriladi.',
     notAllowed: 'Nimaga ruxsat berilmaydi',
     notAllowedText: 'Riftn’da quyidagi kontent va xatti-harakatlar, jumladan, postlar, sharhlar, strimlar, xabarlar, profillar va foydalanuvchi nomlari taqiqlangan:',
@@ -2029,7 +2028,6 @@ export const uz = {
     notAllowedItem2: 'Bolalarga nisbatan jinsiy zo&#39;ravonlik materiallari yoki voyaga yetmaganlarning har qanday jinsiy tasviri. Bu haqda tegishli organlarga xabar beriladi va darhol butunlay olib tashlanadi.',
     notAllowedItem3: 'Zo&#39;ravonlikka undash, zo&#39;ravonlik tahdidi yoki zo&#39;ravonlik ekstremizmi va terrorizmni ulug&#39;lash',
     notAllowedItem4: 'Ta&#39;qib, bezorilik va maqsadli zo&#39;ravonlik, jumladan, muvofiqlashtirilgan to&#39;dalar',
-    notAllowedItem5: 'Irq, millat, milliy kelib chiqishi, dini, nogironligi, kasalligi, jinsi, gender identifikatsiyasi yoki jinsiy orientatsiyasi asosida odamlarga qilingan hujumlarni o&#39;z ichiga olgan nafrat nutqi',
     notAllowedItem6: 'Boshqa shaxsning shaxsiy ma&#39;lumotlarini uning roziligisiz dokslash yoki nashr qilish',
     notAllowedItem7: 'Spam, aloqa manipulyatsiyasi, bot tarmoqlari va ko&#39;rishlar, ovozlar yoki mukofotlarning sun&#39;iy ravishda inflyatsiyasi',
     notAllowedItem8: 'Boshqa shaxs, ijodkor, brend yoki loyihaning nomidan ish yuritish',
@@ -2052,6 +2050,10 @@ export const uz = {
     appealsText: 'Agar siz moderatsiya qarori noto&#39;g&#39;ri deb hisoblasangiz, unga jamoatchilik boshqaruvi orqali shikoyat qilishingiz mumkin. Boshqaruv siyosat moderatorlarining ijrosini ta&#39;minlaydi va individual qarorlarni ko&#39;rib chiqishi yoki bekor qilishi mumkin. Biroq, ijro darhol amalga oshiriladi - kontent apellyatsiya ko&#39;rib chiqilayotgan paytda o&#39;chirilgan holda qoladi.',
     contact: 'Aloqa',
     contactText: 'Ushbu ko&#39;rsatmalar yoki shoshilinch e&#39;tibor talab qiladigan hisobotlar bo&#39;yicha savollarni dev@dehub.io manziliga yuborishingiz mumkin.',
+    notAllowedItem5: 'Maqsadli nifosat gapiruvchisi: bir kishini yoki guruhni ularning irq, etnik, milliy manba, din, nogironlik, kasallik, jins, jinsiy identifikatsiya yoki jinsiy yo‘nalishlari sababli hujum qilish, tahdid qilish yoki insoniyligini yo‘qotish',
+    lastUpdatedDate: '14-chi noyabr 2026',
+    freeSpeech: 'Erkin nutq',
+    freeSpeechText: 'Riftn erkin nutq uchun qurilgan. Fikrlash, bahs, satira va g‘oyalar, e’tiqodlar, dinlar va siyosatga nisbatan tanqid hamma uchun xush keladi, hatto boshqalar bilan rozi bo‘lmaslikka ham. Nafaqat odamlar, balki fikrlar bo‘yicha maqsadli hujumlarni qamrab olgan nafrat gapirish qoidasi. Oxir-oqibat hamjamiyat nima maqsadli nafrat gapirish deb hisoblaydi va platformani markazlashtirilmagan tarzda, hamjamiyat tanlagan moderatordan va boshqaruv ovozlaridan foydalanib boshqaradi. Hisobot berish, blokirovka qilish va ovozni susaytirish hamma uchun mavjud.',
   },
   privacyPolicy: {
     title: 'Maxfiylik siyosati',

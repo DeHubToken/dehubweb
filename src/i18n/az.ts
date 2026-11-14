@@ -2856,7 +2856,6 @@ export const az = {
   communityGuidelines: {
     title: 'İcma Təlimatları',
     lastUpdated: 'Son yenilənmə tarixi:',
-    lastUpdatedDate: '26 avqust 2026-cı il',
     intro: 'Riftn mərkəzləşmiş, istifadəçiyə məxsus platformadır, lakin qaydalarsız yer deyil. Bu təlimatlar nəyin icazə verildiyini və verilmədiyini, məzmunun necə bildiriləcəyini və hesabat verildikdən sonra nə baş verdiyini təyin edir. Siyasət icma idarəetməsi tərəfindən təyin edilir; icrası təyin edilmiş moderatorlar tərəfindən dərhal həyata keçirilir.',
     notAllowed: 'Nələrə icazə verilmir',
     notAllowedText: 'Riftn-da ismarıclar, şərhlər, axınlar, mesajlar, profillər və istifadəçi adları daxil olmaqla aşağıdakı məzmun və davranışlar qadağandır:',
@@ -2864,7 +2863,6 @@ export const az = {
     notAllowedItem2: 'Uşaqlara qarşı cinsi istismar materialı və ya yetkinlik yaşına çatmayanların hər hansı seksual təsvirləri. Bu barədə müvafiq orqanlara məlumat verilir və dərhal daimi silinmə ilə nəticələnir',
     notAllowedItem3: 'Zorakılığa, zorakılıq təhdidlərinə və ya zorakı ekstremizm və terrorizmin tərənnümünə təhrik',
     notAllowedItem4: 'Təcavüz, satqınlıq və hədəfli sui-istifadə, o cümlədən koordinasiya edilmiş qalaq-qalaq',
-    notAllowedItem5: 'İrqi, etnik, milli, dini, əlillik, xəstəlik, cinsiyyət, gender kimliyi və ya cinsi oriyentasiyaya əsaslanan insanlara hücumlar da daxil olmaqla nifrət nitqi',
     notAllowedItem6: 'Başqa şəxsin şəxsi məlumatlarını onların razılığı olmadan paylaşmaq və ya dərc etmək',
     notAllowedItem7: 'Spam, nişan manipulyasiyası, bot şəbəkələri və baxışların, səslərin və ya mükafatların süni inflyasiyası',
     notAllowedItem8: 'Başqa şəxs, yaradıcı, brend və ya layihə haqqında təəssürat',
@@ -2887,6 +2885,10 @@ export const az = {
     appealsText: 'Mülayimlik qərarının yanlış olduğunu düşünürsünüzsə, ona icma idarəçiliyi vasitəsilə etiraz edilə bilər. İdarəetmə siyasət moderatorlarını təyin edir və fərdi qərarları nəzərdən keçirə və ya ləğv edə bilər. Etiraza baxılarkən dərhal — məzmunlu qonaqlamalar tətbiq edilir.',
     contact: 'Əlaqə',
     contactText: 'Bu təlimatlarla bağlı suallar və ya təcili diqqət tələb edən hesabatlar dev@dehub.io ünvanına göndərilə bilər.',
+    notAllowedItem5: 'Hədəflənmiş nifrət nitqi: bir şəxsə və ya qrupa irqi, etnik mənsubiyyəti, milli mənşəyi, dini, əlilliyi, xəstəliyi, cinsi, gender kimliyi və ya cinsi oriyentasiyası səbəbindən hücum etmək, hədələmək və ya qeyri-insani rəftar göstərmək',
+    lastUpdatedDate: '14 noyabr 2026-cı il',
+    freeSpeech: 'Söz Azadlığı',
+    freeSpeechText: 'Riftn söz azadlığı üçün yaradılıb. Fikirlər, müzakirələr, satira və ideyaların, inamların, dinlərin və siyasətin tənqidi, o cümlədən başqalarının razılaşmadığı fikirlər hamısı xoş qarşılanır. Nifrət nitqi qaydası fikirlərə deyil, insanlara qarşı yönəlmiş hücumlara aiddir. Nəticə etibarən icma hədəflənmiş nifrət nitqi hesab edilən məzmunun nə olduğunu müəyyən edir və icmanın seçdiyi moderatorlar və idarəetmə səsvermələri vasitəsilə platformanı mərkəzləşdirilməmiş şəkildə moderasiya edir. Şikayət etmək, bloklamaq və səssiz etmək hər kəs üçün əlçatan olaraq qalır.',
   },
   adTools: {
     vsLastWeek: 'keçən həftəyə nisbətən {delta}',
