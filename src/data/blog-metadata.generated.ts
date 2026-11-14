@@ -15,7 +15,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.",
     "excerpt": "We counted every commit and every active developer across more than 370 public GitHub repos behind 270 crypto projects over 90 days, then ranked the 100 most active. An AI agent framework leads, wallets are the busiest corner, and about 1 in 6 commits now credit AI.",
     "content": "",
-    "bannerImage": "/media/top-100-crypto-projects-2026-banner-manrope.jpg",
+    "bannerImage": "/media/top-100-crypto-projects-2026-banner-r2.jpg",
     "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn",
     "author": {
       "name": "Riftn Team"
@@ -222,7 +222,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "title": "How monetization works on social media apps",
     "excerpt": "Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.",
     "content": "",
-    "bannerImage": "/media/social-media-monetization-2026-banner-manrope.jpg",
+    "bannerImage": "/media/social-media-monetization-2026-banner-r2.jpg",
     "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
     "author": {
       "name": "Riftn Team"
@@ -267,7 +267,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "demonetisation",
       "digital ownership",
       "creator economy",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 10,
     "featured": false,
@@ -295,7 +295,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "creator monetisation",
       "athlete branding",
       "web3 creators",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 10,
     "featured": false,
@@ -323,7 +323,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "platform economics",
       "digital ownership",
       "web3 curriculum",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 10,
     "featured": false,
@@ -351,7 +351,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "fan engagement",
       "sports business",
       "web3 creators",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 10,
     "featured": false,
@@ -379,7 +379,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "leaving instagram",
       "reels",
       "watch-to-earn",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 8,
     "featured": false,
@@ -407,7 +407,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "leaving youtube",
       "demonetisation",
       "watch-to-earn",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 9,
     "featured": false,
@@ -434,7 +434,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "web3 creators",
       "leaving tiktok",
       "watch-to-earn",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 9,
     "featured": false,
@@ -446,7 +446,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "title": "Riftn Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
     "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio, priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
     "content": "",
-    "bannerImage": "/media/ai-creator-studio-banner-manrope.jpg",
+    "bannerImage": "/media/ai-creator-studio-banner-r2.jpg",
     "bannerImageAlt": "Riftn Creator, AI credits that never expire, with Veo, Seedance and Kling live",
     "author": {
       "name": "Riftn Team"
@@ -476,7 +476,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "How to buy DHB token in the UK, explained clearly: what $DHB does, which chains it runs on, where it trades, and a careful step-by-step for UK buyers.",
     "excerpt": "A plain-English UK guide to the DHB token: what it does, which chains it runs on, where it trades, and a careful, non-advisory step-by-step for buying it safely.",
     "content": "",
-    "bannerImage": "/media/how-to-buy-dhb-token-uk-banner-manrope.jpg",
+    "bannerImage": "/media/how-to-buy-dhb-token-uk-banner-r2.jpg",
     "bannerImageAlt": "A guide to buying the DHB token in the UK on the Base network, with the Riftn logo",
     "author": {
       "name": "Riftn Team"
@@ -529,7 +529,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how Riftn pays you to watch on-chain.",
     "excerpt": "Watch-to-earn pays viewers a share of the value their attention creates. Here is what watch to earn actually means, how it works, and how Riftn does it honestly.",
     "content": "",
-    "bannerImage": "/media/what-is-watch-to-earn-banner-manrope.jpg",
+    "bannerImage": "/media/what-is-watch-to-earn-banner-r2.jpg",
     "bannerImageAlt": "Riftn watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network",
     "author": {
       "name": "Riftn Team"
@@ -612,7 +612,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Looking for a Cheelee alternative? Compare Riftn vs Cheelee, Theta.tv and XCAD Network on cost, payouts and features to pick the best watch-to-earn app in 2026.",
     "excerpt": "A head-to-head comparison of Riftn, Cheelee, Theta.tv and XCAD Network on entry cost, payout transparency and features to help you choose the best watch-to-earn app in 2026.",
     "content": "",
-    "bannerImage": "/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner-manrope.jpg",
+    "bannerImage": "/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner-r2.jpg",
     "bannerImageAlt": "Riftn compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026",
     "author": {
       "name": "Riftn Team"
@@ -682,7 +682,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "leaving tiktok",
       "watch-to-earn",
       "british crypto creators",
-      "dehub"
+      "riftn"
     ],
     "readingTime": 10,
     "featured": false,
@@ -867,7 +867,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from Riftn.",
     "excerpt": "Is play-to-earn legal in the UK, which games genuinely pay British players in 2026, and how does HMRC tax the rewards? A practical guide, not tax advice.",
     "content": "",
-    "bannerImage": "/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner-manrope.jpg",
+    "bannerImage": "/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner-r2.jpg",
     "bannerImageAlt": "Play-to-earn gaming in the UK with Riftn, showing crypto rewards and HMRC tax considerations",
     "author": {
       "name": "Riftn Team"
@@ -893,7 +893,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "title": "We're Finally Here: A Major Riftn Update",
     "excerpt": "After 5 years of development, we're proud to be in a position to finally challenge the behemoths of legacy media. What was always holding us back is now a superpower.",
     "content": "",
-    "bannerImage": "/media/town-hall-feb-2026-banner.png",
+    "bannerImage": "/media/were-finally-here-a-major-dehub-update-banner-r2.jpg",
     "bannerImageAlt": "Riftn Town Hall Overview February 2026 - A Major Riftn Update",
     "author": {
       "name": "Riftn Team"
@@ -945,7 +945,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "privacy-first-open-source-e2ee-dehub",
     "excerpt": "Military-grade End-to-End Encryption ensures your conversations remain completely private. Learn how Riftn protects your messages with battle-tested cryptography.",
     "content": "",
-    "bannerImage": "/media/e2ee-banner.png",
+    "bannerImage": "/media/privacy-first-open-source-e2ee-dehub-banner-r2.jpg",
     "bannerImageAlt": "Riftn End-to-End Encryption Banner - Privacy First Technology",
     "author": {
       "name": "Riftn Team"
@@ -1043,7 +1043,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "transparency-hub-dhbscancom-launches-for-contract-activity-tracking",
     "excerpt": "dhbscan.com, every DHB contract in one place, so verifying us does not require knowing which addresses to look at.",
     "content": "",
-    "bannerImage": "/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png",
+    "bannerImage": "/media/transparency-hub-dhbscancom-launches-for-contract-activity-t-banner-r2.jpg",
     "bannerImageAlt": "DHBScan.com banner",
     "author": {
       "name": "Riftn Team"
@@ -1193,7 +1193,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb",
     "excerpt": "We ended Ethereum mainnet support a year after adding it, and concentrated on Base. Fees, not ideology.",
     "content": "",
-    "bannerImage": "/media/milestone-ethereum-exit-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-ethereum-exit-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
     "author": {
       "name": "Riftn Team"
@@ -1318,7 +1318,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "1-year-review-a-quick-look-back",
     "excerpt": "A year ago, we took a bold step and decided to delist from gate.io. This is a look back at that decision and our commitment to decentralization.",
     "content": "",
-    "bannerImage": "/media/ffb3a54c-cb66-4856-b9ff-491567ce3324.png",
+    "bannerImage": "/media/1-year-review-a-quick-look-back-banner-r2.jpg",
     "bannerImageAlt": "A Look Back In Time",
     "author": {
       "name": "Riftn"
@@ -1394,7 +1394,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "town-hall-ama-october-2024",
     "excerpt": "A summary of our recent Town Hall & AMA session, covering roadmap updates, platform enhancements, and answers to your top questions.",
     "content": "",
-    "bannerImage": "/media/ea33e3a2-72d6-4be8-8648-07293e8b806f.png",
+    "bannerImage": "/media/town-hall-ama-october-2024-banner-r2.jpg",
     "bannerImageAlt": "Riftn Town Hall & AMA banner",
     "author": {
       "name": "Riftn Team"
@@ -1420,7 +1420,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "developments-overview",
     "excerpt": "A summary of major upcoming enhancements, including a platform overhaul, BASE tax removal, new LP initiatives, and a major push in community and marketing efforts.",
     "content": "",
-    "bannerImage": "/media/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png",
+    "bannerImage": "/media/developments-overview-banner-r2.jpg",
     "bannerImageAlt": "Riftn Developments Overview",
     "author": {
       "name": "Riftn Team"
@@ -1620,7 +1620,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "q1-overview-a-birds-eye-view",
     "excerpt": "A bird’s eye view of plans for the rest of this quarter.",
     "content": "",
-    "bannerImage": "/media/ed0c4e36-5a13-4043-9c5f-725f4985cc91.png",
+    "bannerImage": "/media/q1-overview-a-birds-eye-view-banner-r2.jpg",
     "bannerImageAlt": "Q1 Overview: A Bird's Eye View",
     "author": {
       "name": "Riftn Team"
@@ -1670,7 +1670,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "expanding-reach-dhb-lists-on-ethereum-mainnet",
     "excerpt": "DHB listed on Ethereum mainnet. A year later we discontinued it, this post is where the reasoning for both starts.",
     "content": "",
-    "bannerImage": "/media/milestone-eth-listing-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-eth-listing-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet",
     "author": {
       "name": "Riftn Team"
@@ -1745,7 +1745,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "smarter-liquidity-automated-liquidity-provision-on-dexs",
     "excerpt": "Liquidity management moved out of the contract and into a rules-based process, the opposite of where it lived when it broke everything.",
     "content": "",
-    "bannerImage": "/media/milestone-auto-liquidity-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-auto-liquidity-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs",
     "author": {
       "name": "Riftn Team"
@@ -1820,7 +1820,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "feature-spotlight-ad-tech",
     "excerpt": "Taking digital advertising to new horizons.",
     "content": "",
-    "bannerImage": "/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png",
+    "bannerImage": "/media/feature-spotlight-ad-tech-banner-r2.jpg",
     "bannerImageAlt": "Riftn ad tech ecosystem stakeholders",
     "author": {
       "name": "Riftn Team"
@@ -2067,7 +2067,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "creator-economy-reimagined-tokenized-uploads-90-ad-revenue-share",
     "excerpt": "Creators keep 90% of ad revenue, settled on-chain. The number is the easy part, making it structural rather than promotional is not.",
     "content": "",
-    "bannerImage": "/media/milestone-tokenized-uploads-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-tokenized-uploads-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
     "author": {
       "name": "Riftn Team"
@@ -2092,7 +2092,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "dehub-development-update-dapp-dec-2022",
     "excerpt": "Streaming d'app upgrade scheduled for private beta this Friday the 16th, further major developments pipelined for imminent release, and $DHB token listing date proposed for early January.",
     "content": "",
-    "bannerImage": "/media/09d36738-4fac-4bec-93ca-12b75da186ae.png",
+    "bannerImage": "/media/dehub-development-update-dapp-dec-2022-banner-r2.jpg",
     "bannerImageAlt": "Riftn and Binance logos with lightning",
     "author": {
       "name": "Riftn Team"
@@ -2114,7 +2114,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "stability-first-adopting-standard-erc20-tokenomics",
     "excerpt": "No tax triggers, no reflections, nothing in the transfer path. The boring choice, made immediately after the interesting one broke.",
     "content": "",
-    "bannerImage": "/media/milestone-erc20-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-erc20-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics",
     "author": {
       "name": "Riftn Team"
@@ -2639,7 +2639,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "to-the-moon-gateio-listing-and-10m-lp-milestone",
     "excerpt": "A near-1000x run, close to $10m in the pool, and a Gate.io listing. This is the high point, and it is inseparable from what happened during it.",
     "content": "",
-    "bannerImage": "/media/milestone-gate-listing-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-gate-listing-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone",
     "author": {
       "name": "Riftn Team"
@@ -2839,7 +2839,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "diving-in-first-dehub-liquidity-pools-on-pancake-swap",
     "excerpt": "The community had already voted on the chain, the price, the supply and the market cap. PancakeSwap is where those decisions became real.",
     "content": "",
-    "bannerImage": "/media/milestone-pancake-pools-banner-manrope.jpg",
+    "bannerImage": "/media/milestone-pancake-pools-banner-r2.jpg",
     "bannerImageAlt": "Riftn Q2 2021 update: Diving In: First Riftn Liquidity Pools on Pancake Swap",
     "author": {
       "name": "Riftn Team"
@@ -3095,7 +3095,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Riftn Token and Exchange Listings Update",
     "excerpt": "An update on the new token, AI credits, planned buybacks for stakers, and the expected timing of official exchange listings.",
     "content": "",
-    "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
+    "bannerImage": "/media/dehub-token-exchange-listings-update-2026-banner-r2.jpg",
     "bannerImageAlt": "Riftn listing soon announcement banner",
     "author": {
       "name": "Riftn Team"
@@ -3171,7 +3171,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Development Update: The Riftn Era Starts - Final Updates and Bug Fixes Shipping in Coming Days",
     "excerpt": "As we prepare to cut the rope and begin app promotions after years of building, there has never been a more exciting time to be here. Final updates and bug fixes are shipping in the coming days.",
     "content": "",
-    "bannerImage": "/media/dev-update-jan-2026-banner.png",
+    "bannerImage": "/media/development-update-dehub-era-starts-final-updates-bug-fixes-banner-r2.jpg",
     "bannerImageAlt": "Riftn Development Update January 2026 - The Riftn Era Starts",
     "author": {
       "name": "Riftn Team"
@@ -3197,7 +3197,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Town Hall Overview: $200,000 Private Sale Complete, Partner TGE March, New Pools, Added LP and More!",
     "excerpt": "The Riftn team provides a detailed update following the recent Town Hall, covering the completed $200,000 private sale, confirmed TGE timeline, public sale mechanics, and an accelerated growth strategy for 2026.",
     "content": "",
-    "bannerImage": "/media/town-hall-jan-2026-banner.png",
+    "bannerImage": "/media/town-hall-200k-private-sale-partner-tge-march-2026-banner-r2.jpg",
     "bannerImageAlt": "Riftn Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement",
     "author": {
       "name": "Riftn Team"
@@ -3224,7 +3224,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Yearly Wrap Up and 2026 Roadmap",
     "excerpt": "A look back at a defining year for Riftn, from the Coinbase listing and Google Play launch to BNB Chain recognition and the First Class partnership, and a deep dive into the explosive 2026 roadmap ahead.",
     "content": "",
-    "bannerImage": "/media/yearly-wrap-up-2025-banner.png",
+    "bannerImage": "/media/yearly-wrap-up-2025-and-2026-roadmap-banner-r2.jpg",
     "bannerImageAlt": "Riftn 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration",
     "author": {
       "name": "Riftn Team"
@@ -3278,7 +3278,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "The Countdown Begins!",
     "excerpt": "Riftn's app launch across stores is imminent. The countdown is live on riftn.com and the moment we've been building towards for 4 years is finally here.",
     "content": "",
-    "bannerImage": "/media/countdown-clock-banner.png",
+    "bannerImage": "/media/countdown-begins-dehub-app-store-launch-banner-r2.jpg",
     "bannerImageAlt": "Countdown clock for Riftn app store launch",
     "author": {
       "name": "Riftn Team"
@@ -3356,7 +3356,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Off-Ramp Service Revealed: Riftn Card Coming Soon!",
     "excerpt": "With our on-ramp service now live, we're introducing something revolutionary: the Riftn Card. Rather than traditional bank transfers, spend crypto directly anywhere cards are accepted.",
     "content": "",
-    "bannerImage": "/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png",
+    "bannerImage": "/media/off-ramp-service-revealed-dehub-card-coming-soon-banner-r2.jpg",
     "bannerImageAlt": "Riftn Cards in premium gold finish showcasing modern crypto payment solution",
     "author": {
       "name": "Riftn Team"
@@ -3394,7 +3394,7 @@ export const newPostsMetadata: BlogPost[] = [
       "Interface",
       "User Experience"
     ],
-    "bannerImage": "/media/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png",
+    "bannerImage": "/media/fresh-experience-revamped-app-feed-with-audio-replies-live-t-banner-r2.jpg",
     "bannerImageAlt": "Riftn's new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections",
     "featured": false,
     "seoTitle": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces - Riftn",
@@ -3406,7 +3406,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Interactive Streaming: On-Chain Live Streams with Animated Tip",
     "excerpt": "The digital content landscape is evolving rapidly, and live streaming has become the cornerstone of real-time audience engagement. At Riftn, we're introducing Interactive On-Chain Live Streaming - a groundbreaking feature that combines the immediacy of live content with blockchain technology.",
     "content": "",
-    "bannerImage": "/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png",
+    "bannerImage": "/media/interactive-streaming-on-chain-live-streams-with-animated-ti-banner-r2.jpg",
     "bannerImageAlt": "Interactive live streaming with animated tips - Riftn's revolutionary approach to on-chain content creation",
     "author": {
       "name": "Riftn Team"
@@ -3431,7 +3431,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "2022 Wrap Up",
     "excerpt": "Diving back through the year just passed as well as into the one ahead. Thanks to each and every one of the team, community and contributors we have been ploughing through our roadmap and setting ourself up for the biggest year yet.",
     "content": "",
-    "bannerImage": "/media/4476fbc3-58ec-467b-8c1b-30570349940c.png",
+    "bannerImage": "/media/2022-wrap-up-banner-r2.jpg",
     "bannerImageAlt": "2022 Wrap Up - Riftn year in review with fireworks celebration",
     "author": {
       "name": "Riftn Team"
@@ -3456,7 +3456,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Tokenised uploads are here!",
     "excerpt": "Discover how we've integrated a unique fan token experience into our app. Every upload can now be minted as a fractionalised NFT, sharing ad revenue with its owners!",
     "content": "",
-    "bannerImage": "/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png",
+    "bannerImage": "/media/tokenised-uploads-are-here-banner-r2.jpg",
     "bannerImageAlt": "A glowing Riftn token representing tokenized uploads.",
     "author": {
       "name": "Riftn Team"
@@ -3481,7 +3481,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Award Winning Innovation! Riftn recognised for pioneering efforts",
     "excerpt": "After 27k votes over the last 12 months, Riftn is officially Corporate LiveWire’s 2023 Innovation and Excellence Winner in the \"Gaming\" category.",
     "content": "",
-    "bannerImage": "/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png",
+    "bannerImage": "/media/award-winning-innovation-dehub-recognised-banner-r2.jpg",
     "bannerImageAlt": "Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.",
     "author": {
       "name": "Riftn Team"
@@ -3505,7 +3505,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Global Footprint: Riftn Expands Middle East Presence via Dubai Event",
     "excerpt": "Hard work and innovation deserve to be recognized. We were incredibly honored in Q2 2024 when Riftn achieved a significant external milestone, expanding our global footprint into the Middle East.",
     "content": "",
-    "bannerImage": "/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png",
+    "bannerImage": "/media/global-footprint-dehub-expands-middle-east-presence-via-duba-banner-r2.jpg",
     "bannerImageAlt": "Riftn DeTour Dubai event banner",
     "author": {
       "name": "Riftn Team"
@@ -3530,7 +3530,7 @@ export const newPostsMetadata: BlogPost[] = [
     "slug": "base-pool-going-live-soon",
     "excerpt": "Get ready Riftners! We are thrilled to announce that we will be deploying on Uniswap on the Base network imminently. Find out how to bridge your tokens for free!",
     "content": "",
-    "bannerImage": "/media/068250b6-b4b6-42fc-8633-f686a94990c7.png",
+    "bannerImage": "/media/base-pool-going-live-soon-banner-r2.jpg",
     "bannerImageAlt": "Riftn launching on Base network announcement banner",
     "author": {
       "name": "Riftn Team"
@@ -3554,7 +3554,7 @@ export const newPostsMetadata: BlogPost[] = [
     "slug": "dehub-takeover",
     "excerpt": "We've been focused on building, but now it's time to turbocharge the Riftn Army. Find out about our new community growth initiatives and how we plan to take over.",
     "content": "",
-    "bannerImage": "/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png",
+    "bannerImage": "/media/dehub-takeover-banner-r2.jpg",
     "bannerImageAlt": "Riftn Takeover announcement banner",
     "author": {
       "name": "Riftn Team"
@@ -3578,7 +3578,7 @@ export const newPostsMetadata: BlogPost[] = [
     "slug": "new-multi-year-sponsorship-crusaders",
     "excerpt": "We're delighted to reveal a multi-year sponsorship agreement with the only Rugby League club in Wales, The North Wales Crusaders.",
     "content": "",
-    "bannerImage": "/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png",
+    "bannerImage": "/media/new-multi-year-sponsorship-crusaders-banner-r2.jpg",
     "bannerImageAlt": "Riftn announces new multi-year sponsorship with North Wales Crusaders rugby team",
     "author": {
       "name": "Riftn Team"
@@ -3602,7 +3602,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Public Beta D'app Report",
     "excerpt": "An overview of the beta launch for our main d'app. Our biggest and final core d'app launch now sets us up to focus on scaling users and growth.",
     "content": "",
-    "bannerImage": "/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png",
+    "bannerImage": "/media/public-beta-dapp-report-banner-r2.jpg",
     "bannerImageAlt": "Riftn Beta Overview banner",
     "author": {
       "name": "Riftn Team"

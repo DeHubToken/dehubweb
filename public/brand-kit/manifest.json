@@ -121,35 +121,6 @@
       ]
     },
     {
-      "key": "coins-falling",
-      "file": "icons/coins-falling.png",
-      "tags": [
-        "money",
-        "earnings",
-        "rewards",
-        "tokens"
-      ]
-    },
-    {
-      "key": "coin",
-      "file": "icons/coin.png",
-      "tags": [
-        "token",
-        "dhb",
-        "crypto",
-        "price"
-      ]
-    },
-    {
-      "key": "coin-bag",
-      "file": "icons/coin-bag.png",
-      "tags": [
-        "earnings",
-        "treasury",
-        "savings"
-      ]
-    },
-    {
       "key": "clock",
       "file": "icons/clock.png",
       "tags": [

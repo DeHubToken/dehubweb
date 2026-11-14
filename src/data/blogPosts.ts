@@ -62,7 +62,7 @@ const MILESTONE_BANNERS: Record<string, string> = {
   'connect-and-converse-advanced-messaging-system-with-paidfree-dms---a-dehub-milestone-from-q1-2025':
     '/media/milestone-messaging-banner-manrope.jpg',
   'strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb---a-dehub-milestone-from-q1-2025':
-    '/media/milestone-ethereum-exit-banner-manrope.jpg',
+    '/media/milestone-ethereum-exit-banner-r2.jpg',
   'speed-of-light-custom-cdn-achieves-sub-200ms-global-latency---a-dehub-milestone-from-q1-2025':
     '/media/milestone-cdn-banner-manrope.jpg',
   'the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024':
@@ -88,11 +88,11 @@ const MILESTONE_BANNERS: Record<string, string> = {
   'fueling-growth-1m-raised-for-fansite-bj-fork---a-dehub-milestone-from-q1-2024':
     '/media/milestone-fansite-raise-banner.jpg',
   'expanding-reach-dhb-lists-on-ethereum-mainnet---a-dehub-milestone-from-q1-2024':
-    '/media/milestone-eth-listing-banner-manrope.jpg',
+    '/media/milestone-eth-listing-banner-r2.jpg',
   'expanding-horizons-partner-airdrop-for-fansite-bj-fork---a-dehub-milestone-from-q3-2023':
     '/media/milestone-partner-airdrop-banner-manrope.jpg',
   'smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023':
-    '/media/milestone-auto-liquidity-banner-manrope.jpg',
+    '/media/milestone-auto-liquidity-banner-r2.jpg',
   'open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023':
     '/media/milestone-dex-policy-banner-manrope.jpg',
   'prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization---a-dehub-milestone-from-q4-2023':
@@ -114,9 +114,9 @@ const MILESTONE_BANNERS: Record<string, string> = {
   'insights-for-creators-advanced-analytics-dashboard-development-begins---a-dehub-milestone-from-q1-2023':
     '/media/milestone-analytics-banner-manrope.jpg',
   'creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023':
-    '/media/milestone-tokenized-uploads-banner-manrope.jpg',
+    '/media/milestone-tokenized-uploads-banner-r2.jpg',
   'stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022':
-    '/media/milestone-erc20-banner-manrope.jpg',
+    '/media/milestone-erc20-banner-r2.jpg',
   'moving-forward-successful-migration-of-25000-holders-to-v2---a-dehub-milestone-from-q4-2022':
     '/media/milestone-v2-migration-banner-manrope.jpg',
   'the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch---a-dehub-milestone-from-q4-2022':
@@ -158,7 +158,7 @@ const MILESTONE_BANNERS: Record<string, string> = {
   'trials-and-tribulations-the-gateio-listing-agent-incident---a-dehub-milestone-from-q4-2021':
     '/media/milestone-gate-incident-banner-manrope.jpg',
   'to-the-moon-gateio-listing-and-10m-lp-milestone---a-dehub-milestone-from-q4-2021':
-    '/media/milestone-gate-listing-banner-manrope.jpg',
+    '/media/milestone-gate-listing-banner-r2.jpg',
   'game-on-dehub-launches-prediction-and-raffle-games---a-dehub-milestone-from-q4-2021':
     '/media/milestone-prediction-games-banner-manrope.jpg',
   'global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021':
@@ -174,7 +174,7 @@ const MILESTONE_BANNERS: Record<string, string> = {
   'navigating-challenges-addressing-a-v1-smart-contract-security-issue---a-dehub-milestone-from-q2-2021':
     '/media/milestone-v1-security-banner-manrope.jpg',
   'diving-in-first-dehub-liquidity-pools-on-pancake-swap---a-dehub-milestone-from-q2-2021':
-    '/media/milestone-pancake-pools-banner-manrope.jpg',
+    '/media/milestone-pancake-pools-banner-r2.jpg',
   'power-to-the-people-community-governed-listings---a-dehub-milestone-from-q2-2021':
     '/media/milestone-governed-listings-banner-manrope.jpg',
   'early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021':
@@ -435,7 +435,7 @@ export const blogPosts: BlogPost[] = [
 
 ### Wrap Up
 After an explosive start to the year, I trust you all share our excitement for how 2024 is shaping up so far as all unfolds. Partner airdrops for club members were always part of our utility and for reasons now becoming more evident. We're building an entire ecosystem here and all launches drive revenue back to Riftn, which has a 100% profit buy back system laid out in the whitepaper. Soon, we envision everyone will have a social token of some kind and we're already building the framework for this in how our uploads work today on riftn.com. Even the way we built the watch2earn / bounty upload system allows users to launch IVOs, initial video offerings. With the PPV feature for pre-sale functions and the bounty feature for the airdrop function. Although $BJ did isolate a sector of our holder base due to the nature of the project, the next one won't.`,
-    bannerImage: '/media/ed0c4e36-5a13-4043-9c5f-725f4985cc91.png',
+    bannerImage: '/media/q1-overview-a-birds-eye-view-banner-r2.jpg',
     bannerImageAlt: "Q1 Overview: A Bird's Eye View",
     author: { name: 'Riftn Team' },
     publishedAt: new Date('2024-02-06').toISOString(),
@@ -509,7 +509,7 @@ We are confident that, with our combined efforts, Riftn will gain visibility fro
 - Implementing AI-driven tools for thumbnail and description generation
 - Integrating AI video generators to allow seamless video uploads
 - Expanding partnerships across the entertainment and hospitality sectors`,
-    bannerImage: '/media/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png',
+    bannerImage: '/media/developments-overview-banner-r2.jpg',
     bannerImageAlt: 'Riftn Developments Overview',
     author: { name: 'Riftn Team' },
     publishedAt: new Date('2024-09-26').toISOString(),
@@ -564,7 +564,7 @@ We're only interested in listing on top-tier CEXs like Binance, Coinbase, and ot
 
 ### 11. Are there any expected delays after the countdown?
 No delays are expected. The major overhaul is ready and will be rolled out at the end of the countdown. Any features not immediately live at launch will be released according to the updated roadmap, which will be shared alongside the upgrade.`,
-    bannerImage: '/media/ea33e3a2-72d6-4be8-8648-07293e8b806f.png',
+    bannerImage: '/media/town-hall-ama-october-2024-banner-r2.jpg',
     bannerImageAlt: 'Riftn Town Hall & AMA banner',
     author: { name: 'Riftn Team' },
     publishedAt: new Date('2024-10-11').toISOString(),
@@ -689,7 +689,7 @@ Leaving a large re-minted supply idle on an exchange we no longer list with is a
 The alternative was carrying an unknown quantity of tokens with an unknown release schedule into a fresh pool, which is precisely the condition that got the previous one drained.
 
 Thank you for trusting and supporting us through these unprecedented actions, all to ensure the success of Riftn and protection of investors.`,
-    bannerImage: '/media/ffb3a54c-cb66-4856-b9ff-491567ce3324.png',
+    bannerImage: '/media/1-year-review-a-quick-look-back-banner-r2.jpg',
     bannerImageAlt: 'A Look Back In Time',
     author: { name: 'Riftn' },
     publishedAt: new Date('2024-11-12').toISOString(),

@@ -199,7 +199,7 @@ const OG_CARD_ROUTES = new Set([
 /** Bump when the cards in public/og are re-rendered: X, Facebook, LinkedIn and
  *  Telegram cache a share image by its URL, so new art under the old URL keeps
  *  showing the old picture until their cache expires. */
-const OG_CARD_REV = '4';
+const OG_CARD_REV = '5';
 
 /** A route's own share card, or the shared one when it has none. */
 function shareImage(key) {
@@ -2830,7 +2830,7 @@ export async function refreshReferralCard(html, pathname, requestUrl) {
     );
     out = out.replace(
       /(affiliate-share-image\?[^"'\s<]*?[?&](?:amp;)?v=)6(?![0-9A-Za-z-])/g,
-      (m, head) => `${head}7-${tag}`,
+      (m, head) => `${head}8-${tag}`,
     );
   }
   let linkTag = '';
@@ -7035,7 +7035,7 @@ async function handleRequest(request, env, ctx) {
   // Share-card sources for the image transform (see shareCardImage). Ahead of
   // the `/_` static-asset skip below, which would hand these to ASSETS.
   // Older installed apps and already-shared URLs continue to receive the current card.
-  const textPostCard = pathname.match(/^\/_og\/post\/v(?:1|2|3|4|5|6)\/([1-9]\d{0,14})\.png$/);
+  const textPostCard = pathname.match(/^\/_og\/post\/v(?:1|2|3|4|5|6|7)\/([1-9]\d{0,14})\.png$/);
   if (textPostCard) {
     const { handlePostShareImage } = await import('./server/post-share-image.js');
     return handlePostShareImage(request, env, ctx, textPostCard[1], fetchPostRecord, {
@@ -7043,7 +7043,7 @@ async function handleRequest(request, env, ctx) {
       price: fetchShareBadgePrice,
     });
   }
-  const profileCard = pathname.match(/^\/_og\/profile\/v(?:1|2)\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
+  const profileCard = pathname.match(/^\/_og\/profile\/v(?:1|2|3)\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
   if (profileCard) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);

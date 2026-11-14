@@ -43,7 +43,7 @@ import { EditPostCover } from './EditPostCover';
 import { useTranslation } from 'react-i18next';
 import { normalizeCategoryName } from '@/lib/category-names';
 import { CONTENT_WARNING_MAX } from '@/components/app/cards/ContentWarningGate';
-import type { QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
+import type { PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import { PostAllowReactions } from '@/components/app/remix/AllowReactionsSwitch';
 
 export interface EditPostResult {
@@ -57,9 +57,13 @@ export interface EditPostResult {
   shopLinks: ShopLink[];
   shopListingCount: number;
   spoilerText: string;
+  /** Set when the edit opened a followers-only or mentioned-only post up to everyone. */
+  visibility?: PostVisibility;
 }
 
 interface EditPostModalProps {
+  /** Who may see the post; absent means everyone. Only a narrower one shows a row. */
+  currentVisibility?: PostVisibility | null;
   /** The post's content warning, if it has one. */
   currentSpoilerText?: string;
   /** Who may quote the post; absent means anyone. */
@@ -99,6 +103,7 @@ export function EditPostModal({
   currentSpoilerText = '',
   currentQuotePolicy = 'public',
   currentReplyPolicy = 'public',
+  currentVisibility,
   canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
@@ -113,6 +118,10 @@ export function EditPostModal({
   const [spoilerText, setSpoilerText] = useState(currentSpoilerText);
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>(currentQuotePolicy);
   const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>(currentReplyPolicy);
+  // A followers-only or mentioned-only post can be opened up to everyone (not
+  // narrowed: it may already have been seen outside the smaller audience).
+  const narrowVisibility = currentVisibility === 'followers' || currentVisibility === 'direct' ? currentVisibility : null;
+  const [visibility, setVisibility] = useState<PostVisibility>(narrowVisibility ?? 'public');
   // Text cap scales with the badge tier; only read once the modal opens,
   // because every feed card mounts this component.
   const [tierTextMax, setTierTextMax] = useState(BASE_POST_TEXT_CHARS);
@@ -217,6 +226,8 @@ export function EditPostModal({
     if (spoilerText.trim() !== currentSpoilerText.trim()) params.spoilerText = spoilerText.trim();
     if (quotePolicy !== currentQuotePolicy) params.quotePolicy = quotePolicy;
     if (replyPolicy !== currentReplyPolicy) params.replyPolicy = replyPolicy;
+    const openedUp = !!narrowVisibility && visibility === 'public';
+    if (openedUp) params.visibility = 'public';
     const nextRating: ContentRating = isMature ? 'mature' : 'safe';
     // The API stores nothing for a safe post, so an unrated one arrives as
     // undefined — compare against the rating it means rather than the field.
@@ -299,7 +310,7 @@ export function EditPostModal({
       setArticleBody.complete(articleBody, articleBody);
       setCategories.complete(categories, categories);
       setShopLinks.complete(shopLinks, shopLinks);
-      onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length, spoilerText: spoilerText.trim() });
+      onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length, spoilerText: spoilerText.trim(), ...(openedUp ? { visibility: 'public' as PostVisibility } : {}) });
         onOpenChange(false);
       } else {
         toast.error(_copy("copy.3cd8b962fe5d", { defaultValue: "Failed to update post" }));
@@ -355,6 +366,23 @@ export function EditPostModal({
               placeholder={t('contentWarning.placeholder')}
             />
           </div>
+
+          {/* Who can see it. Only a followers-only or mentioned-only post gets
+              this row, and it can only be opened up to everyone. */}
+          {narrowVisibility && (
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="edit-visibility" className="text-sm font-medium text-zinc-300">{t('postVisibility.label')}</Label>
+              <select
+                id="edit-visibility"
+                value={visibility}
+                onChange={(e) => setVisibility(e.target.value as PostVisibility)}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none"
+              >
+                <option value={narrowVisibility}>{t(`postVisibility.${narrowVisibility}`)}</option>
+                <option value="public">{t('postVisibility.public')}</option>
+              </select>
+            </div>
+          )}
 
           {/* Who may quote it from now on. Quotes already made stay. */}
           <div className="flex items-center justify-between gap-3">

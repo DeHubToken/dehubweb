@@ -90,7 +90,7 @@ Stay tuned, and get ready to play. The arena awaits.`;
     newPost.bannerImageAlt = 'Riftn Revamped App Feed';
     newPost.publishedAt = '2025-05-03T10:00:00.000Z';
   } else if (post.slug === 'transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025') {
-    newPost.bannerImage = '/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png';
+    newPost.bannerImage = '/media/transparency-hub-dhbscancom-launches-for-contract-activity-t-banner-r2.jpg';
     newPost.bannerImageAlt = 'DHBScan.com banner';
   } else if (post.slug === 'community-champions-ugc-ambassadorship-program-launched---a-dehub-milestone-from-q2-2025') {
     newPost.bannerImage = '/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png';
@@ -688,7 +688,7 @@ With our streaming d'app release, we do have a number of new ways users can earn
 During our sale, new community growth tool release and documentary trailer, we came under a strong bot attack on all channels, so take no notice of fluctuating social numbers. It's clear what we're building is designed to be used by the millions and is scalable endlessly, with everything custom-made from the ground up.
 
 As we rapidly enter the middle age of our development stages, we will no longer be able to say we are a new project in our first years. We're growing, maturing and building years of bonds above all else. Now we are at the end of this incredibly enlightening year and celebrations edge closer, it's a notorious time of year for extreme contrasts of happiness and sadness, relative to one's situation. Now more than ever some may need a community, support or just someone to talk to. We invite you all to reach out to someone you haven't heard from for a while and know that our DMs are open to anyone needing any of the above.`,
-    bannerImage: '/media/09d36738-4fac-4bec-93ca-12b75da186ae.png',
+    bannerImage: '/media/dehub-development-update-dapp-dec-2022-banner-r2.jpg',
     bannerImageAlt: 'Riftn and Binance logos with lightning',
     author: {
       name: 'Riftn Team',
@@ -809,7 +809,7 @@ That is a considerably weaker claim than "fraud-proof", and it is the accurate o
 POVR is the mechanism behind the [90% ad revenue share on tokenised uploads](/guides/creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023). A revenue share is only meaningful if the revenue is real, and the revenue is only real if advertisers believe the audience is. Patents pending on the mechanism, as noted above.
 
 For more information on our ad revenue sharing, refer to this thread and our whitepaper below. Also, be sure to follow us for all the latest news on app features and updates.`,
-    bannerImage: '/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png',
+    bannerImage: '/media/feature-spotlight-ad-tech-banner-r2.jpg',
     bannerImageAlt: 'Riftn ad tech ecosystem stakeholders',
     author: {
       name: 'Riftn Team',

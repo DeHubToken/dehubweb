@@ -43,7 +43,7 @@ const countdownBeginsPost: BlogPostType = {
 
     The wait is almost over. Visit riftn.com to see the countdown and be part of this historic moment. The future starts now!
   `,
-  bannerImage: '/media/countdown-clock-banner.png',
+  bannerImage: '/media/countdown-begins-dehub-app-store-launch-banner-r2.jpg',
   bannerImageAlt: 'Countdown clock for Riftn app store launch',
   author: {
     name: 'Riftn Team',
@@ -361,7 +361,7 @@ const interactiveStreamingPost: BlogPostType = {
 
     **The future of live streaming is decentralized, interactive, and built on principles of fairness and transparency. Join us as we reshape the digital content landscape, one stream at a time.**
   `,
-  bannerImage: '/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png',
+  bannerImage: '/media/interactive-streaming-on-chain-live-streams-with-animated-ti-banner-r2.jpg',
   bannerImageAlt: 'Interactive live streaming with animated tips - Riftn\'s revolutionary approach to on-chain content creation',
   author: {
     name: 'Riftn Team',
@@ -540,7 +540,7 @@ const wrapUp2022Post: BlogPostType = {
     
     <p class="mt-8 font-bold text-royal-blue text-xl">Bring on 2023.</p>
   `,
-  bannerImage: '/media/4476fbc3-58ec-467b-8c1b-30570349940c.png',
+  bannerImage: '/media/2022-wrap-up-banner-r2.jpg',
   bannerImageAlt: '2022 Wrap Up - Riftn year in review with fireworks celebration',
   author: {
     name: 'Riftn Team',
@@ -579,7 +579,7 @@ const tokenisedUploadsPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">We believe Tokenised Uploads are the future of the creator economy. It's a system built on transparency, ownership, and shared success. Start exploring this new feature today and be a part of the revolution!</p>
   `,
-  bannerImage: '/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png',
+  bannerImage: '/media/tokenised-uploads-are-here-banner-r2.jpg',
   bannerImageAlt: 'A glowing Riftn token representing tokenized uploads.',
   author: {
     name: 'Riftn Team',
@@ -611,7 +611,7 @@ const awardWinningInnovationPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">The London awards ceremony is on the 27th of August, and we'd like to extend an invitation to whoever nominated us for this amazing prize. Please reach out to us via any social media, community group, or by direct email to <a href="mailto:marketing@dehub.net" class="text-middle-blue hover:underline">marketing@dehub.net</a>. A special thanks to you for making this journey more fruitful every day.</p>
   `,
-  bannerImage: '/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
+  bannerImage: '/media/award-winning-innovation-dehub-recognised-banner-r2.jpg',
   bannerImageAlt: 'Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.',
   author: {
     name: 'Riftn Team',
@@ -659,7 +659,7 @@ const dubaiEventPost: BlogPostType = {
 
     <p class="mt-8 font-semibold text-royal-blue">This was more than just a trip; it was a statement. Riftn is a global project, and our presence in Dubai has solidified our position in one of the world's most dynamic tech hubs. Thank you to everyone who connected with us. The future is bright, and we're just getting started!</p>
   `,
-  bannerImage: '/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
+  bannerImage: '/media/global-footprint-dehub-expands-middle-east-presence-via-duba-banner-r2.jpg',
   bannerImageAlt: 'Riftn DeTour Dubai event banner',
   author: {
     name: 'Riftn Team',
@@ -707,7 +707,7 @@ const basePoolPost: BlogPostType = {
 
     <p class="mt-8 font-semibold text-royal-blue">This is just the beginning. Stay tuned for the official announcement when the Uniswap pool goes live. We're incredibly excited for this next chapter and couldn't have done it without our amazing community!</p>
   `,
-  bannerImage: '/media/068250b6-b4b6-42fc-8633-f686a94990c7.png',
+  bannerImage: '/media/base-pool-going-live-soon-banner-r2.jpg',
   bannerImageAlt: 'Riftn launching on Base network announcement banner',
   author: {
     name: 'Riftn Team',
@@ -745,7 +745,7 @@ const dehubTakeoverPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">Furthermore, we will be kick-starting these campaigns with the private token gated groups launching this weekend, in preparation for the app upgrade. So stay tuned for more information and reach out to any of the team or hr@dehub.net for hiring opportunities as it's all kicking off soon here.</p>
   `,
-  bannerImage: '/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png',
+  bannerImage: '/media/dehub-takeover-banner-r2.jpg',
   bannerImageAlt: 'Riftn Takeover announcement banner',
   author: {
     name: 'Riftn Team',
@@ -791,7 +791,7 @@ const crusadersSponsorshipPost: BlogPostType = {
 
     <p class="mt-8 font-semibold text-royal-blue">Stay tuned for more details on how we're reaching their 15,000 capacity stadium full of fans on a weekly basis!</p>
   `,
-  bannerImage: '/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png',
+  bannerImage: '/media/new-multi-year-sponsorship-crusaders-banner-r2.jpg',
   bannerImageAlt: 'Riftn announces new multi-year sponsorship with North Wales Crusaders rugby team',
   author: {
     name: 'Riftn Team',
@@ -866,7 +866,7 @@ const publicBetaDappReportPost: BlogPostType = {
     <p class="mb-4 text-lg text-royal-blue/80">Now, how many of you would buy a token or use an app because your favourite influencer was now making content on that platform? Drastically more.</p>
     <p class="mb-4 text-lg text-royal-blue/80">Once this flywheel spins, it won't stop, and we're more confident than ever now we've seen our final core d'app working fully out in the wild.</p>
   `,
-  bannerImage: '/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png',
+  bannerImage: '/media/public-beta-dapp-report-banner-r2.jpg',
   bannerImageAlt: 'Riftn Beta Overview banner',
   author: {
     name: 'Riftn Team',
@@ -947,7 +947,7 @@ Your feedback drives this platform, so let us know what you love (or want improv
   publishedAt: '2025-05-03T00:00:00Z',
   readingTime: 6,
   tags: ['UI/UX', 'Product Update', 'Features', 'Interface', 'User Experience'],
-  bannerImage: '/media/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png',
+  bannerImage: '/media/fresh-experience-revamped-app-feed-with-audio-replies-live-t-banner-r2.jpg',
   bannerImageAlt: 'Riftn\'s new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections',
   featured: false,
   seoTitle: 'Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces - Riftn',
@@ -1058,7 +1058,7 @@ const offRampServicePost: BlogPostType = {
 
     **Ready to skip the banks and spend crypto directly? The Riftn Card is coming soon. Stay tuned for more details and be among the first to experience the future of crypto spending.**
   `,
-  bannerImage: '/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png',
+  bannerImage: '/media/off-ramp-service-revealed-dehub-card-coming-soon-banner-r2.jpg',
   bannerImageAlt: 'Riftn Cards in premium gold finish showcasing modern crypto payment solution',
   author: {
     name: 'Riftn Team',

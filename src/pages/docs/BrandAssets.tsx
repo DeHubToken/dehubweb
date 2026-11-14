@@ -17,7 +17,7 @@ import ExternalLink from "@/components/ui/cut-icons/open-externally";
 import Download from "@/components/ui/cut-icons/download";
 
 import { useLanguage } from '@/contexts/LanguageContext';
-const designSystemZip = { url: '/brand/dehub-design-system.zip' };
+const designSystemZip = { url: '/brand/dehub-design-system.zip?v=vector-wordmark-1' };
 const figmaDuplicateInstruction = { url: '/docs/figma-duplicate-instruction.png' };
 const wordmarkWhite = { url: '/brand/riftn-wordmark-white.png' };
 const wordmarkBlack = { url: '/brand/riftn-wordmark-black.png' };
@@ -39,7 +39,7 @@ const BrandAssets = () => {
 
   const handleDownload = async (url: string, filename: string) => {
     try {
-      const res = await fetch(url, { mode: 'cors' });
+      const res = await fetch(url, { mode: 'cors', cache: 'reload' });
       if (!res.ok) throw new Error('Logo download failed');
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
