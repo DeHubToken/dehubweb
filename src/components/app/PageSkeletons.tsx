@@ -151,8 +151,8 @@ function HomeLeftSidebarSkeleton() {
           <Skeleton className={`h-[40.6px] w-[135px] rounded relative -top-[3px] ${SK}`} />
         </div>
       </div>
-      {/* Nav bento — matches -mt-[8.5px] + lg:p-2.5 lg:space-y-[2px] from real */}
-      <div data-side-panel data-desktop-sidebar-bento className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden">
+      {/* Nav bento — matches -mt-[9px] + lg:p-2.5 lg:space-y-[2px] from real */}
+      <div data-side-panel data-desktop-sidebar-bento className="relative -mt-[9px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden">
         <div className="lg:p-2.5 lg:space-y-[2px] flex flex-col items-stretch h-full">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 px-2.5 py-2.5 w-full">
@@ -201,8 +201,8 @@ function HomeRightSidebarSkeleton() {
             ))}
           </div>
         </div>
-        {/* What's happening — real has -mt-[4.2px] */}
-        <div data-side-panel className="-mt-[4.2px] bg-zinc-900 rounded-2xl overflow-hidden">
+        {/* What's happening — real has -mt-[4px] */}
+        <div data-side-panel className="-mt-[4px] bg-zinc-900 rounded-2xl overflow-hidden">
           <div className="flex">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex-1 py-3 flex items-center justify-center">

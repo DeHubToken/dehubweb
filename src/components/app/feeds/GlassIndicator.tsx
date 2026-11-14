@@ -49,11 +49,25 @@ export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
 
   if (!displayRect.ready) return null;
 
-  const displayHeight = fixedHeightPx ?? displayRect.height;
-  const displayY =
-    fixedHeightPx != null
-      ? displayRect.y + (displayRect.height - fixedHeightPx) / 2
-      : displayRect.y;
+  // Land the pill on whole screen pixels. Tab rows split their width
+  // evenly, so the measured rect is usually fractional (e.g. x 365.77,
+  // width 105.28) and centring a 35px pill in a 36px row adds another half
+  // pixel. A transform is never pixel-snapped by the browser, so at 100% zoom
+  // the 1px rim and its rounded corners were smeared across two pixels and
+  // read as jagged. Snapping to device pixels keeps them crisp at any zoom.
+  const dpr = typeof window !== 'undefined' && window.devicePixelRatio > 0 ? window.devicePixelRatio : 1;
+  const snap = (v: number) => Math.round(v * dpr) / dpr;
+  // A pinned height is centred with an equal gap above and below, rounded
+  // up to a whole device pixel (a 35px pill in a 36px row stays 35px on a
+  // 2x screen and becomes 34px with a 1px gap each side at 100%).
+  const left = snap(displayRect.x);
+  const right = snap(displayRect.x + displayRect.width);
+  const rowTop = snap(displayRect.y);
+  const rowHeight = snap(displayRect.y + displayRect.height) - rowTop;
+  const rawGap = fixedHeightPx != null ? (rowHeight - fixedHeightPx) / 2 : 0;
+  const gap = rawGap > 0 ? Math.ceil(rawGap * dpr - 0.001) / dpr : snap(rawGap);
+  const displayY = rowTop + gap;
+  const displayHeight = fixedHeightPx != null ? rowHeight - gap * 2 : rowHeight;
 
   // Smooth spring-like easing for sexy tab transitions
   const SMOOTH_TRANSITION = [
@@ -77,8 +91,8 @@ export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
       )}
       style={{
         borderRadius,
-        transform: `translate(${displayRect.x}px, ${displayY}px)`,
-        width: displayRect.width,
+        transform: `translate(${left}px, ${displayY}px)`,
+        width: right - left,
         height: displayHeight,
         transition: enableTransition ? SMOOTH_TRANSITION : 'none',
         willChange: enableTransition ? 'transform, width' : 'auto',
