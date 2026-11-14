@@ -39,7 +39,7 @@ const BrandAssets = () => {
 
   const handleDownload = async (url: string, filename: string) => {
     try {
-      const res = await fetch(url, { mode: 'cors' });
+      const res = await fetch(url, { mode: 'cors', cache: 'reload' });
       if (!res.ok) throw new Error('Logo download failed');
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
