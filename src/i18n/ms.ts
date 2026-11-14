@@ -2305,7 +2305,6 @@ export const ms = {
   communityGuidelines: {
     title: 'Garis Panduan Komuniti',
     lastUpdated: 'Kemas kini terakhir:',
-    lastUpdatedDate: '26 Ogos 2026',
     intro: 'Riftn adalah platform milik pengguna yang terdesentralisasi, tetapi ia bukan tempat tanpa peraturan. Garis panduan ini menetapkan perkara yang dibenarkan dan tidak dibenarkan, cara melaporkan kandungan, dan apa yang berlaku selepas laporan dibuat. Dasar ditetapkan oleh tadbir urus komuniti; penguatkuasaan dijalankan dengan segera oleh moderator yang ditetapkan.',
     notAllowed: 'Apa yang Tidak Dibenarkan',
     notAllowedText: 'Kandungan dan tingkah laku berikut dilarang di mana-mana sahaja di Riftn, termasuk hantaran, komen, strim, mesej, profil dan nama pengguna:',
@@ -2313,7 +2312,6 @@ export const ms = {
     notAllowedItem2: 'Materi kekerasan seksual terhadap kanak-kanak, atau sebarang penggambaran seksualisasi terhadap kanak-kanak. Ini dilaporkan kepada pihak berkuasa yang berkaitan dan mengakibatkan penghapusan segera dan kekal.',
     notAllowedItem3: 'Hasutan terhadap keganasan, ancaman keganasan, atau pemuliaan ekstremisme ganas dan keganasan',
     notAllowedItem4: 'Gangguan, buli dan penderaan yang disasarkan, termasuk timbunan yang diselaraskan',
-    notAllowedItem5: 'Ucapan kebencian, termasuk serangan terhadap orang berdasarkan bangsa, etnik, negara asal, agama, kecacatan, penyakit, seks, identiti jantina atau orientasi seksual',
     notAllowedItem6: 'Doxxing atau menyiarkan maklumat peribadi orang lain tanpa persetujuan mereka',
     notAllowedItem7: 'Spam, manipulasi penglibatan, rangkaian bot, dan inflasi buatan pandangan, undian atau ganjaran',
     notAllowedItem8: 'Penyamaran orang, pengkarya, jenama atau projek lain',

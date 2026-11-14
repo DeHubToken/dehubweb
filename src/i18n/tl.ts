@@ -2021,7 +2021,6 @@ export const tl = {
   communityGuidelines: {
     title: 'Mga Alituntunin ng Komunidad',
     lastUpdated: 'Huling na - update:',
-    lastUpdatedDate: '26 Agosto 2026',
     intro: 'Ang Riftn ay isang desentralisado, platform na pag - aari ng gumagamit, ngunit hindi ito isang lugar na walang mga panuntunan. Itinatakda ng mga tagubiling ito kung ano ang pinapahintulutan at hindi pinapahintulutan, kung paano mag - ulat ng nilalaman, at kung ano ang mangyayari pagkatapos gawin ang isang ulat. Ang patakaran ay itinakda ng pamamahala ng komunidad; ang pagpapatupad ay isinasagawa kaagad ng mga itinalagang moderator.',
     notAllowed: 'Ano ang Hindi Pinapayagan',
     notAllowedText: 'Ipinagbabawal ang sumusunod na nilalaman at pag - uugali kahit saan sa Riftn, kabilang ang mga post, komento, stream, mensahe, profile at username:',
@@ -2029,7 +2028,6 @@ export const tl = {
     notAllowedItem2: 'Materyal na pang - aabusong sekswal ng bata, o anumang sekswal na paglalarawan ng mga menor de edad. Iniuulat ito sa mga kaugnay na awtoridad at nagreresulta sa agarang permanenteng pag - alis',
     notAllowedItem3: 'Pag - uudyok sa karahasan, pagbabanta ng karahasan, o pagluluwalhati sa marahas na ekstremismo at terorismo',
     notAllowedItem4: 'Pang - aabuso, pang - aabuso at naka - target na pang - aabuso, kabilang ang mga coordinated na pile - on',
-    notAllowedItem5: 'Hate speech, kabilang ang mga pag - atake sa mga tao batay sa lahi, etnisidad, bansang pinagmulan, relihiyon, kapansanan, sakit, kasarian, pagkakakilanlan ng kasarian o oryentasyong sekswal',
     notAllowedItem6: 'Doxxing o pag - publish ng pribadong impormasyon ng ibang tao nang wala ang kanilang pahintulot',
     notAllowedItem7: 'Spam, pagmamanipula ng pakikipag - ugnayan, mga network ng bot, at artipisyal na implasyon ng mga pagtingin, boto o gantimpala',
     notAllowedItem8: 'Pagpapanggap ng ibang tao, tagalikha, tatak o proyekto',

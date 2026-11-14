@@ -2021,7 +2021,6 @@ export const af = {
   communityGuidelines: {
     title: 'Gemeenskapsriglyne',
     lastUpdated: 'Laas opgedateer:',
-    lastUpdatedDate: '26 Augustus 2026',
     intro: 'Riftn is \'n gedesentraliseerde, gebruikersbeheerde platform, maar dit is nie \'n plek sonder reëls nie. Hierdie riglyne gee \'n uiteensetting van wat toegelaat word en wat nie toegelaat word nie, hoe om inhoud te rapporteer en wat gebeur nadat \'n verslag gemaak is. Beleid word deur gemeenskapsbestuur bepaal; handhawing word dadelik deur aangewese moderators uitgevoer.',
     notAllowed: 'Wat nie toegelaat word nie',
     notAllowedText: 'Die volgende inhoud en gedrag word oral op Riftn verbied, insluitend plasings, kommentaar, strome, boodskappe, profiele en gebruikersname:',
@@ -2029,7 +2028,6 @@ export const af = {
     notAllowedItem2: 'Seksuele misbruik van kinders of enige seksuele uitbeelding van minderjariges. Dit word aan die betrokke owerhede gerapporteer en lei tot onmiddellike permanente verwydering.',
     notAllowedItem3: 'Aanhitsing tot geweld, dreigemente van geweld of verheerliking van gewelddadige ekstremisme en terrorisme',
     notAllowedItem4: 'Teistering, afknouery en geteikende mishandeling, insluitend gekoördineerde stapels',
-    notAllowedItem5: 'Haatspraak, insluitend aanvalle op mense op grond van ras, etnisiteit, nasionale oorsprong, godsdiens, gestremdheid, siekte, geslag, geslagsidentiteit of seksuele oriëntasie',
     notAllowedItem6: 'Doxxing of die publikasie van \'n ander persoon se persoonlike inligting sonder hul toestemming',
     notAllowedItem7: 'Spam, betrokkenheid manipulasie, bot netwerke, en kunsmatige inflasie van sienings, stemme of belonings',
     notAllowedItem8: 'Verpersoonliking van \'n ander persoon, skepper, handelsmerk of projek',
@@ -2052,6 +2050,10 @@ export const af = {
     appealsText: 'As jy glo dat \'n modereringsbesluit verkeerd was, kan dit deur gemeenskapsbestuur geappelleer word. Bestuur bepaal die beleid moderators af te dwing en kan hersien of omgekeerde individuele besluite. Handhawing is egter onmiddellik — inhoud bly stil terwyl\' n appèl oorweeg word.',
     contact: 'Kontak',
     contactText: 'Vrae oor hierdie riglyne, of verslae wat dringende aandag benodig, kan na dev@dehub.io gestuur word.',
+    notAllowedItem5: 'Geteikende haatspraak: om \'n persoon of groep aan te val, te bedreig of te ontmenslik weens hul ras, etnisiteit, nasionale herkoms, godsdiens, gestremdheid, siekte, geslag, geslagsidentiteit of seksuele oriëntasie',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Vryheid van spraak',
+    freeSpeechText: 'Riftn is gebou vir vryheid van spraak. Menings, debat, satire en kritiek op idees, oortuigings, godsdienste en politiek is alles welkom, insluitend standpunte waarmee ander nie saamstem nie. Die reël oor haatspraak dek geteikende aanvalle op mense, nie op standpunte nie. Uiteindelik besluit die gemeenskap wat as geteikende haatspraak beskou word en modereer die platform op ’n gedesentraliseerde wyse, deur gemeenskapsverkose moderators en bestuursstemme. Aanmelding, blokkering en demping bly vir almal beskikbaar.',
   },
   privacyPolicy: {
     title: 'Privaatheidsbeleid',

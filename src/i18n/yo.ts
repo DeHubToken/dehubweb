@@ -1974,7 +1974,6 @@ export const yo = {
   communityGuidelines: {
     title: 'Awọn Itọsọna Agbegbe',
     lastUpdated: 'Imudojuiwọn ti o kẹhin:',
-    lastUpdatedDate: '26 Oṣù 2026',
     intro: 'Riftn jẹ́ pẹpẹ tí a ti pín sí, tí ó jẹ́ ti oníṣe, ṣùgbọ́n kì í ṣe ibi tí kò ní òfin. Àwọn ìtọ́sọ́nà yìí sọ ohun tí ó jẹ́ àti ohun tí a kò gbà láyè, bí a ṣe lè ròyìn ohun tí ó wà nínú rẹ̀, àti ohun tí ó ṣẹlẹ̀ lẹ́yìn tí a bá ṣe ìròyìn kan. Ìṣàkóso agbègbè ló ń ṣe ìlànà; àwọn alábòójútó tí a yàn ló máa ń ṣe àmúlò lẹ́sẹ̀kẹsẹ̀.',
     notAllowed: 'Ohun tí a kò gbà láyè',
     notAllowedText: 'Àwọn àkóónú àti ìwà tó tẹ̀lé e yìí ni a fòfin de níbikíbi lórí Riftn, títí kan àwọn iṣẹ́, àlàyé, ìsọfúnni, àtẹ̀jísẹ́, àkọsílẹ̀ àti orúkọ oníṣe:',
@@ -1982,7 +1981,6 @@ export const yo = {
     notAllowedItem2: 'Ohun-èlò ìfipábánilòpọ̀ ọmọdé, tàbí ìṣàfihàn ìṣekúṣe èyíkéyìí nípa àwọn ọmọdé. Èyí ni a máa ròyìn fún àwọn aláṣẹ tó yẹ tí ó sì máa yọrí sí ìyọ̀sí tí ó wà pẹ́ títí lẹ́sẹ̀kẹsẹ̀.',
     notAllowedItem3: 'Ìwúlò sí ìwà ipá, ìbẹ̀rù ìwà ipá, tàbí ògo ìwà ipá àti ìpániláyà',
     notAllowedItem4: 'Ìfipábánilòpọ̀, ìfipábánilòpọ̀ àti ìfipábánilòpọ̀, pẹ̀lú àkójọpọ̀ pile-ons',
-    notAllowedItem5: 'Ọrọ ikorira, pẹlu ikọlu lori awọn eniyan ti o da lori ẹya, ẹya, orisun orilẹ-ede, ẹsin, ailera, arun, ibalopo, idanimọ abo tabi iṣalaye ibalopo',
     notAllowedItem6: 'Doxxing tabi atejade alaye ikọkọ ti eniyan miiran laisi igbanilaaye wọn.',
     notAllowedItem7: 'Spam, ìdarí ìdarí, àwọn nẹ́tìwọ̀n bot, àti ìforígbárí èrò, ìbò tàbí èrè.',
     notAllowedItem8: 'Ifarahan ti eniyan miiran, ẹlẹda, ami iyasọtọ tabi iṣẹ akanṣe',

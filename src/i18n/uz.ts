@@ -2021,7 +2021,6 @@ export const uz = {
   communityGuidelines: {
     title: 'Jamiyat qoidalari',
     lastUpdated: 'Oxirgi yangilanish:',
-    lastUpdatedDate: '2026-yil 26-avgust',
     intro: 'Riftn markazlashtirilmagan, foydalanuvchilarga tegishli platforma, ammo u qoidalarsiz joy emas. Ushbu ko&#39;rsatmalar nimaga ruxsat berilishi va nimaga ruxsat berilmasligini, kontent haqida qanday xabar berishni va hisobot berilgandan keyin nima sodir bo&#39;lishini belgilaydi. Siyosat jamoatchilik boshqaruvi tomonidan belgilanadi; ijro tayinlangan moderatorlar tomonidan tezkor ravishda amalga oshiriladi.',
     notAllowed: 'Nimaga ruxsat berilmaydi',
     notAllowedText: 'Riftn’da quyidagi kontent va xatti-harakatlar, jumladan, postlar, sharhlar, strimlar, xabarlar, profillar va foydalanuvchi nomlari taqiqlangan:',
@@ -2029,7 +2028,6 @@ export const uz = {
     notAllowedItem2: 'Bolalarga nisbatan jinsiy zo&#39;ravonlik materiallari yoki voyaga yetmaganlarning har qanday jinsiy tasviri. Bu haqda tegishli organlarga xabar beriladi va darhol butunlay olib tashlanadi.',
     notAllowedItem3: 'Zo&#39;ravonlikka undash, zo&#39;ravonlik tahdidi yoki zo&#39;ravonlik ekstremizmi va terrorizmni ulug&#39;lash',
     notAllowedItem4: 'Ta&#39;qib, bezorilik va maqsadli zo&#39;ravonlik, jumladan, muvofiqlashtirilgan to&#39;dalar',
-    notAllowedItem5: 'Irq, millat, milliy kelib chiqishi, dini, nogironligi, kasalligi, jinsi, gender identifikatsiyasi yoki jinsiy orientatsiyasi asosida odamlarga qilingan hujumlarni o&#39;z ichiga olgan nafrat nutqi',
     notAllowedItem6: 'Boshqa shaxsning shaxsiy ma&#39;lumotlarini uning roziligisiz dokslash yoki nashr qilish',
     notAllowedItem7: 'Spam, aloqa manipulyatsiyasi, bot tarmoqlari va ko&#39;rishlar, ovozlar yoki mukofotlarning sun&#39;iy ravishda inflyatsiyasi',
     notAllowedItem8: 'Boshqa shaxs, ijodkor, brend yoki loyihaning nomidan ish yuritish',

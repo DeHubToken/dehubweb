@@ -2305,7 +2305,6 @@ export const lt = {
   communityGuidelines: {
     title: 'Bendruomenės gairės',
     lastUpdated: 'Paskutinį kartą atnaujinta:',
-    lastUpdatedDate: '2026 m. rugpjūčio 26 d.',
     intro: '„Riftn“ yra decentralizuota, vartotojui priklausanti platforma, tačiau tai nėra vieta be taisyklių. Šiose gairėse išdėstyta, kas yra ir kas neleidžiama, kaip pranešti apie turinį ir kas nutinka po pranešimo pateikimo. Politiką nustato bendruomenės valdymas; vykdymą greitai atlieka paskirti moderatoriai.',
     notAllowed: 'Kas neleidžiama',
     notAllowedText: 'Toliau nurodytas turinys ir elgesys draudžiamas bet kurioje „Riftn“ vietoje, įskaitant įrašus, komentarus, srautus, žinutes, profilius ir naudotojų vardus:',
@@ -2313,7 +2312,6 @@ export const lt = {
     notAllowedItem2: 'Vaikų seksualinio išnaudojimo medžiaga arba bet koks seksualizuotas nepilnamečių vaizdavimas. Apie tai pranešama atitinkamoms institucijoms ir nedelsiant visam laikui pašalinama',
     notAllowedItem3: 'Smurto kurstymas, grasinimas smurtu arba smurtinio ekstremizmo ir terorizmo šlovinimas',
     notAllowedItem4: 'Priekabiavimas, patyčios ir tikslinė prievarta, įskaitant koordinuotus pylimus',
-    notAllowedItem5: 'Neapykantą kurstančios kalbos, įskaitant išpuolius prieš žmones dėl rasės, etninės kilmės, tautinės kilmės, religijos, negalios, ligos, lyties, lytinės tapatybės ar seksualinės orientacijos',
     notAllowedItem6: '„Doxxing“ arba kito asmens privačios informacijos paskelbimas be jo sutikimo',
     notAllowedItem7: 'Šlamštas, manipuliavimas dalyvavimu, robotų tinklai ir dirbtinė nuomonių, balsų ar atlygių infliacija',
     notAllowedItem8: 'Kito asmens, kūrėjo, prekės ženklo ar projekto įkūnijimas',

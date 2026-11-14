@@ -2305,7 +2305,6 @@ export const no = {
   communityGuidelines: {
     title: 'Retningslinjer for fellesskapet',
     lastUpdated: 'Sist oppdatert:',
-    lastUpdatedDate: '26. august 2026',
     intro: 'Riftn er en desentralisert, brukereid plattform, men det er ikke et sted uten regler. Disse retningslinjene angir hva som er og ikke er tillatt, hvordan innhold rapporteres, og hva som skjer etter at en rapport er gjort. Retningslinjene er fastsatt av fellesskapets styring; håndheving utføres raskt av utpekte moderatorer.',
     notAllowed: 'Hva som ikke er tillatt',
     notAllowedText: 'Følgende innhold og oppførsel er forbudt hvor som helst på Riftn, inkludert innlegg, kommentarer, strømmer, meldinger, profiler og brukernavn:',
@@ -2313,7 +2312,6 @@ export const no = {
     notAllowedItem2: 'Materiale med seksuelt misbruk av barn, eller seksualiserte skildringer av mindreårige. Dette rapporteres til relevante myndigheter og resulterer i umiddelbar permanent fjerning.',
     notAllowedItem3: 'Oppfordring til vold, trusler om vold eller glorifisering av voldelig ekstremisme og terrorisme',
     notAllowedItem4: 'Trakassering, mobbing og målrettet misbruk, inkludert koordinerte pågripelser',
-    notAllowedItem5: 'Hatefulle ytringer, inkludert angrep på personer basert på rase, etnisitet, nasjonal opprinnelse, religion, funksjonshemming, sykdom, kjønn, kjønnsidentitet eller seksuell legning',
     notAllowedItem6: 'Doxing eller publisering av en annen persons private informasjon uten deres samtykke',
     notAllowedItem7: 'Spam, manipulering av engasjement, botnettverk og kunstig inflasjon av visninger, stemmer eller belønninger',
     notAllowedItem8: 'Etterligning av en annen person, skaper, merkevare eller prosjekt',

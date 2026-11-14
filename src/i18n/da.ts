@@ -2455,7 +2455,6 @@ export const da = {
   communityGuidelines: {
     title: 'Retningslinjer for fællesskabet',
     lastUpdated: 'Senest opdateret:',
-    lastUpdatedDate: '26. august 2026',
     intro: 'Riftn er en decentraliseret, bruger-ejet platform, men det er ikke et sted uden regler. Disse retningslinjer beskriver, hvad der er tilladt og ikke tilladt, hvordan man rapporterer indhold, og hvad der sker, efter at en rapport er lavet. Politikken fastsættes af fællesskabsstyring; håndhævelse udføres straks af udpegede moderatorer.',
     notAllowed: 'Hvad er ikke tilladt',
     notAllowedText: 'Følgende indhold og adfærd er forbudt overalt på Riftn, herunder indlæg, kommentarer, streams, meddelelser, profiler og brugernavne:',
@@ -2463,7 +2462,6 @@ export const da = {
     notAllowedItem2: 'Materiale med seksuelt misbrug af børn eller enhver seksualiseret skildring af mindreårige. Dette indberettes til de relevante myndigheder og resulterer i øjeblikkelig permanent fjernelse',
     notAllowedItem3: 'Tilskyndelse til vold, trusler om vold eller glorificering af voldelig ekstremisme og terrorisme',
     notAllowedItem4: 'Chikane, mobning og målrettet misbrug, herunder koordinerede pile-ons',
-    notAllowedItem5: 'Hadtale, herunder angreb på mennesker baseret på race, etnicitet, national oprindelse, religion, handicap, sygdom, køn, kønsidentitet eller seksuel orientering',
     notAllowedItem6: 'Doxxing eller offentliggørelse af en anden persons private oplysninger uden deres samtykke',
     notAllowedItem7: 'Spam, engagementmanipulation, botnetværk og kunstig inflation af synspunkter, stemmer eller belønninger',
     notAllowedItem8: 'Efterligning af en anden person, kreatør, brand eller projekt',
@@ -2486,6 +2484,10 @@ export const da = {
     appealsText: 'Hvis du mener, at en moderationsbeslutning var forkert, kan den appelleres gennem netværksstyring. Governance fastsætter, at politikmoderatorerne håndhæver og kan gennemgå eller ændre individuelle beslutninger. Håndhævelsen er dog øjeblikkelig — indholdet forbliver nede, mens en appel behandles.',
     contact: 'Kontakt',
     contactText: 'Spørgsmål om disse retningslinjer eller rapporter, der kræver øjeblikkelig opmærksomhed, kan sendes til dev@dehub.io.',
+    notAllowedItem5: 'Målrettet hadefuld tale: Angreb på, trusler mod eller dehumanisering af en person eller gruppe på grund af deres race, etnicitet, nationale oprindelse, religion, handicap, sygdom, køn, kønsidentitet eller seksuelle orientering',
+    lastUpdatedDate: '14. november 2026',
+    freeSpeech: 'Ytringsfrihed',
+    freeSpeechText: 'Riftn er skabt til ytringsfrihed. Meninger, debat, satire og kritik af idéer, overbevisninger, religioner og politik er alle velkomne, herunder synspunkter, som andre er uenige i. Reglen om hadefuld tale omfatter målrettede angreb på personer, ikke på holdninger. I sidste ende er det fællesskabet, der afgør, hvad der betragtes som målrettet hadefuld tale, og som modererer platformen på en decentraliseret måde gennem fællesskabsvalgte moderatorer og afstemninger om styring. Indberetning, blokering og slå lyd fra er fortsat tilgængeligt for alle.',
   },
   adTools: {
     budgetCalculatorTitle: 'Lommeregner for kampagnebudget',

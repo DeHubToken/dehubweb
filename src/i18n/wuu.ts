@@ -1949,7 +1949,6 @@ export const wuu = {
     contactText: '關於這些服務條款的問題，請參與我們的社群治理頻道或提交提案通過DAO機制。',
   },
   communityGuidelines: {
-    lastUpdatedDate: '26 8月 2026',
     intro: 'Riftn 係一個去中心化、由用戶擁有嘅平台，但係唔係無規矩嘅地方。咱哋嘅指引定出咋樣嘅內容可以、唔可以，咋樣報告內容，以及報告後會咋樣。政策由社群治理決定；執行由指定嘅管理員迅速處理。',
     adultContent: '成人內容',
     reportingText: '報告只需幾下手指頭就可以完成，而且可以直接從內容中進行。',
@@ -1962,7 +1961,6 @@ export const wuu = {
     notAllowedItem2: '任何形式的兒童性虐待材料，或任何性化描繪未成年人的內容。 這將立即永久刪除並報告給相關當局',
     notAllowedItem3: '煽動暴力、威脅暴力或宣揚極端暴力和恐怖主義',
     notAllowedItem4: '騷擾、欺凌和針對性攻擊，包括有組織的圍攻',
-    notAllowedItem5: '針對種族、族裔、國籍、宗教、殘疾、疾病、性別、性別認同或性取向的仇恨言論',
     notAllowedItem6: '未經同意公開別人的私人信息',
     notAllowedItem7: '垃圾郵件、互動操控、機器人網絡和人工增加觀看、投票或獎勵',
     notAllowedItem8: '冒充別人、創作者、品牌或項目',

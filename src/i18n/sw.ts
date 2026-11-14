@@ -2490,7 +2490,6 @@ export const sw = {
   communityGuidelines: {
     title: 'Miongozo ya Jumuiya',
     lastUpdated: 'Mara ya mwisho kusasishwa:',
-    lastUpdatedDate: '26 Agosti 2026',
     intro: 'Riftn ni tovuti ya ugatuzi, inayomilikiwa na mtumiaji, lakini si eneo lisilo na sheria. Miongozo hii inaweka kile kinachoruhusiwa na kisichoruhusiwa, jinsi ya kuripoti maudhui na kile kinachotokea baada ya ripoti kufanywa. Sera huwekwa na utawala wa jamii; utekelezaji hufanywa mara moja na wasimamizi walioteuliwa.',
     notAllowed: 'Kile Ambacho Hairuhusiwi',
     notAllowedText: 'Maudhui na tabia zifuatazo zimepigwa marufuku mahali popote kwenye Riftn, ikiwemo machapisho, maoni, mitiririko, ujumbe, wasifu na majina ya watumiaji:',
@@ -2498,7 +2497,6 @@ export const sw = {
     notAllowedItem2: 'Nyenzo za unyanyasaji wa kingono kwa watoto, au onyesho lolote la kingono kwa watoto. Hii inaripotiwa kwa mamlaka husika na husababisha kuondolewa mara moja kwa kudumu',
     notAllowedItem3: 'Kuchochea vurugu, vitisho vya vurugu, au kutukuza msimamo mkali na ugaidi',
     notAllowedItem4: 'Unyanyasaji, uonevu na dhuluma inayolengwa, pamoja na rundo lililoratibiwa',
-    notAllowedItem5: 'Matamshi ya chuki, ikiwa ni pamoja na mashambulizi dhidi ya watu kulingana na rangi, kabila, asili ya kitaifa, dini, ulemavu, magonjwa, jinsia, utambulisho wa kijinsia au mwelekeo wa kijinsia',
     notAllowedItem6: 'Kufanya au kuchapisha habari ya faragha ya mtu mwingine bila idhini yake',
     notAllowedItem7: 'Barua taka, udanganyifu wa ushiriki, mitandao ya bot, na mfumuko wa bei bandia wa maoni, kura au zawadi',
     notAllowedItem8: 'Uigaji wa mtu mwingine, mtengenezaji, chapa au mradi',

@@ -2008,7 +2008,6 @@ export const mnp = {
   },
   communityGuidelines: {
     lastUpdated: '最後更新：',
-    lastUpdatedDate: '26 八月 2026',
     intro: 'Riftn係一個去中心化、由用戶擁有嘅平台，但咱並非無規矩嘅地方。這些指引規定咱能做啥、不能做啥，咋樣報告內容，以及報告後會發生啥事。政策由社群治理決定；執行則由指定嘅管理員迅速處理。',
     adultContent: '成人內容',
     reportingText: '報告只需幾下手指頭就可以做，可以直接從內容裡面報告：',
@@ -2020,7 +2019,6 @@ export const mnp = {
     notAllowedItem2: '兒童性虐待材料，或者任何對未成年人嘅性化描繪。呢啲會向相關當局舉報，並導致立即永久移除',
     notAllowedItem3: '煽動暴力、威脅暴力，或者頌揚暴力極端主義同恐怖主義',
     notAllowedItem4: '騷擾、欺凌同針對性 abuso，包括協調一致嘅圍攻',
-    notAllowedItem5: '仇恨言論，包括基於種族、民族、國籍、宗教、殘疾、疾病、性別、性別認同或性取向對人嘅攻擊',
     notAllowedItem7: '垃圾訊息、參與度操縱、機器人網絡，以及人為誇大瀏覽量、投票或獎勵',
     notAllowedItem8: '冒充其他人、創作者、品牌或項目',
     notAllowedItem9: '惡意軟件、網絡釣魚連結、錢包吸管，以及詐騙或欺詐性金融計劃',

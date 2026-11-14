@@ -2020,7 +2020,6 @@ export const yue = {
   },
   communityGuidelines: {
     lastUpdated: '上次更新：',
-    lastUpdatedDate: '2026年8月26號',
     intro: 'Riftn 係一個去中心化、用戶擁有嘅平台，但係佢唔係一個冇規則嘅地方。呢啲指引規定咗啲咩係允許同唔允許嘅，點樣報告內容，同埋報告完之後會發生啲咩事。政策係由社區治理制定；執行係由指定嘅主持人及時進行。',
     notAllowed: '唔准嘅嘢',
     notAllowedText: '喺 Riftn 嘅任何地方都禁止以下內容同行為，包括帖子、留言、串流、訊息、個人檔案同用戶名：',
@@ -2028,7 +2027,6 @@ export const yue = {
     notAllowedItem2: '兒童性虐待材料，或者任何對未成年人嘅性描繪。呢個會向相關機關報告，並且會立即被永久移除',
     notAllowedItem3: '煽動暴力、威脅暴力，或者榮耀暴力極端主義同恐怖主義',
     notAllowedItem4: '騷擾、欺凌同有針對性嘅虐待，包括協調嘅堆疊',
-    notAllowedItem5: '仇恨言論，包括基於種族、族裔、國籍、宗教、殘疾、疾病、性別、性別認同或性取向對人嘅攻擊',
     notAllowedItem6: '喺未經其他人同意嘅情況下，用人身攻擊或者發佈其他人嘅私人資料',
     notAllowedItem7: '垃圾內容、互動操縱、機器人網絡，同埋人為嘅觀看次數、票數或者獎勵膨脹',
     notAllowedItem8: '冒充另一個人、創作者、品牌或者項目',

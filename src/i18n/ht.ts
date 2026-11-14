@@ -2428,7 +2428,6 @@ export const ht = {
   communityGuidelines: {
     title: 'Gid Kominotè',
     lastUpdated: 'Dènye mizajou:',
-    lastUpdatedDate: '26 Out 2026',
     intro: 'Riftn se yon platfòm desantralize, itilizatè-posede, men li pa yon kote san règ. Gid sa yo tabli ki sa ki pèmèt ak ki pa pèmèt, ki jan yo rapòte kontni, ak sa k ap pase apre yo fin fè yon rapò. Gouvènans kominotè a fikse politik; moderatè deziyen yo fè aplikasyon san pèdi tan.',
     notAllowed: 'Ki sa ki pa pèmèt',
     notAllowedText: 'Kontni ak konpòtman sa yo entèdi nenpòt kote sou Riftn, ki gen ladan posts, kòmantè, kouran, mesaj, pwofil ak non itilizatè:',
@@ -2436,7 +2435,6 @@ export const ht = {
     notAllowedItem2: 'Materyèl abi seksyèl timoun, oswa nenpòt reprezantasyon seksyèl minè yo. Yo rapòte sa bay otorite ki enpòtan yo epi sa lakòz yo retire yo imedyatman pou toutan',
     notAllowedItem3: 'Ensitasyon pou vyolans, menas vyolans, oswa glorifikasyon ekstremis vyolan ak teworis',
     notAllowedItem4: 'Asèlman, entimidasyon ak abi vize, ki gen ladan pil-ons kowòdone',
-    notAllowedItem5: 'Diskou rayi, ki gen ladan atak sou moun ki baze sou ras, etnisite, orijin nasyonal, relijyon, andikap, maladi, sèks, idantite seksyèl oswa oryantasyon seksyèl',
     notAllowedItem6: 'Doxxing oswa pibliye enfòmasyon prive yon lòt moun san konsantman yo',
     notAllowedItem7: 'Spam, manipilasyon angajman, rezo bot, ak enflasyon atifisyèl nan opinyon, vòt oswa rekonpans',
     notAllowedItem8: 'Imitasyon yon lòt moun, kreyatè, mak oswa pwojè',

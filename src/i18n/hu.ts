@@ -2428,7 +2428,6 @@ export const hu = {
   communityGuidelines: {
     title: 'Közösségi irányelvek',
     lastUpdated: 'Utolsó frissítés:',
-    lastUpdatedDate: '2026. augusztus 26.',
     intro: 'A Riftn egy decentralizált, felhasználó tulajdonában lévő platform, de nem egy szabályok nélküli hely. Ezek az irányelvek meghatározzák, hogy mi engedélyezett és mi nem, hogyan kell jelenteni a tartalmat, és mi történik a jelentés elkészítése után. A szabályzatot a közösségi irányítás határozza meg; a végrehajtást azonnal elvégzik a kijelölt moderátorok.',
     notAllowed: 'Mi nem megengedett?',
     notAllowedText: 'A Riftnon bárhol tilos a következő tartalom és viselkedés, beleértve a bejegyzéseket, megjegyzéseket, adatfolyamokat, üzeneteket, profilokat és felhasználóneveket:',
@@ -2436,7 +2435,6 @@ export const hu = {
     notAllowedItem2: 'Gyermekekkel szembeni szexuális visszaélést ábrázoló anyag vagy kiskorúak bármilyen szexuális ábrázolása. Ezt jelentik az illetékes hatóságoknak, és azonnali végleges eltávolítást eredményez',
     notAllowedItem3: 'Erőszakra való felbujtás, erőszakkal való fenyegetés vagy erőszakos szélsőségesség és terrorizmus dicsőítése',
     notAllowedItem4: 'Zaklatás, megfélemlítés és célzott bántalmazás, beleértve az összehangolt halmozást',
-    notAllowedItem5: 'Gyűlöletbeszéd, beleértve az emberek elleni, faji, etnikai, nemzeti hovatartozáson, valláson, fogyatékosságon, betegségen, nemen, nemi identitáson vagy szexuális irányultságon alapuló támadásokat',
     notAllowedItem6: 'Egy másik személy személyes adatainak meghamisítása vagy közzététele a beleegyezése nélkül',
     notAllowedItem7: 'Spam, elkötelezettségi manipuláció, bothálózatok és a nézetek, szavazatok vagy jutalmak mesterséges inflációja',
     notAllowedItem8: 'Másik személy, alkotó, márka vagy projekt megszemélyesítése',

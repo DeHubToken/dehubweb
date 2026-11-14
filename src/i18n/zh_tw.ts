@@ -2019,12 +2019,10 @@ export const zh_tw = {
     limitationItem1: '用户发布的内容',
   },
   communityGuidelines: {
-    lastUpdatedDate: '26日 2026年8月',
     intro: 'Riftn 是一个去中心化、用户所有的平台，但这并不是一个没有规则的地方。这些指引明确了哪些行为是允许的，哪些是不允许的，如何举报内容，以及举报后会发生什么。政策由社区治理决定；由指定的版主及时执行监管。',
     notAllowedItem1: '非法内容或促进非法活动的内容',
     notAllowedItem2: '儿童性虐待内容，或任何性化的未成年人肖像。这些内容将被报告给相关机构，并会立即永久删除。',
     notAllowedItem4: '性骚扰、欺凌和针对性的恶意攻击，包括协同围攻',
-    notAllowedItem5: '种族、民族、国籍、宗教、残疾、疾病、性别、性别认同或性取向等基于人群的攻击性言论，包括仇恨言论',
     notAllowedItem7: '垃圾信息、操纵互动、机器人网络，以及人为炒作浏览量、投票或奖励数量',
     notAllowedItem8: '冒充他人、创作者、品牌或项目',
     notAllowedItem9: '恶意软件、钓鱼链接、钱包排干器（drainers）以及欺诈或欺骗性金融计划',

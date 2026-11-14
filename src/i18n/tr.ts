@@ -2213,7 +2213,6 @@ export const tr = {
   communityGuidelines: {
     title: "Topluluk Kuralları",
     lastUpdated: "Son güncelleme:",
-    lastUpdatedDate: "26 Ağustos 2026",
     intro: "Riftn merkeziyetsiz, kullanıcıya ait bir platformdur, ama kuralsız bir yer değildir. Bu kurallar neye izin verilip verilmediğini, içeriğin nasıl bildirileceğini ve bir bildirimden sonra ne olacağını ortaya koyar. Politika topluluk yönetişimiyle belirlenir; uygulama görevli denetçilerce hızla yürütülür.",
     notAllowed: "Neye İzin Verilmez",
     notAllowedText: "Aşağıdaki içerik ve davranışlar; paylaşımlar, yorumlar, yayınlar, mesajlar, profiller ve kullanıcı adları dâhil Riftn'ın her yerinde yasaktır:",
@@ -2221,7 +2220,6 @@ export const tr = {
     notAllowedItem2: "Çocukların cinsel istismarına ilişkin materyal ya da reşit olmayanların cinselleştirilmiş her türlü tasviri. Bu, ilgili makamlara bildirilir ve derhal kalıcı olarak kaldırılmayla sonuçlanır",
     notAllowedItem3: "Şiddete teşvik, şiddet tehdidi ya da şiddet yanlısı aşırılığın ve terörizmin yüceltilmesi",
     notAllowedItem4: "Koordineli toplu saldırılar dâhil taciz, zorbalık ve hedefli kötüye kullanım",
-    notAllowedItem5: "Irk, etnik köken, ulusal köken, din, engellilik, hastalık, cinsiyet, cinsiyet kimliği ya da cinsel yönelime dayalı saldırılar dâhil nefret söylemi",
     notAllowedItem6: "Başkasının özel bilgilerini rızası olmadan ifşa etmek ya da yayımlamak",
     notAllowedItem7: "İstenmeyen posta, etkileşim manipülasyonu, bot ağları ve izlenme, oy ya da ödüllerin yapay olarak şişirilmesi",
     notAllowedItem8: "Başka bir kişinin, içerik oluşturucunun, markanın ya da projenin kimliğine bürünmek",

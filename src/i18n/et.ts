@@ -2312,7 +2312,6 @@ export const et = {
   communityGuidelines: {
     title: 'Kogukonna reeglid',
     lastUpdated: 'Viimati uuendatud:',
-    lastUpdatedDate: '26. august 2026',
     intro: 'Riftn on detsentraliseeritud, kasutaja omanduses olev platvorm, kuid see ei ole reegliteta koht. Need juhised sätestavad, mis on ja mis ei ole lubatud, kuidas sisust teatada ja mis juhtub pärast aruande koostamist. Poliitika kehtestab kogukonna juhtimine; jõustamist teostavad viivitamatult määratud moderaatorid.',
     notAllowed: 'Mis ei ole lubatud',
     notAllowedText: 'Järgnev sisu ja käitumine on keelatud kõikjal Riftnis, sealhulgas postitused, kommentaarid, voogedastused, sõnumid, profiilid ja kasutajanimed:',
@@ -2320,7 +2319,6 @@ export const et = {
     notAllowedItem2: 'Laste seksuaalset kuritarvitamist kujutav materjal või alaealiste seksualiseeritud kujutamine. Sellest teatatakse asjaomastele ametiasutustele ja tulemuseks on viivitamatu lõplik eemaldamine',
     notAllowedItem3: 'Vägivallale õhutamine, vägivallaga ähvardamine või vägivaldse äärmusluse ja terrorismi ülistamine',
     notAllowedItem4: 'Ahistamine, kiusamine ja sihipärane väärkohtlemine, sealhulgas koordineeritud kuhjumine',
-    notAllowedItem5: 'Vihakõne, sealhulgas inimeste ründamine rassi, etnilise päritolu, rahvusliku päritolu, usutunnistuse, puude, haiguse, soo, soolise identiteedi või seksuaalse sättumuse alusel',
     notAllowedItem6: 'Teise isiku isikliku teabe tegemine või avaldamine ilma tema nõusolekuta',
     notAllowedItem7: 'Rämpspost, kaasamisega manipuleerimine, robotivõrgud ja vaadete, häälte või preemiate kunstlik inflatsioon',
     notAllowedItem8: 'Teise isiku, looja, kaubamärgi või projekti kehastamine',

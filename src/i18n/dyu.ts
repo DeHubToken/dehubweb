@@ -2523,7 +2523,6 @@ export const dyu = {
     useRewardsTitle: 'Rewards currency',
   },
   communityGuidelines: {
-    notAllowedItem5: 'Koniya kumaw, minnu bɛ mɔgɔw tɔɔrɔ u siya, u bɔyɔrɔ, u jamana, u diinɛ, u fiɲɛ, u bana, u cɛya walima musoya, u yɛrɛ ka cɛya-musoya jateli walima u kanu sira kosɔn',
     notAllowedItem6: 'Mɔgɔ wɛrɛ ka gundo kunnafoniw jɛnsɛnni (doxxing) k\'a sɔnni tɛ',
     notAllowedItem8: 'Ka i yɛrɛ kɛ mɔgɔ wɛrɛ ye, dabɔbaga, taamasiyɛn walima porozɛ wɛrɛ ye',
     notAllowedItem9: 'Fɛn juguw (malware), nanbara jɛɲɔgɔnyaw (phishing), wari-bolo nicilanw (wallet drainers), ani nanbara walima wari kɛcogo juguw',
@@ -2531,7 +2530,6 @@ export const dyu = {
     whatHappensNextItem4: 'Fɛn minnu tɛ sariya la, olu bɛ ci fanga ɲɛmɔgɔw ma yɔrɔ min na sariya b\'a fɛ',
     title: 'Jamana ka ladiliw',
     lastUpdated: 'An ka kunnafoni wɛrɛw lajɛ:',
-    lastUpdatedDate: 'saan 2026 ɔkutɔburu tile 26.',
     intro: 'Riftn ye decentralized baarakɛla ka site ye nka o tɛ yɔrɔ min na sariya tɛ O ladiliw b\'a yira fɛɛn min be se ka kɛ ani min man kan ka kɛ, i be se k\'o lakali cogo min na ani min be kɛ o kɔ. Jamana ka politikikow be sigi sen kan, u be sigi sen kan joona joona.',
     notAllowed: 'O tɛ se ka kɛ',
     notAllowedItem1: 'O kama, a ka ɲi ka kuma ni mɔgɔ dɔ ye min ma sɔn ka kuma n\'a ye.',

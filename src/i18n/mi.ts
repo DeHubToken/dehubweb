@@ -2021,7 +2021,6 @@ export const mi = {
   communityGuidelines: {
     title: 'Ngā aratohu a te hapori',
     lastUpdated: 'Whakahōu whakamutunga:',
-    lastUpdatedDate: '26 Akuhata 2026',
     intro: 'Ko Riftn he papaaho decentralized, e whai ana i te kaiwhakamahi, engari ehara i te waahi kaore he ture. Ko ēnei aratohu e whakaatu ana i te mea e whakaaetia ana, e kore e whakaaetia, me pēhea te pūrongo i te ihirangi, me te mea e tupu ana i muri i te pūrongo. Ko te kaupapa here e whakaturia ana e te whakahaere hapori; ko te whakatinana ka mahia wawe e nga kaiwhakawhanake kua tohua.',
     notAllowed: 'He aha te mea e kore e whakaaetia',
     notAllowedText: 'Ko nga ihirangi me nga whanonga e whai ake nei ka aukatihia i nga waahi katoa i Riftn, tae atu ki nga pou, nga korero, nga awa, nga karere, nga korero me nga ingoa kaiwhakamahi:',
@@ -2029,7 +2028,6 @@ export const mi = {
     notAllowedItem2: 'He rauemi tūkino taumahinga tamariki, he whakaahua taumahinga rānei o ngā tamariki. Ka pūrongo tēnei ki ngā mana whakahaere e pā ana, ā, ka puta he whakakore tonu.',
     notAllowedItem3: 'Te whakaongaonga ki te tutu, te whakawehi i te tutu, te whakakororia ranei i te riri kaha me te whakaeke',
     notAllowedItem4: 'Te tukino, te tukino me te tukino arotahi, tae atu ki nga pile-ons kua whakaritea',
-    notAllowedItem5: 'Te korero kino, tae atu ki nga whakaeke i runga i nga tangata e hāngai ana ki te iwi, te iwi, te takenga mai o te motu, te whakapono, te ngoikoretanga, te mate, te ira tangata, te tuakiri taatai, te aronga taatai ranei',
     notAllowedItem6: 'Te mahi, te whakaputa rānei i ngā mōhiohio tūmataiti o tētahi atu tangata me te kore e whakaae ki a ia',
     notAllowedItem7: 'Spam, te whakahaere whakauru, nga whatunga bot, me te inflation mahi o nga whakaaro, nga pooti, nga utu ranei',
     notAllowedItem8: 'Whakaaturanga o tetahi atu tangata, kaihanga, waitohu, kaupapa ranei',

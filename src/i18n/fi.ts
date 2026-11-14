@@ -2468,7 +2468,6 @@ export const fi = {
   communityGuidelines: {
     title: 'Yhteisöohjeet',
     lastUpdated: 'Päivitetty viimeksi:',
-    lastUpdatedDate: '26.8.2026',
     intro: 'Riftn on hajautettu, käyttäjien omistama alusta, mutta se ei ole paikka ilman sääntöjä. Näissä ohjeissa kerrotaan, mikä on sallittua ja mikä ei, miten sisällöstä ilmoitetaan ja mitä tapahtuu ilmoituksen tekemisen jälkeen. Käytännön määrittelee yhteisön hallinto; valvonnan suorittavat viipymättä nimetyt valvojat.',
     notAllowed: 'Mikä ei ole sallittua',
     notAllowedText: 'Seuraavat sisällöt ja käyttäytyminen ovat kiellettyjä missä tahansa Riftnissa, mukaan lukien julkaisut, kommentit, streamit, viestit, profiilit ja käyttäjätunnukset:',
@@ -2476,7 +2475,6 @@ export const fi = {
     notAllowedItem2: 'Lasten seksuaaliseen hyväksikäyttöön liittyvä materiaali tai mikä tahansa seksuaalinen kuvaus alaikäisistä. Tämä ilmoitetaan asianomaisille viranomaisille ja johtaa välittömään pysyvään poistamiseen',
     notAllowedItem3: 'Väkivaltaan yllyttäminen, väkivallalla uhkaaminen tai väkivaltaisen ekstremismin ja terrorismin ihannointi',
     notAllowedItem4: 'Häirintä, kiusaaminen ja kohdennettu väärinkäyttö, mukaan lukien koordinoidut paalut',
-    notAllowedItem5: 'Vihapuhe, mukaan lukien hyökkäykset ihmisiä vastaan rodun, etnisyyden, kansallisen alkuperän, uskonnon, vammaisuuden, sairauden, sukupuolen, sukupuoli-identiteetin tai seksuaalisen suuntautumisen perusteella',
     notAllowedItem6: 'Toisen henkilön yksityisten tietojen tekeminen tai julkaiseminen ilman hänen suostumustaan',
     notAllowedItem7: 'Roskaposti, sitoutumisen manipulointi, bottiverkostot ja näkymien, äänien tai palkintojen keinotekoinen inflaatio',
     notAllowedItem8: 'Toisena henkilönä, tekijänä, brändinä tai projektina esiintyminen',

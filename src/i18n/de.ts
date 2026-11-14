@@ -2531,7 +2531,6 @@ export const de = {
   communityGuidelines: {
     title: 'Community Guidelines',
     lastUpdated: 'Zuletzt aktualisiert:',
-    lastUpdatedDate: '26. August 2026',
     intro: 'Riftn ist eine dezentrale, nutzergeführte Plattform, aber es ist kein Ort ohne Regeln. Diese Richtlinien legen fest, was erlaubt ist und was nicht, wie Inhalte gemeldet werden und was passiert, nachdem ein Bericht erstellt wurde. Die Richtlinie wird von der Community-Governance festgelegt; die Durchsetzung erfolgt zeitnah durch benannte Moderatoren.',
     notAllowed: 'Was nicht erlaubt ist',
     notAllowedText: 'Die folgenden Inhalte und Verhaltensweisen sind überall auf Riftn verboten, einschließlich Beiträge, Kommentare, Streams, Nachrichten, Profile und Benutzernamen:',
@@ -2539,7 +2538,6 @@ export const de = {
     notAllowedItem2: 'Material über sexuellen Missbrauch von Kindern oder eine sexualisierte Darstellung von Minderjährigen. Dies wird den zuständigen Behörden gemeldet und führt zu einer sofortigen dauerhaften Entfernung',
     notAllowedItem3: 'Anstiftung zu Gewalt, Androhung von Gewalt oder Verherrlichung von gewalttätigem Extremismus und Terrorismus',
     notAllowedItem4: 'Belästigung, Mobbing und gezielter Missbrauch, einschließlich koordinierter Stapel',
-    notAllowedItem5: 'Hassreden, einschließlich Angriffe auf Menschen aufgrund von Rasse, ethnischer Zugehörigkeit, nationaler Herkunft, Religion, Behinderung, Krankheit, Geschlecht, Geschlechtsidentität oder sexueller Orientierung',
     notAllowedItem6: 'Doxxing oder Veröffentlichung der privaten Informationen einer anderen Person ohne deren Zustimmung',
     notAllowedItem7: 'Spam, Engagement-Manipulation, Bot-Netzwerke und künstliche Inflation von Ansichten, Stimmen oder Belohnungen',
     notAllowedItem8: 'Imitation einer anderen Person, eines anderen Erstellers, einer anderen Marke oder eines anderen Projekts',

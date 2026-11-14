@@ -2442,7 +2442,6 @@ export const cs = {
   communityGuidelines: {
     title: 'Pravidla pro komunitu',
     lastUpdated: 'Poslední aktualizace:',
-    lastUpdatedDate: '26. srpna 2026',
     intro: 'Riftn je decentralizovaná platforma vlastněná uživateli, ale není to místo bez pravidel. Tyto pokyny stanoví, co je a co není povoleno, jak nahlásit obsah a co se stane po nahlášení. Politika je stanovena správou komunity; prosazování je prováděno okamžitě určenými moderátory.',
     notAllowed: 'Co není povoleno',
     notAllowedText: 'Následující obsah a chování jsou zakázány kdekoli na Riftnu, včetně příspěvků, komentářů, streamů, zpráv, profilů a uživatelských jmen:',
@@ -2450,7 +2449,6 @@ export const cs = {
     notAllowedItem2: 'Materiály týkající se sexuálního zneužívání dětí nebo jakékoli sexualizované zobrazení nezletilých. To je hlášeno příslušným orgánům a má za následek okamžité trvalé odstranění',
     notAllowedItem3: 'Podněcování k násilí, vyhrožování násilím nebo glorifikace násilného extremismu a terorismu',
     notAllowedItem4: 'Obtěžování, šikana a cílené zneužívání, včetně koordinovaných hromadných útoků',
-    notAllowedItem5: 'Nenávistné projevy, včetně útoků na lidi na základě rasy, etnického původu, národnosti, náboženství, zdravotního postižení, nemoci, pohlaví, genderové identity nebo sexuální orientace',
     notAllowedItem6: 'Doxxing nebo zveřejnění soukromých informací jiné osoby bez jejího souhlasu',
     notAllowedItem7: 'Spam, manipulace se zapojením, sítě botů a umělé nafukování názorů, hlasů nebo odměn',
     notAllowedItem8: 'Vydávání se za jinou osobu, tvůrce, značku nebo projekt',
@@ -2473,6 +2471,10 @@ export const cs = {
     appealsText: 'Pokud se domníváte, že rozhodnutí o moderování bylo nesprávné, můžete se proti němu odvolat prostřednictvím správy komunity. Správa stanoví, že moderátoři zásad prosazují a mohou přezkoumat nebo zvrátit jednotlivá rozhodnutí. Vymáhání je však okamžité — obsah zůstává dole, zatímco se zvažuje odvolání.',
     contact: 'Kontakt',
     contactText: 'Otázky týkající se těchto pokynů nebo hlášení, která vyžadují naléhavou pozornost, můžeš posílat na adresu dev@dehub.io.',
+    notAllowedItem5: 'Cílená nenávistná prohlášení: útoky, vyhrožování nebo dehumanizace osoby či skupiny osob na základě jejich rasy, etnického původu, národnosti, náboženství, zdravotního postižení, nemoci, pohlaví, genderové identity nebo sexuální orientace',
+    lastUpdatedDate: '14. listopadu 2026',
+    freeSpeech: 'Svoboda projevu',
+    freeSpeechText: 'Riftn je vytvořen pro svobodu projevu. Názory, diskuze, satira a kritika myšlenek, přesvědčení, náboženství a politiky jsou vítány, včetně názorů, s nimiž ostatní nesouhlasí. Pravidlo proti nenávistným projevům se vztahuje na cílené útoky na lidi, nikoli na názory. O tom, co se považuje za cílený nenávistný projev, nakonec rozhoduje komunita, která platformu moderuje decentralizovaným způsobem prostřednictvím moderátorů zvolených komunitou a hlasování o správě. Nahlášení, blokování a ztlumení zůstávají k dispozici všem.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kalkulačka rozpočtu kampaně',

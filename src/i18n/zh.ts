@@ -2115,7 +2115,6 @@ export const zh = {
   communityGuidelines: {
     title: '社区指南',
     lastUpdated: '上次更新时间：',
-    lastUpdatedDate: '2026年8月26日',
     intro: 'Riftn是一个去中心化的用户自有平台，但它不是一个没有规则的地方。这些准则规定了哪些内容是允许的，哪些内容是不允许的，如何举报内容，以及举报后会发生什么情况。政策由社区治理制定；由指定的主持人及时执行。',
     notAllowed: '什么是不允许的',
     notAllowedText: 'Riftn上的任何地方都禁止以下内容和行为，包括帖子、评论、流媒体、消息、个人资料和用户名：',
@@ -2123,7 +2122,6 @@ export const zh = {
     notAllowedItem2: '儿童性虐待材料，或对未成年人的任何性描绘。我们会向相关部门报告此事，并立即将其永久移除',
     notAllowedItem3: '煽动暴力、暴力威胁或美化暴力极端主义和恐怖主义',
     notAllowedItem4: '骚扰、欺凌和有针对性的虐待，包括协调堆放',
-    notAllowedItem5: '仇恨言论，包括基于种族、民族、国籍、宗教、残疾、疾病、性别、性别认同或性取向的攻击',
     notAllowedItem6: '在未经他人同意的情况下泄露或发布他人的私人信息',
     notAllowedItem7: '垃圾邮件、参与度操纵、机器人网络以及观看次数、投票或奖励的人为膨胀',
     notAllowedItem8: '冒充他人、创作者、品牌或项目',

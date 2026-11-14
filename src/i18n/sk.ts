@@ -2490,7 +2490,6 @@ export const sk = {
   communityGuidelines: {
     title: 'Pravidlá pre komunitu',
     lastUpdated: 'Posledná aktualizácia:',
-    lastUpdatedDate: '26. augusta 2026',
     intro: 'Riftn je decentralizovaná platforma vlastnená používateľmi, ale nie je to miesto bez pravidiel. Tieto pokyny stanovujú, čo je a čo nie je povolené, ako nahlásiť obsah a čo sa stane po nahlásení. Politika je stanovená správou komunity; presadzovanie sa vykonáva bezodkladne určenými moderátormi.',
     notAllowed: 'Čo nie je povolené',
     notAllowedText: 'Nasledujúci obsah a správanie sú zakázané kdekoľvek na Riftn, vrátane príspevkov, komentárov, streamov, správ, profilov a používateľských mien:',
@@ -2498,7 +2497,6 @@ export const sk = {
     notAllowedItem2: 'Materiály týkajúce sa sexuálneho zneužívania detí alebo akékoľvek sexuálne zobrazovanie maloletých. Toto sa oznamuje príslušným orgánom a vedie k okamžitému trvalému odstráneniu',
     notAllowedItem3: 'Podnecovanie k násiliu, vyhrážanie sa násilím alebo glorifikácia násilného extrémizmu a terorizmu',
     notAllowedItem4: 'Obťažovanie, šikanovanie a cielené zneužívanie vrátane koordinovaných hromadných útokov',
-    notAllowedItem5: 'Nenávistné prejavy vrátane útokov na ľudí na základe rasy, etnického pôvodu, národnosti, náboženstva, zdravotného postihnutia, choroby, pohlavia, rodovej identity alebo sexuálnej orientácie',
     notAllowedItem6: 'Doxxing alebo zverejnenie súkromných informácií inej osoby bez jej súhlasu',
     notAllowedItem7: 'Spam, manipulácia so zapojením, siete botov a umelá inflácia názorov, hlasov alebo odmien',
     notAllowedItem8: 'Vydávanie sa za inú osobu, tvorcu, značku alebo projekt',
