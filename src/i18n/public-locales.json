@@ -1,5 +1,5 @@
 {
-  "version": "078015eed57218b0",
+  "version": "79184ac1b8a2a8d9",
   "routes": {
     "/": [
       "ar",
@@ -716,6 +716,13 @@
       "tr"
     ],
     "/guides/decentralization-in-practice-the-fansite-fork-story": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/decentralization-spectrum-social-media": [
       "ar",
       "es",
       "fr",

@@ -1,6 +1,7 @@
 import { BlogPost as BlogPostType } from '@/types/blog';
 import { riftnRelaunchPost } from './posts/riftnRelaunchPost';
 import { isRiftnDehubPost } from './posts/isRiftnDehubPost';
+import { decentralizationSpectrumPost } from './posts/decentralizationSpectrumPost';
 import { binancePioneerBurnAppealPost } from './posts/binancePioneerBurnAppealPost';
 import { ownEverythingTaglinePost } from './posts/ownEverythingTaglinePost';
 import { yearlyWrapUp2025Post } from './posts/yearlyWrapUp2025Post';
@@ -1418,6 +1419,7 @@ const bnbPoolUpdatePost: BlogPostType = {
 };
 
 export const newPosts: BlogPostType[] = [
+  decentralizationSpectrumPost,
   isRiftnDehubPost,
   ownEverythingTaglinePost,
   binancePioneerBurnAppealPost,
