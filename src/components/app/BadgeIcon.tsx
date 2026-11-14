@@ -13,7 +13,7 @@ import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useInlineBadgeFont } from '@/hooks/use-inline-badge-font';
-import { badgePosterSit } from '@/lib/badge-poster-bounds';
+import { badgePosterSit, badgeTierScale } from '@/lib/badge-poster-bounds';
 import { badgeSmallSrcSet, warmBadgeStills } from '@/lib/badge-small-art';
 
 function BadgeAnimation({ src, style, onError }: { src: string; style: CSSProperties; onError: () => void }) {
@@ -125,7 +125,8 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // scale from this one number. The box ends on the tier's resting line, so
   // that line sits on the name's baseline and thin tips overshoot just below.
   const baseCap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
-  const cap = visualName === 'Megalodon' ? `calc(${baseCap} * 1.069)` : baseCap;
+  const tierScale = badgeTierScale[visualName ?? ''] ?? 1;
+  const cap = `calc(${baseCap} * ${tierScale})`;
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: `calc(${sit} * ${cap})`,
