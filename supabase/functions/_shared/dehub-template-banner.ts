@@ -183,7 +183,7 @@ function heuristicSpec(prompt: string, manifest: KitManifest, format: BannerForm
     const score = i.tags.reduce((a, t) => a + (p.includes(t) ? 1 : 0), 0) + (p.includes(i.key) ? 2 : 0);
     if (score > best) { best = score; icon = i.key; }
   }
-  if (!icon) icon = "coin";
+  if (!icon) icon = "sparkle";
   const quoted = prompt.match(/["“”']([^"“”']{2,28})["“”']/)?.[1];
   const base = (quoted || prompt.replace(/\b(dehub|make|create|generate|a|an|the|for|please|banner|poster|graphic|image)\b/gi, " "))
     .trim().split(/\s+/).filter(Boolean);
@@ -207,7 +207,7 @@ export async function buildSpecFromPrompt(opts: {
 - headline: 1-2 lines, UPPERCASE, punchy marketing copy, max 12 chars per line (hard limit 14). blurTail = 1-3 trailing letters to motion-blur on the LAST line, 0 on the first.
 - subtitle: short snake_case descriptor (e.g. get_paid_to_watch). extra: optional tiny snake_case fact (e.g. 2026, no_investment).
 - typeTag: one snake word categorizing it (guide, game, ranking, announcement, product, reward, brand, explainer...).
-- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). The "coin" icon carries the Riftn logo mark — use it ONLY for token / price / buy / staking topics, otherwise it duplicates the brand logo. icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
+- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
 - layout: "wordmark" ONLY for a pure brand/logo card with no other subject; otherwise "hero".
 Icon inventory: ${inventory}.
 Shape (exact — subtitle/extra/typeTag/icon are PLAIN STRINGS, never objects): {"layout":"hero","headline":[{"text":"GO","blurTail":0},{"text":"LIVE","blurTail":1}],"subtitle":"web3_streaming","extra":"2026","typeTag":"product","icon":"mic","icon2":""}

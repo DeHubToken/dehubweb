@@ -35,7 +35,7 @@ If you are hitting login or posting problems in the meantime, they are known. Th
 
 Waiting around on markets or perfect products is no longer viable. With the rise of AI and global uncertainty, speed is paramount, moats must be built. It's time to lock in, get vocal, get active and stand when others lay, because we're here to stay.
   `,
-  bannerImage: '/media/dev-update-jan-2026-banner.png',
+  bannerImage: '/media/development-update-dehub-era-starts-final-updates-bug-fixes-banner-r2.jpg',
   bannerImageAlt: 'Riftn Development Update January 2026 - The Riftn Era Starts',
   author: {
     name: 'Riftn Team',

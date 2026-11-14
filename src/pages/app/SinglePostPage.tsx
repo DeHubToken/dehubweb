@@ -1666,6 +1666,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           currentSpoilerText={videoData.spoilerText}
           currentQuotePolicy={videoData.quotePolicy}
           currentReplyPolicy={videoData.replyPolicy}
+          currentVisibility={(videoData as any).visibility}
           currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);

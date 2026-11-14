@@ -1804,6 +1804,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             currentSpoilerText={post.spoilerText}
             currentQuotePolicy={post.quotePolicy}
             currentReplyPolicy={post.replyPolicy}
+            currentVisibility={(post as any).visibility}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

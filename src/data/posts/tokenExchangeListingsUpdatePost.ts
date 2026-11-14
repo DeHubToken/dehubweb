@@ -24,7 +24,7 @@ We expect to announce official exchange listings soon. Our current target is the
 
 [Explore token purchase options](https://riftn.com/buy) · [Read the original announcement on X](https://x.com/riftn_com/status/2101031547285746132)
   `,
-  bannerImage: '/media/dehub-token-exchange-listings-2026.jpg',
+  bannerImage: '/media/dehub-token-exchange-listings-update-2026-banner-r2.jpg',
   bannerImageAlt: 'Riftn listing soon announcement banner',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-09-18T19:32:10.000Z',

@@ -65,6 +65,8 @@ function normalizeEditedPost(edited: EditPostResult) {
     // the card that is already on screen.
     shopLinks: edited.shopLinks,
     shopListingCount: edited.shopListingCount,
+    // The "Followers only" mark comes off the card once the post is opened up.
+    ...(edited.visibility ? { visibility: edited.visibility } : {}),
   };
 }
 

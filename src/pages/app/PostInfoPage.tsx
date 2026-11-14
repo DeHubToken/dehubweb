@@ -916,6 +916,7 @@ export default function PostInfoPage() {
           currentSpoilerText={nftInfo.spoilerText}
           currentQuotePolicy={nftInfo.quotePolicy}
           currentReplyPolicy={nftInfo.replyPolicy}
+          currentVisibility={(nftInfo as any).visibility}
           currentForKids={nftInfo.forKids}
           currentShopLinks={(nftInfo as any).shopLinks}
           onSuccess={(edited) => {

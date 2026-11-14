@@ -180,7 +180,7 @@ Your messages remain encrypted and unreadable. That's the power of true end-to-e
 At Riftn, we believe privacy is a fundamental right. Our E2EE implementation ensures that your conversations are truly private, protected by mathematics, not just policies. We've chosen industry-leading cryptographic libraries and algorithms to give you the same level of security used by Signal, WhatsApp, and other privacy-focused messaging platforms.
 
 Your messages. Your privacy. Always.`,
-  bannerImage: '/media/e2ee-banner.png',
+  bannerImage: '/media/privacy-first-open-source-e2ee-dehub-banner-r2.jpg',
   bannerImageAlt: 'Riftn End-to-End Encryption Banner - Privacy First Technology',
   author: {
     name: 'Riftn Team',

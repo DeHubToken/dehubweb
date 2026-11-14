@@ -316,7 +316,7 @@ See our sister ranking, the [Top 50 Blockchain Projects 2026](/guides/top-50-blo
 ## Build with Riftn
 
 Open [riftn.com](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
-  bannerImage: '/media/top-100-crypto-projects-2026-banner-manrope.jpg',
+  bannerImage: '/media/top-100-crypto-projects-2026-banner-r2.jpg',
   bannerImageAlt: 'Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T23:30:00.000Z',
