@@ -7,6 +7,7 @@
  * @module hooks/use-unified-feed
  */
 
+import { isSignInWall, noteSignInWall } from '@/lib/sign-in-wall';
 import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, getMediaUrl, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
@@ -702,11 +703,12 @@ async function fetchUnifiedFeedFromAPI(
   // 24h guess). If we believed we were authenticated and the page came back
   // with no viewer fields at all, the token was dead — refresh once and refetch
   // so the cache never stores someone else's engagement state.
-  if (viewer && token && isAnonymousResponse(result)) {
+  if (viewer && token && (isAnonymousResponse(result) || isSignInWall(result))) {
     const fresh = await ensureFreshToken().catch(() => null);
     if (fresh && fresh !== token) return requestFeed(fresh);
   }
 
+  noteSignInWall(result);
   return result;
 }
 

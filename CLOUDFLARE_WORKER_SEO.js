@@ -4805,8 +4805,8 @@ export function profileSitemapXml(profiles, systemRoutes) {
 
 /** Post ids are sequential, so a sitemap page is an id range. */
 const POST_SITEMAP_CHUNK_SIZE = 50000;
-/** The API caps `limit` at 100 and silently returns 100 for anything larger. */
-const POST_SITEMAP_FEED_PAGE_SIZE = 100;
+/** Rows per /api/sitemap/posts page (its cap is 5,000). */
+const POST_SITEMAP_FEED_PAGE_SIZE = 5000;
 const POST_SITEMAP_RETRIES = 4;
 const POST_SITEMAP_MAX_WAIT_SECONDS = 30;
 /** Start waiting with this many requests still in the budget: waiting out the
@@ -4843,6 +4843,7 @@ export function postQualifiesForSitemap(post) {
   if (!post || post.isHidden || post.isPrivate) return false;
   // A subscriber-gated post renders a paywall to a signed-out crawler, so the
   // page Google would index is not the page the URL promises.
+  if (post.gated === true) return false;
   if (Array.isArray(post.plansDetails) && post.plansDetails.length) return false;
   // Deliberately no `status` test. The feed's own `status=minted` parameter is
   // silently ignored — 308 of 1,200 rows came back `signed`, i.e. posted
@@ -4850,7 +4851,10 @@ export function postQualifiesForSitemap(post) {
   // sampled `signed` posts answer 200 at /app/post/<tokenId>. Rejecting them
   // would drop a quarter of the corpus for a distinction the page does not
   // make.
-  const text = `${post.name || ''} ${post.description || ''}`.replace(/[^\p{L}\p{N}]/gu, '').length;
+  // /api/sitemap/posts sends the count, not the text.
+  const text = Number.isFinite(post.textLength)
+    ? post.textLength
+    : `${post.name || ''} ${post.description || ''}`.replace(/[^\p{L}\p{N}]/gu, '').length;
   if (text >= POST_SITEMAP_MIN_TEXT) return true;
   return Number(post.commentCount) >= POST_SITEMAP_MIN_COMMENTS;
 }
@@ -4922,16 +4926,15 @@ function postSitemapRateWait(headers) {
 /** One page of the feed, retried through transient failures. Null once the
  *  retries are spent — which the caller must treat as an incomplete run, not
  *  as the end of the data. */
-async function fetchSitemapFeedPage(page) {
+async function fetchSitemapFeedPage(page, minId, maxId) {
   for (let attempt = 0; attempt < POST_SITEMAP_RETRIES; attempt++) {
     try {
+      // The sitemap list, not the feed: signed-out reads of the feed stop a
+      // few pages in (riftn-backend common/util/signed-out-wall.ts), and this
+      // list only carries ids, dates, a picture and the quality counts.
       const res = await fetch(
-        `https://api.dehub.io/api/feed?limit=${POST_SITEMAP_FEED_PAGE_SIZE}&page=${page}`
-          // Without an explicit sort the API's page boundaries shift between
-          // requests, so a post slides across one and is listed twice or not at
-          // all; without status=minted the list carries posts whose /app/post/
-          // page does not resolve, i.e. a sitemap of 404s.
-          + '&sortBy=createdAt&sortOrder=desc&status=minted',
+        `https://api.dehub.io/api/sitemap/posts?minId=${minId}&maxId=${maxId}`
+          + `&page=${page}&limit=${POST_SITEMAP_FEED_PAGE_SIZE}`,
         { signal: AbortSignal.timeout(15000) },
       );
       if (!res.ok) {
@@ -5019,7 +5022,7 @@ async function dehubPostSitemap(page) {
   const posts = [];
   const seen = new Set();
   for (let feedPage = 1; feedPage <= POST_SITEMAP_MAX_FEED_PAGES; feedPage++) {
-    const json = await fetchSitemapFeedPage(feedPage);
+    const json = await fetchSitemapFeedPage(feedPage, minId, maxId);
     if (!json) return null;
     const rows = Array.isArray(json.result) ? json.result : [];
     if (rows.length === 0) return posts;

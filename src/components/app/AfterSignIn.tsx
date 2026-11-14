@@ -26,6 +26,7 @@ import {
   takeAfterSignIn,
   takeSheetAfterLeave,
 } from '@/lib/after-sign-in';
+import { SIGN_IN_WALL_EVENT } from '@/lib/sign-in-wall';
 
 /** Long enough for the page under the sheet to re-render as signed in. */
 const SETTLE_MS = 450;
@@ -47,6 +48,18 @@ export function AfterSignIn() {
 
   const latest = useRef({ isAuthenticated, isLoading, openLoginModal, navigate, pathname: location.pathname });
   latest.current = { isAuthenticated, isLoading, openLoginModal, navigate, pathname: location.pathname };
+
+  // 0. Signed-out reading reached the end of what the API shows without an
+  //    account (lib/sign-in-wall): ask them to sign in to keep scrolling.
+  useEffect(() => {
+    const onWall = () => {
+      const { isAuthenticated: authed, isLoading: loading, openLoginModal: open } = latest.current;
+      if (authed || loading) return;
+      open();
+    };
+    window.addEventListener(SIGN_IN_WALL_EVENT, onWall);
+    return () => window.removeEventListener(SIGN_IN_WALL_EVENT, onWall);
+  }, []);
 
   // 1. Signed-out taps: remember the button, and keep account-only links in place.
   useEffect(() => {
