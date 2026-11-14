@@ -7,6 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { cdnImageSource } from '@/lib/media-url';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 interface TranslationResult {
@@ -81,9 +82,13 @@ export function useImageTranslation(): UseImageTranslationReturn {
   ): Promise<TranslationResult | null> => {
     // Get user's language preference
     const userLang = targetLang || resolveUserLanguage();
+    // The uploaded picture, not the resized copy the feed shows: the reader
+    // behind the translation cannot open resized links and answered with an
+    // error for every feed photo.
+    const sourceUrl = cdnImageSource(imageUrl);
     
     // Check client cache first
-    const cacheKey = getCacheKey(imageUrl, userLang);
+    const cacheKey = getCacheKey(sourceUrl, userLang);
     const cached = getFromSessionCache(cacheKey);
     if (cached) {
       setResult(cached);
@@ -96,7 +101,7 @@ export function useImageTranslation(): UseImageTranslationReturn {
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke('translate-image', {
-        body: { imageUrl, targetLang: userLang },
+        body: { imageUrl: sourceUrl, targetLang: userLang },
       });
 
       if (fnError) {
