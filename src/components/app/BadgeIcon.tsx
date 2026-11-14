@@ -8,7 +8,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
-import { riftnGoldBadge, type BadgeLock } from '@/lib/staking-badges';
+import { type BadgeLock } from '@/lib/staking-badges';
 import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -63,14 +63,14 @@ const BADGE_OPTICS: Record<string, { left: number; top: number; right: number; b
   "Killer Whale": { left: 19, top: 17, right: 109, bottom: 121 },
   "Great White Shark": { left: 8, top: 13, right: 121, bottom: 120 },
   "Blue Whale": { left: 7, top: 13, right: 119, bottom: 121 },
-  "Megalodon": { left: 8, top: 15, right: 120, bottom: 117 },
+  "Megalodon": { left: 9, top: 11, right: 119, bottom: 117 },
 };
 
 // Optical resting line of the original stills, measured like badgePosterSit.
 const BADGE_SIT: Record<string, number> = {
   "Crab": 114, "Ghost Lobster": 108, "Piranha": 112, "Giant Tortoise": 112, "King Cobra": 117, "Octopus": 118,
   "Crocodile": 115, "Dolphin": 117, "Tiger Shark": 113, "Killer Whale": 118, "Great White Shark": 114,
-  "Blue Whale": 115, "Megalodon": 114,
+  "Blue Whale": 115, "Megalodon": 112,
 };
 
 function badgeNameFromAssetUrl(url: string | null): string | undefined {
@@ -91,8 +91,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // Profiles already hold a resolved asset URL. Recover its tier so the same
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
-  const gold = url === riftnGoldBadge;
-  const art = gold ? undefined : badgeHoverArt(visualName);
+  const art = badgeHoverArt(visualName);
   const originalStill = visualName === 'Killer Whale';
   const fullStill = originalStill ? url : art?.poster ?? url;
   const [hovered, setHovered] = useState(false);
@@ -114,10 +113,10 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   };
   useEffect(warmBadgeStills, []);
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
-  const bounds = gold ? { left: 1, top: 1, right: 127, bottom: 123 } : optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
+  const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
   // Each tier's optical resting line (its body, not a dangling claw or tail tip).
-  const sitRow = gold ? bounds.bottom : !visualName ? bounds.bottom
+  const sitRow = !visualName ? bounds.bottom
     : (originalStill || !art ? BADGE_SIT[visualName] : badgePosterSit[visualName]) ?? bounds.bottom;
   const sit = Math.min(1, Math.max(0, (sitRow - bounds.top) / artworkHeight));
   // Full artwork height: 1.27x the adjacent font's cap height (cap height,
@@ -193,7 +192,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             style={imageStyle}
             data-badge-icon
             src={poster}
-            srcSet={gold ? undefined : badgeSmallSrcSet(visualName)}
+            srcSet={badgeSmallSrcSet(visualName)}
             alt={visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
             width={16}
             height={16}
