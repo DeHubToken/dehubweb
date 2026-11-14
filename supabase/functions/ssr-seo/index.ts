@@ -6,6 +6,11 @@ const corsHeaders = {
 };
 
 const DEHUB_API_BASE = "https://api.dehub.io";
+// Every crawler render reaches the API from this function's one IP. The
+// internal secret keeps a crawler burst off the API's per-IP limit, which
+// otherwise turned real posts and profiles into 404s.
+const INTERNAL_SERVICE_SECRET = Deno.env.get("INTERNAL_SERVICE_SECRET") || "";
+const API_HEADERS: Record<string, string> = INTERNAL_SERVICE_SECRET ? { "x-internal-secret": INTERNAL_SERVICE_SECRET } : {};
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const APP_URL = "https://riftn.com"; // Change to actual production URL if different
 
@@ -536,6 +541,7 @@ serve(async (req) => {
             console.log(`[SSR] Profile detected for: ${username}`);
 
             const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`, {
+                headers: API_HEADERS,
                 signal: AbortSignal.timeout(7000),
             });
             const userData = await response.json();
@@ -629,12 +635,13 @@ serve(async (req) => {
             const slug = cleanPath.split(isNewPost ? "/newpost/" : "/post/")[1].split("/")[0];
             let postId = slug;
             if (isNewPost) {
-                const resolved = await fetch(`${DEHUB_API_BASE}/api/newpost/${slug}`, { signal: AbortSignal.timeout(7000) });
+                const resolved = await fetch(`${DEHUB_API_BASE}/api/newpost/${slug}`, { headers: API_HEADERS, signal: AbortSignal.timeout(7000) });
                 if (!resolved.ok) return new Response(build404Html(canonicalUrl, isBot, functionBaseUrl), { status: 404, headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
                 postId = String((await resolved.json()).tokenId || slug);
             }
 
             const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`, {
+                headers: API_HEADERS,
                 signal: AbortSignal.timeout(7000),
             });
             const nftData = await response.json();

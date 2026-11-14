@@ -3054,6 +3054,21 @@ function profileAddressOf(html) {
   return m ? m[1].toLowerCase() : '';
 }
 
+/** 'missing' only when the API answers 404 for the post; 'unknown' on a limit, error or timeout. */
+async function postLookupStatus(tokenId) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/nft_info/${encodeURIComponent(tokenId)}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (res.status === 404) return 'missing';
+    if (!res.ok) return 'unknown';
+    const data = await res.json();
+    return data?.result || data?.tokenId ? 'found' : 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
+
 async function fetchPostRecord(tokenId) {
   try {
     const res = await fetch(`https://api.dehub.io/api/nft_info/${encodeURIComponent(tokenId)}`, {
@@ -7752,6 +7767,14 @@ async function handleRequest(request, env, ctx) {
     const looksNotFound =
       isEntityRoute &&
       (fnSaysNotFound || NOT_FOUND_TITLES.some((t) => html.includes(t)));
+    // The fn reads the post from the API under one shared IP for every
+    // crawler, so a burst trips the API's per-IP limit and the fn calls a
+    // real post missing. A 404 makes Google drop the page; only say it when
+    // the API itself answers 404, otherwise ask the crawler to come back.
+    const notFoundPostId = (ssrPath.match(/^\/app\/post\/(\d+)\/?$/) || [])[1];
+    if (looksNotFound && notFoundPostId && (await postLookupStatus(notFoundPostId)) !== 'missing') {
+      return entityUnavailable();
+    }
     if (looksNotFound) {
       return guard(new Response(riftnFallbackCard(html), {
         status: 404,
