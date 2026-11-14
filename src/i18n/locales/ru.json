@@ -2936,7 +2936,17 @@
     "noMenuMatches": "В меню ничего не найдено",
     "searchDehubFor": "Искать «{{query}}» в Riftn",
     "switchAccount": "Сменить аккаунт",
-    "signedInAs": "Вошли как {{name}}"
+    "signedInAs": "Вошли как {{name}}",
+    "requestPrompt": "Ещё нет? Отправьте как запрос",
+    "requestPromptShort": "Ещё нет?",
+    "requestDraftMenu": "Добавить {{query}} в Riftn",
+    "requestDraftSettings": "Настройка для {{query}}",
+    "requestSend": "Отправить запрос",
+    "requestPostsTo": "Попадёт в Запросы",
+    "requestHint": "Попадёт в Запросы от вашего имени. Мы сообщим, когда это появится.",
+    "requestSent": "Отправлено в Запросы",
+    "requestSentHint": "Мы сообщим, когда это появится.",
+    "requestSeeIt": "Открыть в Запросах"
   },
   "comments": {
     "reportComment": "Комментарий к отчету",

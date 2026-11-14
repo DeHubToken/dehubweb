@@ -407,7 +407,11 @@ export default function SettingsPage({ initialTab }: { initialTab?: string } = {
               value={settingsSearch}
               onChange={(e) => { setSettingsSearch(e.target.value); setSearchCursor(0); }}
               onFocus={() => setSettingsSearchFocused(true)}
-              onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
+              onBlur={(e) => {
+                // Moving into the request box under "no results" keeps the list open.
+                if ((e.relatedTarget as HTMLElement | null)?.closest('#settings-search-results')) return;
+                setTimeout(() => setSettingsSearchFocused(false), 150);
+              }}
               onKeyDown={(e) => {
                 const count = settingsSearchResults.length;
                 if (e.key === 'Escape') { setSettingsSearch.complete(settingsSearch, ''); setSettingsSearchFocused(false); return; }
@@ -428,7 +432,15 @@ export default function SettingsPage({ initialTab }: { initialTab?: string } = {
             />
           </div>
           {settingsSearchFocused && settingsSearch.trim() && (
-            <div id="settings-search-results" role="listbox" className="mt-2 max-h-[min(352px,50dvh)] overflow-y-auto overscroll-contain bg-white/5 border border-white/10 rounded-xl">
+            <div
+              id="settings-search-results"
+              role="listbox"
+              onBlur={(e) => {
+                const next = e.relatedTarget as HTMLElement | null;
+                if (next?.closest('#settings-search-results') || next?.matches('[data-search-surface]')) return;
+                setTimeout(() => setSettingsSearchFocused(false), 150);
+              }}
+              className="mt-2 max-h-[min(352px,50dvh)] overflow-y-auto overscroll-contain bg-white/5 border border-white/10 rounded-xl">
               {settingsSearchResults.length > 0 ? (
                 settingsSearchResults.map((result, i) => (
                   <button
@@ -449,6 +461,11 @@ export default function SettingsPage({ initialTab }: { initialTab?: string } = {
                     <span className="text-zinc-500 text-xs">{t(TAB_KEYS[result.tab] ?? '', result.tab)}</span>
                   </button>
                 ))
+              ) : settingsSearch.trim().length >= 2 ? (
+                // onMouseDown keeps the input focused: its blur closes this list.
+                <div className="p-2.5" onMouseDown={(e) => { if (!(e.target instanceof HTMLInputElement)) e.preventDefault(); }}>
+                  <SearchRequestPrompt query={settingsSearch} source="settings" />
+                </div>
               ) : (
                 <div className="px-4 py-3 text-zinc-500 text-sm">{t('settings.noSearchResults', 'No matching settings')}</div>
               )}

@@ -3130,7 +3130,17 @@
     "noMenuMatches": "Rien ne correspond dans le menu",
     "searchDehubFor": "Rechercher « {{query}} » sur Riftn",
     "switchAccount": "Changer de compte",
-    "signedInAs": "Connecté en tant que {{name}}"
+    "signedInAs": "Connecté en tant que {{name}}",
+    "requestPrompt": "Pas encore là ? Envoie-le comme demande",
+    "requestPromptShort": "Pas encore là ?",
+    "requestDraftMenu": "Ajouter {{query}} à Riftn",
+    "requestDraftSettings": "Un réglage pour {{query}}",
+    "requestSend": "Envoyer la demande",
+    "requestPostsTo": "Publié dans Demandes",
+    "requestHint": "Publié dans Demandes en ton nom. On te prévient quand c'est en ligne.",
+    "requestSent": "Envoyé dans Demandes",
+    "requestSentHint": "On te prévient quand c'est en ligne.",
+    "requestSeeIt": "Voir dans Demandes"
   },
   "comments": {
     "reportComment": "Signaler un commentaire",

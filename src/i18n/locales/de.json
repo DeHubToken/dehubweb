@@ -2939,7 +2939,17 @@
     "noMenuMatches": "Nichts im Menü passt",
     "searchDehubFor": "Riftn nach „{{query}}\" durchsuchen",
     "switchAccount": "Konto wechseln",
-    "signedInAs": "Angemeldet als {{name}}"
+    "signedInAs": "Angemeldet als {{name}}",
+    "requestPrompt": "Noch nicht da? Als Wunsch senden",
+    "requestPromptShort": "Noch nicht da?",
+    "requestDraftMenu": "{{query}} zu Riftn hinzufügen",
+    "requestDraftSettings": "Eine Einstellung für {{query}}",
+    "requestSend": "Wunsch senden",
+    "requestPostsTo": "Landet bei Wünsche",
+    "requestHint": "Landet in deinem Namen bei Wünsche. Wir sagen dir Bescheid, wenn es live ist.",
+    "requestSent": "An Wünsche gesendet",
+    "requestSentHint": "Wir sagen dir Bescheid, wenn es live ist.",
+    "requestSeeIt": "Bei Wünsche ansehen"
   },
   "comments": {
     "reportComment": "Berichtskommentar",
