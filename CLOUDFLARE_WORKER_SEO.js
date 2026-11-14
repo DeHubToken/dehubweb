@@ -2830,7 +2830,7 @@ export async function refreshReferralCard(html, pathname, requestUrl) {
     );
     out = out.replace(
       /(affiliate-share-image\?[^"'\s<]*?[?&](?:amp;)?v=)6(?![0-9A-Za-z-])/g,
-      (m, head) => `${head}7-${tag}`,
+      (m, head) => `${head}8-${tag}`,
     );
   }
   let linkTag = '';

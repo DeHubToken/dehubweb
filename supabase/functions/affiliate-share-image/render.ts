@@ -90,7 +90,7 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
     <text x="366" y="219" fill="#fff" font-weight="700" ${fitted(name)}>${escapeXml(name.text)}</text>
     ${opts.badgeDataUri ? `<image href="${escapeXml(opts.badgeDataUri)}" x="${366 + name.width + 10}" y="${badgeY}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>` : ""}
     ${handle.text ? `<text x="366" y="271" fill="#bdc0c5" ${fitted(handle)}>${escapeXml(handle.text)}</text>` : ""}
-    <text x="366" y="365" fill="#fff" font-size="56" font-weight="700">${hasIdentity ? "Join me on Riftn." : "You’re invited."}</text>
+    <text x="366" y="365" fill="#fff" font-size="56" font-weight="700">${hasIdentity ? "Join me on Riftn.com" : "You’re invited."}</text>
     <path d="M64 464H917" stroke="#56595e"/>
     <text x="64" y="531" fill="#bdc0c5" font-size="33">Your invitation</text>
     <text x="64" y="578" fill="#fff" font-weight="700" ${fitted(linkText)}>${escapeXml(linkText.text)}</text>
