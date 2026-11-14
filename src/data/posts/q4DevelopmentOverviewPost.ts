@@ -132,7 +132,7 @@ The browser editor from Q3 is now a full production tool on web and in the app:
 
 October is only half done. The rest of Q4 continues from here, and this page will keep growing with it.
   `,
-  bannerImage: '/media/q4-development-overview-banner-riftn.png',
+  bannerImage: '/media/q4-development-overview-banner-manrope.jpg',
   bannerImageAlt: 'Q4 Development Overview - Riftn rocket banner',
   author: {
     name: 'Riftn Team',

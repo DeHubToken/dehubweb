@@ -35,7 +35,7 @@ No. Those are university services that happened to share our old name. Riftn has
 ## Where to start
 
 New here? Read [What is Riftn?](/guides/what-is-dehub), or open [riftn.com](https://riftn.com) and look around. You can browse without an account.`,
-  bannerImage: '/media/is-riftn-the-same-as-dehub-banner-riftn.png',
+  bannerImage: '/media/is-riftn-the-same-as-dehub-banner-manrope.jpg',
   bannerImageAlt: 'DeHub to Riftn, the same platform under a new name',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-11-11T06:00:00.000Z',

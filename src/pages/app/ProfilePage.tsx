@@ -63,7 +63,7 @@ import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButto
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
-import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { ProfilePostBgContext, ProfilePostBgArtContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
 import { mergePostBg, parsePostBg, postBgById } from '@/lib/post-backgrounds';
 import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/profile/ArticleTile';
 import { articleReadMinutes, mergeArticleTile, parseArticleTile, type ArticleTileLook } from '@/lib/article-tile';
@@ -881,6 +881,7 @@ return () => rail.removeEventListener('wheel', onWheel);
           />
         )}
         <ProfilePostBgContext.Provider value={postBg}>
+        <ProfilePostBgArtContext.Provider value={data.profile?.avatarUrl ?? null}>
         <ProfileArticleTileContext.Provider value={articleTile}>
         <div ref={postBgPostHold.hostRef} className="relative" {...postBgPostHold.handlers}>
         {postBgPostHold.ringEl}
@@ -920,6 +921,7 @@ return () => rail.removeEventListener('wheel', onWheel);
         </div>
         </div>
         </ProfileArticleTileContext.Provider>
+        </ProfilePostBgArtContext.Provider>
         </ProfilePostBgContext.Provider>
         </FeedSwallowMotion>
         </div>

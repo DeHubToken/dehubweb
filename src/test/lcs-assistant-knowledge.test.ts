@@ -12,7 +12,7 @@ describe('LCS assistant knowledge', () => {
     expect(LCS_ASSISTANT_KNOWLEDGE).toContain('(LCS)');
     expect(LCS_ASSISTANT_KNOWLEDGE).toContain('flagship MMA battle royale');
     expect(LCS_ASSISTANT_KNOWLEDGE).toContain('licensed mixed martial artists');
-    expect(LCS_ASSISTANT_KNOWLEDGE).toContain('$DHB');
+    expect(LCS_ASSISTANT_KNOWLEDGE).toContain('Riftn token');
   });
 
   it('points to the canonical guide and forbids volatile guesses', () => {
@@ -65,6 +65,22 @@ describe('Riftn platform knowledge', () => {
     // The map only helps if paths outside it are off limits.
     const chatFunction = readFileSync(resolve('supabase/functions/general-ai-chat/index.ts'), 'utf8');
     expect(chatFunction).toContain('NEVER INVENT A URL');
+  });
+
+  it('knows the rename and the token pause', () => {
+    expect(DEHUB_PLATFORM_KNOWLEDGE).toContain('Riftn is the new name of DeHub');
+    expect(DEHUB_PLATFORM_KNOWLEDGE).toContain('$RIFT');
+    expect(DEHUB_PLATFORM_KNOWLEDGE).toContain('not trading yet');
+    // Contract addresses and exchanges were pulled from every public surface
+    // while sales are paused; the assistant must not hand them out either.
+    for (const stale of ['0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', '0x680d3113caf77b61b510f332d5ef4cf5b41a761d', 'MEXC', 'PancakeSwap', 'docs.dhb.gg', '/stores,']) {
+      expect(DEHUB_PLATFORM_KNOWLEDGE).not.toContain(stale);
+    }
+  });
+
+  it('answers the drafts and scheduled-posts question with real pages', () => {
+    expect(DEHUB_PLATFORM_KNOWLEDGE).toContain('/planned');
+    expect(DEHUB_PLATFORM_KNOWLEDGE).toContain('Drafts button');
   });
 
   it('refuses to claim a generation it did not perform', () => {

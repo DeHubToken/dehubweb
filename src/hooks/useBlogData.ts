@@ -31,7 +31,9 @@ export const useBlogData = () => {
   // (NOT here) — this hook is shared with the single-post page, which must
   // always open at the top.
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedTag = searchParams.get('tag') || '';
+  // Blog tags renamed with the brand: an old ?tag=dehub link opens riftn.
+  const rawTag = searchParams.get('tag') || '';
+  const selectedTag = rawTag.toLowerCase() === 'dehub' ? 'riftn' : rawTag;
   const setSelectedTag = useCallback((tag: string) => {
     setSearchParams(
       prev => {

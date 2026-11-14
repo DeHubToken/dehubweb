@@ -23,6 +23,7 @@ import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSyncExternalStore, type ComponentType } from 'react';
 
 const SK = "theme-skeleton";
 const SK_LIGHT = "theme-skeleton";
@@ -39,6 +40,53 @@ function ContentLoader({ minHeight = '46vh' }: { minHeight?: string }) {
   return <DeHubPageLoader minHeight={minHeight} />;
 }
 
+
+// ─── Phone page pill ────────────────────────────────────────────────────────
+
+/** Same width as PageIsland's phone pill (page-kit/PageKit.tsx). */
+const PHONE_QUERY = '(max-width: 1023px)';
+function subscribePhone(cb: () => void) {
+  const mql = window.matchMedia(PHONE_QUERY);
+  mql.addEventListener('change', cb);
+  return () => mql.removeEventListener('change', cb);
+}
+function useIsPhoneWidth() {
+  return useSyncExternalStore(subscribePhone, () => window.matchMedia(PHONE_QUERY).matches, () => false);
+}
+
+/**
+ * Phones: a page's loading state draws its real top pill, same spot, same
+ * 36px glass, just empty. The pill then holds still while the page loads and
+ * its contents fade in when the page lands (PillRouteMotion), instead of a
+ * differently shaped header block swapping out for the pill.
+ */
+export function PhonePillSkeleton() {
+  return (
+    <div data-feed-nav-outer data-kit-pill-outer data-pill-skeleton aria-hidden="true" className="sticky top-11 z-50 px-2 pt-1 pb-2 sm:px-3">
+      <div data-feed-nav data-kit-pill className="relative z-10 flex flex-col rounded-xl bg-zinc-900" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <span data-nav-glass-backdrop aria-hidden="true" />
+        <div className="relative z-20 flex min-h-9 items-center" />
+      </div>
+    </div>
+  );
+}
+
+/** A page skeleton that draws the empty pill + loader on phones and its own
+ *  desktop layout above the phone width. */
+export function withPhonePill(Desktop: ComponentType): ComponentType {
+  function PhoneAwareSkeleton() {
+    const phone = useIsPhoneWidth();
+    if (!phone) return <Desktop />;
+    return (
+      <div data-phone-page-skeleton>
+        <PhonePillSkeleton />
+        <ContentLoader />
+      </div>
+    );
+  }
+  PhoneAwareSkeleton.displayName = `withPhonePill(${Desktop.displayName || Desktop.name || 'Skeleton'})`;
+  return PhoneAwareSkeleton;
+}
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
 

@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Platformă de lansare",
+    "findWords": {
+      "getTheApp": "descarcă aplicația, Android, iPhone, aplicație mobilă, instalează, APK, aplicație desktop, instalează pe calculator, Windows, Mac"
+    },
     "reorderHint": "Țineți apăsată și trageți orice pictogramă pentru a o rearanja",
     "reorderReset": "Resetează",
     "reorderResetLong": "Resetați ordinea meniului",
@@ -713,6 +716,10 @@
     "media": "Media",
     "language": "Limbă",
     "languageDesc": "Alege limba preferată",
+    "desktopApp": "Aplicație desktop",
+    "desktopAppDesc": "Instalează Riftn pe acest calculator. Se deschide într-una proprie fereastră și se actualizează singură.",
+    "desktopAppInstall": "Instalează",
+    "desktopAppInstalled": "Instalat",
     "light": "Luminoasă",
     "minimal": "Minimalist",
     "minimalLight": "Minimalist Luminoasă",
@@ -11890,7 +11897,25 @@
     "shareX": "Distribuie pe X",
     "shareFacebook": "Distribuie pe Facebook",
     "shareTelegram": "Distribuie pe Telegram",
-    "copyLink": "Copiază linkul"
+    "copyLink": "Copiază linkul",
+    "seoTitleAll": "Obține aplicația Riftn: Desktop și Android APK",
+    "seoDescriptionAll": "Instalează Riftn pe calculatorul tău cu un singur clic, sau sări peste magazine și obține cea mai recentă versiune Android ca APK direct. Open source, social media deținut de utilizator.",
+    "shareTextAll": "Sari peste magazine: obține Riftn pe calculatorul tău, sau ia cea mai recentă versiune Android direct.",
+    "tabsLabel": "Alege-ți dispozitivul",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn pe calculatorul tău.",
+    "desktopSubtitle": "Fereastră proprie, iconiță proprie, și se actualizează de fiecare dată când lansăm. Niciun magazin și nimic de descărcat.",
+    "install": "Instalează Riftn",
+    "installed": "Instalat",
+    "installedHint": "Deschide Riftn din meniul Start, Dock sau lista de aplicații.",
+    "inAppHint": "Ești deja pe aplicația instalată.",
+    "desktopHint": "Browserul tău solicită o dată, apoi Riftn se deschide într-una proprie fereastră.",
+    "howChromium": "Apasă pe pictograma de instalare la capătul drept al barei de adrese, apoi Instalează.",
+    "howSafari": "În Safari, deschide meniul File și alege Adaugă la Dock.",
+    "howFirefox": "Firefox nu poate instala aplicații. Deschide această pagină în Chrome, Edge sau Safari pentru a instala Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Preferi Microsoft Store? Obține-l acolo în schimb."
   },
   "postStage": {
     "back": "Înapoi",

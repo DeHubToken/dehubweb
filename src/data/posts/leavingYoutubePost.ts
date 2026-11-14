@@ -96,12 +96,12 @@ No. Nothing in YouTube's terms prevents publishing the same work elsewhere, and 
 ### Does Riftn work for long-form video, or just short clips?
 
 Both. The platform carries long-form video, shorts, music, live streaming, images and text, and the monetisation options, free, pay-per-view, token-gated, watch-to-earn, apply per upload regardless of length.`,
-  bannerImage: '/media/creators-guide-leaving-youtube-banner-riftn.png',
+  bannerImage: '/media/creators-guide-leaving-youtube-banner-manrope.jpg',
   bannerImageAlt: 'A creator moving from YouTube to a Web3 platform they own on Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-27T12:00:00.000Z',
   updatedAt: '2026-08-27T12:00:00.000Z',
-  tags: ['youtube alternative', 'creator monetisation', 'web3 creators', 'leaving youtube', 'demonetisation', 'watch-to-earn', 'dehub'],
+  tags: ['youtube alternative', 'creator monetisation', 'web3 creators', 'leaving youtube', 'demonetisation', 'watch-to-earn', 'riftn'],
   readingTime: 9,
   featured: false,
   status: 'published',

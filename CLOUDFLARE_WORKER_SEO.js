@@ -1462,9 +1462,9 @@ const MARKETING_PAGES = {
   // reads both from the releases API, but a crawler runs no JS, so these are
   // what a share card and a search result will carry.
   'apk': {
-    title: 'Download the Riftn APK: Latest Android Build',
-    description: 'Skip the stores and get the latest version of Riftn right here. Direct APK download for Android, open source, user-owned social media, no store account needed.',
-    heading: 'Download the Riftn APK',
+    title: 'Get the Riftn App: Desktop and Android APK',
+    description: 'Install Riftn on your computer in one click, or skip the stores and get the latest Android build as a direct APK. Open source, user-owned social media.',
+    heading: 'Get the Riftn App',
     // A WebPage about the app, not a SoftwareApplication: Google's Software
     // App result requires an aggregateRating or review, the APK has neither,
     // and without one Search Console lists the page as an invalid item.
@@ -1474,6 +1474,9 @@ const MARKETING_PAGES = {
       about: { '@type': 'Thing', name: 'Riftn for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
     },
     bodyHtml: `<p>Skip the stores and get the latest version of Riftn right here, straight from us, no store account and no waiting on a review queue.</p>
+<h2>On your computer</h2>
+<p>Install Riftn as a desktop app on Windows, Mac, Linux or ChromeOS. It opens in its own window and updates itself every time Riftn ships.</p>
+<h2>On Android</h2>
 <p><a href="https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a>, Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? Riftn is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
@@ -2776,6 +2779,68 @@ async function fetchAccountInfo(handle) {
   } catch {
     return null;
   }
+}
+
+/** Short stable hash (FNV-1a, base36) used to version invite card image URLs. */
+function inviteCardTag(input) {
+  let h = 0x811c9dc5;
+  const text = String(input || '');
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(36);
+}
+
+/**
+ * Invite landings (/r/<CODE>). The deployed fn names the inviter from the
+ * share_name snapshot saved the last time they opened their invite page, and
+ * its card image URL never changes (…&v=6). X, Telegram and WhatsApp keep a
+ * card under its URL for days, so a rename, or a wallet that briefly belonged
+ * to another account, kept showing the old name (Mart's invite showed the
+ * blank "Brave Mercury" account, 2026-11). Here the title names the live
+ * profile, the image URL is versioned by the account, name, handle and photo,
+ * and a shared ?n=<tag> (src/lib/inviteLink.ts) is kept on og:url, so every
+ * change is a URL the platforms have never cached.
+ */
+export async function refreshReferralCard(html, pathname, requestUrl) {
+  const match = /^\/r\/([A-Za-z0-9]+)/.exec(pathname);
+  if (!match) return html;
+  const code = match[1].toUpperCase();
+  let out = html;
+  const rows = await supabaseRows(
+    `affiliate_codes?code=eq.${encodeURIComponent(code)}&active=eq.true&select=owner_address&limit=1`,
+  );
+  const owner = rows && rows[0] && typeof rows[0].owner_address === 'string' ? rows[0].owner_address : null;
+  const account = owner ? await fetchAccountInfo(owner) : null;
+  if (account) {
+    const live = (String(account.displayName || '').trim() || String(account.username || '').trim())
+      .replace(/^@+/, '')
+      .slice(0, 60);
+    const old = (out.match(/property="og:title" content="([^"]*?) invited you to Riftn/) || [])[1];
+    if (live && old != null) {
+      out = out.split(`${old} invited you to Riftn`).join(`${escFnAttr(live)} invited you to Riftn`);
+      const oldJson = escJsonText(decodeFnText(old));
+      out = out.split(`${oldJson} invited you to Riftn`).join(`${escJsonText(live)} invited you to Riftn`);
+    }
+    const tag = inviteCardTag(
+      [account._id, account.displayName, account.username, account.avatarImageUrl, account.coverImageUrl]
+        .map((v) => String(v == null ? '' : v))
+        .join('|'),
+    );
+    out = out.replace(
+      /(affiliate-share-image\?[^"'\s<]*?[?&](?:amp;)?v=)6(?![0-9A-Za-z-])/g,
+      (m, head) => `${head}7-${tag}`,
+    );
+  }
+  let linkTag = '';
+  try {
+    linkTag = (new URL(requestUrl).searchParams.get('n') || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 12);
+  } catch { /* no tag */ }
+  if (linkTag) {
+    out = out.split(`"${APP_URL}/r/${code}"`).join(`"${APP_URL}/r/${code}?n=${linkTag}"`);
+  }
+  return out;
 }
 
 /**
@@ -5530,6 +5595,11 @@ const SUPABASE_RELAY_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
 const DEHUB_IO_KEEP_PATHS = [
   /^\/api\//, /^\/_sb(?:\/|$)/, /^\/\.well-known\//, /^\/apple-app-site-association$/,
   /^\/assets\//, /^\/cdn-cgi\//, /^\/_handoff-out$/,
+  // Fediverse accounts were @name@dehub.io before the move. Their old actor
+  // documents keep answering here (as "moved to riftn.com"), which is what
+  // lets Mastodon servers move their followers over. Not redirected: a
+  // redirect to another host would fail Mastodon's id check.
+  /^\/ap\/users\/[^/]+\/?$/,
 ];
 // Installed app builds load arcade games, the mesh preview and other pages
 // from dehub.io inside a WebView, and send any load that leaves dehub.io out
@@ -6286,14 +6356,17 @@ async function handleRequest(request, env, ctx) {
 
   // ActivityPub (server/activitypub-relay.js): WebFinger, NodeInfo, /ap/*, and
   // profile/post pages asked for activity+json. Every UA, ahead of the SSR
-  // branches — a federating server wants JSON, not the HTML shell.
-  if (isCanonicalHost) {
+  // branches — a federating server wants JSON, not the HTML shell. dehub.io
+  // too: old @name@dehub.io handles, followers' deliveries to the old inboxes
+  // and Mastodon apps signed in there before the move. The API answers those
+  // with the riftn.com address (it sees the host in x-ap-host).
+  if (isCanonicalHost || aliasHost === 'dehub.io') {
     const apTarget = apRelayTarget(pathname, request.headers.get('accept'), (segment) =>
       couldBeProfileSegment(segment, SYSTEM_ROUTES),
     );
     if (apTarget) return handleApRelay(request, apTarget, 'https://api.dehub.io');
 
-    // Mastodon apps signed in to dehub.io (server/mastodon-relay.js): the
+    // Mastodon apps signed in to riftn.com (server/mastodon-relay.js): the
     // client API and the OAuth token endpoints. The approval page itself,
     // /oauth/authorize, falls through to the SPA.
     const mastodonTarget = mastodonRelayTarget(pathname);
@@ -7609,6 +7682,7 @@ async function handleRequest(request, env, ctx) {
     const isReferral = /^\/r\/[A-Za-z0-9]+/.test(pathname);
     const canonicalUrl = `${APP_URL}${canonicalizePath(pathname)}`;
     if (isReferral) {
+      html = await refreshReferralCard(html, pathname, request.url);
       if (!html.includes('og:url')) {
         html = html.replace('</head>', () => `<meta property="og:url" content="${request.url}"></head>`);
       }

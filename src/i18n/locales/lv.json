@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Palaišanas panelis",
+    "findWords": {
+      "getTheApp": "Lejupielādējiet lietotni, Android, iPhone, mobilā lietotne, instalēt, APK, datora lietotne, instalēt uz datora, Windows, Mac"
+    },
     "reorderHint": "Turiet un velciet jebkuru ikonu, lai pārkārtotu",
     "reorderReset": "Atiestatīt",
     "reorderResetLong": "Atiestati ēdienkartes secību",
@@ -713,6 +716,10 @@
     "media": "Mediji",
     "language": "Valoda",
     "languageDesc": "Izvēlieties vēlamo valodu",
+    "desktopApp": "Datora lietotne",
+    "desktopAppDesc": "Instalējiet Riftn uz šī datora. Tā atveras savā logā un atjaunojas pati.",
+    "desktopAppInstall": "Instalēt",
+    "desktopAppInstalled": "Instalēts",
     "light": "Gaišs",
     "minimal": "Minimālisms",
     "minimalLight": "Minimālisms Gaišs",
@@ -11896,7 +11903,25 @@
     "shareX": "Kopīgot vietnē X",
     "shareFacebook": "Kopīgot vietnē Facebook",
     "shareTelegram": "Kopīgot lietotnē Telegram",
-    "copyLink": "Kopēt saiti"
+    "copyLink": "Kopēt saiti",
+    "seoTitleAll": "Iegūstiet Riftn lietotni: Datora un Android APK",
+    "seoDescriptionAll": "Instalējiet Riftn uz sava datora vienā klikšķī, vai izlaist veikalu un iegūt jaunāko Android versiju tieši kā APK. Atvērtā pirmkods, lietotāju īpašuma sociālā medija.",
+    "shareTextAll": "Izlaist veikalu: iegūstiet Riftn uz sava datora, vai ņemiet jaunāko Android versiju tieši.",
+    "tabsLabel": "Izvēlieties ierīci",
+    "tabDesktop": "DATORA",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn uz jūsu datora.",
+    "desktopSubtitle": "Tās pats logs, sava ikona, un tā atjaunojas katru reizi, kad mēs izsūtām. Nav veikala un neko lejupielādēt.",
+    "install": "Instalēt Riftn",
+    "installed": "Instalēts",
+    "installedHint": "Atveriet Riftn no Start izvēlnes, Dock vai lietotņu saraksta.",
+    "inAppHint": "Jūs jau lietojat instalēto lietotni.",
+    "desktopHint": "Jūsu pārlūkprogramma pieprasa vienreiz, tad Riftn atveras savā logā.",
+    "howChromium": "Noklikšķiniet uz instalēšanas ikonas adreses joslas labo gala, tad Instalēt.",
+    "howSafari": "Safari, atveriet Failu izvēlni un izvēlieties Pievienot Dock.",
+    "howFirefox": "Firefox nevar instalēt lietotnes. Atveriet šo lapu Chrome, Edge vai Safari, lai instalētu Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Vai vēlaties Microsoft Store? Iegūstiet to tur."
   },
   "postStage": {
     "back": "Atpakaļ",

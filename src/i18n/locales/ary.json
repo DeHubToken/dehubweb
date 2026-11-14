@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "منصة الإطلاق",
+    "findWords": {
+      "getTheApp": "حمّل التطبيق، أندرويد، آيفون، تطبيق موبايل، نصب، APK، تطبيق ديسكتوب، نصب على الكمبيوتر، ويندوز، ماك"
+    },
     "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
     "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
@@ -711,6 +714,10 @@
     "media": "الميديا",
     "language": "اللغة",
     "languageDesc": "اختار اللغة المفضلة ديالك",
+    "desktopApp": "تطبيق ديسكتوب",
+    "desktopAppDesc": "نصّب Riftn على هاد الكمبيوتر. كيفتح فنافذة ديالو الخاصة وكيتحدّث بوحدو.",
+    "desktopAppInstall": "نصّب",
+    "desktopAppInstalled": "منصّب",
     "light": "فاتح",
     "minimal": "بسيط",
     "minimalLight": "بسيط فاتح",
@@ -11899,7 +11906,25 @@
     "shareX": "بارطاجي على X",
     "shareFacebook": "بارطاجي على Facebook",
     "shareTelegram": "بارطاجي على Telegram",
-    "copyLink": "نسخ الرابط"
+    "copyLink": "نسخ الرابط",
+    "seoTitleAll": "حصل على تطبيق Riftn: ديسكتوب وAPK ديال أندرويد",
+    "seoDescriptionAll": "نصّب Riftn على الكمبيوتر ديالك بنقرة وحدة، ولا تخلى على المتاجر وخد آخر نسخة أندرويد مباشرة كـ APK. مصدر مفتوح، وسائط اجتماعية مملوكة للمستعمل.",
+    "shareTextAll": "تخلى على المتاجر: خذ Riftn على الكمبيوتر ديالك، ولا جبد آخر نسخة أندرويد مباشرة.",
+    "tabsLabel": "اختار جهازك",
+    "tabDesktop": "ديسكتوب",
+    "tabAndroid": "أندرويد",
+    "desktopTitle": "Riftn على الكمبيوتر ديالك.",
+    "desktopSubtitle": "نافذتو الخاصة، أيقونتو الخاصة، وكيتحدّث بوحدو كل مرة كنصدرو نسخة جديدة. ماشي من المتجر وما كاين حتى حاجة خاصك تنزلها.",
+    "install": "نصّب Riftn",
+    "installed": "منصّب",
+    "installedHint": "فتح Riftn من قائمة Start، Dock أو لائحة التطبيقات.",
+    "inAppHint": "راك بالفعل كتستعمل التطبيق المنصّب.",
+    "desktopHint": "المتصفح ديالك كيطلب مرة وحدة، من بعد Riftn كيفتح فنافذة ديالو الخاصة.",
+    "howChromium": "كليك على أيقونة النصب فآخر شريط العنوان، من بعد نصّب.",
+    "howSafari": "فـ Safari، فتح قائمة File واختار Add to Dock.",
+    "howFirefox": "Firefox ما يقدّرش ينصّب التطبيقات. فتح هاد الصفحة فـ Chrome، Edge أو Safari باش تنصّب Riftn.",
+    "desktopMeta": "ويندوز · ماك · لينكس · ChromeOS",
+    "microsoftStore": "كتفضّل Microsoft Store؟ خذها من تمّان."
   },
   "postStage": {
     "back": "العودة",

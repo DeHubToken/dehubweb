@@ -52,7 +52,7 @@ Share the appeal. The more people who see it, the more likely it reaches someone
 [Share the appeal on X](https://x.com/riftn_com/status/2118787081803583870) · [See our on-chain stats](https://riftn.com/stats) · [Read our plan for the relaunch](/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch)
 
 Recovery is subject to Binance reviewing and approving our case.`,
-  bannerImage: '/media/open-appeal-binance-876-bnb-banner-riftn.png',
+  bannerImage: '/media/open-appeal-binance-876-bnb-banner-manrope.jpg',
   bannerImageAlt: 'Dear Binance, an open appeal from Riftn to recover 876 BNB through the Pioneer Burn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-11-06T19:26:20.000Z',

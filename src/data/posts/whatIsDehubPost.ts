@@ -95,7 +95,7 @@ Yes, the code is public under the [Riftn organization on GitHub](https://github.
 ### Where can I follow Riftn?
 On Riftn itself at [riftn.com](https://riftn.com), on X at [@riftn_com](https://x.com/riftn_com), and on [Telegram](https://t.me/riftn_com).
   `,
-  bannerImage: '/media/what-is-dehub-banner-riftn.png',
+  bannerImage: '/media/what-is-dehub-banner-manrope.jpg',
   bannerImageAlt: 'Riftn | the open source, user-owned social platform for creators and communities',
   author: {
     name: 'Riftn Team',

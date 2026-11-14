@@ -431,6 +431,9 @@
   },
   "nav": {
     "launchpad": "लॉन्चपैड",
+    "findWords": {
+      "getTheApp": "ऐप डाउनलोड करीं, Android, iPhone, मोबाइल ऐप, इंस्टॉल, APK, डेस्कटॉप ऐप, कंप्यूटर पर इंस्टॉल करीं, Windows, Mac"
+    },
     "reorderHint": "Hold aur drag karke koi bhi icon ke rearrange kariं",
     "reorderReset": "रीसेट करीं",
     "reorderResetLong": "मेनू ऑर्डर समायोजित करें",
@@ -694,6 +697,10 @@
     "media": "मीडिया",
     "language": "भासा",
     "languageDesc": "अपन पसंद के भासा चुनीं",
+    "desktopApp": "डेस्कटॉप ऐप",
+    "desktopAppDesc": "इँस्टॉल रिफ्टन ई कंप्यूटर प. ई अपना खुद के विंडो में खुलेला आ खुदे अपडेट हो जाला.",
+    "desktopAppInstall": "इँस्टॉल",
+    "desktopAppInstalled": "इँस्टॉल हो गइल",
     "light": "उज्ज्वल",
     "minimal": "मिनिमल",
     "minimalLight": "मिनिमल उज्ज्वल",
@@ -11747,7 +11754,23 @@
     "shareX": "X पर शेयर करीं",
     "shareFacebook": "Facebook पर शेयर करीं",
     "shareTelegram": "Telegram पर शेयर करीं",
-    "copyLink": "लिंक कॉपी करीं"
+    "copyLink": "लिंक कॉपी करीं",
+    "seoTitleAll": "रिफ्टन ऐप पावऽ: डेस्कटॉप आ Android APK",
+    "seoDescriptionAll": "एक क्लिक में रिफ्टन आपन कंप्यूटर प इँस्टॉल करीं, या स्टोर छोड़के नवीनतम Android बिल्ड सीधे APK के रूप में पावऽ. ओपन सोर्स, यूज़र-ओन्ड सोशल मीडिया.",
+    "shareTextAll": "स्टोर छोड़ऽ: रिफ्टन आपन कंप्यूटर प पावऽ, या नवीनतम Android बिल्ड सीधे ले लऽ.",
+    "tabsLabel": "आपन डिवाइस चुनऽ",
+    "tabDesktop": "डेस्कटॉप",
+    "desktopTitle": "रिफ्टन आपन कंप्यूटर प.",
+    "desktopSubtitle": "अपना खुद के विंडो, अपना खुद के आइकन, आ हर बार जब हम शिप करेम त खुदे अपडेट हो जाला. कोनो स्टोर ना आ कुछो डाउनलोड करे के जरूरत ना.",
+    "install": "रिफ्टन इँस्टॉल करीं",
+    "installed": "इँस्टॉल हो गइल",
+    "installedHint": "रिफ्टन आपन स्टार्ट मेन्यू, डॉक या ऐप लिस्ट से खोलऽ.",
+    "inAppHint": "रउआ पहिले से इँस्टॉल कइल ऐप इस्तेमाल कर रहल बानी.",
+    "desktopHint": "रउआ ब्राउज़र एक बार पूछी, तब रिफ्टन अपना खुद के विंडो में खुलेला.",
+    "howChromium": "एड्रेस बार के दहिना अंत में इँस्टॉल आइकन प क्लिक करीं, फिर इँस्टॉल करीं.",
+    "howSafari": "Safari में, फ़ाइल मेन्यू खोलके Add to Dock चुनऽ.",
+    "howFirefox": "Firefox ऐप इँस्टॉल ना कर सकेला. ई पेज Chrome, Edge या Safari में खोलके रिफ्टन इँस्टॉल करीं.",
+    "microsoftStore": "Microsoft Store पसंद बा? ओहिजा से ले लऽ."
   },
   "postStage": {
     "back": "पीछे रहे ना, पहुंचे चां",

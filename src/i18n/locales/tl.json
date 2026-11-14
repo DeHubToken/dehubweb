@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "download ang app, Android, iPhone, mobile app, i-install, APK, desktop app, i-install sa computer, Windows, Mac"
+    },
     "reorderHint": "I - hold at i - drag ang anumang icon upang muling ayusin",
     "reorderReset": "I - reset",
     "reorderResetLong": "I - reset ang order ng menu",
@@ -711,6 +714,10 @@
     "media": "Media",
     "language": "Wika",
     "languageDesc": "Piliin ang gusto mong wika",
+    "desktopApp": "Desktop app",
+    "desktopAppDesc": "I-install ang Riftn sa computer na ito. Ito ay magbubukas sa sarili nitong window at mag-a-update nang sarili.",
+    "desktopAppInstall": "I-install",
+    "desktopAppInstalled": "Na-install",
     "light": "Maliwanag",
     "minimal": "Minimal",
     "minimalLight": "Minimal Maliwanag",
@@ -12011,7 +12018,25 @@
     "shareX": "Ibahagi sa X",
     "shareFacebook": "Ibahagi sa Facebook",
     "shareTelegram": "Ibahagi sa Telegram",
-    "copyLink": "Kopyahin ang link"
+    "copyLink": "Kopyahin ang link",
+    "seoTitleAll": "Kunin ang Riftn App: Desktop at Android APK",
+    "seoDescriptionAll": "I-install ang Riftn sa iyong computer sa isang click, o laktawan ang mga store at kunin ang pinakabagong Android build bilang direktang APK. Open source, user-owned social media.",
+    "shareTextAll": "Laktawan ang mga store: kunin ang Riftn sa iyong computer, o kunin ang pinakabagong Android build direkta.",
+    "tabsLabel": "Pumili ng iyong device",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn sa iyong computer.",
+    "desktopSubtitle": "Sariling window, sariling icon, at nag-a-update ito sa bawat beses na magpapadala kami. Walang store at wala ring kailangang i-download.",
+    "install": "I-install ang Riftn",
+    "installed": "Na-install",
+    "installedHint": "Buksan ang Riftn mula sa iyong Start menu, Dock o listahan ng app.",
+    "inAppHint": "Kasalukuyan ka nang gumagamit ng na-install na app.",
+    "desktopHint": "Humihiling ang iyong browser nang isang beses, pagkatapos ay magbubukas ang Riftn sa sarili nitong window.",
+    "howChromium": "I-click ang install icon sa kanang dulo ng address bar, pagkatapos ay I-install.",
+    "howSafari": "Sa Safari, buksan ang File menu at piliin ang Add to Dock.",
+    "howFirefox": "Hindi makapag-install ng apps ang Firefox. Buksan ang pahinang ito sa Chrome, Edge o Safari upang i-install ang Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Mas gusto mo ba ang Microsoft Store? Kunin ito doon sa halip."
   },
   "postStage": {
     "back": "Bumalik",

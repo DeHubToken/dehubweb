@@ -440,6 +440,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "stáhněte aplikaci, Android, iPhone, mobilní aplikace, instalovat, APK, desktopová aplikace, instalovat na počítač, Windows, Mac"
+    },
     "reorderHint": "Držte a přetáhněte libovolnou ikonu pro přeuspořádání",
     "reorderReset": "Reset",
     "reorderResetLong": "Resetovat pořadí menu",
@@ -714,6 +717,10 @@
     "media": "Média",
     "language": "Jazyk",
     "languageDesc": "Vyberte preferovaný jazyk",
+    "desktopApp": "Desktopová aplikace",
+    "desktopAppDesc": "Nainstalujte Riftn na tento počítač. Otevře se v samostatném okně a aktualizuje se sama.",
+    "desktopAppInstall": "Instalovat",
+    "desktopAppInstalled": "Nainstalováno",
     "light": "Světlý",
     "minimal": "Minimalistický",
     "minimalLight": "Minimalistický Světlý",
@@ -11897,7 +11904,25 @@
     "shareX": "Sdílet na X",
     "shareFacebook": "Sdílet na Facebooku",
     "shareTelegram": "Sdílet na Telegramu",
-    "copyLink": "Kopírovat odkaz"
+    "copyLink": "Kopírovat odkaz",
+    "seoTitleAll": "Získejte aplikaci Riftn: Desktop a Android APK",
+    "seoDescriptionAll": "Nainstalujte Riftn na svůj počítač jedním kliknutím, nebo přeskočte obchody a získejte nejnovější Android build jako přímé APK. Open source, sociální média vlastněná uživateli.",
+    "shareTextAll": "Přeskočte obchody: získejte Riftn na svůj počítač, nebo si stáhněte nejnovější Android build přímo.",
+    "tabsLabel": "Vyberte své zařízení",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn na vašem počítači.",
+    "desktopSubtitle": "Vlastní okno, vlastní ikona a aktualizuje se pokaždé, když vydáme novou verzi. Žádný obchod a nic ke stažení.",
+    "install": "Instalovat Riftn",
+    "installed": "Nainstalováno",
+    "installedHint": "Otevřete Riftn ze Start menu, Docku nebo seznamu aplikací.",
+    "inAppHint": "Již používáte nainstalovanou aplikaci.",
+    "desktopHint": "Váš prohlížeč se zeptá jednou, poté Riftn otevře ve svém vlastním okně.",
+    "howChromium": "Klikněte na ikonu instalace na pravém konci adresního řádku, pak Instalovat.",
+    "howSafari": "V Safari otevřete nabídku Soubor a vyberte Přidat do Docku.",
+    "howFirefox": "Firefox nemůže instalovat aplikace. Otevřete tuto stránku v Chrome, Edge nebo Safari pro instalaci Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Preferujete Microsoft Store? Získejte ji tam místo toho."
   },
   "postStage": {
     "back": "Zpět",

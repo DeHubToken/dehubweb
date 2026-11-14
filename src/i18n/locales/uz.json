@@ -434,6 +434,9 @@
   },
   "nav": {
     "launchpad": "Ishga tushirish paneli",
+    "findWords": {
+      "getTheApp": "Ilovani yuklab oling, Android, iPhone, mobil ilova, o'rnatish, APK, ish stoli ilovasi, kompyuterga o'rnatish, Windows, Mac"
+    },
     "reorderHint": "Qayta tartiblash uchun istalgan belgini ushlab turing va sudrang",
     "reorderReset": "Qayta tiklash",
     "reorderResetLong": "Menyu tartibini tiklash",
@@ -708,6 +711,10 @@
     "media": "Media",
     "language": "Til",
     "languageDesc": "Afzal tilni tanlang",
+    "desktopApp": "Ish stoli ilovasi",
+    "desktopAppDesc": "Riftnni bu kompyuterga o'rnating. U o'zining oynasida ochiladi va o'zini yangilaydi.",
+    "desktopAppInstall": "O'rnatish",
+    "desktopAppInstalled": "O'rnatildi",
     "light": "Yorugʻ",
     "minimal": "Minimal",
     "minimalLight": "Minimal Yorugʻ",
@@ -11880,7 +11887,25 @@
     "shareX": "X'da ulashish",
     "shareFacebook": "Facebook'da ulashish",
     "shareTelegram": "Telegram'da ulashish",
-    "copyLink": "Havolani nusxalash"
+    "copyLink": "Havolani nusxalash",
+    "seoTitleAll": "Riftn ilovasini oling: Ish stoli va Android APK",
+    "seoDescriptionAll": "Riftnni kompyuteringizga bitta bosish bilan o'rnating, yoki do'konlarni o'tkazib, so'nggi Android versiyasini to'g'ridan-to'g'ri APK sifatida oling. Ochiq manba, foydalanuvchi egalikidagi ijtimoiy media.",
+    "shareTextAll": "Do'konlarni o'tkazib yuboring: Riftnni kompyuteringizga oling, yoki so'nggi Android versiyasini to'g'ridan-to'g'ri oling.",
+    "tabsLabel": "Qurilmangizni tanlang",
+    "tabDesktop": "ISH STOLI",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn kompyuteringizda.",
+    "desktopSubtitle": "O'zining oynasi, o'zining belgisini, va har safar biz yuborganimizda o'zini yangilaydi. Do'kon yo'q va hech narsa yuklab olish kerak emas.",
+    "install": "Riftnni o'rnatish",
+    "installed": "O'rnatildi",
+    "installedHint": "Riftnni Start menyusi, Dock yoki ilova ro'yxatidan oching.",
+    "inAppHint": "Siz allaqachon o'rnatilgan ilovani ishlatasiz.",
+    "desktopHint": "Brauzeringiz bir marta so'raydi, keyin Riftn o'zining oynasida ochiladi.",
+    "howChromium": "Manzil satrining o'ng tomonidagi o'rnatish belgisini bosing, keyin O'rnatish.",
+    "howSafari": "Safari'da Fayl menyusini oching va Dockga qo'shishni tanlang.",
+    "howFirefox": "Firefox ilovalarni o'rnatolmaydi. Riftnni o'rnatish uchun bu sahifani Chrome, Edge yoki Safari'da oching.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Microsoft Store'ni afzal ko'rasizmi? O'sha yerda oling."
   },
   "postStage": {
     "back": "Ortga qaytish",

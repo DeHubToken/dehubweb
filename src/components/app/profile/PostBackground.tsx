@@ -1,12 +1,15 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { POST_BACKGROUNDS, postBgById, type PostBg } from '@/lib/post-backgrounds';
+import { POST_BACKGROUNDS, postBgById, postBgVariant, type PostBg } from '@/lib/post-backgrounds';
 import '@/styles/post-backgrounds.css';
 
 /** The backdrop for the profile being viewed (null = plain posts). */
 export const ProfilePostBgContext = createContext<PostBg | null>(null);
 export const useProfilePostBg = () => useContext(ProfilePostBgContext);
+
+/** The profile picture of the profile being viewed, for the backdrop that blurs it (Profile Echo). */
+export const ProfilePostBgArtContext = createContext<string | null>(null);
 
 /** Phones with little memory get a still frame instead of motion. */
 const lowEndDevice = (() => {
@@ -42,8 +45,11 @@ function observe(el: Element) {
   return () => sharedObserver?.unobserve(el);
 }
 
-export function PostBgLayer({ bg }: { bg: PostBg | null }) {
+/** `seed` (the post's id) picks the look on backdrops that differ per post; without one each tile keeps its own. */
+export function PostBgLayer({ bg, seed }: { bg: PostBg | null; seed?: string | number }) {
   const ref = useRef<HTMLSpanElement>(null);
+  const art = useContext(ProfilePostBgArtContext);
+  const own = React.useId();
   const moving = bg?.kind === 'moving';
   useEffect(() => {
     if (!moving || !ref.current) return;
@@ -55,6 +61,8 @@ export function PostBgLayer({ bg }: { bg: PostBg | null }) {
       ref={ref}
       aria-hidden
       className={`pbg pbg-${bg.id}`}
+      data-pbg-n={postBgVariant(seed ?? own, 8)}
+      style={bg.id === 'echo' && art && !art.endsWith('/placeholder.svg') ? ({ '--pbg-art': `url("${art.replace(/["\\\n]/g, '')}")` } as React.CSSProperties) : undefined}
       data-pbg-off={moving ? '' : undefined}
       data-pbg-still={moving && lowEndDevice ? '' : undefined}
     />
@@ -266,6 +274,7 @@ export function PostBgPicker({ open, current, name, handle, avatarUrl, sampleTex
   );
 
   return createPortal(
+    <ProfilePostBgArtContext.Provider value={avatarUrl ?? null}>
     <div className="pbg-picker" role="presentation" onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}>
       <div className="pbg-picker-panel" role="dialog" aria-modal="true" aria-label={t('postBg.title', 'Post background')} onKeyDown={onKeyDown} tabIndex={-1} ref={(el) => el?.focus({ preventScroll: true })}>
         <div className="pbg-picker-top">
@@ -304,7 +313,8 @@ export function PostBgPicker({ open, current, name, handle, avatarUrl, sampleTex
         </div>
         <p className="pbg-picker-hint">{t('postBg.hint', 'Swipe the strip. Your post changes as you go. Only you can change this.')}</p>
       </div>
-    </div>,
+    </div>
+    </ProfilePostBgArtContext.Provider>,
     document.body,
   );
 }

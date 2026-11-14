@@ -438,6 +438,9 @@
   },
   "nav": {
     "launchpad": "Whakatuwherahia",
+    "findWords": {
+      "getTheApp": "tikiakea te taupānga, Android, iPhone, taupānga pāpāho, tāuta, APK, taupānga papa, tāuta i te komputa, Windows, Mac"
+    },
     "reorderHint": "Kia mau, me te hopu i tetahi tohu ki te rearrange",
     "reorderReset": "Whakahokia",
     "reorderResetLong": "Whakahokia te ota tahua",
@@ -702,6 +705,10 @@
     "media": "Pāpāho",
     "language": "Reo",
     "languageDesc": "Kōwhiria tō reo hiahia",
+    "desktopApp": "Taupānga papa",
+    "desktopAppDesc": "Tāuta Riftn i tēnei komputa. Ka whakatuwhera i roto i tōna ake whārangi, ā, ka whakahoutia āna ake.",
+    "desktopAppInstall": "Tāuta",
+    "desktopAppInstalled": "Tāutatia",
     "light": "Mārama",
     "minimal": "Iti noa",
     "minimalLight": "Iti noa Mārama",
@@ -11869,7 +11876,25 @@
     "shareX": "Tiri ki X",
     "shareFacebook": "Tiri ki Facebook",
     "shareTelegram": "Tiri ki Telegram",
-    "copyLink": "Tāruatia te hononga"
+    "copyLink": "Tāruatia te hononga",
+    "seoTitleAll": "Tukua te Taupānga Riftn: Desktop and Android APK",
+    "seoDescriptionAll": "Tāuta Riftn i tō komputa i te wāhi kotahi, ā, ka pāwhiri i ngā toa, ā, ka whiwhi i te whakatū Android tuatahi hei APK. Ōhanga o te nuinga, ā, he taupānga ā-āwhina.",
+    "shareTextAll": "Whakawātea i ngā toa: whiwhi i te Riftn i tō komputa, ā, ka mau i te whakatū Android tuatahi.",
+    "tabsLabel": "Tīpako i tō taputapu",
+    "tabDesktop": "PAPA",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn i tō komputa.",
+    "desktopSubtitle": "Ko tōna ake whārangi, ko tōna ake tohu, ā, ka whakahoutia āna ake ia wā ka tukuna. Kāore he toa, ā, kāore he mea e tikiakea.",
+    "install": "Tāuta Riftn",
+    "installed": "Tāutatia",
+    "installedHint": "Tīmataa Riftn i tō menu Tīmata, i te Dock, i te rārangi taupānga.",
+    "inAppHint": "Kei te whakamahi koe i te taupānga tāutatia kē.",
+    "desktopHint": "Ka rapu te pānui i te wā, ka whakatuwhera Riftn i tōna ake whārangi.",
+    "howChromium": "Pāwhiri i te tohu tāuta i te taha whānui o te rārangi wāhitau, ā, ka Tāuta.",
+    "howSafari": "I Safari, whakatuwhera te menu File, ā, tīpako Add to Dock.",
+    "howFirefox": "Kaore e taea e Firefox te tāuta taupānga. Whakatuwhera tēnei whārangi i Chrome, Edge, i Safari hei tāuta Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Mā te hiahia ki te Microsoft Store? Whiwhi i reira i te wā."
   },
   "postStage": {
     "back": "Hoki",

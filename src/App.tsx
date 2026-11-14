@@ -365,6 +365,13 @@ if (typeof window !== 'undefined') {
     .requestIdleCallback;
   if (ric) ric(runSweep, { timeout: 5000 });
   else setTimeout(runSweep, 3000);
+  // Signed follows (lib/follow-graph): catch up quietly once the page has
+  // settled, and again whenever the built-in wallet unlocks.
+  const syncFollows = () => {
+    import("@/lib/follow-graph").then(m => m.syncFollowSignatures()).catch(() => {});
+  };
+  setTimeout(syncFollows, 20_000);
+  window.addEventListener('dehub:wallet-lock-changed', syncFollows);
 }
 
 const queryClient = new QueryClient({

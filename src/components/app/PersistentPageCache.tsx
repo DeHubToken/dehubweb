@@ -24,16 +24,29 @@ import { handoffVideoFor } from '@/lib/video-handoff';
 import { isOwnHandlePath } from '@/lib/own-profile-path';
 import {
   FeedSkeleton,
-  ExploreSkeleton,
+  ExploreSkeleton as ExploreSkeletonDesktop,
   SeededProfileSkeleton,
-  MessagesSkeleton,
-  NotificationsSkeleton,
-  LeaderboardSkeleton,
-  SettingsSkeleton,
-  FeaturesSkeleton,
-  GridSkeleton,
-  GenericPageSkeleton,
+  MessagesSkeleton as MessagesSkeletonDesktop,
+  NotificationsSkeleton as NotificationsSkeletonDesktop,
+  LeaderboardSkeleton as LeaderboardSkeletonDesktop,
+  SettingsSkeleton as SettingsSkeletonDesktop,
+  FeaturesSkeleton as FeaturesSkeletonDesktop,
+  GridSkeleton as GridSkeletonDesktop,
+  GenericPageSkeleton as GenericPageSkeletonDesktop,
+  withPhonePill,
 } from './PageSkeletons';
+
+// Phones draw every page pill page's loading state as its real (empty) top
+// pill, so the pill holds still between pages; desktop keeps each layout.
+const ExploreSkeleton = withPhonePill(ExploreSkeletonDesktop);
+const MessagesSkeleton = withPhonePill(MessagesSkeletonDesktop);
+const NotificationsSkeleton = withPhonePill(NotificationsSkeletonDesktop);
+const LeaderboardSkeleton = withPhonePill(LeaderboardSkeletonDesktop);
+const SettingsSkeleton = withPhonePill(SettingsSkeletonDesktop);
+const FeaturesSkeleton = withPhonePill(FeaturesSkeletonDesktop);
+const GridSkeleton = withPhonePill(GridSkeletonDesktop);
+const GenericPageSkeleton = withPhonePill(GenericPageSkeletonDesktop);
+const BookmarksSkeleton = withPhonePill(FeedSkeleton);
 
 // Lazy page imports with chunk-load retry
 const ExplorePage = lazyWithRetry(() => import('@/pages/app/ExplorePage'));
@@ -92,7 +105,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'messages', path: ['/app/messages', '/messages'], component: MessagesPage, skeleton: MessagesSkeleton },
   { key: 'assistant', path: ['/app/assistant', '/assistant'], component: AssistantPage, skeleton: GenericPageSkeleton },
   { key: 'leaderboard', path: ['/app/leaderboard', '/leaderboard'], component: LeaderboardPage, skeleton: LeaderboardSkeleton },
-  { key: 'bookmarks', path: ['/app/bookmarks', '/bookmarks'], component: BookmarksPage, skeleton: FeedSkeleton },
+  { key: 'bookmarks', path: ['/app/bookmarks', '/bookmarks'], component: BookmarksPage, skeleton: BookmarksSkeleton },
   { key: 'settings', path: ['/app/settings', '/settings'], component: SettingsPage, skeleton: SettingsSkeleton },
   { key: 'command-centre', path: ['/app/command-centre', '/command-centre'], component: CommandCentrePage, skeleton: GenericPageSkeleton },
   { key: 'wallet', path: '/app/wallet', component: FullWalletPage, skeleton: GenericPageSkeleton },
@@ -102,12 +115,13 @@ const CACHED_PAGES: CachedPageConfig[] = [
   // one cached instance either way, and without it dehub.io/<x> fell through to
   // the /:username catch-all and rendered an empty profile. `wallet` is the one
   // exception — a real account holds that handle, so /wallet stays a profile.
-  { key: 'music', path: ['/app/music', '/music'], component: MusicPage, skeleton: GridSkeleton },
+  // Music, Requests and Affiliate draw their own headers, not the page pill.
+  { key: 'music', path: ['/app/music', '/music'], component: MusicPage, skeleton: GridSkeletonDesktop },
   { key: 'stages', path: ['/app/stages', '/stages'], component: StagesPage, skeleton: GenericPageSkeleton },
   { key: 'tv', path: ['/app/tv', '/tv'], component: TVPage, skeleton: GridSkeleton },
   { key: 'buy', path: BUY_PATHS, component: BuyCoinsPage, skeleton: GenericPageSkeleton },
   { key: 'agents', path: ['/app/agents', '/agents'], component: AgentsPage, skeleton: GenericPageSkeleton },
-  { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
+  { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeletonDesktop },
   { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
   { key: 'dao', path: ['/app/dao', '/dao'], component: DaoPage, skeleton: FeaturesSkeleton },
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
@@ -125,7 +139,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'usernames', path: ['/app/usernames', '/usernames'], component: UsernamesPage, skeleton: GridSkeleton },
   { key: 'accounts', path: ['/app/accounts', '/accounts'], component: AccountsPage, skeleton: GridSkeleton },
   { key: 'work', path: ['/app/work', '/work'], component: WorkPage, skeleton: GenericPageSkeleton },
-  { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
+  { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeletonDesktop },
   { key: 'ads', path: ['/app/ads', '/ads'], component: AdsPage, skeleton: GenericPageSkeleton },
   { key: 'arcade', path: ['/arcade', '/app/arcade'], component: ArcadePage, skeleton: GridSkeleton },
   { key: 'profile', path: ['/app/profile', '/profile'], component: ProfilePage, skeleton: SeededProfileSkeleton },

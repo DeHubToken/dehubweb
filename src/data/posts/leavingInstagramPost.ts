@@ -92,12 +92,12 @@ Posts pointing at an external link tend to under-perform, which is a reason to b
 ### What happens to my content if the platform goes away?
 
 Uploads can be minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the difference between owning your work and renting somewhere to keep it.`,
-  bannerImage: '/media/creators-guide-leaving-instagram-banner-riftn.png',
+  bannerImage: '/media/creators-guide-leaving-instagram-banner-manrope.jpg',
   bannerImageAlt: 'A creator moving from Instagram to a Web3 platform they own on Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-08-27T13:00:00.000Z',
   updatedAt: '2026-08-27T13:00:00.000Z',
-  tags: ['instagram alternative', 'creator monetisation', 'web3 creators', 'leaving instagram', 'reels', 'watch-to-earn', 'dehub'],
+  tags: ['instagram alternative', 'creator monetisation', 'web3 creators', 'leaving instagram', 'reels', 'watch-to-earn', 'riftn'],
   readingTime: 8,
   featured: false,
   status: 'published',

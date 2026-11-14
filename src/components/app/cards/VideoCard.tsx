@@ -75,6 +75,7 @@ import Pencil from "@/components/ui/cut-icons/edit";
 
 import ArrowLeft from "@/components/ui/cut-icons/back";
 import Download from "@/components/ui/cut-icons/download";
+import { CastMenuItem } from './CastMenuItem';
 import Play from "@/components/ui/cut-icons/play";
 import Pause from "@/components/ui/cut-icons/pause";
 import MessageCircle from "@/components/ui/cut-icons/messages";
@@ -2583,6 +2584,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             whatever gate the post actually has, rather than replacing it. */}
         {contentWarning.hidden ? (
           <ContentWarningGate
+            text={contentWarning.text}
             preview={thumbnail}
             onReveal={contentWarning.reveal}
             className="w-full h-full rounded-lg [&>img]:h-full [&>img]:max-h-none"
@@ -3710,6 +3712,18 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               <button onClick={handleDownloadVideo} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Download className="w-5 h-5" /> {t('postOptions.download')}
               </button>
+            )}
+            {!video.isAudio && !video.isLivePost && !isContentGated && !isHoldingsLocked && !!playableVideoUrl && (
+              <CastMenuItem
+                onBeforeCast={() => setShowOptionsDrawer(false)}
+                getSource={() => ({
+                  url: playableVideoUrl,
+                  title: video.title,
+                  poster: thumbnail || video.thumbnail,
+                  startAt: videoRef.current?.currentTime,
+                  pageVideo: videoRef.current,
+                })}
+              />
             )}
             <button 
               onClick={() => {

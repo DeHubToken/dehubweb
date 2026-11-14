@@ -8,7 +8,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
-import { type BadgeLock } from '@/lib/staking-badges';
+import { riftnGoldBadge, type BadgeLock } from '@/lib/staking-badges';
 import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -91,7 +91,8 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // Profiles already hold a resolved asset URL. Recover its tier so the same
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
-  const art = badgeHoverArt(visualName);
+  const gold = url === riftnGoldBadge;
+  const art = gold ? undefined : badgeHoverArt(visualName);
   const originalStill = visualName === 'Killer Whale';
   const fullStill = originalStill ? url : art?.poster ?? url;
   const [hovered, setHovered] = useState(false);
@@ -113,17 +114,18 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   };
   useEffect(warmBadgeStills, []);
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
-  const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
+  const bounds = gold ? { left: 1, top: 1, right: 127, bottom: 123 } : optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
   // Each tier's optical resting line (its body, not a dangling claw or tail tip).
-  const sitRow = !visualName ? bounds.bottom
+  const sitRow = gold ? bounds.bottom : !visualName ? bounds.bottom
     : (originalStill || !art ? BADGE_SIT[visualName] : badgePosterSit[visualName]) ?? bounds.bottom;
   const sit = Math.min(1, Math.max(0, (sitRow - bounds.top) / artworkHeight));
   // Full artwork height: 1.27x the adjacent font's cap height (cap height,
   // +10%, +10% on 2026-11-04, +5% on 2026-11-05). Every tier's measured bounds
   // scale from this one number. The box ends on the tier's resting line, so
   // that line sits on the name's baseline and thin tips overshoot just below.
-  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
+  const baseCap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
+  const cap = visualName === 'Megalodon' ? `calc(${baseCap} * 1.069)` : baseCap;
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: `calc(${sit} * ${cap})`,
@@ -191,7 +193,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             style={imageStyle}
             data-badge-icon
             src={poster}
-            srcSet={badgeSmallSrcSet(visualName)}
+            srcSet={gold ? undefined : badgeSmallSrcSet(visualName)}
             alt={visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
             width={16}
             height={16}

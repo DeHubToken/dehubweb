@@ -21,16 +21,18 @@ export function useContentWarning(spoilerText?: string) {
 /**
  * The warning in place of a post. Covers the body and the media together, the
  * way Mastodon does, so neither gives away what the warning is about. The
- * creator's own line stays behind the cover; the notice only says one exists.
+ * creator's own line is the message on the cover; the stock notice is only for
+ * a warning that came without one.
  */
-export function ContentWarningGate({ preview, onReveal, className }: { preview?: string; onReveal: () => void; className?: string }) {
+export function ContentWarningGate({ text, preview, onReveal, className }: { text?: string; preview?: string; onReveal: () => void; className?: string }) {
   const { t } = useTranslation();
+  const own = text?.trim();
   return (
     <NoticeGate
       preview={preview}
       icon={<AlertTriangle className="h-6 w-6" aria-hidden="true" />}
       label={t('contentWarning.label')}
-      description={t('contentWarning.notice', { defaultValue: 'The creator added a warning' })}
+      description={own || t('contentWarning.notice', { defaultValue: 'The creator added a warning' })}
       action={t('contentWarning.view', { defaultValue: 'View post' })}
       onReveal={onReveal}
       className={className}

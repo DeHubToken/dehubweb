@@ -4,7 +4,8 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { IslandAction, PageIsland, usePhonePill } from '@/components/app/page-kit/PageKit';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
+import CloseIcon from '@/components/ui/cut-icons/close';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
@@ -19,6 +20,12 @@ import Fullscreen from "@/components/ui/cut-icons/fullscreen";
 import ExitFullscreen from "@/components/ui/cut-icons/exit-fullscreen";
 import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
 import { ChatTextSizeButton } from '@/components/app/chat/ChatTextSizeButton';
+import { ChatIconButton, ChatListTop, ChatMeDock } from '@/components/app/chat/FullScreenChatChrome';
+import { ChatRowContextMenu, type ChatOptionsHandlers } from '@/components/app/chat/ChatOptionsMenu';
+import { isArchived, isMuted, useChatPrefs, useClearChatHistory } from '@/hooks/use-chat-prefs';
+import type { ChatPref } from '@/lib/api/dehub/chat-prefs';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Archive, BellOff, Pin, ChevronLeft } from 'lucide-react';
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -57,6 +64,7 @@ import { toast } from 'sonner';
 import { LiveRipple } from '@/components/app/LiveRipple';
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
+import { ChatPinStrip } from '@/components/app/chat/ChatPinStrip';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { chatsFromMemberships } from '@/lib/community-kinds';
 
@@ -101,12 +109,15 @@ export function ConversationItem({
   isSelected,
   onDelete,
   onBlock,
+  pref,
 }: {
   conversation: DeHubConversation;
   onClick: () => void;
   isSelected: boolean;
   onDelete: (conversation: DeHubConversation) => void;
   onBlock: (conversation: DeHubConversation) => void;
+  /** Your own pin / mute / marked-unread for this chat (full-screen chat). */
+  pref?: ChatPref;
 }) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -150,6 +161,8 @@ export function ConversationItem({
     >
     <button
       onClick={onClick}
+      data-chat-list-row
+      data-selected={isSelected ? '' : undefined}
       className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${
         isSelected ? 'bg-white/[0.07]' : ''
       }`}
@@ -181,6 +194,11 @@ export function ConversationItem({
           </span>
           {lastMessageTime && (
             <span className="text-zinc-500 text-sm ml-auto flex-shrink-0 tabular-nums">{lastMessageTime}</span>
+          )}
+          {pref && isMuted(pref) && <BellOff data-chat-row-muted aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-zinc-500" />}
+          {pref?.pinnedAt && <Pin data-chat-row-pinned aria-hidden="true" className="h-3.5 w-3.5 shrink-0 rotate-45 text-zinc-500" />}
+          {pref?.markedUnread && !(conversation.unreadCount > 0) && (
+            <span data-count-badge data-chat-row-marked-unread aria-label="Unread" className="ml-1 h-2.5 w-2.5 shrink-0 rounded-full bg-white" />
           )}
           {/* Count rides in the name row rather than welded to the avatar corner,
               matching the mobile app. White-on-near-black instead of red-500:
@@ -219,6 +237,9 @@ export function ConversationItem({
  * the list and the open chat side by side on a computer, and the cozy thread
  * layout (grouped bubbles, day pills, wallpaper). See FullScreenChatShell.
  */
+// Settings open inside the full-screen chat (computers) rather than leaving it.
+const EmbeddedSettings = lazy(() => import('@/pages/app/SettingsPage'));
+
 export default function MessagesPage({ fullscreen = false }: { fullscreen?: boolean } = {}) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -364,6 +385,59 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
     }
   }, [_copy]);
 
+  // Full-screen chat on a computer: your own pins, archive, mutes and
+  // "marked unread", plus the right-click menu on every row.
+  const richList = fullscreen && !phonePill;
+  const clearHistory = useClearChatHistory();
+  const { byId: chatPrefs, update: updateChatPref } = useChatPrefs();
+  const [showArchived, setShowArchived] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  // Opening any chat puts settings away.
+  useEffect(() => {
+    if (selectedConversation || showPublicChat) setShowSettings(false);
+  }, [selectedConversation, showPublicChat]);
+  const [clearTarget, setClearTarget] = useState<DeHubConversation | null>(null);
+  const lastActivity = (c: DeHubConversation) => c.lastMessage?.createdAt || c.updatedAt;
+  const archivedConversations = richList
+    ? visibleConversations.filter(c => isArchived(chatPrefs.get(c.id), lastActivity(c)))
+    : [];
+  const pinnedAt = (c: DeHubConversation) => {
+    const at = chatPrefs.get(c.id)?.pinnedAt;
+    return at ? new Date(at).getTime() : 0;
+  };
+  const listedConversations = !richList
+    ? visibleConversations
+    : showArchived
+      ? archivedConversations
+      : visibleConversations
+          .filter(c => !isArchived(chatPrefs.get(c.id), lastActivity(c)))
+          .sort((a, b) => pinnedAt(b) - pinnedAt(a));
+  // Glass, full screen on computers: pinned chats ride as bubbles above the list.
+  const pinStrip = richList && fullscreen && !phonePill && !showArchived && !searchQuery.trim()
+    ? listedConversations.filter(c => pinnedAt(c) > 0)
+    : [];
+  const chatOptionsFor = (conv: DeHubConversation): ChatOptionsHandlers => {
+    const peer = (conv.otherUser || conv.participants?.[0])?.address;
+    return {
+      pref: chatPrefs.get(conv.id),
+      // The server's unread count clears when the chat is opened; the menu
+      // only flips your own "marked unread" flag.
+      hasUnread: false,
+      onPref: (patch) => updateChatPref(conv.id, patch),
+      onOpenWindow: peer
+        ? () => { window.open(`/chat?with=${encodeURIComponent(peer)}`, `riftn-chat-${conv.id}`, 'popup,width=520,height=780'); }
+        : undefined,
+      onBlock: () => handleBlockConversationUser(conv),
+      onClearHistory: () => setClearTarget(conv),
+      onDelete: () => handleDeleteConversation(conv),
+    };
+  };
+  const openConversation = (conv: DeHubConversation) => {
+    setShowPublicChat(false);
+    setSelectedConversation({ ...conv, unreadCount: 0 });
+    if (chatPrefs.get(conv.id)?.markedUnread) updateChatPref(conv.id, { unread: false });
+  };
+
   // Get existing conversation addresses to filter search results
   const existingAddresses = new Set(
     (conversations || []).map(c => c.otherUser?.address?.toLowerCase()).filter(Boolean)
@@ -410,7 +484,15 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
   // `?chat=public` is the same landing in a URL, which is all a push or an
   // email can carry: a mention in the public chat opens the room itself.
   useEffect(() => {
-    if (new URLSearchParams(location.search).get('chat') === 'public') setShowPublicChat(true);
+    const params = new URLSearchParams(location.search);
+    if (params.get('chat') === 'public') setShowPublicChat(true);
+    // `?with=<address>` opens that chat: what "Open in new window" links to.
+    const peer = params.get('with');
+    if (peer && /^0x[0-9a-fA-F]{40}$/.test(peer)) {
+      pendingDmRef.current = { address: peer };
+      pendingUserPromiseRef.current = getAccountInfo(peer).catch(() => null);
+      setPendingDmTrigger(prev => prev + 1);
+    }
   }, [location.search]);
 
   useEffect(() => {
@@ -695,6 +777,21 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       />
   );
 
+  const settingsPane = fullscreen && !phonePill && showSettings ? (
+    <div data-fsc-settings className="h-full overflow-y-auto">
+      <div className="sticky top-0 z-[60] flex justify-end px-4 pt-3">
+        <ChatIconButton label={_copy('fullscreenChat.closeSettings', { defaultValue: 'Close settings' })} onClick={() => setShowSettings(false)} data-fsc-settings-close="">
+          <CloseIcon />
+        </ChatIconButton>
+      </div>
+      <div className="mx-auto -mt-11 w-full max-w-[47.5rem] px-4">
+        <Suspense fallback={null}>
+          <EmbeddedSettings initialTab="messages" />
+        </Suspense>
+      </div>
+    </div>
+  ) : null;
+
   const dmPane = fullscreen && selectedConversation && !showPublicChat ? (
     <DirectMessageChat
       key={conversationIdentity(selectedConversation)}
@@ -703,6 +800,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       focusComposer={composerFocusFor === conversationIdentity(selectedConversation)}
       onBack={closeChat}
       cozy
+      options={richList ? (({ onBlock: _b, onDelete: _d, ...rest }) => rest)(chatOptionsFor(selectedConversation)) : undefined}
     />
   ) : null;
 
@@ -734,6 +832,42 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
     );
   }
 
+  // Computers only: phones keep the pill header they already have.
+  const fullscreenTop = fullscreen && !phonePill ? (
+    <ChatListTop
+      title={_copy('fullscreenChat.title', { defaultValue: 'Chat' })}
+      search={(
+        <input
+          type="text"
+          data-fsc-search
+          placeholder={_copy('fullscreenChat.search', { defaultValue: 'Search chats' })}
+          aria-label={_copy('fullscreenChat.search', { defaultValue: 'Search chats' })}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="h-10 w-full bg-transparent pl-2.5 text-[15px] text-white placeholder:text-zinc-500 outline-none"
+        />
+      )}
+      searchActions={(
+        <>
+          <ChatIconButton label={_copy("copy.0e9161011702", { defaultValue: "Refresh" })} onClick={() => refetch()} data-messages-search-action="">
+            <RefreshCw className={isRefetching ? 'animate-spin' : ''} />
+          </ChatIconButton>
+          <ChatIconButton label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })} onClick={openNewMessage} data-messages-search-action="">
+            <Plus />
+          </ChatIconButton>
+        </>
+      )}
+      actions={(
+        <>
+          <ChatTextSizeButton className="rounded-full" />
+          <ChatIconButton label={_copy('fullscreenChat.exit', { defaultValue: 'Leave full screen' })} onClick={() => navigate('/app/messages')} data-chat-exit-fullscreen="">
+            <ExitFullscreen />
+          </ChatIconButton>
+        </>
+      )}
+    />
+  ) : null;
+
   const listColumn = (
       <div className={fullscreen ? 'h-full' : 'h-full lg:h-[calc(100dvh-32px)] max-h-full'}>
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
@@ -741,9 +875,9 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
             [data-page-bento] hook stays: the Osaka and Jungle `#app-root` class
             nets exclude on it, and without it every bg-zinc-8/9 descendant in
             here becomes a frosted rectangle. */}
-        <div data-page-bento data-bento-flat className="w-full h-full flex flex-col overflow-hidden">
+        <div data-page-bento data-bento-flat className="relative w-full h-full flex flex-col overflow-hidden">
           {/* Header */}
-          <PageIsland
+          {fullscreenTop ?? (<PageIsland
             className={fullscreen ? 'shrink-0 top-0 lg:top-0 px-2 pt-2' : 'shrink-0'}
             icon={<BrandIcon src={messagesBubbleIcon} alt={_copy("copy.04d7b4833927", { defaultValue: "Messages" })} className="h-8 w-8 object-contain" />}
             title={fullscreen ? _copy('fullscreenChat.title', { defaultValue: 'Chat' }) : t('messages.title')}
@@ -819,13 +953,20 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 )}
               </div>
             </div>
-          </PageIsland>
+          </PageIsland>)}
 
           {/* Conversation List */}
-          <div className={`flex-1 min-h-0 overflow-y-auto pt-3 ${fullscreen ? 'pb-4' : 'pb-[76px] lg:pb-0'}`}>
+          <div data-chat-list-scroll className={`flex-1 min-h-0 overflow-y-auto ${fullscreen && !phonePill ? 'pt-1 pb-24' : fullscreen ? 'pt-3 pb-4' : 'pt-3 pb-[76px] lg:pb-0'}`}>
+            <ChatPinStrip
+              conversations={pinStrip}
+              selectedId={selectedConversation?.id}
+              optionsFor={chatOptionsFor}
+              onOpen={openConversation}
+            />
             {/* Public Chat (pinned) */}
             <button
               onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
+              data-chat-list-row
               data-selected={fullscreen && showPublicChat ? '' : undefined}
               className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${fullscreen && showPublicChat ? 'bg-white/[0.06]' : ''}`}
             >
@@ -880,19 +1021,47 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
             )}
 
             {/* Conversations */}
-            {!isLoading && !isError && visibleConversations.map((conv) => (
-              <ConversationItem
-                key={conv.id}
-                conversation={conv}
-                onClick={() => {
-                  setShowPublicChat(false);
-                  setSelectedConversation({ ...conv, unreadCount: 0 });
-                }}
-                isSelected={selectedConversation?.id === conv.id}
-                onDelete={handleDeleteConversation}
-                onBlock={handleBlockConversationUser}
-              />
-            ))}
+            {richList && showArchived && (
+              <button
+                type="button"
+                data-chat-archive-back
+                onClick={() => setShowArchived(false)}
+                className="flex w-full items-center gap-2 border-t border-white/[0.07] px-4 py-3 text-left text-[15px] font-semibold text-white hover:bg-white/[0.04]"
+              >
+                <ChevronLeft className="h-4 w-4 text-zinc-400" />
+                {_copy('chatMenu.archivedChats', { defaultValue: 'Archived chats' })}
+              </button>
+            )}
+            {!isLoading && !isError && listedConversations.map((conv) => {
+              const row = (
+                <ConversationItem
+                  key={conv.id}
+                  conversation={conv}
+                  onClick={() => openConversation(conv)}
+                  isSelected={selectedConversation?.id === conv.id}
+                  onDelete={handleDeleteConversation}
+                  onBlock={handleBlockConversationUser}
+                  pref={richList ? chatPrefs.get(conv.id) : undefined}
+                />
+              );
+              return richList ? (
+                <ChatRowContextMenu key={conv.id} {...chatOptionsFor(conv)}>
+                  <div data-chat-row data-pinned={pinnedAt(conv) > 0 ? '' : undefined}>{row}</div>
+                </ChatRowContextMenu>
+              ) : row;
+            })}
+            {richList && !showArchived && archivedConversations.length > 0 && !searchQuery.trim() && (
+              <button
+                type="button"
+                data-chat-archive-open
+                onClick={() => setShowArchived(true)}
+                className="flex w-full items-center gap-3 border-t border-white/[0.07] px-4 py-3 text-left text-[14px] text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+              >
+                <Archive className="h-[18px] w-[18px]" />
+                <span className="flex-1">{_copy('chatMenu.archivedChats', { defaultValue: 'Archived chats' })}</span>
+                <span className="tabular-nums">{archivedConversations.length}</span>
+              </button>
+            )}
 
             {/* User search results (people not in existing conversations) */}
             {searchQuery.trim().length >= 2 && newUserResults.length > 0 && (
@@ -958,12 +1127,25 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
                 <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.3084651a3386", { defaultValue: "Searching users..." })}</div>
             )}
           </div>
+          {fullscreen && !phonePill && <ChatMeDock onOpenSettings={() => setShowSettings(true)} />}
         </div>
       </div>
   );
 
   const dialogs = (
     <>
+      <AlertDialog open={!!clearTarget} onOpenChange={(open) => { if (!open) setClearTarget(null); }}>
+        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">{_copy('chatMenu.clearTitle', { defaultValue: 'Clear history?' })}</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">{_copy('chatMenu.clearBody', { defaultValue: 'Every message in this chat disappears for you. The other person keeps their copy.' })}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (clearTarget) void clearHistory(clearTarget); setClearTarget(null); }}>{_copy('chatMenu.clearHistory', { defaultValue: 'Clear history' })}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {/* Message Type Selector */}
       <NewMessageSelector
         open={showMessageSelector}
@@ -996,7 +1178,7 @@ export default function MessagesPage({ fullscreen = false }: { fullscreen?: bool
       <FullScreenChatShell
         style={shellKeyboardStyle}
         chatOpen={chatOpen}
-        chat={publicChatPane ?? dmPane}
+        chat={settingsPane ?? publicChatPane ?? dmPane}
         list={<>{chatSeo}{listColumn}{dialogs}</>}
       />
     );

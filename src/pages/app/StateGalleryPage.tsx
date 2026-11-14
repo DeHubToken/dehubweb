@@ -6,6 +6,8 @@ import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/p
 import type { ArticleTileLook } from '@/lib/article-tile';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
+import { ContentWarningGate } from '@/components/app/cards/ContentWarningGate';
+import { AuthorThread } from '@/components/app/cards/AuthorThread';
 import { postBgById } from '@/lib/post-backgrounds';
 import type { TextPost as GalleryTextPost } from '@/types/feed.types';
 import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
@@ -141,6 +143,7 @@ import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
 import { DmMessageBubble, CozyDayPill } from '@/components/app/chat/DirectMessageChat';
 import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
+import { SignedFollowsSetting } from '@/components/app/settings/SignedFollowsSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
 import { ProfileFieldsEditor, type FieldRow } from '@/components/app/settings/ProfileFieldsSetting';
@@ -402,8 +405,30 @@ function SpotifyGallery() {
         <div className="min-w-0 space-y-3"><h3>Post</h3>{links.map((url) => <FeedLinkPreviews key={url} text={url} />)}</div>
         <div className="min-w-0 space-y-3"><h3>Chat</h3>{links.slice(0, 1).map((url) => <ChatLinkPreviews key={url} content={url} />)}</div>
       </div>
+      <SpotifyGridGallery />
       {open && <RadioPlayerProvider><SpotifyMiniPlayer /></RadioPlayerProvider>}
     </section>
+  );
+}
+
+function SpotifyGridGallery() {
+  const qc = useQueryClient();
+  const [ready] = useState(() => {
+    for (const preview of GALLERY_SPOTIFY_PREVIEWS) qc.setQueryData(['grid-link-preview', preview.url], preview);
+    return true;
+  });
+  const entries = [
+    pillText('9116', 'On repeat all week https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC'),
+    pillText('9117', 'Still the best album ever made https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv'),
+    pillVideo('sp-video', 'Night ride through the city', pillArtB),
+  ] as unknown as MixedGridEntry[];
+  return (
+    <div className="space-y-2" data-spotify-grid-gallery>
+      <h3>Profile grid</h3>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        {ready && <div className="max-w-[360px]"><ProfileMixedGrid entries={entries} /></div>}
+      </AuthContext.Provider>
+    </div>
   );
 }
 
@@ -420,6 +445,64 @@ function PredictionGallery() {
         <div><h3>{_copy("copy.396c3cb18f81", { defaultValue: "Feed" })}</h3><FeedLinkPreviews text={text} /></div>
         <div><h3>{_copy("copy.ccca18175753", { defaultValue: "Conversation" })}</h3><ChatLinkPreviews content={text} /></div>
       </div>
+    </section>
+  );
+}
+
+/** An author's thread under their post, as the author sees it (Add to thread, Reorder) and as a reader does. */
+const GALLERY_THREAD_AUTHOR = '0x9a11e2y0000000000000000000000000000000a1';
+const GALLERY_THREAD_ROWS = [
+  'First, the why: most creator tools take a cut of every tip. Ours takes none.',
+  'Second, the how: tips settle on chain in seconds, straight to your wallet.',
+  'Third, what is next: tipped comments with a message, already live on Home.',
+].map((content, i) => ({
+  id: String(880001 + i),
+  tokenId: 990001,
+  address: GALLERY_THREAD_AUTHOR,
+  content,
+  imageUrl: null,
+  replyIds: [],
+  parentId: null,
+  createdAt: new Date(Date.now() - (3 - i) * 3_600_000).toISOString(),
+  updatedAt: new Date(Date.now() - (3 - i) * 3_600_000).toISOString(),
+  likeCount: 12 - i * 3,
+  writor: { username: 'marco_v', displayName: 'Marco V' },
+}));
+const GALLERY_THREAD_AUTHOR_AUTH = {
+  isAuthenticated: true,
+  walletAddress: GALLERY_THREAD_AUTHOR,
+  user: null,
+  openLoginModal: () => {},
+} as unknown as AuthContextType;
+
+function AuthorThreadGallery() {
+  const qc = useQueryClient();
+  const [ready] = useState(() => {
+    for (const viewer of [GALLERY_THREAD_AUTHOR.toLowerCase(), '']) {
+      qc.setQueryData(['comments', '990001', 'author-thread', viewer], GALLERY_THREAD_ROWS);
+    }
+    return true;
+  });
+  const post = {
+    ...GALLERY_TEXT_POSTS[0],
+    id: '990001',
+    content: 'Why we built tipping with zero fees. A thread:',
+    author: { ...GALLERY_TEXT_POSTS[0].author, id: GALLERY_THREAD_AUTHOR },
+  } as GalleryTextPost;
+  if (!ready) return null;
+  return (
+    <section data-author-thread-gallery className="mb-5 grid gap-4 md:grid-cols-2">
+      {([['author', GALLERY_THREAD_AUTHOR_AUTH], ['reader', GALLERY_AUTH]] as const).map(([who, auth]) => (
+        <AuthContext.Provider key={who} value={auth}>
+          <div data-author-thread-view={who} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">{who}</h2>
+            <GalleryPostCard
+              post={post}
+              threadSlot={<AuthorThread tokenId="990001" authorAddress={GALLERY_THREAD_AUTHOR} />}
+            />
+          </div>
+        </AuthContext.Provider>
+      ))}
     </section>
   );
 }
@@ -448,7 +531,7 @@ const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon a
 const SAMPLE_ARTICLE = {
   get title() { return _translateCopy("copy.b91b0545d5a2", { defaultValue: "Why we moved our streams on-chain" }); },
   summary: 'After two years of takedowns and payout freezes, here is what changed when our audience started paying us directly.',
-  cover: '/media/ai-creator-studio-banner-riftn.jpg',
+  cover: '/media/ai-creator-studio-banner-manrope.jpg',
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
     'Moving to Riftn was not about crypto. It was about owning the relationship with the people who watch us every night.',
@@ -1346,6 +1429,10 @@ function PostStatsGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   const [seeded] = useState(() => {
     queryClient.setQueryData(['post-stats', '777'], SAMPLE_POST_STATS);
     queryClient.setQueryData(['post-stats-best-times'], SAMPLE_BEST_TIMES);
+    // The % on the view button: ahead of usual, behind, and about the same.
+    queryClient.setQueryData(['post-vs-usual', '777'], { pct: 42, people: 1240, usual: 873 });
+    queryClient.setQueryData(['post-vs-usual', '778'], { pct: -18, people: 716, usual: 873 });
+    queryClient.setQueryData(['post-vs-usual', '779'], { pct: 3, people: 899, usual: 873 });
     return true;
   });
   const [open, setOpen] = useState(initiallyOpen);
@@ -1353,7 +1440,11 @@ function PostStatsGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   return (
     <section data-post-stats-gallery className="mb-5 max-w-xl">
       <h2 className="mb-3 text-sm font-semibold">Post stats</h2>
-      <PostMetadata timestamp="2d" viewCount="1.2K" tokenId="777" isOwnPost />
+      <div className="flex flex-col gap-2" data-post-vs-usual-gallery>
+        <PostMetadata timestamp="2d" viewCount="1.2K" tokenId="777" isOwnPost />
+        <PostMetadata timestamp="3d" viewCount="716" tokenId="778" isOwnPost />
+        <PostMetadata timestamp="5d" viewCount="899" tokenId="779" isOwnPost />
+      </div>
       <Button className="mt-3" onClick={() => setOpen(true)}>Quick Peek</Button>
       <PostStatsSheet open={open} onOpenChange={setOpen} tokenId="777" />
       <div className="mt-4" data-post-stats-gallery-panel>
@@ -1557,6 +1648,7 @@ export default function StateGalleryPage() {
 
         {params.get('predictions') === '1' && <PredictionGallery />}
         {params.get('spotify') === '1' && <SpotifyGallery />}
+        {params.get('thread') === '1' && <AuthorThreadGallery />}
 
         <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
 
@@ -1588,7 +1680,9 @@ export default function StateGalleryPage() {
         <StreamerArtworkGallery />
 
         <PinnedProfileGallery />
+        <ContentWarningGallery />
         <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
+        <TextTilesGallery />
         <ArticleTilesGallery initialLook={params.get('atile')} initiallyOpen={params.get('sheet') === 'article-tile'} />
         <GridCardsGallery />
 
@@ -1661,6 +1755,9 @@ export default function StateGalleryPage() {
 
         <PageKitGallery />
         <GithubLinkGallery />
+        <section data-page-bento data-signed-follows-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+          <SignedFollowsSetting />
+        </section>
         <ProfileFieldsGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -2019,6 +2116,19 @@ const GALLERY_TEXT_POSTS: GalleryTextPost[] = [
   stats: { comments: 12 + i * 7, reposts: i, likes: 140 + i * 53, dislikes: 0 },
 }) as GalleryTextPost);
 
+/** Content warning cover: the creator's own line, and the stock notice when a warning has none. */
+function ContentWarningGallery() {
+  return (
+    <section data-page-bento data-content-warning-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Content warning</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div data-cw-own><ContentWarningGate text="Flashing lights and loud sound in the first 10 seconds" preview={galleryAvatar} onReveal={() => {}} /></div>
+        <div data-cw-fallback><ContentWarningGate onReveal={() => {}} /></div>
+      </div>
+    </section>
+  );
+}
+
 /** Profile text-post backgrounds: the owner's hold-to-pick picker, phone grid tiles and a desktop card. */
 function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: string | null; initiallyOpen: boolean }) {
   const [bgId, setBgId] = useState<string | null>(postBgById(initialBg)?.id ?? 'aurora');
@@ -2107,7 +2217,15 @@ const GRID_CARD_ENTRIES = [
   pillText('9113', 'We are on right now, pull up https://riftn.com/stages/2'),
   pillText('gc-plain', 'Sunday reset. Coffee, long walk, no notifications.'),
   pillText('9115', 'Read this before you buy anything https://riftn.com/app/post/5162'),
+  pillText('9116', 'On repeat all week https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC'),
+  pillText('9117', 'Still the best album ever made https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv'),
 ] as unknown as MixedGridEntry[];
+
+/** Spotify previews the gallery draws with no network (grid + Spotify section). */
+const GALLERY_SPOTIFY_PREVIEWS = [
+  { url: 'https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC', title: 'Never Gonna Give You Up', description: 'Rick Astley · Song · 1987', image: 'https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02255e131abc1410833be95673', siteName: 'Spotify' },
+  { url: 'https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv', title: 'The Dark Side of the Moon', description: 'Pink Floyd · Album · 1973', image: 'https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02db216ca805faf5fe35df4ee6', siteName: 'Spotify' },
+];
 
 /** What the cards above read, so the gallery draws them with no network. */
 function seedGridCards(qc: ReturnType<typeof useQueryClient>) {
@@ -2120,6 +2238,7 @@ function seedGridCards(qc: ReturnType<typeof useQueryClient>) {
   qc.setQueryData(['grid-link-preview', 'https://www.youtube.com/watch?v=gallery'], { url: 'https://www.youtube.com/watch?v=gallery', title: 'Full review: the 35mm that does it all', description: '', image: 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/7389-article-1.jpg', siteName: 'YouTube' });
   qc.setQueryData(['communities', 'slug', 'night-shooters'], { id: 'c1', slug: 'night-shooters', name: 'Night Shooters', banner_url: pillAbs(galleryCommunityArt), avatar_url: null, member_count: 1240 });
   qc.setQueryData(['store-listing', PILL_LISTING], { id: PILL_LISTING, store_id: PILL_STORE, title: 'A3 print: Rain City', price: 25, images: [pillAbs(pillArtB)], stores: { name: 'Marco prints' } });
+  for (const preview of GALLERY_SPOTIFY_PREVIEWS) qc.setQueryData(['grid-link-preview', preview.url], preview);
   qc.setQueryData(['single-post', '5162'], { tokenId: 5162, name: 'Ready to rock', description: '', minterDisplayName: 'Riftn', imageUrls: [pillAbs(pillArtE)], postType: 'feed-images' });
 }
 
@@ -2132,6 +2251,28 @@ function GridCardsGallery() {
       <h2 className="mb-3 text-sm font-semibold">Profile grid: posts with cards</h2>
       <AuthContext.Provider value={GALLERY_AUTH}>
         {ready && <div className="max-w-[360px]"><ProfileMixedGrid entries={GRID_CARD_ENTRIES} /></div>}
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+/** Plain text posts in the profile grid: Soft Light with no backdrop chosen, then the three backdrops that differ per post. */
+function TextTilesGallery() {
+  const entries: MixedGridEntry[] = GALLERY_TEXT_POSTS.slice(0, 3).map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
+  return (
+    <section data-page-bento data-text-tiles-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Text tiles in the profile grid</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div className="flex flex-wrap gap-4">
+          {[null, 'echo', 'cards', 'deck'].map((id) => (
+            <div key={id ?? 'soft'} className="w-full max-w-[360px]">
+              <p className="mb-1 text-xs opacity-60">{postBgById(id)?.name ?? 'Soft Light (default)'}</p>
+              <ProfilePostBgContext.Provider value={postBgById(id)}>
+                <ProfileMixedGrid entries={entries} />
+              </ProfilePostBgContext.Provider>
+            </div>
+          ))}
+        </div>
       </AuthContext.Provider>
     </section>
   );
@@ -2289,8 +2430,7 @@ function LockedChatGallery() {
         </div>
       </div>
       <div data-dm-safety-gallery className="mt-4 grid gap-2 pb-2 md:grid-cols-2">
-        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} peerSentLink />
-        <DmSafetyBanner peer={{ address: '0x2222222222222222222222222222222222222222', displayName: 'Tad' }} peerSentLink />
+        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} />
       </div>
     </section>
   );

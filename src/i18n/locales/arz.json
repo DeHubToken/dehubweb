@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "منصة الإطلاق",
+    "findWords": {
+      "getTheApp": "حمّل التطبيق، أندرويد، آيفون، تطبيق موبايل، تثبيت، APK، تطبيق سطح المكتب، تثبيت على الكمبيوتر، ويندوز، ماك"
+    },
     "reorderHint": "احتفظ و اسحب أي أيكون لتغيير ترتيبها",
     "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
@@ -711,6 +714,10 @@
     "media": "الوسائط",
     "language": "اللغة",
     "languageDesc": "اختار لغتك المفضلة",
+    "desktopApp": "تطبيق سطح المكتب",
+    "desktopAppDesc": "ثبت Riftn على الكمبيوتر ده. التطبيق بيفتح في نافذة خاصة بيه وبيحدّث نفسه.",
+    "desktopAppInstall": "ثبت",
+    "desktopAppInstalled": "تم التثبيت",
     "light": "فاتح",
     "minimal": "بسيط",
     "minimalLight": "بسيط فاتح",
@@ -11885,7 +11892,25 @@
     "shareX": "شارك على X",
     "shareFacebook": "شارك على Facebook",
     "shareTelegram": "شارك على Telegram",
-    "copyLink": "نسخ الرابط"
+    "copyLink": "نسخ الرابط",
+    "seoTitleAll": "احصل على تطبيق Riftn: سطح المكتب وAPK أندرويد",
+    "seoDescriptionAll": "ثبت Riftn على جهازك بنقرة واحدة، أو تجاهل المتاجر وخد أحدث نسخة أندرويد كـ APK مباشر. مصدر مفتوح، وسائط اجتماعية مملوكة للمستخدم.",
+    "shareTextAll": "تجاهل المتاجر: خذ Riftn على الكمبيوتر بتاعك، أو نزّل أحدث نسخة أندرويد مباشرة.",
+    "tabsLabel": "اختر جهازك",
+    "tabDesktop": "سطح المكتب",
+    "tabAndroid": "أندرويد",
+    "desktopTitle": "Riftn على الكمبيوتر بتاعك.",
+    "desktopSubtitle": "نافذته الخاصة، أيقونته الخاصة، وبيحدّث نفسه كل مرة بننشر نسخة جديدة. مفيش متجر ولا حاجة للتنزيل.",
+    "install": "ثبت Riftn",
+    "installed": "تم التثبيت",
+    "installedHint": "افتح Riftn من قائمة Start أو Dock أو قائمة التطبيقات.",
+    "inAppHint": "أنت بالفعل بتستخدم التطبيق المثبت.",
+    "desktopHint": "المتصفح بتاعك هيسأل مرة واحدة، بعدين Riftn هيفتح في نافذة خاصة بيه.",
+    "howChromium": "اضغط على أيقونة التثبيت في آخر شريط العنوان، بعدين ثبت.",
+    "howSafari": "في Safari، افتح قائمة File واختار Add to Dock.",
+    "howFirefox": "Firefox مش بيدعم تثبيت التطبيقات. افتح الصفحة دي في Chrome أو Edge أو Safari لتثبيت Riftn.",
+    "desktopMeta": "ويندوز · ماك · لينكس · ChromeOS",
+    "microsoftStore": "حابب Microsoft Store؟ خده من هناك بدلًا من كده."
   },
   "postStage": {
     "back": "العودة",

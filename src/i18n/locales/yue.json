@@ -431,6 +431,9 @@
   },
   "nav": {
     "launchpad": "啟動板",
+    "findWords": {
+      "getTheApp": "下載應用程式，Android、iPhone、手機應用程式、安裝、APK、桌面應用程式、在電腦上安裝、Windows、Mac"
+    },
     "reorderHint": "按住同拖曳任何圖示嚟重新排列",
     "reorderReset": "重設",
     "reorderResetLong": "重設菜單順序",
@@ -705,6 +708,10 @@
     "media": "媒體",
     "language": "語言",
     "languageDesc": "揀你鍾意嘅語言",
+    "desktopApp": "桌面應用程式",
+    "desktopAppDesc": "在此電腦上安裝 Riftn。它會在自己的視窗中開啟並自動更新。",
+    "desktopAppInstall": "安裝",
+    "desktopAppInstalled": "已安裝",
     "light": "淺色",
     "minimal": "簡約",
     "minimalLight": "簡約 淺色",
@@ -11837,7 +11844,24 @@
     "shareX": "分享到 X",
     "shareFacebook": "分享到 Facebook",
     "shareTelegram": "分享到 Telegram",
-    "copyLink": "複製連結"
+    "copyLink": "複製連結",
+    "seoTitleAll": "取得 Riftn 應用程式：桌面版與 Android APK",
+    "seoDescriptionAll": "一鍵在電腦上安裝 Riftn，或直接跳過商店，取得最新 Android 版本的 APK。開源、用戶擁有的社交媒體。",
+    "shareTextAll": "跳過商店：在電腦上取得 Riftn，或直接下載最新 Android 版本。",
+    "tabsLabel": "選擇你的裝置",
+    "tabDesktop": "桌面",
+    "tabAndroid": "安卓",
+    "desktopTitle": "Riftn 在你的電腦上。",
+    "desktopSubtitle": "它有自己的視窗、自己的圖示，每次我們發佈新版本時都會自動更新。沒有商店，也不需要下載。",
+    "install": "安裝 Riftn",
+    "installed": "已安裝",
+    "installedHint": "從開始選單、Dock 或應用程式清單開啟 Riftn。",
+    "inAppHint": "你已經在使用已安裝的應用程式。",
+    "desktopHint": "瀏覽器只會詢問一次，然後 Riftn 會在自己的視窗中開啟。",
+    "howChromium": "點擊地址列右端的安裝圖示，然後點擊安裝。",
+    "howSafari": "在 Safari，開啟檔案選單並選擇「加入 Dock」。",
+    "howFirefox": "Firefox 無法安裝應用程式。請在 Chrome、Edge 或 Safari 中開啟此頁面以安裝 Riftn。",
+    "microsoftStore": "偏好 Microsoft Store？直接到那裡取得。"
   },
   "postStage": {
     "back": "返去",

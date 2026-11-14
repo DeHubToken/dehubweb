@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "preuzmite aplikaciju, Android, iPhone, mobilna aplikacija, instaliraj, APK, desktop aplikacija, instaliraj na računalo, Windows, Mac"
+    },
     "reorderHint": "Držite i povucite bilo koju ikonu za promjenu rasporeda",
     "reorderReset": "Resetiraj",
     "reorderResetLong": "Resetiraj redoslijed izbornika",
@@ -713,6 +716,10 @@
     "media": "Mediji",
     "language": "Jezik",
     "languageDesc": "Odaberite željeni jezik",
+    "desktopApp": "Desktop aplikacija",
+    "desktopAppDesc": "Instalirajte Riftn na ovo računalo. Otvara se u vlastitom prozoru i sam se ažurira.",
+    "desktopAppInstall": "Instaliraj",
+    "desktopAppInstalled": "Instalirano",
     "light": "Svijetlo",
     "minimal": "Minimalistički",
     "minimalLight": "Minimalistički Svijetlo",
@@ -11894,7 +11901,25 @@
     "shareX": "Podijeli na X-u",
     "shareFacebook": "Podijeli na Facebooku",
     "shareTelegram": "Podijeli na Telegramu",
-    "copyLink": "Kopiraj poveznicu"
+    "copyLink": "Kopiraj poveznicu",
+    "seoTitleAll": "Preuzmite Riftn aplikaciju: Desktop i Android APK",
+    "seoDescriptionAll": "Instalirajte Riftn na svoje računalo jednim klikom, ili preskočite trgovine i preuzmite najnoviju Android verziju izravno kao APK. Open source, društveni medij u vlasništvu korisnika.",
+    "shareTextAll": "Preskočite trgovine: nabavite Riftn na svoje računalo, ili preuzmite najnoviju Android verziju izravno.",
+    "tabsLabel": "Odaberite svoj uređaj",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn na vašem računalu.",
+    "desktopSubtitle": "Vlastiti prozor, vlastita ikona i sam se ažurira svaki put kad objavimo novu verziju. Bez trgovine i ništa za preuzimanje.",
+    "install": "Instaliraj Riftn",
+    "installed": "Instalirano",
+    "installedHint": "Otvorite Riftn iz izbornika Start, Docka ili popisa aplikacija.",
+    "inAppHint": "Već koristite instaliranu aplikaciju.",
+    "desktopHint": "Vaš preglednik pita jednom, zatim Riftn otvara u vlastitom prozoru.",
+    "howChromium": "Kliknite ikonu instalacije na desnom kraju adresne trake, zatim Instaliraj.",
+    "howSafari": "U Safariju otvorite izbornik File i odaberite Dodaj u Dock.",
+    "howFirefox": "Firefox ne može instalirati aplikacije. Otvorite ovu stranicu u Chromeu, Edgeu ili Safariju da instalirate Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Preferirate Microsoft Store? Preuzmite ga tamo."
   },
   "postStage": {
     "back": "Natrag",

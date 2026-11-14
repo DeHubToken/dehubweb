@@ -518,7 +518,7 @@ function HomeTabPanel({
           : <VideoCard key={op.id} video={op.data as VideoItem} />;
         return (
           <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" {...(op.type === 'post' ? postBgHostProps(postBg) : {})}>
-            {op.type === 'post' && <PostBgLayer bg={postBg} />}
+            {op.type === 'post' && <PostBgLayer bg={postBg} seed={op.id} />}
             {card}
           </div>
         );
@@ -541,7 +541,7 @@ function HomeTabPanel({
             style={offscreenCardStyle(item.type, index)}
             {...(isPlainTextItem(item) ? postBgHostProps(postBg) : {})}
           >
-            {isPlainTextItem(item) && <PostBgLayer bg={postBg} />}
+            {isPlainTextItem(item) && <PostBgLayer bg={postBg} seed={item.data.id} />}
             {item.isPinned && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Pin className="w-3.5 h-3.5 fill-current" />
@@ -663,7 +663,7 @@ function PostsTabPanel({
           const plain = !(item.data as TextPost).articleBody;
           return (
             <div key={item.data.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle} {...(plain ? postBgHostProps(postBg) : {})}>
-              {plain && <PostBgLayer bg={postBg} />}
+              {plain && <PostBgLayer bg={postBg} seed={item.data.id} />}
               <PostCard post={item.data as TextPost} />
             </div>
           );

@@ -49,6 +49,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { StylePreview } from './StylePreview';
+import { LOW_FRAME_MS, calmContext, noteVisualizerFrame, subscribeLowPower, visualizerLowPower } from './visualizer-quality';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
   VisualizerStyle,
@@ -390,14 +391,14 @@ export function AudioVisualizer({
   // the artwork behind it, which is why they are banned repo-wide.
   const { ref: chipScrollRef, style: chipFadeStyle } = useScrollFadeMask<HTMLDivElement>();
 
-  // Every card starts on Bars; a pick sticks until it unmounts.
+  // Every card starts on Glass Bars; a pick sticks until it unmounts.
   const styleKey = `dehub.audio.style.${handoffKey || seed}`;
   const readStyle = () => {
     try {
       const saved = window.localStorage.getItem(styleKey);
       if (STYLES.some(item => item.value === saved)) return saved as AnyStyle;
     } catch { /* Storage may be unavailable. */ }
-    return 'bars';
+    return 'glassbars';
   };
   const [style, setStyleState] = useState<AnyStyle>(readStyle);
   useEffect(() => { setStyleState(readStyle()); }, [styleKey, theme]);
@@ -678,13 +679,24 @@ export function AudioVisualizer({
      the card was — soft, smeared bars on anything wider than a phone. Size it
      to its own box at device resolution instead. */
   const [canvasSize, setCanvasSize] = useState({ w: 320, h: 160 });
+  // Slow devices draw a 1x canvas at 30 frames a second with no glow.
+  const lowPower = React.useSyncExternalStore(subscribeLowPower, visualizerLowPower, () => false);
+  // Nothing is drawn while the card is scrolled out of view.
+  const onScreenRef = useRef(true);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => { onScreenRef.current = entry.isIntersecting; });
+    observer.observe(canvas);
+    return () => { observer.disconnect(); onScreenRef.current = true; };
+  }, []);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const apply = () => {
       const rect = canvas.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 2);
       const w = Math.round(rect.width * dpr);
       const h = Math.round(rect.height * dpr);
       setCanvasSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
@@ -694,7 +706,7 @@ export function AudioVisualizer({
     const ro = new ResizeObserver(apply);
     ro.observe(canvas);
     return () => ro.disconnect();
-  }, [theme]);
+  }, [theme, lowPower]);
 
   /* ─── Drawing ─────────────────────────────────────────────────────────── */
 
@@ -712,6 +724,8 @@ export function AudioVisualizer({
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const calm = visualizerLowPower();
+    if (calm) calmContext(ctx);
 
     const { width } = canvas;
     // Studio card: the animation stands on the deck's top line, and the strip
@@ -727,7 +741,7 @@ export function AudioVisualizer({
       ctx.setTransform(1, 0, 0, -1, 0, height * 2);
       // Frosted in the canvas itself, so the bleed reads as glass even where
       // the deck's backdrop blur doesn't render.
-      ctx.filter = `blur(${Math.round(bleed / 4)}px) saturate(1.4)`;
+      if (!calm) ctx.filter = `blur(${Math.round(bleed / 4)}px) saturate(1.4)`;
       ctx.globalAlpha = .85;
       ctx.drawImage(canvas, 0, height - bleed, width, bleed, 0, height - bleed, width, bleed);
       ctx.restore();
@@ -874,12 +888,21 @@ export function AudioVisualizer({
       return;
     }
     let alive = true;
-    const loop = () => {
+    let last = 0;
+    const loop = (now: number) => {
       if (!alive) return;
-      drawFrameRef.current();
+      const due = !visualizerLowPower() || now - last >= LOW_FRAME_MS - 2;
+      if (due && onScreenRef.current) {
+        const gap = last ? now - last : 0;
+        last = now;
+        const started = performance.now();
+        drawFrameRef.current();
+        noteVisualizerFrame(performance.now() - started, gap);
+      }
       animationRef.current = requestAnimationFrame(loop);
     };
-    loop();
+    drawFrameRef.current();
+    animationRef.current = requestAnimationFrame(loop);
     return () => {
       alive = false;
       if (animationRef.current) cancelAnimationFrame(animationRef.current);

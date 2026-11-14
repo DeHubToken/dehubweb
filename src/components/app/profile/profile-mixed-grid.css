@@ -385,3 +385,53 @@ html[data-theme='osaka'] [data-profile-mixed-grid] .pmg-adrop-cap { color: #ff6f
 [data-profile-mixed-grid] .pmg-mini-quoted span { color: var(--pmg-sub); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 [data-profile-mixed-grid] .pmg-mini-quoted img ~ span { -webkit-line-clamp: 1; }
 @media (prefers-reduced-motion: reduce) { [data-profile-mixed-grid] .pmg-kind-dot { animation: none; } }
+
+/* ── Soft Light: a plain text post with no chosen backdrop ───────────────
+   A gentle glow in the theme's colours, a fine grain and a faded quote mark.
+   The glow sits in one of three corners (data-soft, from the post id) so a
+   row of text posts is not three identical boxes. */
+[data-profile-mixed-grid] { --pmg-soft-a: #aebfce; --pmg-soft-b: #6d7f92; --pmg-soft-base: #0c0d10; }
+html:is([data-theme='light'], [data-system-tone='light']) [data-profile-mixed-grid] { --pmg-soft-a: #7f93a8; --pmg-soft-b: #b9c4cf; --pmg-soft-base: #f1f3f6; }
+html[data-theme='osaka'] [data-profile-mixed-grid] { --pmg-soft-a: #ff6fb5; --pmg-soft-b: #7c5cff; --pmg-soft-base: #15101f; }
+html[data-theme='hazy'] [data-profile-mixed-grid] { --pmg-soft-a: #ff7ad9; --pmg-soft-b: #7aa8ff; --pmg-soft-base: rgba(20, 12, 40, 0.55); }
+html[data-theme='island'] [data-profile-mixed-grid] { --pmg-soft-a: #ff7a8a; --pmg-soft-b: #3fc1c9; }
+html[data-theme='hacker'] [data-profile-mixed-grid] { --pmg-soft-a: #39ff88; --pmg-soft-b: #0f8f4a; }
+html[data-theme='horror'] [data-profile-mixed-grid] { --pmg-soft-a: #ff2b2b; --pmg-soft-b: #6b0f0f; }
+html[data-theme='jungle'] [data-profile-mixed-grid] { --pmg-soft-a: #e2b060; --pmg-soft-b: #3f7f4a; }
+html[data-theme='war'] [data-profile-mixed-grid] { --pmg-soft-a: #4fe3e0; --pmg-soft-b: #2b6f7a; }
+[data-profile-mixed-grid] .pmg-text[data-soft]:not([data-pbg]) {
+  isolation: isolate;
+  background:
+    radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--pmg-soft-a) 38%, transparent), transparent 62%),
+    radial-gradient(90% 70% at 100% 100%, color-mix(in srgb, var(--pmg-soft-b) 30%, transparent), transparent 66%),
+    var(--pmg-soft-base);
+}
+[data-profile-mixed-grid] .pmg-text[data-soft='1']:not([data-pbg]) {
+  background:
+    radial-gradient(110% 80% at 100% 0%, color-mix(in srgb, var(--pmg-soft-b) 30%, transparent), transparent 62%),
+    radial-gradient(90% 70% at 0% 100%, color-mix(in srgb, var(--pmg-soft-a) 22%, transparent), transparent 66%),
+    var(--pmg-soft-base);
+}
+[data-profile-mixed-grid] .pmg-text[data-soft='2']:not([data-pbg]) {
+  background: radial-gradient(130% 70% at 50% 110%, color-mix(in srgb, var(--pmg-soft-a) 32%, transparent), transparent 64%), var(--pmg-soft-base);
+}
+[data-profile-mixed-grid] .pmg-text[data-soft]:not([data-pbg])::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+[data-profile-mixed-grid] .pmg-text[data-soft]:not([data-pbg]) > .pmg-quote {
+  position: absolute;
+  right: 0.2em;
+  bottom: 0.05em;
+  height: auto;
+  font-size: 9em;
+  line-height: 0.5;
+  opacity: 0.09;
+  pointer-events: none;
+}
