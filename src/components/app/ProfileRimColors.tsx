@@ -10,9 +10,9 @@ import { extractBrandColors } from '@/lib/brand-colors';
  * thin aurora rim tinted from the signed-in person's profile picture
  * (styles/system-rim.css). This writes the three rim colours onto <html> as
  * --rim-1..3 ("r g b"). With no picture, or signed out, the CSS falls back to
- * the default violet / sky / pink rim.
+ * the metallic white rim.
  */
-const CACHE_KEY = 'dehub.rimColors';
+const CACHE_KEY = 'dehub.rimColors.v2';
 const VARS = ['--rim-1', '--rim-2', '--rim-3'] as const;
 
 function hexToRgb(hex: string): [number, number, number] {
@@ -38,22 +38,31 @@ function hslToTriplet(h: number, s: number, l: number): string {
   return [f(0), f(8), f(4)].map(v => Math.round(v * 255)).join(' ');
 }
 
+/** Metallic white / silver: the rim for signed-out people, no picture, or a
+    picture with no clear colour of its own (most face photos). */
+const METALLIC = ['240 240 246', '150 150 162', '215 215 226'];
+const SHINE = '240 240 246';
+
+/** Skin and warm beige read as salmon pink once lifted, which is what every
+    face photo produced. They never count as the picture's colour. */
+function isSkinLike(h: number, s: number, l: number): boolean {
+  return (h <= 50 || h >= 345) && s < 0.8 && l > 0.2 && l < 0.88;
+}
+
 /**
- * Turn raw picture colours into rim colours that read on near-black: vivid
- * hues are lifted to a bright, saturated tone; a black / white / grey picture
- * gets a silver rim instead of a muddy one. Always returns three.
+ * Turn raw picture colours into rim colours that read on near-black. Only a
+ * clear, non-skin colour counts; it is lifted to a bright tone and paired with
+ * a white shine. A picture with no such colour gets the metallic rim. Always
+ * returns three.
  */
 function rimColorsFrom(hexes: string[]): string[] {
-  const hues = hexes
+  const vivid = hexes
     .map(hexToRgb)
     .map(([r, g, b]) => rgbToHsl(r, g, b))
-    .filter(([, s, l]) => s >= 0.18 && l > 0.08 && l < 0.95);
-  if (hues.length === 0) return ['235 235 242', '150 150 162', '210 210 222'];
-  const lift = ([h, s]: [number, number, number]) => hslToTriplet(h, Math.max(0.6, Math.min(0.95, s)), 0.66);
-  const base = hues[0];
-  const second = hues[1] ?? [(base[0] + 40) % 360, base[1], base[2]] as [number, number, number];
-  const third = hues[2] ?? [(base[0] + 320) % 360, base[1], base[2]] as [number, number, number];
-  return [lift(base), lift(second), lift(third)];
+    .filter(([h, s, l]) => s >= 0.3 && l > 0.12 && l < 0.92 && !isSkinLike(h, s, l));
+  if (vivid.length === 0) return METALLIC;
+  const lift = ([h, s]: [number, number, number]) => hslToTriplet(h, Math.max(0.65, Math.min(0.95, s)), 0.64);
+  return [lift(vivid[0]), SHINE, vivid[1] ? lift(vivid[1]) : lift(vivid[0])];
 }
 
 function readCache(url: string): string[] | null {
@@ -84,7 +93,7 @@ export function ProfileRimColors() {
     const cached = readCache(url);
     if (cached) { applyRim(cached); return; }
     let cancelled = false;
-    extractBrandColors(url, 3)
+    extractBrandColors(url, 6)
       .then(raw => {
         if (cancelled) return;
         const colors = rimColorsFrom(raw);
