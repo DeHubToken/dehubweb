@@ -16,7 +16,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import worker, { isBountyIndexable, isFilePath, setPageUrl, stylePrerendered } from '../../CLOUDFLARE_WORKER_SEO.js';
+import worker, { isAiTrainingBotUa, isBountyIndexable, isFilePath, setPageUrl, stylePrerendered } from '../../CLOUDFLARE_WORKER_SEO.js';
 import { isBountyIndexable as spaIsBountyIndexable } from '@/features/work/seo';
 
 const ROOT = resolve(__dirname, '../..');
@@ -442,14 +442,111 @@ describe('site-wide crawler chrome', () => {
 
 describe('robots.txt', () => {
   const robots = readFileSync(resolve(ROOT, 'public/robots.txt'), 'utf8');
-  it('is one group, so every rule reaches every crawler', () => {
-    expect(robots.match(/^User-agent:/gim)).toEqual(['User-agent:']);
-    expect(robots).toMatch(/^User-agent: \*$/m);
+  const groups = robots.split(/\n\s*\n/).filter((g) => /^User-agent:/im.test(g));
+  const everyone = groups.find((g) => /^User-agent: \*$/m.test(g)) || '';
+  const aiTraining = groups.find((g) => /^User-agent: GPTBot$/m.test(g)) || '';
+
+  it('has one group for everyone and one for AI training crawlers', () => {
+    expect(groups).toHaveLength(2);
+    expect(everyone).toBeTruthy();
+    expect(aiTraining).toMatch(/^Disallow: \/$/m);
   });
-  it('keeps crawlers out of the API relays and nothing else', () => {
-    const disallows = robots.match(/^Disallow: .*$/gm);
+  it('never names a search engine, link previewer or AI search fetcher', () => {
+    // A named group replaces the * rules for that crawler, so naming one of
+    // these would change what it may read.
+    for (const ua of ['Googlebot', 'Bingbot', 'Applebot', 'Twitterbot', 'facebookexternalhit', 'Discordbot',
+      'TelegramBot', 'OAI-SearchBot', 'ChatGPT-User', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot']) {
+      expect(robots).not.toMatch(new RegExp(`^User-agent: ${ua}$`, 'im'));
+    }
+  });
+  it('keeps everyone else out of the API relays and nothing else', () => {
+    const disallows = everyone.match(/^Disallow: .*$/gm);
     expect(disallows).toEqual(['Disallow: /_api/', 'Disallow: /_sb/', 'Disallow: /api/']);
+    expect(everyone).toContain('Content-Signal: search=yes, ai-input=yes, ai-train=no');
     expect(robots).toContain('Sitemap: https://riftn.com/sitemap.xml');
+  });
+});
+
+describe('AI training crawlers', () => {
+  const GPTBOT = 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot';
+  const CLAUDEBOT = 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)';
+  const BYTESPIDER = 'Mozilla/5.0 (Linux; Android 5.0) AppleWebKit/537.36 (KHTML, like Gecko) Mobile Safari/537.36 (compatible; Bytespider; spider-feedback@bytedance.com)';
+  const META_AGENT = 'meta-externalagent/1.1 (+https://developers.facebook.com/docs/sharing/webmasters/crawler)';
+
+  it('get a 403 on pages, relays and files', async () => {
+    for (const ua of [GPTBOT, CLAUDEBOT, BYTESPIDER, META_AGENT]) {
+      for (const path of ['/', '/explore', '/maldoteth', '/llms.txt', '/_api/api/feed']) {
+        const res = await get(path, ua);
+        expect(res.status, `${ua} ${path}`).toBe(403);
+      }
+    }
+  });
+  it('can still read robots.txt', async () => {
+    expect((await get('/robots.txt', GPTBOT)).status).toBe(200);
+  });
+  it('leave search engines, previews and AI search fetchers alone', async () => {
+    const allowed = [
+      GOOGLEBOT, FACEBOOK, CHROME,
+      'Twitterbot/1.0',
+      'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)',
+      'TelegramBot (like TwitterBot)',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-SearchBot/1.0; +Claude-SearchBot@anthropic.com)',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)',
+      'meta-externalfetcher/1.1 (+https://developers.facebook.com/docs/sharing/webmasters/crawler)',
+    ];
+    for (const ua of allowed) {
+      expect((await get('/robots.txt', ua)).status, ua).toBe(200);
+      expect(isAiTrainingBotUa(ua), ua).toBe(false);
+    }
+  });
+});
+
+describe('edge rate limits', () => {
+  const limiter = (allow: boolean) => ({ limit: vi.fn(async () => ({ success: allow })) });
+  async function hit(path: string, ua: string, bindings: Record<string, unknown>, init: RequestInit = {}) {
+    const env = { ...makeEnv(), ...bindings };
+    const headers = new Headers(init.headers);
+    headers.set('User-Agent', ua);
+    headers.set('CF-Connecting-IP', '203.0.113.7');
+    const res = await worker.fetch(new Request(`https://riftn.com${path}`, { ...init, headers }), env, { waitUntil() {} });
+    return res;
+  }
+
+  it('hold scripts to the limit, keyed on the visitor', async () => {
+    const rl = limiter(false);
+    const res = await hit('/explore', 'python-requests/2.32.3', { RL_SCRIPTED_CLIENTS: rl });
+    expect(res.status).toBe(429);
+    expect(res.headers.get('Retry-After')).toBe('60');
+    expect(rl.limit).toHaveBeenCalledWith({ key: 'script:203.0.113.7' });
+  });
+  it('never count browsers, previews or search engines as scripts', async () => {
+    const rl = limiter(false);
+    for (const ua of [CHROME, GOOGLEBOT, FACEBOOK, 'Twitterbot/1.0', 'okhttp/4.12.0']) {
+      expect((await hit('/robots.txt', ua, { RL_SCRIPTED_CLIENTS: rl })).status, ua).toBe(200);
+    }
+    expect(rl.limit).not.toHaveBeenCalled();
+  });
+  it('let everything through when the binding is missing or fails', async () => {
+    expect((await hit('/robots.txt', 'curl/8.5.0', {})).status).toBe(200);
+    const broken = { limit: vi.fn(async () => { throw new Error('down'); }) };
+    expect((await hit('/robots.txt', 'curl/8.5.0', { RL_SCRIPTED_CLIENTS: broken })).status).toBe(200);
+  });
+  it('limit signed-out Mastodon reads but not apps with a token', async () => {
+    const rl = limiter(false);
+    const anon = await hit('/api/v1/timelines/public', CHROME, { RL_MASTODON_ANON: rl });
+    expect(anon.status).toBe(429);
+    expect(anon.headers.get('Access-Control-Allow-Origin')).toBe('*');
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('[]', { status: 200 }));
+    try {
+      const authed = await hit('/api/v1/timelines/public', CHROME, { RL_MASTODON_ANON: rl }, { headers: { Authorization: 'Bearer abc' } });
+      expect(authed.status).toBe(200);
+    } finally {
+      fetchSpy.mockRestore();
+    }
+    expect(rl.limit).toHaveBeenCalledTimes(1);
   });
 });
 

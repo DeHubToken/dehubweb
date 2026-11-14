@@ -1,6 +1,13 @@
 {
   "name": "dehub-staging",
   "main": "./CLOUDFLARE_WORKER_SEO.js",
+  // Per-address edge limits (CLOUDFLARE_WORKER_SEO.js edgeRateLimited):
+  // scripted HTTP clients, signed-out Mastodon API reads, federation reads.
+  "ratelimits": [
+    { "name": "RL_SCRIPTED_CLIENTS", "namespace_id": "1201", "simple": { "limit": 120, "period": 60 } },
+    { "name": "RL_MASTODON_ANON", "namespace_id": "1202", "simple": { "limit": 60, "period": 60 } },
+    { "name": "RL_FEDERATION_READS", "namespace_id": "1203", "simple": { "limit": 300, "period": 60 } }
+  ],
   "compatibility_date": "2026-07-18",
   // Staging twin of wrangler.jsonc: same worker, same SPA assets, one host.
   //
