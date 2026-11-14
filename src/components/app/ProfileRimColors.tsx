@@ -43,7 +43,7 @@ function hslToTriplet(h: number, s: number, l: number): string {
  * hues are lifted to a bright, saturated tone; a black / white / grey picture
  * gets a silver rim instead of a muddy one. Always returns three.
  */
-export function rimColorsFrom(hexes: string[]): string[] {
+function rimColorsFrom(hexes: string[]): string[] {
   const hues = hexes
     .map(hexToRgb)
     .map(([r, g, b]) => rgbToHsl(r, g, b))
