@@ -2,13 +2,13 @@
    The desktop side panels, the search bar and the top nav pill sit on a
    near-black fill with a thin faded rim. The rim colours come from the
    signed-in person's profile picture (ProfileRimColors.tsx writes --rim-1..3
-   on <html>); signed out or with no picture they fall back to violet / sky /
-   pink. Phones, System Light and every other theme are untouched. */
+   on <html>); signed out, with no picture, or with no clear colour in the
+   picture they fall back to metallic white. Phones, System Light and every other theme are untouched. */
 @media (min-width: 1024px) {
   html[data-theme='system']:not([data-system-tone='light']) {
-    --rim-a: var(--rim-1, 168 140 255);
-    --rim-b: var(--rim-2, 96 205 255);
-    --rim-c: var(--rim-3, 255 140 200);
+    --rim-a: var(--rim-1, 240 240 246);
+    --rim-b: var(--rim-2, 150 150 162);
+    --rim-c: var(--rim-3, 215 215 226);
     --rim-fill-top: rgb(19 19 23);
     --rim-fill-bottom: rgb(13 13 16);
   }
