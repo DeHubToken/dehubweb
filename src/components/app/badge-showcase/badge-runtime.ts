@@ -2,13 +2,14 @@
 import { StickerStage, type StickerItem } from './sticker-stage';
 import { MetalStage, type MetalBox } from './metal-stage';
 import { ThemeStage } from './theme-stage';
-import { badgeWorld } from '@/lib/badge-world';
+import { badgeLook, badgeWorld } from '@/lib/badge-world';
 
 interface Boot {
   items: (StickerItem & { label?: string })[];
   origin: number;
   metallic?: boolean;
   world?: string | null;
+  look?: string | null;
   reducedMotion?: boolean;
   hero?: MetalBox;
 }
@@ -27,12 +28,13 @@ if (boot && canvas) {
     const handlers = {
       onTap: () => post('tap'), onMiss: () => post('miss'), onInteract: () => post('interact'),
     };
-    const world = badgeWorld(boot.world ?? '');
+    const look = badgeLook(boot.look ?? '');
+    const world = look ? null : badgeWorld(boot.world ?? '');
     stage = world ? new ThemeStage(canvas, {
       ...handlers, theme: world, hero: () => hero, reducedMotion: boot.reducedMotion,
       onError: () => post('failed'),
-    }) : boot.metallic ? new MetalStage(canvas, {
-      ...handlers, hero: () => hero, reducedMotion: boot.reducedMotion,
+    }) : boot.metallic || look ? new MetalStage(canvas, {
+      ...handlers, look, hero: () => hero, reducedMotion: boot.reducedMotion,
       onError: () => post('failed'),
     }) : new StickerStage(canvas, handlers);
     stage.setItems(boot.items);
