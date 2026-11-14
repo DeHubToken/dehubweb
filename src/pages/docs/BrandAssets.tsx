@@ -152,7 +152,7 @@ const BrandAssets = () => {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {asset.id.startsWith('wordmark')
-                      ? 'PNG artwork; the SVG preserves the same embedded PNG without redrawing.'
+                      ? 'PNG image or scalable vector SVG with editable paths.'
                       : 'PNG image or scalable vector SVG. The icon is separate from the R in the wordmark.'}
                   </p>
                 </div>
