@@ -554,7 +554,7 @@ const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon a
 const SAMPLE_ARTICLE = {
   get title() { return _translateCopy("copy.b91b0545d5a2", { defaultValue: "Why we moved our streams on-chain" }); },
   summary: 'After two years of takedowns and payout freezes, here is what changed when our audience started paying us directly.',
-  cover: '/media/ai-creator-studio-banner-manrope.jpg',
+  cover: '/media/ai-creator-studio-banner-r2.jpg',
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
     'Moving to Riftn was not about crypto. It was about owning the relationship with the people who watch us every night.',

@@ -5,8 +5,7 @@ import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js'
 
 const SHARE_IMAGE = 'https://riftn.com/og/riftn-share.png';
 let assets;
-let chromeAsset;
-const RENDER_REVISION = 8;
+const RENDER_REVISION = 9;
 const bytesToUri = (bytes, type) => {
   let binary = '';
   for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
@@ -14,20 +13,12 @@ const bytesToUri = (bytes, type) => {
 };
 
 async function loadAssets(env) {
-  if (!assets) assets = Promise.all(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png'].map(async (path) => {
+  if (!assets) assets = Promise.all(['/brand-kit/font/manrope-500.ttf', '/brand-kit/brand/riftn-logo-white.png'].map(async (path) => {
     const response = await env.ASSETS.fetch(new Request(`https://riftn.com${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Share card asset unavailable');
     return new Uint8Array(await response.arrayBuffer());
   })).catch((error) => { assets = undefined; throw error; });
   return assets;
-}
-
-async function loadProfileChrome(env) {
-  if (!chromeAsset) chromeAsset = env.ASSETS.fetch(new Request('https://riftn.com/brand/share-chrome-edge.png')).then(async response => {
-    if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/png')) throw new Error('Profile artwork unavailable');
-    return new Uint8Array(await response.arrayBuffer());
-  }).catch(error => { chromeAsset = undefined; throw error; });
-  return chromeAsset;
 }
 
 async function loadCdnImage(url, { folder, limit, timeout, resize }) {
@@ -177,8 +168,8 @@ export async function handleProfileShareImage(request, env, ctx, handle, fetchAc
       hit.headers.set('Cache-Control', publicCache);
       return hit;
     }
-    const [, [font, mark], avatar, chrome] = await Promise.all([resvgReady(), loadAssets(env), loadAvatar(data.avatar), loadProfileChrome(env)]);
-    const png = renderPng(renderProfileCardSvg(data, { logo: bytesToUri(mark, 'image/png'), chrome: bytesToUri(chrome, 'image/png'), avatar }), font);
+    const [, [font, mark], avatar] = await Promise.all([resvgReady(), loadAssets(env), loadAvatar(data.avatar)]);
+    const png = renderPng(renderProfileCardSvg(data, { logo: bytesToUri(mark, 'image/png'), avatar }), font);
     const cacheable = !data.avatar || !!avatar;
     const response = new Response(png, { headers: {
       ...headers, 'Content-Type': 'image/png', 'Cache-Control': cacheable ? publicCache : 'no-store',

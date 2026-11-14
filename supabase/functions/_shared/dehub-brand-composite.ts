@@ -46,7 +46,7 @@ async function loadFonts(): Promise<Uint8Array[]> {
 // dehub.io CDN path returns HTML/SPA-fallback in production, which broke
 // the composite silently before). CDN fetch kept as a last-ditch fallback.
 const DEHUB_LOGO_URL =
-  "https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png";
+  "https://riftn.com/brand-kit/brand/wordmark-white.png";
 async function fetchLogoDataUri(): Promise<string | null> {
   if (DEHUB_LOGO_DATA_URI && DEHUB_LOGO_DATA_URI.startsWith("data:image/")) {
     return DEHUB_LOGO_DATA_URI;

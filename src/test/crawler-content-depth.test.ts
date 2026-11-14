@@ -158,7 +158,7 @@ describe('the streaming guide', () => {
     const html = await (await crawl('https://riftn.com/guides/best-decentralized-streaming-apps')).text();
     const ld = ldOf(html);
     expect(ld['@type']).toBe('Article');
-    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=4');
+    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=5');
     expect(ld.datePublished).toBe('2026-09-13');
     expect(ld.dateModified).toBe('2026-09-29');
     expect(ld.author).toEqual({ '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' });

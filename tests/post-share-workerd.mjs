@@ -25,7 +25,7 @@ const mf = new Miniflare(convertV4MiniflareOptions({
   durableObjects: { EDITOR_PRESENCE: { className: 'EditorPresenceRoom', useSQLite: true } },
   serviceBindings: { ASSETS: request => {
     const path = decodeURIComponent(new URL(request.url).pathname);
-    assert.ok(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png', '/og/riftn-share.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
+    assert.ok(['/brand-kit/font/manrope-500.ttf', '/brand-kit/brand/riftn-logo-white.png', '/og/riftn-share.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
     return new WorkerResponse(readFileSync(new URL(`../public${path}`, import.meta.url)), { headers: { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'font/ttf' } });
   } },
   outboundService: request => {
@@ -70,7 +70,7 @@ async function dispatch(...args) {
 }
 
 try {
-  const url = 'https://dehub.io/_og/post/v6/6501.png';
+  const url = 'https://dehub.io/_og/post/v7/6501.png';
   const response = await dispatch(url);
   assert.equal(response.status, 200, await response.clone().text());
   assert.equal(response.headers.get('Content-Type'), 'image/png');
@@ -80,7 +80,7 @@ try {
   assert.equal(response.headers.get('X-DeHub-Post-Poll'), 'closed');
   assert.equal(response.headers.get('X-DeHub-Poll-Votes'), '123');
   assert.equal(response.headers.get('X-DeHub-Share-Artwork'), 'plain-background');
-  assert.equal(response.headers.get('X-DeHub-Share-Card'), 'v6');
+  assert.equal(response.headers.get('X-DeHub-Share-Card'), 'v7');
   const png = Buffer.from(await response.arrayBuffer());
   assert.equal(png.readUInt32BE(16), 1200);
   assert.equal(png.readUInt32BE(20), 630);
@@ -175,17 +175,17 @@ try {
   assert.equal(noPoll.headers.get('X-DeHub-Post-Poll'), 'none');
   assert.ok(noPoll.headers.get('Cache-Control').startsWith('public,'), 'ordinary text posts remain cacheable when the poll endpoint returns its normal 404');
   await noPoll.arrayBuffer();
-  for (const version of ['v1', 'v2', 'v3', 'v4', 'v5']) {
+  for (const version of ['v1', 'v2', 'v3', 'v4', 'v5', 'v6']) {
     const legacy = await mf.dispatchFetch(`https://dehub.io/_og/post/${version}/6501.png`);
     assert.equal(legacy.status, 200);
     assert.equal(legacy.headers.get('X-DeHub-Share-Artwork'), 'plain-background');
-    assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v6');
+    assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v7');
     await legacy.arrayBuffer();
   }
   profile = { ...profile, followers: 2048, avatarImageUrl: 'avatars/mal.jpg' };
-  const profileCard = await dispatch('https://dehub.io/_og/profile/v2/maldoteth.png');
+  const profileCard = await dispatch('https://dehub.io/_og/profile/v3/maldoteth.png');
   assert.equal(profileCard.status, 200);
-  assert.equal(profileCard.headers.get('X-DeHub-Share-Card'), 'profile-v2');
+  assert.equal(profileCard.headers.get('X-DeHub-Share-Card'), 'profile-v3');
   assert.equal(profileCard.headers.get('X-DeHub-Profile-Followers'), '2048');
   assert.equal(profileCard.headers.get('X-DeHub-Post-Avatar'), 'image');
   const profilePng = Buffer.from(await profileCard.arrayBuffer());
@@ -193,7 +193,7 @@ try {
   assert.equal(profilePng.readUInt32BE(20), 630);
   writeFileSync('post-card-checks/worker-profile.png', profilePng);
   failDetails = true;
-  const missingProfile = await dispatch('https://dehub.io/_og/profile/v2/maldoteth.png');
+  const missingProfile = await dispatch('https://dehub.io/_og/profile/v3/maldoteth.png');
   assert.equal(missingProfile.headers.get('X-DeHub-Share-Card'), 'brand');
   await missingProfile.arrayBuffer();
   const unavailable = await dispatch(url);

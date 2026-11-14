@@ -166,7 +166,7 @@ export const wrapUp2022Post: BlogPostType = {
     
     <p class="mt-8 font-bold text-royal-blue text-xl">Bring on 2023.</p>
   `,
-  bannerImage: '/media/4476fbc3-58ec-467b-8c1b-30570349940c.png',
+  bannerImage: '/media/2022-wrap-up-banner-r2.jpg',
   bannerImageAlt: '2022 Wrap Up - Riftn year in review with fireworks celebration',
   author: {
     name: 'Riftn Team',
