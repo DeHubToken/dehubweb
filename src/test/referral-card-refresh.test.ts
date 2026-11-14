@@ -61,13 +61,13 @@ describe('refreshReferralCard', () => {
     const out = await refreshReferralCard(FN_HTML, '/r/YWXRY67Q', 'https://riftn.com/r/YWXRY67Q');
     const urls = [...out.matchAll(/affiliate-share-image\?[^"]*/g)].map((m) => m[0]);
     expect(urls).toHaveLength(4);
-    for (const url of urls) expect(url).toMatch(/&v=7-[0-9a-z]+$/);
+    for (const url of urls) expect(url).toMatch(/&v=8-[0-9a-z]+$/);
     expect(new Set(urls).size).toBe(1);
 
     stubLookups({ ...MART, displayName: 'Mart' });
     const renamed = await refreshReferralCard(FN_HTML, '/r/YWXRY67Q', 'https://riftn.com/r/YWXRY67Q');
     const renamedUrl = renamed.match(/affiliate-share-image\?[^"]*/)?.[0];
-    expect(renamedUrl).toMatch(/&v=7-/);
+    expect(renamedUrl).toMatch(/&v=8-/);
     expect(renamedUrl).not.toBe(urls[0]);
   });
 
