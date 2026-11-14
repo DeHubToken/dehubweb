@@ -87,6 +87,7 @@ import {
 import { TwoFactorSettings } from '@/components/app/settings/TwoFactorSettings';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
+import { SearchRequestPrompt } from '@/components/app/navigation/SearchRequestPrompt';
 import Search from "@/components/ui/cut-icons/search";
 import Share2 from "@/components/ui/cut-icons/feedshare";
 

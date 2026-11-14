@@ -96,16 +96,31 @@ export function SearchRequestPrompt({ query, source, compact = false, onNavigate
         <span>{compact ? t('sidebar.requestPromptShort', 'Not here yet?') : t('sidebar.requestPrompt', 'Not here yet? Send it as a request')}</span>
       </div>
       <div className={cn('mt-2 flex gap-2 rounded-xl border border-white/15 bg-black/20 focus-within:border-white/30', compact ? 'flex-col p-2' : 'items-center py-1 pl-3 pr-1')}>
-        <input
-          type="text"
-          value={text}
-          maxLength={100}
-          onChange={(e) => { editedRef.current = true; setText(e.target.value); }}
-          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); send(); } }}
-          aria-label={t('sidebar.requestPrompt', 'Not here yet? Send it as a request')}
-          data-search-request-input
-          className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-zinc-500"
-        />
+        {/* The rail is too narrow for one line: two rows there, so the whole
+            sentence stays readable. Enter still sends. */}
+        {compact ? (
+          <textarea
+            value={text}
+            maxLength={100}
+            rows={2}
+            onChange={(e) => { editedRef.current = true; setText(e.target.value); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); send(); } }}
+            aria-label={t('sidebar.requestPrompt', 'Not here yet? Send it as a request')}
+            data-search-request-input
+            className="min-w-0 flex-1 resize-none bg-transparent text-[13px] leading-snug text-white outline-none"
+          />
+        ) : (
+          <input
+            type="text"
+            value={text}
+            maxLength={100}
+            onChange={(e) => { editedRef.current = true; setText(e.target.value); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); send(); } }}
+            aria-label={t('sidebar.requestPrompt', 'Not here yet? Send it as a request')}
+            data-search-request-input
+            className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-zinc-500"
+          />
+        )}
         {!compact && sendButton}
       </div>
       {compact ? (
