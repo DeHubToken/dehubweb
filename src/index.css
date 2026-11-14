@@ -784,7 +784,9 @@ html[data-feed-loading] [data-feed-welcome-bounds] :is(
   [data-feed-swallow-content]
 ) {
   transform: none !important;
+  translate: none !important;
   clip-path: none !important;
+  overflow: visible !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
