@@ -150,7 +150,21 @@ describe('the posts sitemap is wired at the edge', () => {
     expect(body).toContain('POST_SITEMAP_MAX_FEED_PAGES');
   });
 
-  it('asks the feed for a stable order, or pages shift under the walk', () => {
-    expect(WORKER).toContain('sortBy=createdAt&sortOrder=desc');
+  it('reads the id range from the sitemap list, not the feed signed-out callers cannot page', () => {
+    const fetchPage = WORKER.slice(WORKER.indexOf('async function fetchSitemapFeedPage'));
+    const body = fetchPage.slice(0, fetchPage.indexOf('\n}\n'));
+    expect(body).toContain('/api/sitemap/posts?minId=${minId}&maxId=${maxId}');
+    expect(body).not.toContain('/api/feed');
+  });
+});
+
+describe('slim rows from /api/sitemap/posts', () => {
+  it('judge text by the count the API sends', () => {
+    expect(postQualifiesForSitemap({ tokenId: 1, textLength: 40, commentCount: 0 })).toBe(true);
+    expect(postQualifiesForSitemap({ tokenId: 1, textLength: 39, commentCount: 0 })).toBe(false);
+    expect(postQualifiesForSitemap({ tokenId: 1, textLength: 0, commentCount: 3 })).toBe(true);
+  });
+  it('leave out plan-gated posts', () => {
+    expect(postQualifiesForSitemap({ tokenId: 1, textLength: 400, gated: true })).toBe(false);
   });
 });

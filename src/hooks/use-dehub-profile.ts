@@ -6,6 +6,7 @@
  * @module hooks/use-dehub-profile
  */
 
+import { noteSignInWall } from '@/lib/sign-in-wall';
 import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { mergeLiveCounts } from '@/lib/live-counts';
 import { shouldRetryProfile } from '@/lib/profile-retry';
@@ -471,6 +472,7 @@ export function useDeHubUserContent({
       }
       
       const json = await response.json();
+      noteSignInWall(json);
       const items = json.result || [];
       mergeLiveCounts(queryClient, items);
       
