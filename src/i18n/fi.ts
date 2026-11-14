@@ -2497,6 +2497,10 @@ export const fi = {
     appealsText: 'Jos pidät maltillista päätöstä vääränä, siitä voi valittaa yhteisöhallinnon kautta. Hallinto asettaa käytäntöjen valvojat valvomaan ja voivat tarkistaa tai kumota yksittäisiä päätöksiä. Täytäntöönpano on kuitenkin välitöntä — sisältö pysyy alhaalla muutoksenhaun ajan.',
     contact: 'Ota yhteyttä',
     contactText: 'Näitä ohjeita koskevat kysymykset tai kiireellistä huomiota vaativat raportit voi lähettää osoitteeseen dev@dehub.io.',
+    notAllowedItem5: 'Kohdennettu vihapuhe: henkilön tai ryhmän hyökkääminen, uhkaaminen tai epäinhimillistäminen heidän rotunsa, etnisen alkuperänsä, kansallisen alkuperänsä, uskontonsa, vammansa, sairautensa, sukupuolensa, sukupuoli-identiteettinsä tai seksuaalisen suuntautumisensa perusteella',
+    lastUpdatedDate: '14. marraskuuta 2026',
+    freeSpeech: 'Sananvapaus',
+    freeSpeechText: 'Riftn on luotu sananvapautta varten. Mielipiteet, keskustelu, satiiri sekä ideoiden, uskomusten, uskontojen ja politiikan kritisointi ovat kaikki tervetulleita, mukaan lukien näkemykset, joista muut ovat eri mieltä. Vihapuhetta koskeva sääntö kattaa kohdennetut hyökkäykset ihmisiä, ei näkemyksiä, vastaan. Lopulta yhteisö päättää, mikä katsotaan kohdennetuksi vihapuheeksi, ja moderoi alustaa hajautetusti yhteisön valitsemien moderaattoreiden ja hallintoon liittyvien äänestysten kautta. Ilmoittaminen, estäminen ja mykistys ovat edelleen kaikkien käytettävissä.',
   },
   adTools: {
     cpmRow: 'Hinta / 1 000 näyttöä:',

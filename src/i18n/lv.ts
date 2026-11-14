@@ -2334,6 +2334,10 @@ export const lv = {
     appealsText: 'Ja uzskatāt, ka mērenības lēmums bija nepareizs, to var pārsūdzēt, izmantojot kopienas pārvaldību. Pārvaldība nosaka politikas moderatoru izpildi un var pārskatīt vai atcelt atsevišķus lēmumus. Tomēr izpilde ir tūlītēja — saturs paliek ierobežots, kamēr tiek izskatīta pārsūdzība.',
     contact: 'Kontaktinformācija',
     contactText: 'Jautājumus par šīm vadlīnijām vai ziņojumus, kuriem steidzami jāpievērš uzmanība, var nosūtīt uz dev@dehub.io.',
+    notAllowedItem5: 'Mērķtiecīga naida runa: uzbrukšana, draudējums vai dehumanizēšana personai vai grupai sakarā ar viņu rasi, etnisko piederību, nacionālo izcelsmi, reliģiju, invaliditāti, slimību, dzimumu, dzimumidentitāti vai seksuālo orientāciju.',
+    lastUpdatedDate: '2026. gada 14. novembris',
+    freeSpeech: 'Brīvā runa',
+    freeSpeechText: 'Riftn ir izveidots brīvai runai. Viedokļi, debates, satīra un kritika par idejām, ticējumiem, reliģijām un politiku ir visi laipni gaidīti, ieskaitot skatījumus, ar kuriem citi nesaskaņojas. Naida runas noteikums aptver mērķtiecīgus uzbrukumus cilvēkiem, nevis uzskatiem. Galu galā kopiena nosaka, kas tiek uzskatīts par mērķtiecīgu naida runu, un regulē platformu decentralizētā veidā, caur kopienas izvēlētiem moderatoriem un pārvaldes balsojumiem. Ziņošana, bloķēšana un klusinašana paliek pieejama ikvienam.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampaņas budžeta kalkulators',

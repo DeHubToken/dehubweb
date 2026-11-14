@@ -2003,6 +2003,9 @@ export const yo = {
     appealsText: 'Tí o bá gbàgbọ́ pé ìpinnu ìwọ̀nba kò dára, a lè fi ẹ̀sùn kàn án nípasẹ̀ ìṣàkóso ìlú. Ìṣàkóso ṣe àgbékalẹ̀ àwọn agbófinró ìlànà tí wọ́n sì lè ṣe àtúnyẹ̀wò tàbí yí ìpinnu ẹnìkọ̀ọ̀kan padà. Ìmúṣẹ, síbẹ̀síbẹ̀, lẹ́sẹ̀kẹsẹ̀ — àwọn ohun tó wà nínú rẹ̀ máa ń wà ní ìsàlẹ̀ nígbà tí a bá ń ronú lórí ẹ̀bẹ̀.',
     contact: 'Kan si',
     contactText: 'Àwọn ìbéèrè nípa àwọn ìtọ́sọ́nà wọ̀nyí, tàbí àwọn ìròyìn tí ó nílò àkíyèsí pàjáwìrì, ni a lè fi ránṣẹ́ sí dev@dehub.io.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Ọ̀rọ̀ ọfẹ́',
+    freeSpeechText: 'Riftn ti kọ́ fún ìbànújẹ ọ̀fẹ́. Àwọn ìmọ̀lára, ìjíròrò, àkúnya àti ìtúpalẹ̀ àwọn ìmọ̀, ìgbàgbọ́, ẹ̀sìn àti ìpolówó gbogbo ni a gba, pẹ̀lú àwọn ìwòye tí àwọn mìíràn kò ní ìbáṣepọ̀. Ilana ìbànújẹ àìlera ń bo àwọn ìkànsí tó ń lọ̀kàn sí àwọn ènìyàn, kì í ṣe àwọn ìwòye. Ní ìparí, àwùjọ náà ń pinnu ohun tó jẹ́ ìbànújẹ àìlera tó ń lọ̀kàn àti ṣíṣe àtúnṣe pẹpẹ ní ọ̀nà àìkọ́kọ́, nípasẹ̀ àwọn olùṣàkóso tó yàn ní àwùjọ àti àbẹ̀wò ìṣàkóso. Ìkìlọ̀, ìdènà àti ìdákẹ́jẹ̀ ń wà fún gbogbo ènìyàn.',
   },
   privacyPolicy: {
     blockchainData: 'Dátà Blockchain:',

@@ -2050,6 +2050,9 @@ export const zh_tw = {
     reporting: '如何报告',
     whatHappensNext: '下一步',
     contactText: '有关这些指南或需要紧急处理的报告，请发送到dev@dehub.io。',
+    notAllowedItem5: '针对性仇恨言论：因其种族、民族、国籍、宗教、残疾、疾病、性别、性别认同或性取向而攻击、威胁或去人性化个人或团体',
+    freeSpeech: '言论自由',
+    freeSpeechText: 'Riftn 为言论自由而建。欢迎对思想、信仰、宗教和政治的观点、辩论、讽刺和批评，包括他人不同意的看法。仇恨言论规则涵盖针对个人的攻击，而非观点。最终，社区决定什么算作针对性仇恨言论，并通过社区选举的版主和治理投票以去中心化方式管理平台。举报、屏蔽和静音功能对所有人开放。',
   },
   privacyPolicy: {
     communityGovernance: '社群治理：',

@@ -2341,6 +2341,10 @@ export const et = {
     appealsText: 'Kui usute, et moderatsioonideetsioon oli vale, saab sedaappeelida kogukonna valitsuse kaudu. Valitsus määratleb poliitika, mida moderatoorid rakendavad, ja saab vaadata või kaasa teha üksikute otsuste üle. Ennetus, kuidas tegu on aga kiire — sisus jääb alla, kuniappeel on arutletud.',
     contact: 'Kontakt',
     contactText: 'Küsimusi selle juhendega või raporte, mis vajavad kiiret tähelepanu, saab saata dev@dehub.io.',
+    notAllowedItem5: 'Sihipärane vaenukõne: isiku või rühma ründamine, ähvardamine või inimväärikuse alandamine tema või nende rassi, etnilise kuuluvuse, rahvusliku päritolu, usutunnistuse, puude, haiguse, soo, soolise identiteedi või seksuaalse sättumuse tõttu',
+    lastUpdatedDate: '14. november 2026',
+    freeSpeech: 'Sõnavabadus',
+    freeSpeechText: 'Riftn on loodud sõnavabaduse jaoks. Arvamused, arutelud, satiir ning ideede, uskumuste, religioonide ja poliitika kritiseerimine on kõik teretulnud, sealhulgas seisukohad, millega teised ei nõustu. Vihakõne reegel hõlmab sihipäraseid rünnakuid inimeste, mitte vaadete vastu. Lõppkokkuvõttes otsustab kogukond, mida loetakse suunatud vaenukõneks, ja modereerib platvormi detsentraliseeritult kogukonna valitud moderaatorite ja juhtimisalaste hääletuste kaudu. Teavitamine, blokeerimine ja vaigistamine on kõigile jätkuvalt kättesaadavad.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampaania eelarvekalkulaator',

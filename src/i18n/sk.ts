@@ -2519,6 +2519,10 @@ export const sk = {
     appealsText: 'Ak sa domnievate, že rozhodnutie o zmiernení bolo nesprávne, môžete sa odvolať prostredníctvom správy komunity. Riadenie stanovuje, že moderátori zásad presadzujú a môžu kontrolovať alebo zvrátiť jednotlivé rozhodnutia. Exekúcia je však okamžitá — obsah zostáva na nízkej úrovni, kým sa zváži odvolanie.',
     contact: 'Kontakt',
     contactText: 'Otázky týkajúce sa týchto pokynov alebo hlásení, ktoré si vyžadujú naliehavú pozornosť, môžete poslať na adresu dev@dehub.io.',
+    notAllowedItem5: 'Cielená nenávistná reč: útok, hrozba alebo dehumanizácia osoby alebo skupiny kvôli ich rase, etnickému pôvodu, národnému pôvodu, náboženstvu, postihnuteľnosti, chorobe, pohlaviu, genderovej identite alebo sexuálnej orientácii',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Sloboda prejavu',
+    freeSpeechText: 'Riftn je postavený na slobode prejavu. Názorové, debatné, satirické a kritické vyjadrenia ideí, vier, náboženstiev a politiky sú všetky vítané, vrátane názorov, s ktorými sa iní nesúhlasia. Pravidlo nenávistného prejavu sa vzťahuje na cielene určené útoky na ľudí, nie na názory. Nakoniec komunita rozhoduje, čo sa považuje za cielene určený nenávistný prejav a moderuje platformu decentralizovaným spôsobom, prostredníctvom komunálne volených moderátorov a hlasov na riadenie. Hlásenie, blokovanie a potlačenie zostávajú dostupné pre všetkých.',
   },
   brandGuidelines: {
     title: 'Pokyny pre značku',

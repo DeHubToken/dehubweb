@@ -2533,6 +2533,10 @@ export const pl = {
     appealsText: 'Jeśli uważasz, że decyzja o moderacji była błędna, możesz się od niej odwołać poprzez zarządzanie społecznością. Zarządzanie określa, że moderatorzy polityki egzekwują i mogą przeglądać lub odwracać poszczególne decyzje. Egzekwowanie jest jednak natychmiastowe — treść pozostaje wyłączona, gdy rozpatrywane jest odwołanie.',
     contact: 'Kontakt',
     contactText: 'Pytania dotyczące tych wytycznych lub zgłoszeń, które wymagają pilnej uwagi, można przesyłać na adres dev@dehub.io.',
+    notAllowedItem5: 'Targeted hate speech: atakowanie, grożenie lub dehumanizowanie osoby lub grupy z powodu ich rasy, etniczności, pochodzenia narodowego, religii, niepełnosprawności, choroby, płci, tożsamości płciowej lub orientacji seksualnej',
+    lastUpdatedDate: '14 listopada 2026',
+    freeSpeech: 'Swoboda słowa',
+    freeSpeechText: 'Riftn jest stworzony dla wolności słowa. Opinie, debata, satyra i krytyka idei, przekonań, religii i polityki są mile widziane, w tym poglądy, z którymi inni się nie zgadzają. Zasada mowy nienawiści obejmuje ataki skierowane na ludzi, a nie na poglądy. Ostatecznie społeczność decyduje, co liczy się jako skierowana mowa nienawiści i moderuje platformę w zdecentralizowany sposób, poprzez moderatorów wybranych przez społeczność i głosy w zarządzaniu. Zgłaszanie, blokowanie i wyciszanie pozostają dostępne dla wszystkich.',
   },
   brandGuidelines: {
     title: 'Wytyczne dotyczące marki',

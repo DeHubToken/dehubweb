@@ -2519,6 +2519,10 @@ export const sw = {
     appealsText: 'Ikiwa unaamini uamuzi wa kiasi haukuwa sahihi, unaweza kukata rufaa kupitia utawala wa jamii. Utawala huweka wasimamizi wa sera wanaotekeleza na wanaweza kupitia au kubadilisha maamuzi ya mtu binafsi. Utekelezaji, hata hivyo, ni wa haraka — maudhui yanabaki chini wakati rufaa inazingatiwa.',
     contact: 'Mawasiliano',
     contactText: 'Maswali kuhusu miongozo hii, au ripoti ambazo zinahitaji uangalizi wa haraka, zinaweza kutumwa kwa dev@dehub.io.',
+    notAllowedItem5: 'Mzunguko wa kinyume: kushambulia, kutishia au kupunguza thamani ya mtu au kikundi kutokana na rangi yao, utamaduni, asili ya taifa, dini, ulemavu, ugonjwa, jinsia, utambulisho wa kijinsia au mwelekeo wa kibinafsi',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Huru ya Maneno',
+    freeSpeechText: 'Riftn imeundwa kwa uhuru wa mazungumzo. Maoni, majadiliano, ucheshi na mapambano ya mawazo, imani, dini na siasa yanakubalika, pamoja na maoni ambayo wengine hawakubaliana nayo. Sheria ya mazungumzo ya kinyamkato inahusu mashambulizi yaliyoelekezwa kwa watu, sio maoni. Mwisho, jamii inamua nini kinahesabika kama mazungumzo ya kinyamkato na inahimiza jukwaa kwa njia isiyo na umiliki, kupitia wahusika waliochaguliwa na uchaguzi wa utawala. Kuripoti, kuzuia na kusikiliza bado inapatikana kwa kila mtu.',
   },
   brandGuidelines: {
     title: 'Miongozo ya Chapa',

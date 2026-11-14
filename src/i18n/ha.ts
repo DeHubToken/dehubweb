@@ -2542,6 +2542,10 @@ export const ha = {
     adultContent: 'Abun ciki na Manya',
     reporting: 'Yadda za a bayar da rahoto',
     whatHappensNextItem1: 'Abubuwan da ke karya waɗannan jagororin an cire su',
+    notAllowedItem5: 'Maganganun ƙiyayya da aka yi niyya: kai hari, barazana ko wulakanta mutum ko ƙungiya saboda launin fatarsu, kabilarsu, asalin ƙasarsu, addininsu, nakasa, cuta, jinsi, ainihin jinsi ko yanayin jima\'i',
+    lastUpdatedDate: '14 ga watan Nuwamba na shekarar 2026',
+    freeSpeech: '\'Yancin Magana',
+    freeSpeechText: 'An gina Riftn don \'yancin faɗar albarkacin baki. Ana maraba da ra\'ayoyi, muhawara, ba\'a da sukar ra\'ayoyi, imani, addinai da siyasa, har da ra\'ayoyin da wasu ba su yarda da su ba. Dokar maganganun ƙiyayya ta shafi hare-haren da aka yi wa mutane, ba ra\'ayoyi ba. A ƙarshe, al\'umma ce ke yanke hukunci kan abin da ake ɗauka a matsayin maganar ƙiyayya da aka yi niyya kuma suke tsara dandamalin ta hanyar da ba ta da tsakiya, ta hanyar masu tsara al\'umma da aka zaɓa da kuma zaɓen gwamnati. Rahotawa, toshewa da shiru suna nan a samuwa ga kowa.',
   },
   docsSearchIndex: {
     nftTitle: 'NFT da Kadarorin Dijital',

@@ -2519,6 +2519,10 @@ export const so = {
     contact: 'La xiriir',
     contactText: 'Su \'aalaha ku saabsan tilmaamahan, ama warbixinnada u baahan feejignaan degdeg ah, waxaa loo diri karaa dev@dehub.io.',
     notAllowedItem2: 'Waxyaabaha galmada carruurta, ama sawir kasta oo galmo ah oo carruur ah. Tan waxaa loo gudbiyaa maamullada ay khusayso waxayna keentaa in si degdeg ah oo joogto ah looga saaro',
+    notAllowedItem5: 'Hadal nacayb ah oo la beegsanayo: weerar, hanjabaad ama ka dhigid mid aan bini\'aadannimo lahayn qof ama koox sababta ay u tahay jinsigooda, qowmiyaddooda, asalka qaranka, diintooda, naafada, cudurka, jinsiga, aqoonsiga jinsi ama jihada galmada.',
+    lastUpdatedDate: '14 Nofembar 2026',
+    freeSpeech: 'Xorriyadda hadalka',
+    freeSpeechText: 'Riftn waxaa loogu talagalay hadalka xor ah. Fikradaha, doodaha, majaajilada iyo dhaleeceynta fikradaha, aaminsanaanta, diimaha iyo siyaasadda ayaa dhammaantood soo dhaweyn, oo ay ku jiraan aragtiyada dadka kale aan ku raacsanayn. Xeerka hadalka nacaybka waxa uu daboolaa weerarrada bartilmaameedka ah ee dadka, ma aha aragtiyada. Ugu dambeyntii, bulshada ayaa go\'aamisa waxa loo arkaa hadalka nacaybka bartilmaameedka ah oo ay nidaamiyaan madal ahaan qaab aan dhexeeyn, iyada oo loo marayo moderators ay bulshada doortay iyo codbixinta maamulka. Warbixinta, xayiraadda iyo dhidibka ayaa sii jira dhammaan dadka.',
   },
   brandGuidelines: {
     title: 'Tilmaamaha Calaamadda',

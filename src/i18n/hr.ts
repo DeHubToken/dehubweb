@@ -2551,6 +2551,10 @@ export const hr = {
     adultContent: 'Odrasli sadržaj',
     reporting: 'Kako izjaviti',
     whatHappensNextItem1: 'Sadržaj koji krši ova pravila uklanja se.',
+    notAllowedItem5: 'Ciljani govor mržnje: napadanje, prijetnje ili dehumanizacija osobe ili skupine zbog njihove rase, etničke pripadnosti, nacionalnog podrijetla, vjere, invaliditeta, bolesti, spola, rodnog identiteta ili seksualne orijentacije',
+    lastUpdatedDate: '14. studenoga 2026.',
+    freeSpeech: 'Sloboda govora',
+    freeSpeechText: 'Riftn je stvoren za slobodu govora. Mišljenja, rasprave, satire i kritike ideja, uvjerenja, religija i politike su dobrodošli, uključujući i stavove s kojima se drugi ne slažu. Pravilo o govoru mržnje odnosi se na ciljane napade na ljude, a ne na stavove. U konačnici, zajednica odlučuje što se smatra ciljanim govorom mržnje i moderira platformu na decentraliziran način, putem moderatora koje je zajednica izabrala i glasova o upravljanju. Prijavljivanje, blokiranje i isključivanje zvuka i dalje su dostupni svima.',
   },
   docsSearchIndex: {
     adBadgeTargetingDesc: 'Ciljani oglasi temelje se na razinama korisničkih znački, stopama CPM-a po znački, troškovima oglašavanja Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',

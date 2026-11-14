@@ -2334,6 +2334,10 @@ export const no = {
     appealsText: 'Hvis du mener at en modereringsavgjørelse var feil, kan den ankes gjennom fellesskapets styring. Styring bestemmer hvilke retningslinjer moderatorene håndhever, og kan gjennomgå eller omgjøre individuelle avgjørelser. Håndhevingen skjer imidlertid umiddelbart – innholdet forblir nede mens en anke vurderes.',
     contact: 'Kontakt',
     contactText: 'Spørsmål om disse retningslinjene, eller rapporter som trenger øyeblikkelig oppmerksomhet, kan sendes til dev@dehub.io.',
+    notAllowedItem5: 'Målrettet hatprat: angrep, trusler eller dehumanisering av en person eller gruppe på grunn av deres rase, etnisitet, nasjonale opprinnelse, religion, funksjonshemming, sykdom, kjønn, kjønnsidentitet eller seksuell orientering',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Fri tale',
+    freeSpeechText: 'Riftn er bygget for ytringsfrihet. Meninger, debatt, satire og kritikk av ideer, tro, religioner og politikk er alle velkomne, inkludert syn som andre er uenige i. Hatemeldingsregelen dekker målrettede angrep på personer, ikke meninger. Til slutt bestemmer fellesskapet hva som teller som målrettet hatytring og modererer plattformen på en desentralisert måte, gjennom fellesskapsvalgte moderatorer og styringsavstemninger. Rapportering, blokkering og demping er fortsatt tilgjengelig for alle.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampanjebudsjettkalkulator',

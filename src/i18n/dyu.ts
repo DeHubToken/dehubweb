@@ -2554,6 +2554,10 @@ export const dyu = {
     appealsText: 'N\'i lanin b\'a la ko koo dɔ latigɛra min ma ɲi, i be se k\'o koo ɲɛnabɔ i ka sigida la. O kama, a ka ɲi ka kɛ ni miiriya ɲuman ye. O kama, a ka ɲi ka kuma ni mɔgɔ dɔ ye min ma deli ka kuma a fɛ.',
     contact: 'Ɲɛnamaya',
     contactText: 'I be se ka ɲiningaliw kɛ o ladiliw koo la, walima ka kunnafoniw ci dev@dehub.io ma minw ka kan ka jatiminɛ kɛ joona joona.',
+    notAllowedItem5: 'Kuma jugu minnu be kɛ mɔgɔ dɔw kama: mɔgɔ dɔ wala mɔgɔ jamakulu dɔ kɛlɛ, u lasun wala u ka adamadenya ban u ka siya, u ka siyaɲɔgɔnya, u ka jamana, u ka diina, u ka balima, u ka bana, u ka cɛya wala musoya, u ka cɛya wala musoya hakilina wala u ka cɛnimusoya ɲɛsinin koo la',
+    lastUpdatedDate: '14O loon na, aw bena',
+    freeSpeech: 'Foyi tɛ se ka i ka kuma bali',
+    freeSpeechText: 'Riftn dilanna walisa mɔgɔw ka se ka u ka miiriyaw fɔ hɔrɔnnya la. Mɔgɔw ka miiriyaw, ɲɔgɔn sɔsɔli, nɛɛrɛli ani miiriyaw, kafoɲɛnamaw, diinɛw ani politikikow kan ɲangili, o bɛɛ ka ɲi, hali miiriyaw minw ma bɛn mɔgɔ dɔw ma. Kuma juguw koo la sariya bɛ mɔgɔw kan ka kɛlɛ kɛ u kama, nka o tɛ miiriyaw kan. A laban na, jamakulu lo bɛna latigɛ min ye kɛɲɛnako ye min dira mɔgɔ dɔw ma, ani a bɛna site in ɲɛminɛ fɛɛrɛ dɔ fɛ min tɛ jamana kelen bolo, jamakulu ka modɛratɛrɛw ani kuntigiya lajɛnw sababu fɛ. Mɔgɔ bɛɛ bɛ se ka mɔgɔ dɔ koo fɔ, k\'a bali ani k\'a ka kuma bali.',
   },
   adTools: {
     audienceWarning: 'Lamɛnbaga dɔɔnin ({count}) bɛ nin wari hakɛ in na. A filɛ ka jɛkulu caman sugandi walima ka wari hakɛ dɔgɔya.',

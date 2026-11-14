@@ -2276,6 +2276,10 @@ export const nl = {
     appealsText: 'Als je van mening bent dat een moderatiebeslissing verkeerd was, kan hiertegen beroep worden aangetekend via community-governance. Governance stelt de beleidsmoderators in staat om individuele beslissingen af te dwingen en te herzien of terug te draaien. De handhaving is echter onmiddellijk — de inhoud blijft laag terwijl een beroep wordt overwogen.',
     contactText: 'Vragen over deze richtlijnen of meldingen die dringend aandacht nodig hebben, kunnen worden gestuurd naar dev@dehub.io.',
     contact: 'Contact',
+    notAllowedItem5: 'Doelgerichte haatspraak: een persoon of groep aanvallen, bedreigen of dehumaniseren vanwege hun ras, etniciteit, nationaliteit, religie, handicap, ziekte, geslacht, genderidentiteit of seksuele geaardheid',
+    lastUpdatedDate: '14 november 2026',
+    freeSpeech: 'Vrijheid van meningsuiting',
+    freeSpeechText: 'Riftn is gebouwd voor vrije meningsuiting. Meningen, debat, satire en kritiek op ideeën, overtuigingen, religies en politiek zijn allemaal welkom, inclusief standpunten waar anderen het niet mee eens zijn. De haatspraakregel dekt gerichte aanvallen op mensen, niet op standpunten. Uiteindelijk beslist de gemeenschap wat als gerichte haatspraak telt en reguleert het platform op een gedecentraliseerde manier, via door de gemeenschap gekozen moderators en bestuursstemmen. Rapporteren, blokkeren en dempen blijven voor iedereen beschikbaar.',
   },
   privacyPolicy: {
     title: 'Privacybeleid',

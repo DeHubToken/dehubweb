@@ -2580,6 +2580,9 @@ export const om = {
     adultContent: 'Qabiyyee Ga&#39;eessotaa',
     reporting: 'Akkaataa Gabaasa',
     whatHappensNextItem1: 'Qabiyyeen qajeelfama kana cabsu ni haqama',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Mootii Bilisummaa',
+    freeSpeechText: 'Riftn kan ijaaramuu isaaf afaan bilisaa. Yaada, marii, xalayaa fi yaada yaada, amantii, amantii fi siyaasaa hundaaf kabajaa, akkasumas yaada namoota biraa walii galuun hin jiru. Seerri afaan rakkisaa namoota irratti xiyyeeffate, yaada irratti miti. Dhuma irratti, hawaasni maal akka ta\'e murteessa, afaan rakkisaa kan ta\'e fi tajaajila platformii deemsisa, kan hawaasni filate fi filatamuun murteessuu. Beeksisuu, cufuu fi dhoksuu namni kamiyyuu ni jira.',
   },
   docsSearchIndex: {
     categoryBlog: 'Biloogii',

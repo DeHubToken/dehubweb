@@ -2050,6 +2050,10 @@ export const mi = {
     contactText: 'Ka taea te tuku pātai mō ēnei aratohu, ngā pūrongo rānei e hiahia ana ki te aro nui ki a dev@dehub.io.',
     whatHappensNextText: 'Ka arotakehia ngā pūrongo e ngā kaiwhakahaere kua tohua — ngā kaiwhakahaere kua pootihia e te hapori me ngā kaipupuri tohu teitei — kei a rātou te mana kua tukua ki te mahi me te kore e tatari ki te pooti whakahaere.',
     appealsText: 'Ki te whakapono koe he he te whakatau a te kaiwhakahaere, ka taea te piira ma te whakahaere a te hapori. Ko te whakahaere te whakatakoto kaupapa here ka whai mana ai ngā kaiwhakahaere, ā, ka taea e ia te arotake, te whakakore rānei i ngā whakatau takitahi. Heoi, ka puta tonu te whai mana — ka noho tonu te ihirangi ki raro i te wa e whakaarohia ana te piira.',
+    notAllowedItem5: 'He kōrero mātāmua e whāia ana: e whakatūwhera, e whakatūpato, e whakaiti rānei i tētahi tangata, i tētahi rōpū rānei nā runga i tō rātou ira, iwi, taketake ā-motu, whakapono, hauora, mate, ira tangata, tuakiri ira tangata, me te āhua o te rangatiratanga.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Kōrero Tūwhera',
+    freeSpeechText: 'Ko te Ritenga a Riftn mō te kōrero ā‑kore. Ka whakaae ki ngā whakaaro, te tautohetohe, te whakakata, me te arotakenga i ngā whakaaro, whakapono, karakia, me te tōrangapū, tae atu ki ngā tirohanga kāore e whakaae ana ētahi atu. Ka āraia te ture kōrero kino i ngā whāinga aroaro ki ngā tāngata, kāore i ngā tirohanga. I te mutunga, ko te hapori te kaimahi mō te whakatau he aha te kōrero kino aroaro, ā, ka whakahaere i te papamahi i tētahi ara kore pūmau, mā ngā kaiwhakahaere i kōwhiri e te hapori me ngā pōti rangatiratanga. Ka wātea tonu te pūrongo, te ārai, me te whakaiti ki te katoa.',
   },
   privacyPolicy: {
     title: 'Kaupapahere Tūmataiti',

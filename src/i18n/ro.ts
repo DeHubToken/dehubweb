@@ -2519,6 +2519,10 @@ export const ro = {
     appeals: 'Contestații',
     appealsText: 'În cazul în care considerați că o decizie de moderare a fost greșită, aceasta poate fi contestată prin intermediul guvernanței comunității. Guvernanța stabilește măsurile pe care le impun moderatorii de politici și poate revizui sau inversa deciziile individuale. Cu toate acestea, punerea în aplicare este imediată — conținutul rămâne redus în timp ce se ia în considerare o cale de atac.',
     contactText: 'Întrebările despre aceste linii directoare sau rapoartele care necesită o atenție urgentă pot fi trimise la dev@dehub.io.',
+    notAllowedItem5: 'Discurs de ură țintit: atacarea, amenințarea sau deumanizarea unei persoane sau grupuri din cauza rasei, etniei, originii naționale, religiei, dizabilității, bolii, sexului, identității de gen sau orientării sexuale.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Libertate de exprimare',
+    freeSpeechText: 'Riftn este construit pentru libertatea de exprimare. Opiniile, dezbaterile, satira și criticile ideilor, credințelor, religiilor și politicilor sunt toate binevenite, inclusiv opiniile cu care alții nu sunt de acord. Regula privind discursul de ură acoperă atacurile țintite asupra persoanelor, nu opiniile. În cele din urmă, comunitatea decide ce se numește discurs de ură țintit și moderă platforma într-un mod descentralizat, prin moderatori aleși de comunitate și voturi de guvernare. Raportarea, blocarea și tăcerea rămân disponibile pentru toată lumea.',
   },
   brandGuidelines: {
     title: 'Reguli de marcă',

@@ -2551,6 +2551,10 @@ export const id = {
     reporting: 'Cara Melaporkan',
     whatHappensNextItem1: 'Konten yang melanggar panduan ini dihapus',
     notAllowedItem4: 'Pelecehan, perundungan, dan pelecehan yang ditargetkan, termasuk penumpukan terkoordinasi',
+    notAllowedItem5: 'Ujaran kebencian yang ditargetkan: menyerang, mengancam, atau mendehumanisasi seseorang atau sekelompok orang karena ras, etnis, asal negara, agama, disabilitas, penyakit, jenis kelamin, identitas gender, atau orientasi seksual mereka',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Kebebasan Berpendapat',
+    freeSpeechText: 'Riftn dibangun untuk kebebasan berpendapat. Pendapat, perdebatan, sindiran, dan kritik terhadap gagasan, keyakinan, agama, dan politik semuanya dipersilakan, termasuk pandangan yang tidak disetujui orang lain. Aturan ujaran kebencian mencakup serangan yang ditujukan kepada orang-orang, bukan pandangan. Pada akhirnya, komunitaslah yang memutuskan apa yang dianggap sebagai ujaran kebencian yang ditargetkan dan memoderasi platform secara terdesentralisasi, melalui moderator yang dipilih oleh komunitas dan pemungutan suara tata kelola. Fitur pelaporan, pemblokiran, dan membisukan tetap tersedia bagi semua orang.',
   },
   docsSearchIndex: {
     stakeTitle: 'Penguncian Token (Staking)',

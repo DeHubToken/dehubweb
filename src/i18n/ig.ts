@@ -2526,6 +2526,10 @@ export const ig = {
     adultContent: 'Adult Ọdịnaya',
     reporting: 'Olee otú Report',
     whatHappensNextItem1: 'A na-ewepụ ọdịnaya mebiri ụkpụrụ nduzi ndị a',
+    notAllowedItem5: 'Okwu ịkpọasị a tụrụ anya ya: Ịwakpo, iyi egwu ma ọ bụ ime ka mmadụ ma ọ bụ ìgwè mmadụ ghara ịdị ka mmadụ n\'ihi agbụrụ ha, ebo ha, mba ha si, okpukpe ha, nkwarụ ha, ọrịa ha, okike ha, ụdịdị mmadụ ha ma ọ bụ ụdị mmekọahụ ha.',
+    lastUpdatedDate: '14 Nọvemba 2026',
+    freeSpeech: 'Nnwere Onwe Ikwu Okwu',
+    freeSpeechText: 'E wuru Riftn maka nnwere onwe ikwu okwu. Echiche, arụmụka, nkọwa na nkatọ nke echiche, nkwenye, okpukpe na ndọrọ ndọrọ ọchịchị niile dị mma, gụnyere echiche ndị ọzọ na-ekweghị na ya. Iwu okwu ịkpọasị ahụ na-ekpuchi mwakpo a na-ebute n\'obi megide ndị mmadụ, ọ bụghị echiche. N\'ikpeazụ, ọ bụ ndị obodo na-ekpebi ihe a na-ewere dị ka okwu ịkpọasị a tụrụ aro ma na-achịkwa ikpo okwu ahụ n\'ụzọ na-enweghị etiti, site n\'aka ndị nlekọta ndị obodo họọrọ na ntuli aka ọchịchị. Ịkọ akụkọ, igbochi na ime ka ọ ghara ịnụ ihe ka dịịrị mmadụ niile.',
   },
   docsSearchIndex: {
     apiEndpointsTitle: 'Njedebe API',

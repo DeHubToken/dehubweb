@@ -2560,6 +2560,10 @@ export const de = {
     appealsText: 'Wenn du der Meinung bist, dass eine Moderationsentscheidung falsch war, kann sie über die Community-Governance angefochten werden. Governance setzt die Richtlinienmoderatoren durch und kann einzelne Entscheidungen überprüfen oder rückgängig machen. Die Durchsetzung erfolgt jedoch sofort — der Inhalt bleibt unten, während ein Einspruch geprüft wird.',
     contact: 'Kontakt',
     contactText: 'Fragen zu diesen Richtlinien oder Berichte, die dringend bearbeitet werden müssen, können an dev@dehub.io gesendet werden.',
+    notAllowedItem5: 'Zielgerichtete Hassrede: Angriffe, Drohungen oder Entmenschlichung einer Person oder Gruppe wegen ihrer Rasse, ethnischen Herkunft, nationalen Herkunft, Religion, Behinderung, Krankheit, des Geschlechts, der Geschlechtsidentität oder sexuellen Orientierung.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Meinungsfreiheit',
+    freeSpeechText: 'Riftn ist für die Meinungsfreiheit konzipiert. Meinungen, Debatten, Satire und Kritik an Ideen, Überzeugungen, Religionen und Politik sind alle willkommen, einschließlich Ansichten, denen andere nicht zustimmen. Die Regel zu Hassrede erstreckt sich auf gezielte Angriffe auf Personen, nicht auf Meinungen. Letztendlich entscheidet die Community, was als gezielte Hetze gilt, und moderiert die Plattform auf dezentrale Weise durch von der Community gewählte Moderatoren und Abstimmungen über die Governance. Meldungen, Blockierungen und Stummschaltungen stehen weiterhin allen zur Verfügung.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampagnenbudget-Rechner',

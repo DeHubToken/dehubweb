@@ -2050,6 +2050,10 @@ export const zu = {
     contactText: 'Imibuzo mayelana nalezi ziqondiso, noma imibiko edinga ukunakekelwa okuphuthumayo, ingathunyelwa ku-dev@dehub.io.',
     contact: 'Xhumana Nathi',
     reportingItem3: 'Ungathulisa i-akhawunti ukuze uyisuse kokudla kwakho ngaphandle kokuyibhloka',
+    notAllowedItem5: 'Ukukhuluma okubi okuhlosiwe: ukuhlasela, ukuhlasela noma ukunciphisa umuntu noma iqembu ngenxa yobuhlanga, isiko, umphakathi, inkolo, ukulimala, isifo, ubulili, ubuqotho bokuziphatha noma ukuxhumana kwengqondo.',
+    lastUpdatedDate: '14 Novemba 2026',
+    freeSpeech: 'Ikhono lokukhuluma',
+    freeSpeechText: 'Riftn yakhiwe ukuze kube ukukhuluma okukhululekile. Imibono, ingxoxo, ukucula kanye nokuhlaziywa kwemibono, imikhosi, izinkolo kanye nepolitiki kuyamukelwa, kuhlanganise nemibono yabanye abangavumelani nayo. Umthetho wokukhuluma okubi uhlanganisa ukuhlasela okuqondile kubantu, hhayi imibono. Ekugcineni, umphakathi uyinquma ukuthi yini eyokuthi kube ukukhuluma okubi okuqondile futhi uphatha i-platform ngendlela engahlangene, ngokusebenzisa abaphathi abathathwa umphakathi kanye nemvume yokuphatha. Ukubika, ukuvimbela kanye nokucisha kusebenza kubo bonke.',
   },
   privacyPolicy: {
     title: 'Umthetho Wobumfihlo',

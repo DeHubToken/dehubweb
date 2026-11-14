@@ -2519,6 +2519,10 @@ export const sv = {
     contact: 'Kontakt',
     contactText: 'Frågor om dessa riktlinjer, eller rapporter som kräver brådskande uppmärksamhet, kan skickas till dev@dehub.io.',
     notAllowed: 'Vad som inte är tillåtet',
+    notAllowedItem5: 'Målstyrd hatpropaganda: attackerande, hotande eller dehumaniserande av en person eller grupp på grund av deras ras, etnicitet, nationalitet, religion, funktionsnedsättning, sjukdom, kön, könsidentitet eller sexuella läggning',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Frihet att yttra sig',
+    freeSpeechText: 'Riftn är byggt för yttrandefrihet. Åsikter, debatt, satir och kritik av idéer, övertygelser, religioner och politik är alla välkomna, inklusive åsikter som andra inte håller med om. Hetsregeln omfattar riktade attacker mot personer, inte åsikter. I slutändan bestämmer gemenskapen vad som räknas som riktad hets och modererar plattformen på ett decentraliserat sätt, genom gemenskapsvalda moderatorer och styrningsröster. Rapportering, blockering och tystnad är tillgängliga för alla.',
   },
   brandGuidelines: {
     title: 'Varumärkesriktlinjer',

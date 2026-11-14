@@ -2014,6 +2014,10 @@ export const vi = {
     appealsText: 'Nếu bạn cho rằng quyết định kiểm duyệt là sai, bạn có thể khiếu nại thông qua quản trị cộng đồng. Quản trị đặt các nhà điều hành chính sách thực thi và có thể xem xét hoặc đảo ngược các quyết định cá nhân. Tuy nhiên, việc thực thi sẽ được thực hiện ngay lập tức — nội dung sẽ được giữ nguyên trong khi xem xét khiếu nại.',
     contact: 'Liên hệ',
     contactText: 'Bạn có thể gửi câu hỏi về các hướng dẫn này hoặc báo cáo cần chú ý khẩn cấp đến dev@dehub.io.',
+    notAllowedItem5: 'Bạo lực kỳ thị có mục tiêu: tấn công, đe dọa hoặc làm mất nhân phẩm một người hoặc nhóm vì chủng tộc, dân tộc, nguồn gốc quốc gia, tôn giáo, khuyết tật, bệnh tật, giới tính, nhận dạng giới hoặc xu hướng tình dục của họ',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Ngôn luận tự do',
+    freeSpeechText: 'Riftn được xây dựng cho tiếng nói tự do. Quan điểm, tranh luận, châm biếm và phê bình các ý tưởng, niềm tin, tôn giáo và chính trị đều được chào đón, bao gồm cả những quan điểm mà người khác không đồng ý. Quy tắc phát ngôn thù hận bao gồm các cuộc tấn công nhắm vào người, không phải quan điểm. Cuối cùng, cộng đồng quyết định những gì được coi là phát ngôn thù hận nhắm mục tiêu và điều chỉnh nền tảng theo cách phi tập trung, thông qua các nhà điều hành được cộng đồng bầu chọn và các cuộc bỏ phiếu quản trị. Việc báo cáo, chặn và tắt tiếng vẫn có sẵn cho mọi người.',
   },
   privacyPolicy: {
     title: 'Chính sách quyền riêng tư',

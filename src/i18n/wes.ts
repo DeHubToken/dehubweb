@@ -1880,6 +1880,9 @@ export const wes = {
     contact: 'Contact',
     adultContent: 'Adult Content',
     reporting: 'How to Report',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Free Speech',
+    freeSpeechText: 'Riftn don build for free speech. Opinion, debate, satire and criticism of ideas, belief, religion and politics all dey welcome, even if people no agree. The hate speech rule no cover attack on person, e just target attack on view. Finally the community go decide wetin be targeted hate speech and dem go moderate the platform in decentralized way, through community-elected moderators and governance votes. Reporting, blocking and muting still dey available for everybody.',
   },
   privacyPolicy: {
     blockchainConsiderationsText: 'Bikos blockchain technology no di chenj:',

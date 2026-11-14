@@ -125,6 +125,10 @@ export const ku = {
     whatHappensNextItem3: 'Binpêkirinên dubare an giran dibin sedema rakirina mayînde ya hesabê',
     whatHappensNextItem4: 'Li cihê ku qanûn ferz dike, materyalên neqanûnî ji rayedarên têkildar re têne şandin',
     whatHappensNextText: 'Rapor ji aliyê moderatorên destnîşankirî ve têne nirxandin — rêveberên ku civakê hilbijartine û xwediyên nîşanên asta herî bilind — ku xwedî desthilata wekaletî ne da ku bêyî li benda dengdana rêveberiyê bimînin tevbigerin.',
+    notAllowedItem5: 'Axaftina dijî nefretê: serê xwe dike, tehdit dike an jî mirov an komê bi sedema rase, etnîk, çavkaniya neteweyî, dîn, neçarî, nexweşî, cins, nasnameya cinsî an jî rêwîtiya cinsî şikêrtin.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Azadiya axaftinê',
+    freeSpeechText: 'Riftn ji bo axaftina azad hatî çêkirin. Rêjeyên, şerê, satîra û kritikê li ser fikirên, baweriyên, dînên û siyasetan hemû hatine xêrhatin, di nav de dîtinên ku kesên din li ser wan neheq in jî tê de. Rêzeya axaftina nefretê têkiliyên li ser kesan dike, ne li ser dîtinên. Di dawiyê de civak diyar dike ka çi tiştê wekî axaftina nefretê ya hedefkirî tê hesibandin û platformê di rêya decentralîzeyê de, bi moderatorên ku ji hêla civakê ve hatine hilbijartin û dengdanên hukûmetê re, modere dike. Ragihandin, astengkirin û bêdeng kirin ji bo hemû kesan berdest in.',
   },
   docsSearch: {
     blogPost: 'Posta blogê',

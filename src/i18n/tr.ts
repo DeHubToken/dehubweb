@@ -2242,6 +2242,10 @@ export const tr = {
     appealsText: "Bir denetim kararının yanlış olduğunu düşünüyorsanız, topluluk yönetişimi üzerinden itiraz edilebilir. Yönetişim, denetçilerin uyguladığı politikayı belirler ve tekil kararları gözden geçirebilir ya da tersine çevirebilir. Ancak uygulama anlıktır — itiraz değerlendirilirken içerik kaldırılmış olarak kalır.",
     contact: "İletişim",
     contactText: "Bu kurallar hakkındaki sorular ya da acil ilgi gerektiren bildirimler dev@dehub.io adresine gönderilebilir.",
+    notAllowedItem5: "Hedefli nefret söylemi: bir kişinin veya grubun ırkı, etnik kökeni, ulusal kökeni, dini, engelliliği, hastalığı, cinsiyeti, cinsiyet kimliği veya cinsel yönelimi nedeniyle saldırılması, tehdit edilmesi veya insanlık dışı kılınması.",
+    lastUpdatedDate: "14 November 2026",
+    freeSpeech: "İfade Özgürlüğü",
+    freeSpeechText: "Riftn, özgür konuşma için tasarlanmıştır. Fikirler, inançlar, dinler ve siyasete yönelik görüşler, tartışmalar, alaycılık ve eleştiriler dahil olmak üzere, başkalarının katılmadığı görüşler de dahil olmak üzere her türlü görüşe açıktır. Nefret söylemi kuralı, kişilere yönelik hedefli saldırıları kapsar, görüşleri değil. Sonuçta topluluk, hedefli nefret söyleminin ne sayılacağını belirler ve platformu merkezi olmayan bir şekilde, topluluk tarafından seçilen moderatörler ve yönetişim oylamaları aracılığıyla denetler. Raporlama, engelleme ve susturma herkes için kullanılabilir.",
   },
   privacyPolicy: {
     title: "Gizlilik Politikası",

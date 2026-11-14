@@ -2334,6 +2334,10 @@ export const lt = {
     contact: 'Susisiekti',
     contactText: 'Klausimus apie šias gaires arba ataskaitas, į kurias reikia skubiai atkreipti dėmesį, galite siųsti adresu dev@dehub.io.',
     reporting: 'Kaip pranešti',
+    notAllowedItem5: 'Tikslinė neapykantos kalba: asmens ar grupės atakavimas, grasinimas ar dehumanizavimas dėl jų rasės, etninės kilmės, nacionalinės kilmės, religijos, negalios, ligos, lyties, lytinės tapatybės ar seksualinės orientacijos.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Laisvoji kalba',
+    freeSpeechText: 'Riftn sukurtas laisvai kalbai. Nuomonės, diskusijos, satyra ir kritika idėjų, įsitikinimų, religijų ir politikos yra visada laukiami, įskaitant požiūrius, su kuriais kiti nesutinka. Įžeidžiančių kalbų taisyklė apima tikslinius išpuolius prieš žmones, o ne požiūrius. Galų gale bendruomenė nusprendžia, kas yra tikslinis įžeidžiantis kalbėjimas, ir moderuoja platformą decentralizuotu būdu, per bendruomenės išrinktus moderatorius ir valdymo balsavimus. Pranešimas, blokavimas ir nutildymas lieka prieinami visiems.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampanijos biudžeto skaičiuoklė',

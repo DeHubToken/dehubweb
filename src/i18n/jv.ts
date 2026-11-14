@@ -2049,6 +2049,10 @@ export const jv = {
     notAllowedItem6: 'Doxxing utawa nerbitake informasi pribadi wong liya tanpa idin',
     reporting: 'Cara Nglaporake',
     reportingText: 'Nglaporake mung butuh sawetara tutul lan bisa ditindakake langsung saka konten kasebut:',
+    notAllowedItem5: 'Pidhato kebencian sing ditargetake: nyerang, ngancam utawa ngilangi manungsa utawa kelompok amarga ras, etnisitas, asal negara, agama, disabilitas, penyakit, jinis, identitas gender utawa orientasi seksual.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Kebebasan Ucapan',
+    freeSpeechText: 'Riftn dibangun kanggo kebebasan ujaran. Pendapat, debat, satir lan kritik babagan gagasan, kapercayan, agama lan politik kabeh disambut, kalebu pandangan sing ora disetujui wong liya. Aturan ujaran kebencian nutupi serangan sing ditargetake marang wong, dudu pandangan. Pungkasané komunitas sing mutusaké apa sing dianggep minangka ujaran kebencian sing ditargetake lan ngatur platform kanthi cara terdesentralisasi, liwat moderator sing dipilih komunitas lan voting tata pamrentahan. Pelaporan, blokir lan mute tetep kasedhiya kanggo kabeh wong.',
   },
   privacyPolicy: {
     blockchainConsiderations: 'Pertimbangan Blockchain:',

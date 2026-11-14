@@ -2533,6 +2533,10 @@ export const pt = {
     appealsText: 'Se você acredita que uma decisão de moderação foi errada, ela pode ser contestada por meio da governança da comunidade. A governança define as políticas que os moderadores aplicam e pode revisar ou reverter decisões individuais. A execução, no entanto, é imediata — o conteúdo permanece inativo enquanto um recurso é considerado.',
     contact: 'Contacto',
     contactText: 'Perguntas sobre essas diretrizes ou relatórios que precisam de atenção urgente podem ser enviadas para dev@dehub.io.',
+    notAllowedItem5: 'Discurso de ódio direcionado: atacar, ameaçar ou desumanizar uma pessoa ou grupo por causa de sua raça, etnia, origem nacional, religião, deficiência, doença, sexo, identidade de gênero ou orientação sexual',
+    lastUpdatedDate: '14 de novembro de 2026',
+    freeSpeech: 'Liberdade de expressão',
+    freeSpeechText: 'Riftn foi criado para a liberdade de expressão. Opiniões, debates, sátiras e críticas a ideias, crenças, religiões e política são bem-vindas, inclusive visões com as quais outros discordam. A regra de discurso de ódio cobre ataques direcionados a pessoas, não a opiniões. Em última análise, a comunidade decide o que conta como discurso de ódio direcionado e modera a plataforma de forma descentralizada, por meio de moderadores eleitos pela comunidade e votos de governança. Relatórios, bloqueios e silenciamento permanecem disponíveis para todos.',
   },
   brandGuidelines: {
     title: 'Diretrizes da marca',

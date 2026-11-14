@@ -2050,6 +2050,10 @@ export const tl = {
     appealsText: 'Kung naniniwala kang mali ang isang desisyon sa pag - moderate, maaari itong iapela sa pamamagitan ng pamamahala ng komunidad. Ang pamamahala ay nagtatakda ng pagpapatupad ng mga moderator ng patakaran at maaaring suriin o baligtarin ang mga indibidwal na desisyon. Ang pagpapatupad, gayunpaman, ay agarang — ang nilalaman ay mananatiling pababa habang ang isang apela ay isinasaalang - alang.',
     contact: 'Makipag - ugnayan',
     contactText: 'Ang mga tanong tungkol sa mga alituntuning ito, o mga ulat na nangangailangan ng kagyat na pansin, ay maaaring ipadala sa dev@dehub.io.',
+    notAllowedItem5: 'Targeted hate speech: pag-atake, banta o pagdehumanisa sa isang tao o grupo dahil sa kanilang lahi, etnisidad, pinagmulan, relihiyon, kapansanan, sakit, kasarian, pagkakakilanlan sa kasarian o oryentasyong sekswal',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Malayang Pananalita',
+    freeSpeechText: 'Ang Riftn ay ginawa para sa malayang pagsasalita. Ang mga opinyon, debate, satira at kritisismo ng mga ideya, paniniwala, relihiyon at politika ay lahat ay tinatanggap, kasama na ang mga pananaw na hindi sang-ayon ng iba. Ang patakaran sa hate speech ay sumasaklaw sa mga target na pag-atake sa mga tao, hindi sa mga pananaw. Sa huli, ang komunidad ang magdedesisyon kung ano ang itinuturing na target na hate speech at magmamanage ng platform sa isang de-centrally na paraan, sa pamamagitan ng mga moderator na pinili ng komunidad at mga boto sa pamamahala. Ang pag-uulat, pag-block at pag-mute ay nananatiling magagamit para sa lahat.',
   },
   privacyPolicy: {
     title: 'Patakaran sa Pagkapribado',

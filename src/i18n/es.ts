@@ -2661,6 +2661,10 @@ export const es = {
     appealsText: 'Si crees que una decisión de moderación fue incorrecta, puedes apelar a través de la gobernanza comunitaria. La gobernanza establece los parámetros que los moderadores de políticas aplican y pueden revisar o revertir las decisiones individuales. Sin embargo, la aplicación es inmediata: el contenido permanece inactivo mientras se considera una apelación.',
     contact: 'Contacto',
     contactText: 'Las preguntas sobre estas pautas, o los informes que necesitan atención urgente, pueden enviarse a dev@dehub.io.',
+    notAllowedItem5: 'Discurso de odio dirigido: atacar, amenazar o deshumanizar a una persona o a un grupo por su raza, etnia, origen nacional, religión, discapacidad, enfermedad, sexo, identidad de género u orientación sexual.',
+    lastUpdatedDate: '14 de noviembre de 2026',
+    freeSpeech: 'Libertad de expresión',
+    freeSpeechText: 'Riftn está concebido para la libertad de expresión. Las opiniones, el debate, la sátira y la crítica de ideas, creencias, religiones y política son bienvenidos, incluidas las opiniones con las que otros no estén de acuerdo. La norma sobre el discurso de odio se aplica a los ataques dirigidos contra personas, no contra opiniones. En última instancia, la comunidad decide qué se considera discurso de odio dirigido y modera la plataforma de forma descentralizada, a través de moderadores elegidos por la comunidad y votaciones de gobernanza. Todo el mundo puede seguir denunciando, bloqueando y silenciando.',
   },
   docsSearchIndex: {
     categoryToken: 'Tokens',

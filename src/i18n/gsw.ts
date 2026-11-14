@@ -2500,6 +2500,10 @@ export const gsw = {
     appealsText: 'Falls du meinst, dass eine Moderationsentscheidung falsch war, kannst du dagegen beim Community-Governance-System Berufung einlegen. Dieses legt die Richtlinien fest, die von den Moderator:innen umgesetzt werden, und kann einzelne Entscheidungen überprüfen oder rückgängig machen. Die Durchsetzung ist jedoch sofortig – der Inhalt bleibt heruntergenommen, während über die Berufung entschieden wird.',
     contact: 'Kontakt',
     contactText: 'Fragä zu diesen Richtlinien oder Meldä mit dringlichen Anliegen an dev@dehub.io.',
+    notAllowedItem5: 'Zielgerichteti Hassrede: e Person oder Gruppe aagriffe, bedrohe oder dehumanisiere wäge ihrer Rass, Ethnizität, nationale Herkunft, Religion, Behinderung, Krankheite, Gschlecht, Gschlechtsidentität oder sexuelle Orientierung.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Frei Rede',
+    freeSpeechText: 'Riftn isch für freii Redig gschaffe. Meinigä, Diskussiöne, Satire und Kritik a Idee, Gloubä, Religionä und Politik sind alli willkommä, inklusiv Aasichtä, wo anderi nöd eini sind. D\'Hassredig-Regel deckt zielgerichteti Angrifff uf Lüüt, nöd uf Aasichtä. Am Ändi entscheidet d\'Community, was als zielgerichteti Hassredig gilt und moderiert d\'Plattform uf dezentralä Art, dur d\'vo de Community gwählte Moderatorä und Gsichtsentscheid. Meldige, Blockiere und Stummstelle blibe für alli verfüegbar.',
   },
   adTools: {
     dailyBudgetPlaceholder: 'Tagesbudget eingeben',

@@ -2334,6 +2334,10 @@ export const ms = {
     appealsText: 'Jika anda percaya keputusan kesederhanaan adalah salah, ia boleh dirayu melalui tadbir urus komuniti. Tadbir urus menetapkan moderator dasar menguatkuasakan dan boleh menyemak atau membalikkan keputusan individu. Penguatkuasaan, bagaimanapun, adalah serta-merta — kandungan kekal lemah sementara rayuan dipertimbangkan.',
     contact: 'Hubungi',
     contactText: 'Soalan mengenai garis panduan ini, atau laporan yang memerlukan perhatian segera, boleh dihantar ke dev@dehub.io.',
+    notAllowedItem5: 'Penyebaran kebencian yang disasarkan: menyerang, mengancam atau menurunkan manusia seseorang atau kumpulan kerana bangsa, etnik, asal negara, agama, kecacatan, penyakit, jantina, identiti gender atau orientasi seksual mereka',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Kebebasan Berbicara',
+    freeSpeechText: 'Riftn dibina untuk kebebasan bersuara. Pendapat, perdebatan, satir dan kritikan idea, kepercayaan, agama dan politik semuanya dialu-alukan, termasuk pandangan yang tidak disetujui orang lain. Peraturan ucapan kebencian merangkumi serangan terarah terhadap orang, bukan pandangan. Akhirnya komuniti menentukan apa yang dianggap ucapan kebencian terarah dan mengawasi platform secara terdesentralisasi, melalui moderator yang dipilih oleh komuniti dan undi tadbir urus. Melaporkan, menyekat dan mematikan bunyi tetap tersedia untuk semua orang.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kalkulator Bajet Kempen',

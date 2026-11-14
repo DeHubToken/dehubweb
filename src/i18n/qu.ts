@@ -2533,6 +2533,9 @@ export const qu = {
     appealsText: 'Sichus creenki huk decisión moderación pantasqa kasqanmanta chayqa, apelasqa kanman gobierno comunitario nisqawan. Gobernabilidad nisqa churan política moderadorkuna hunt’achisqankuta hinaspa sapankama decisionkunata qhawayta utaq kutichiyta atinku. Kamachiy ichaqa, chaylla — contenidoqa uraypi qhipakuchkan huk apelación qhawasqa kachkaptin.',
     contact: 'Tupaqmasi',
     contactText: 'Kay kamachiykunamanta tapuykuna, utaq willakuykuna usqhaylla qhawayta munanku, kay dev@dehub.io kaqman apachiyta atikunku.',
+    lastUpdatedDate: '2026 ñukanchay 14',
+    freeSpeech: 'Sumaq kawsay',
+    freeSpeechText: 'Riftn nisqaqa kacharari rimaypaq ruwasqam. Yuyaykuna, rimanakuykuna, asipaykuna, hinallataq yuyaykunata, iñiykunata, religionkunata, politikatapas pisichayqa chaskisqam, wakin runakuna mana tupachikuptinkupas. Chiqniy rimay kamachiyqa runakunaman qaqchiykunallatam harkan, manam yuyaykunatachu. Qipamanqa, ayllum akllan imayna chiqniy rimay kasqanta, hinallataqmi llapa runapa akllasqan kamachiqkuna, kamachiy t\'aqakuna, hinallataq akllanakuykunawan kay pampata kamachinku. Willakuy, harkay, hinallataq upallachiyqa llapa runapaqmi kachkan.',
   },
   brandGuidelines: {
     title: 'Markamanta kamachiykuna',

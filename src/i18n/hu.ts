@@ -2457,6 +2457,10 @@ export const hu = {
     appealsText: 'Ha úgy gondolod, hogy egy moderálási döntés helytelen volt, a közösségi irányításon keresztül fellebbezhetsz ellene. Az irányítás meghatározza, hogy a szabályzati moderátorok kikényszerítsék, és felülvizsgálhatják vagy visszavonhatják az egyes döntéseket. A jogérvényesítés azonban azonnali — a tartalom nem jelenik meg a fellebbezés elbírálása során.',
     contact: 'Kapcsolat',
     contactText: 'Az irányelvekkel kapcsolatos kérdéseket vagy a sürgős figyelmet igénylő jelentéseket a dev@dehub.io címre küldheti.',
+    notAllowedItem5: 'Célzott gyűlöletbeszéd: egy személy vagy csoport megtámadása, megfenyegetése vagy embertelenségre utaló jellemzése faji hovatartozása, etnikai hovatartozása, nemzeti származása, vallása, fogyatékossága, betegsége, neme, nemi identitása vagy szexuális irányultsága miatt',
+    lastUpdatedDate: '2026. november 14.',
+    freeSpeech: 'Szólásszabadság',
+    freeSpeechText: 'A Riftn a szólásszabadságra épül. Az ötletekkel, hiedelmekkel, vallásokkal és politikával kapcsolatos vélemények, viták, szatíra és kritika mind szívesen látottak, beleértve azokat a nézeteket is, amelyekkel mások nem értenek egyet. A gyűlöletbeszédre vonatkozó szabály az emberek elleni célzott támadásokra terjed ki, nem pedig a nézetekre. Végső soron a közösség dönti el, hogy mi számít célzott gyűlöletbeszédnek, és decentralizált módon moderálja a platformot a közösség által választott moderátorokon és az irányítási szavazásokon keresztül. A bejelentés, a letiltás és a némítás továbbra is mindenki számára elérhető.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampányköltségkeret-kalkulátor',

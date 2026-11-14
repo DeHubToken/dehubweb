@@ -2457,6 +2457,10 @@ export const ht = {
     appealsText: 'Si ou kwè yon desizyon modération te mal, yo ka fè apèl kont li atravè gouvènans kominotè. Gouvènans etabli moderatè politik yo aplike epi yo ka revize oswa ranvèse desizyon endividyèl yo. Sepandan, aplikasyon an imedya, kontni an rete desann pandan y ap konsidere yon apèl.',
     contact: 'Kontak',
     contactText: 'Kesyon sou direktiv sa yo, oswa rapò ki bezwen atansyon ijan, ka voye nan dev@dehub.io.',
+    notAllowedItem5: 'Diskou rayisman ki vize yon moun: atake, menase oswa dezekzante yon moun oswa yon gwoup akòz ras yo, etnisite yo, orijin nasyonal yo, relijyon yo, andikap yo, maladi yo, sèks yo, idantite seksyèl yo oswa oryantasyon seksyèl yo',
+    lastUpdatedDate: '14 novanm 2026',
+    freeSpeech: 'Libète lapawòl',
+    freeSpeechText: 'Riftn fèt pou libète lapawòl. Opinyon, deba, sati ak kritik lide, kwayans, relijyon ak politik yo tout byenveni, ki gen ladan opinyon lòt moun pa dakò avèk yo. Règ sou diskou rayisman an kouvri atak ki vize moun, pa opinyon. Alafen, se kominote a ki deside kisa ki konte kòm diskou rayisman ki vize yon moun epi li modere platfòm nan yon fason desantralize, atravè moderatè kominote a eli ak vòt gouvènans. Siyalman, blokaj ak silansman rete disponib pou tout moun.',
   },
   adTools: {
     cpmRow: 'Pri pou chak 1,000 afichaj (CPM):',

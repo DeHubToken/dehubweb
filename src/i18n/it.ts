@@ -2534,6 +2534,10 @@ export const it = {
     appealsText: 'Se ritieni che una decisione di moderazione sia sbagliata, puoi presentare ricorso attraverso la governance della community. La governance stabilisce i criteri che i moderatori applicano e possono rivedere o invertire le singole decisioni. L\'applicazione, tuttavia, è immediata: il contenuto rimane inattivo mentre viene preso in considerazione un ricorso.',
     contact: 'Contatti',
     contactText: 'Domande su queste linee guida o segnalazioni che richiedono attenzione urgente possono essere inviate a dev@dehub.io.',
+    notAllowedItem5: 'Incitamento all\'odio mirato: attaccare, minacciare o disumanizzare una persona o un gruppo a causa della loro razza, etnia, origine nazionale, religione, disabilità, malattia, sesso, identità di genere o orientamento sessuale',
+    lastUpdatedDate: '14 novembre 2026',
+    freeSpeech: 'Libertà di espressione',
+    freeSpeechText: 'Riftn è pensato per la libertà di espressione. Opinioni, dibattiti, satira e critiche di idee, convinzioni, religioni e politica sono tutti benvenuti, comprese le opinioni con cui gli altri non sono d\'accordo. La regola sull\'incitamento all\'odio riguarda gli attacchi mirati alle persone, non alle opinioni. In ultima analisi, è la community a decidere cosa rientra nella definizione di incitamento all\'odio mirato e a moderare la piattaforma in modo decentralizzato, attraverso moderatori eletti dalla community e votazioni di governance. Le funzioni di segnalazione, blocco e disattivazione dell\'audio rimangono a disposizione di tutti.',
   },
   adTools: {
     budgetCalculatorTitle: 'Calcolatore del budget della campagna',

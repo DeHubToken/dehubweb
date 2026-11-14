@@ -2050,6 +2050,10 @@ export const uz = {
     appealsText: 'Agar siz moderatsiya qarori noto&#39;g&#39;ri deb hisoblasangiz, unga jamoatchilik boshqaruvi orqali shikoyat qilishingiz mumkin. Boshqaruv siyosat moderatorlarining ijrosini ta&#39;minlaydi va individual qarorlarni ko&#39;rib chiqishi yoki bekor qilishi mumkin. Biroq, ijro darhol amalga oshiriladi - kontent apellyatsiya ko&#39;rib chiqilayotgan paytda o&#39;chirilgan holda qoladi.',
     contact: 'Aloqa',
     contactText: 'Ushbu ko&#39;rsatmalar yoki shoshilinch e&#39;tibor talab qiladigan hisobotlar bo&#39;yicha savollarni dev@dehub.io manziliga yuborishingiz mumkin.',
+    notAllowedItem5: 'Maqsadli nifosat gapiruvchisi: bir kishini yoki guruhni ularning irq, etnik, milliy manba, din, nogironlik, kasallik, jins, jinsiy identifikatsiya yoki jinsiy yo‘nalishlari sababli hujum qilish, tahdid qilish yoki insoniyligini yo‘qotish',
+    lastUpdatedDate: '14-chi noyabr 2026',
+    freeSpeech: 'Erkin nutq',
+    freeSpeechText: 'Riftn erkin nutq uchun qurilgan. Fikrlash, bahs, satira va g‘oyalar, e’tiqodlar, dinlar va siyosatga nisbatan tanqid hamma uchun xush keladi, hatto boshqalar bilan rozi bo‘lmaslikka ham. Nafaqat odamlar, balki fikrlar bo‘yicha maqsadli hujumlarni qamrab olgan nafrat gapirish qoidasi. Oxir-oqibat hamjamiyat nima maqsadli nafrat gapirish deb hisoblaydi va platformani markazlashtirilmagan tarzda, hamjamiyat tanlagan moderatordan va boshqaruv ovozlaridan foydalanib boshqaradi. Hisobot berish, blokirovka qilish va ovozni susaytirish hamma uchun mavjud.',
   },
   privacyPolicy: {
     title: 'Maxfiylik siyosati',
