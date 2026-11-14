@@ -853,7 +853,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             value={email}
             onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
             disabled={isConnecting}
-            className="h-14 text-center bg-white/10 border-white/10 text-white text-base placeholder:text-white/40 rounded-2xl"
+            className="h-14 text-center bg-transparent border-white/30 text-white text-base placeholder:text-white/40 rounded-2xl"
           />
         </div>
         {emailError && <p className="text-red-400 text-sm">{emailError}</p>}
