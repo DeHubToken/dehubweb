@@ -239,9 +239,9 @@ export function ProfileArrangeSheet({ open, onOpenChange, address, hasCustomOrde
   }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-glass-menu data-profile-arrange className="flex max-h-[80vh] max-w-lg flex-col rounded-3xl p-4">
+      <DialogContent data-glass-menu data-profile-arrange className="flex max-h-[80vh] max-w-lg flex-col rounded-3xl p-4 text-white">
         <DialogHeader className="text-left">
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-white">{title}</DialogTitle>
           <DialogDescription className="pa-hint">{hint}</DialogDescription>
         </DialogHeader>
         {body}
