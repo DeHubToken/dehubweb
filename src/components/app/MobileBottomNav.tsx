@@ -35,6 +35,7 @@ import Gamepad2 from "@/components/ui/cut-icons/arcade";
 
 import Home from "@/components/ui/cut-icons/home";
 import MessageSquare from "@/components/ui/cut-icons/messages";
+import Chat from "@/components/ui/cut-icons/chat";
 import MessageEnvelope from "@/components/ui/cut-icons/message-envelope";
 import { MessagesNavGlyph } from '@/components/app/navigation/MessagesNavGlyph';
 import Plus from "@/components/ui/cut-icons/add";
@@ -108,6 +109,7 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Glossary: 'nav.glossary',
   Prompt: 'nav.prompt',
   Communities: 'nav.communities',
+  'Live chat': 'publicChat.title',
 };
 
 type MobileNavItem = {
@@ -118,7 +120,12 @@ type MobileNavItem = {
   requiresAuth?: boolean;
 };
 
+/** The public chat room itself, not the Messages list it lives in. */
+const LIVE_CHAT_PATH = '/app/messages?chat=public';
+
 const SCROLL_NAV_ITEMS = [
+  // First thing past the main five: one swipe and a tap into the room.
+  { icon: Chat, label: 'Live chat', path: LIVE_CHAT_PATH },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Film, label: 'Editor', path: '/editor' },
   { icon: Creator, label: 'Creator', path: '/creator' },
@@ -210,7 +217,8 @@ export function MobileBottomNav() {
   }, [liveBarOrder]);
 
   const dmUnread = useTotalUnreadCount();
-  const messagesUnread = dmUnread + usePublicChatUnreadCount();
+  const publicChatUnread = usePublicChatUnreadCount();
+  const messagesUnread = dmUnread + publicChatUnread;
   // Same badge sources as DesktopSidebar — keep the two navs in sync
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
@@ -401,16 +409,24 @@ export function MobileBottomNav() {
               const item = barById.get(id);
               if (!item) return null;
               const drag = barDragProps(id);
+              const inPublicChat = location.pathname === '/app/messages' &&
+                new URLSearchParams(location.search).get('chat') === 'public';
               const isActive = item.path === '/app'
                 ? isHomePath(location.pathname)
                 : item.path === '/app/profile'
                   ? isOwnProfilePath(location.pathname)
-                  : location.pathname.startsWith(item.path);
+                  : item.path === LIVE_CHAT_PATH
+                    ? inPublicChat
+                    : item.label === 'Messages'
+                      ? location.pathname.startsWith(item.path) && !inPublicChat
+                      : location.pathname.startsWith(item.path);
               const badge = item.label === 'Messages'
                 ? messagesUnread
                 : item.label === 'Notifications'
                   ? totalNotifUnread
-                  : 0;
+                  : item.path === LIVE_CHAT_PATH
+                    ? publicChatUnread
+                    : 0;
               const glyphClass = cn(
                 'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                 isActive
@@ -422,6 +438,9 @@ export function MobileBottomNav() {
                   key={id}
                   {...drag}
                   to={item.path}
+                  // State as well as the query: a second tap after leaving the
+                  // room has the same URL, and only fresh state reopens it.
+                  state={item.path === LIVE_CHAT_PATH ? { openPublicChat: true } : undefined}
                   onClick={(e) => handleProtectedNavClick(e, item.path, item.requiresAuth)}
                   onTouchStart={() => preloadRoute(item.path)}
                   onPointerEnter={() => preloadRoute(item.path)}

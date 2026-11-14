@@ -297,7 +297,12 @@ export function RealtimeChatPanel({
     }
   };
 
+  // The line whose reaction tray is open. One at a time, and a pick closes it:
+  // it used to stay up over the chat after every emoji.
+  const [reactTrayFor, setReactTrayFor] = useState<string | null>(null);
+
   const handleReact = (id: string, emoji: string) => {
+    setReactTrayFor(null);
     if (!walletAddress) {
       openLoginModal?.();
       return;
@@ -503,7 +508,10 @@ export function RealtimeChatPanel({
                             </TooltipTrigger>
                             <TooltipContent side="top">{_copy("copy.c253f451bdd5", { defaultValue: "Reply" })}</TooltipContent>
                           </Tooltip>
-                          <Popover>
+                          <Popover
+                            open={reactTrayFor === msg.id}
+                            onOpenChange={(open) => setReactTrayFor(open ? msg.id : null)}
+                          >
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <PopoverTrigger asChild>
