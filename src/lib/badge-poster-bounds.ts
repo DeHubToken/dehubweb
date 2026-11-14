@@ -11,7 +11,7 @@ export const badgePosterBounds: Record<string, [number, number, number, number]>
   'Great White Shark': [5, 15, 120, 121],
   'Killer Whale': [19, 11, 93, 98],
   'Blue Whale': [16, 24, 122, 126],
-  'Megalodon': [5, 19, 124, 126],
+  'Megalodon': [9, 19, 120, 126],
 };
 
 /**
