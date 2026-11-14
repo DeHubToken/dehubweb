@@ -2281,7 +2281,12 @@
     "loadFailed": "İstekler yüklenemedi"
   },
   "auth": {
-    "loginRequired": "Giriş yapılması gerekiyor"
+    "loginRequired": "Giriş yapılması gerekiyor",
+    "accountDeleted": "Bu hesap silindi. Yeni bir hesapla tekrar kaydolabilirsiniz.",
+    "accountDeletedHours_one": "Bu hesap silindi. Aynı e-posta veya telefonla yaklaşık {{count}} saat sonra tekrar kaydolabilirsiniz.",
+    "accountDeletedHours_other": "Bu hesap silindi. Aynı e-posta veya telefonla yaklaşık {{count}} saat sonra tekrar kaydolabilirsiniz.",
+    "accountDeletedDays_one": "Bu hesap silindi. Aynı e-posta veya telefonla yaklaşık {{count}} gün sonra tekrar kaydolabilirsiniz.",
+    "accountDeletedDays_other": "Bu hesap silindi. Aynı e-posta veya telefonla yaklaşık {{count}} gün sonra tekrar kaydolabilirsiniz."
   },
   "messages": {
     "newDrawer": {
@@ -2500,7 +2505,24 @@
     "sortMostLiked": "En çok beğenilenler",
     "searchThisChannel": "Bu kanalı ara",
     "searchResultCount": "\"{{query}}\" için 1 sonuç",
-    "searchResultCountPlural": "\"{{query}}\" için {{count}} sonuç"
+    "searchResultCountPlural": "\"{{query}}\" için {{count}} sonuç",
+    "sortCustom": "Özel sıralama",
+    "sortCustomShort": "Özel",
+    "arrangeButton": "Gönderileri sırala",
+    "arrange": {
+      "title": "Gönderilerinizi sıralayın",
+      "hint": "Gönderilerinizi istediğiniz sıraya sürükleyin. Ziyaretçiler önce bu sırayı görür.",
+      "drag": "Taşımak için sürükleyin",
+      "toTop": "En üste taşı",
+      "save": "Sırayı kaydet",
+      "saving": "Kaydediliyor...",
+      "saved": "Sıralamanız kaydedildi",
+      "reset": "Önce en yeniye dön",
+      "resetDone": "Yeniden önce en yeni",
+      "saveFailed": "Sıralamanız kaydedilemedi. Lütfen tekrar deneyin.",
+      "loadFailed": "Gönderileriniz yüklenemedi. Bunu kapatıp tekrar deneyin.",
+      "empty": "Henüz sıralanacak bir şey yok. Önce bir şey paylaşın."
+    }
   },
   "tv": {
     "seoTitle": "Canlı TV: Dünyanın dört bir yanından ücretsiz kanallar",
