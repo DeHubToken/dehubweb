@@ -1052,8 +1052,11 @@ serve(async (req) => {
     // Check for token transaction requests (transfer or purchase)
     const txParsed = parseTokenTransaction(userQuery);
     
-    // If user is NOT authenticated and requests a token transaction, return simulation
-    if (!isAuthenticated && txParsed.type) {
+    // If user is NOT authenticated and requests a token transfer, return simulation.
+    // Purchases are not simulated: buying is paused until the new token lists, so
+    // "where can I buy" gets a real answer from the knowledge map instead of a
+    // pretend 0-token order.
+    if (!isAuthenticated && txParsed.type === 'transfer') {
       const txHash = generateMockTxHash();
       const timestamp = new Date().toISOString();
       
