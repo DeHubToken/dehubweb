@@ -2988,6 +2988,32 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "decentralization-spectrum-social-media",
+    "slug": "decentralization-spectrum-social-media",
+    "title": "The Decentralization Spectrum: How Decentralized Can Social Media Really Get?",
+    "excerpt": "Every \"decentralized\" social app runs on an internet that is already very centralized. Here is an honest spectrum of 30 crypto and decentralized social platforms, where Riftn sits on it, and why open source matters more than a perfect score.",
+    "content": "",
+    "bannerImage": "/media/decentralization-spectrum-banner-manrope.jpg",
+    "bannerImageAlt": "The decentralization spectrum: how decentralized can social media really get?",
+    "author": {
+      "name": "Riftn Team"
+    },
+    "publishedAt": "2026-11-13T22:00:00.000Z",
+    "tags": [
+      "Decentralization",
+      "Decentralized Social Media",
+      "Open Source",
+      "Moderation",
+      "Blockchain",
+      "Riftn"
+    ],
+    "readingTime": 11,
+    "featured": false,
+    "status": "published",
+    "seoTitle": "The Decentralization Spectrum: How Decentralized Can Social Media Get?",
+    "seoDescription": "An honest look at 30 decentralized and crypto social apps, from Mastodon and Bluesky to Farcaster, Nostr and Hive. What goes on chain, who moderates, and why open source matters most."
+  },
+  {
     "id": "is-riftn-the-same-as-dehub",
     "slug": "is-riftn-the-same-as-dehub",
     "title": "Is Riftn the Same as DeHub? What Changed and What Did Not",
@@ -3701,29 +3727,30 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "is-riftn-the-same-as-dehub",
-  "slug": "is-riftn-the-same-as-dehub",
-  "title": "Is Riftn the Same as DeHub? What Changed and What Did Not",
-  "excerpt": "Yes. Riftn is the new name of DeHub. Here is what changed with the rename, what stayed exactly the same, and what to do if you still have a DeHub account or DHB.",
+  "id": "decentralization-spectrum-social-media",
+  "slug": "decentralization-spectrum-social-media",
+  "title": "The Decentralization Spectrum: How Decentralized Can Social Media Really Get?",
+  "excerpt": "Every \"decentralized\" social app runs on an internet that is already very centralized. Here is an honest spectrum of 30 crypto and decentralized social platforms, where Riftn sits on it, and why open source matters more than a perfect score.",
   "content": "",
-  "bannerImage": "/media/is-riftn-the-same-as-dehub-banner-manrope.jpg",
-  "bannerImageAlt": "DeHub to Riftn, the same platform under a new name",
+  "bannerImage": "/media/decentralization-spectrum-banner-manrope.jpg",
+  "bannerImageAlt": "The decentralization spectrum: how decentralized can social media really get?",
   "author": {
     "name": "Riftn Team"
   },
-  "publishedAt": "2026-11-11T06:00:00.000Z",
+  "publishedAt": "2026-11-13T22:00:00.000Z",
   "tags": [
-    "Riftn",
-    "DeHub",
-    "Rebrand",
-    "$RIFT",
-    "FAQ"
+    "Decentralization",
+    "Decentralized Social Media",
+    "Open Source",
+    "Moderation",
+    "Blockchain",
+    "Riftn"
   ],
-  "readingTime": 2,
+  "readingTime": 11,
   "featured": false,
   "status": "published",
-  "seoTitle": "Is Riftn the Same as DeHub? Yes, Here Is What Changed",
-  "seoDescription": "Riftn is the new name of DeHub, the open source, user-owned social network. Same team, same accounts, new name and address. What changed and what did not."
+  "seoTitle": "The Decentralization Spectrum: How Decentralized Can Social Media Get?",
+  "seoDescription": "An honest look at 30 decentralized and crypto social apps, from Mastodon and Bluesky to Farcaster, Nostr and Hive. What goes on chain, who moderates, and why open source matters most."
 };
 
 export const excludedTitles: string[] = [

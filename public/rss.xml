@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 Riftn</copyright>
     <managingEditor>team@dehub.io (Riftn Team)</managingEditor>
     <webMaster>team@dehub.io (Riftn Team)</webMaster>
-    <lastBuildDate>Wed, 11 Nov 2026 06:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 13 Nov 2026 22:00:00 GMT</lastBuildDate>
+    <item>
+      <title>The Decentralization Spectrum: How Decentralized Can Social Media Really Get?</title>
+      <description>An honest look at 30 decentralized and crypto social apps, from Mastodon and Bluesky to Farcaster, Nostr and Hive. What goes on chain, who moderates, and why open source matters most.</description>
+      <link>https://riftn.com/guides/decentralization-spectrum-social-media</link>
+      <guid>https://riftn.com/guides/decentralization-spectrum-social-media</guid>
+      <pubDate>Fri, 13 Nov 2026 22:00:00 GMT</pubDate>
+      <dc:creator>Riftn Team</dc:creator>
+    </item>
     <item>
       <title>Is Riftn the Same as DeHub? What Changed and What Did Not</title>
       <description>Riftn is the new name of DeHub, the open source, user-owned social network. Same team, same accounts, new name and address. What changed and what did not.</description>
@@ -160,14 +168,6 @@
       <link>https://riftn.com/guides/creators-guide-leaving-instagram</link>
       <guid>https://riftn.com/guides/creators-guide-leaving-instagram</guid>
       <pubDate>Thu, 27 Aug 2026 13:00:00 GMT</pubDate>
-      <dc:creator>Riftn Team</dc:creator>
-    </item>
-    <item>
-      <title>The Creator Guide to Leaving YouTube for a Platform You Own (2026)</title>
-      <description>A YouTube alternative creators actually own. What the 55% AdSense split, demonetisation and Content ID really cost you, and how a 90% revenue-share Web3 platform compares.</description>
-      <link>https://riftn.com/guides/creators-guide-leaving-youtube</link>
-      <guid>https://riftn.com/guides/creators-guide-leaving-youtube</guid>
-      <pubDate>Thu, 27 Aug 2026 12:00:00 GMT</pubDate>
       <dc:creator>Riftn Team</dc:creator>
     </item>
   </channel>
