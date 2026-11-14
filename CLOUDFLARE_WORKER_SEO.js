@@ -4334,6 +4334,90 @@ const BOT_UA_PATTERN = /bot|crawl|spider|wordpress|facebook|twitter|linkedin|wha
 // card, and a stand-in card beats a failed unfurl.
 const SEARCH_BOT_UA_PATTERN = /googlebot|google-inspectiontool|googleother|storebot-google|adsbot-google|bingbot|msnbot|bingpreview|applebot|duckduckbot|duckassistbot|yandex|baiduspider|petalbot|seznambot|qwantbot|yeti|slurp|gptbot|oai-searchbot|claudebot|claude-searchbot|perplexitybot|perplexity-user|chatgpt-user|claude-user|meta-externalagent|mistralai-user|ccbot|amazonbot|bytespider|ahrefsbot|semrushbot|mj12bot|dotbot/i;
 
+// Crawlers that only collect pages to train AI models. They send no visitors
+// back, so they get nothing: a 403 on every path except /robots.txt, which
+// also names them (public/robots.txt). Robots rules alone are a request; this
+// is the part that holds for the ones that ignore it.
+//
+// Deliberately NOT here: search engines (Googlebot, Bingbot, Applebot), link
+// previewers (facebookexternalhit, Twitterbot, Discordbot, TelegramBot...),
+// and the AI search / user-triggered fetchers (OAI-SearchBot, ChatGPT-User,
+// Claude-SearchBot, Claude-User, PerplexityBot, Perplexity-User,
+// DuckAssistBot, MistralAI-User). Those show Riftn links to people and send
+// them here. Meta-ExternalFetcher is a user fetch; Meta-ExternalAgent and
+// FacebookBot are Meta's training crawlers.
+const AI_TRAINING_BOT_UA_PATTERN = /\b(?:gptbot|ccbot|claudebot|claude-web|anthropic-ai|bytespider|meta-externalagent|facebookbot|diffbot|omgilibot|omgili|imagesiftbot|timpibot|ai2bot|pangubot|img2dataset|cohere-ai|cohere-training-data-crawler|webzio-extended|scrapy|iaskspider|kangaroo bot|velenpublicwebcrawler|friendlycrawler|icc-crawler|sidetrade indexer bot)\b/i;
+
+export function isAiTrainingBotUa(ua) {
+  return AI_TRAINING_BOT_UA_PATTERN.test(ua || '');
+}
+
+/** The 403 an AI training crawler gets, or null for everyone else. */
+export function aiTrainingBotRefusal(request) {
+  if (!isAiTrainingBotUa(request.headers.get('User-Agent'))) return null;
+  if (new URL(request.url).pathname === '/robots.txt') return null;
+  return new Response('AI training crawlers are not allowed on Riftn. See /robots.txt.\n', {
+    status: 403,
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, noai, noimageai',
+    },
+  });
+}
+
+// Plain HTTP clients and scraping libraries. A person never browses with one;
+// a script that does is held to a page rate a person could not reach. Link
+// previewers, search engines and the app are not in it (the Android app's
+// OkHttp is left out on purpose: many phones share one carrier address).
+const SCRIPTED_CLIENT_UA_PATTERN = /^\s*$|curl\/|wget\/|python-requests|python-urllib|python-httpx|aiohttp|axios\/|node-fetch|undici|got \(|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie|scrapy|colly|guzzlehttp|reqwest|wget2/i;
+
+export function isScriptedClientUa(ua) {
+  return SCRIPTED_CLIENT_UA_PATTERN.test(ua || '');
+}
+
+/**
+ * Per-address limits at the edge, on Cloudflare's rate-limiting bindings
+ * (wrangler.jsonc "ratelimits"). Each is counted per Cloudflare location and
+ * keyed on the visitor's address, which only the edge knows: the API behind
+ * the relays sees the Worker, not the visitor. A missing binding (tests, a
+ * host deployed without it) limits nothing, and a binding error lets the
+ * request through rather than breaking the site.
+ */
+export async function edgeRateLimited(env, binding, ip, scope) {
+  const limiter = env && env[binding];
+  if (!limiter || typeof limiter.limit !== 'function') return null;
+  if (!ip) return null;
+  try {
+    const { success } = await limiter.limit({ key: `${scope}:${ip}` });
+    if (success) return null;
+  } catch {
+    return null;
+  }
+  return new Response(JSON.stringify({ error: 'Too many requests. Slow down and try again in a minute.' }), {
+    status: 429,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Retry-After': '60',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+}
+
+/**
+ * The visitor's address. dehub.io reaches the Worker through the nginx
+ * gateway as origin.dehub.io, so there CF-Connecting-IP is the gateway for
+ * everyone and the gateway's X-Real-IP is the visitor (as in
+ * server/account-mcp-auth.js). Read before canonicalOriginRequest renames
+ * the host. Only used to key rate limits.
+ */
+export function edgeVisitorIp(request) {
+  const viaGateway = new URL(request.url).hostname === 'origin.dehub.io'
+    && request.headers.get('X-DeHub-Public-Host') === 'dehub.io';
+  return (viaGateway && request.headers.get('X-Real-IP')) || request.headers.get('CF-Connecting-IP') || '';
+}
+
 export function isSearchBotUa(ua) {
   return SEARCH_BOT_UA_PATTERN.test(ua || '');
 }
@@ -6077,6 +6161,9 @@ function standbyAcmeChallenge(request) {
 async function handleRequest(request, env, ctx) {
   const acme = standbyAcmeChallenge(request);
   if (acme) return acme;
+  const aiRefusal = aiTrainingBotRefusal(request);
+  if (aiRefusal) return aiRefusal;
+  const visitorIp = edgeVisitorIp(request);
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
   if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(canonicalOriginRequest(request), env);
@@ -6085,6 +6172,11 @@ async function handleRequest(request, env, ctx) {
   }
   if (new URL(request.url).pathname === '/api/work/receipt') {
     return handleWorkReceipt(request, env);
+  }
+  // Scripts reading pages, relays and feeds: 120 requests a minute per address.
+  if (isScriptedClientUa(request.headers.get('User-Agent')) && !new URL(request.url).pathname.startsWith('/assets/')) {
+    const limited = await edgeRateLimited(env, 'RL_SCRIPTED_CLIENTS', visitorIp, 'script');
+    if (limited) return limited;
   }
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
@@ -6364,13 +6456,30 @@ async function handleRequest(request, env, ctx) {
     const apTarget = apRelayTarget(pathname, request.headers.get('accept'), (segment) =>
       couldBeProfileSegment(segment, SYSTEM_ROUTES),
     );
-    if (apTarget) return handleApRelay(request, apTarget, 'https://api.dehub.io');
+    if (apTarget) {
+      // Federation reads (actors, outboxes, posts as JSON): 300 a minute per
+      // address, well above what a server following Riftn accounts needs.
+      if (request.method === 'GET' || request.method === 'HEAD') {
+        const limited = await edgeRateLimited(env, 'RL_FEDERATION_READS', visitorIp, 'ap');
+        if (limited) return limited;
+      }
+      return handleApRelay(request, apTarget, 'https://api.dehub.io');
+    }
 
     // Mastodon apps signed in to riftn.com (server/mastodon-relay.js): the
     // client API and the OAuth token endpoints. The approval page itself,
     // /oauth/authorize, falls through to the SPA.
     const mastodonTarget = mastodonRelayTarget(pathname);
-    if (mastodonTarget) return handleMastodonRelay(request, mastodonTarget, 'https://api.dehub.io');
+    if (mastodonTarget) {
+      // Signed-out Mastodon API reads (public timelines, accounts, posts):
+      // 60 a minute per address, Mastodon's own 300 per 5 minutes. Apps with
+      // a token are limited per token by the API instead.
+      if ((request.method === 'GET' || request.method === 'HEAD') && !request.headers.get('Authorization')) {
+        const limited = await edgeRateLimited(env, 'RL_MASTODON_ANON', visitorIp, 'masto');
+        if (limited) return limited;
+      }
+      return handleMastodonRelay(request, mastodonTarget, 'https://api.dehub.io');
+    }
   }
 
   // RSS for every profile and hashtag (server/rss-feeds.js). Every UA, and
