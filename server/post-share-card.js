@@ -371,8 +371,8 @@ export function applyProfileShareImage(html, account) {
   });
 }
 
-/** A profile in a chrome frame: face, name, handle and following. */
-export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
+/** A profile card: face, name, handle and following. */
+export function renderProfileCardSvg(data, { logo, avatar = '' }) {
   const name = wrapPostText(data.name, 56, 640, 2);
   const nameY = name.length > 1 ? 250 : 286;
   const handleY = nameY + (name.length - 1) * 66 + 50;
@@ -387,7 +387,6 @@ export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
     <clipPath id="face"><rect x="110" y="190" width="220" height="220" rx="56"/></clipPath>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
   <rect x="68" y="84" width="1064" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
   <image data-brand="riftn-wordmark" x="110" y="122" width="96" height="28.4" xlink:href="${logo}"/>
   <rect x="110" y="190" width="220" height="220" rx="56" fill="#25262c" stroke="#5d5f69"/>

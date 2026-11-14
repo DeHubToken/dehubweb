@@ -164,10 +164,11 @@ test('profiles share a rendered card with their name, handle and followers', asy
   assert.equal(applyProfileShareImage(html, null), html);
   await initWasm(readFileSync(new URL('../node_modules/@resvg/resvg-wasm/index_bg.wasm', import.meta.url))).catch(() => {});
   const logo = `data:image/png;base64,${readFileSync(new URL('../public/brand-kit/brand/riftn-logo-white.png', import.meta.url)).toString('base64')}`;
-  const chrome = `data:image/png;base64,${readFileSync(new URL('../public/brand/share-chrome-edge.png', import.meta.url)).toString('base64')}`;
   const font = readFileSync(new URL('../public/brand-kit/font/manrope-500.ttf', import.meta.url));
   for (const [name, card] of [['profile', data], ['profile-long-name', { ...data, name: 'Alexandria Montgomery-Wellington of the Northern Reaches', followers: null }]]) {
-    const renderer = new Resvg(renderProfileCardSvg(card, { logo, chrome, avatar: logo }), { font: { fontBuffers: [font], defaultFontFamily: 'Manrope' } });
+    const svg = renderProfileCardSvg(card, { logo, avatar: logo });
+    assert.ok(!svg.includes('integrated-chrome-edge'));
+    const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Manrope' } });
     const image = renderer.render();
     try {
       assert.equal(image.width, 1200);
