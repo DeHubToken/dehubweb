@@ -1,5 +1,5 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
 import LogOut from "@/components/ui/cut-icons/sign-out";
@@ -42,6 +42,9 @@ const PostModal = React.lazy(() =>
 );
 import { useAuth } from '@/contexts/AuthContext';
 import { canManageAgents } from '@/lib/agent-access';
+
+// Loaded on first empty search: it pulls in the Requests board's submit code.
+const SearchRequestPrompt = lazy(() => import('./navigation/SearchRequestPrompt').then((m) => ({ default: m.SearchRequestPrompt })));
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -204,7 +207,9 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
       {menuQuery && (
         <>
           {visibleNavItems.length === 0 && (
-            <p className="px-3 py-3 text-sm text-zinc-500">{t('sidebar.noMenuMatches')}</p>
+            menuQuery.trim().length >= 2
+              ? <Suspense fallback={null}><SearchRequestPrompt query={menuQuery} source="menu" onNavigate={closeMenu} className="mt-1" /></Suspense>
+              : <p className="px-3 py-3 text-sm text-zinc-500">{t('sidebar.noMenuMatches')}</p>
           )}
           <button
             type="button"

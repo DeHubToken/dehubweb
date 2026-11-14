@@ -3,7 +3,7 @@ import LogIn from "@/components/ui/cut-icons/sign-in";
 import CornerDownLeft from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { Suspense, lazy, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +57,9 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { warmLoginSheet } from '@/components/app/LoginModal';
+
+// Loaded on first empty search: it pulls in the Requests board's submit code.
+const SearchRequestPrompt = lazy(() => import('./SearchRequestPrompt').then((m) => ({ default: m.SearchRequestPrompt })));
 
 /**
  * Terminates the rail's nav list. Deliberately NOT in NAV_ITEMS: that array is
@@ -793,7 +796,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             </button>
           )}
           {navQuery && visibleRailItems.length === 0 && !isCollapsed && (
-            <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
+            navQuery.trim().length >= 2
+              ? <Suspense fallback={null}><SearchRequestPrompt query={navQuery} source="menu" compact className="mx-1 my-2" /></Suspense>
+              : <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
           )}
           {/* Always the last thing in the rail. Three conditions, each for its
               own reason:
