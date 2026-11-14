@@ -260,3 +260,14 @@ html[data-system-tone="light"] .login-stack-option__disc {
 }
 html[data-theme="light"] .login-stack-option__disc svg.fill-white,
 html[data-system-tone="light"] .login-stack-option__disc svg.fill-white { fill: currentColor; }
+
+/* Light themes: the wordmark is solid ink, no glow, no shadow. */
+html[data-theme="light"] .login-stack__logo,
+html[data-system-tone="light"] .login-stack__logo {
+  filter: none;
+  animation: none;
+}
+html[data-theme="light"] .login-stack__logo-mark,
+html[data-system-tone="light"] .login-stack__logo-mark {
+  background: #0b0b0d;
+}
