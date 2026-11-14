@@ -25,7 +25,7 @@ export const dubaiEventPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">This was more than just a trip; it was a statement. Riftn is a global project, and our presence in Dubai has solidified our position in one of the world's most dynamic tech hubs. Thank you to everyone who connected with us. The future is bright, and we're just getting started!</p>
   `,
-  bannerImage: '/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
+  bannerImage: '/media/global-footprint-dehub-expands-middle-east-presence-via-duba-banner-r2.jpg',
   bannerImageAlt: 'Riftn DeTour Dubai event banner',
   author: {
     name: 'Riftn Team',

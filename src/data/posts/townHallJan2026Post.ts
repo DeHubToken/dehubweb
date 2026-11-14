@@ -60,7 +60,7 @@ We will maintain consistent communication through February, with regular updates
 
 **Stay tuned, 2026 is shaping up to be transformative.**
   `,
-  bannerImage: '/media/town-hall-jan-2026-banner.png',
+  bannerImage: '/media/town-hall-200k-private-sale-partner-tge-march-2026-banner-r2.jpg',
   bannerImageAlt: 'Riftn Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement',
   author: {
     name: 'Riftn Team',

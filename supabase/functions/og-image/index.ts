@@ -26,7 +26,9 @@ async function ensureResvg() {
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
-const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg";
+// Riftn white wordmark (720x213) for the footer; a plain dark tile stands in for a missing avatar.
+const RIFTN_WORDMARK = "https://riftn.com/brand-kit/brand/riftn-logo-white.png";
+const BLANK_AVATAR = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGNUVdNhwAaYsIoOWgkAYwsAh9HgLDkAAAAASUVORK5CYII=";
 // 1200x630 brand card, the same image the SEO worker serves when this function fails
 const FALLBACK_CARD = "https://riftn.com/og/riftn-share.png";
 
@@ -53,7 +55,7 @@ async function loadFonts() {
 
 function buildAvatarUrl(user: any): string {
     const apiPath = user?.avatarImageUrl;
-    if (!apiPath) return DEHUB_LOGO;
+    if (!apiPath) return BLANK_AVATAR;
     if (apiPath.startsWith("http")) return apiPath;
     if (user?.address) {
         const ext = apiPath.match(/\.([a-zA-Z0-9-]+)$/)?.[1]?.toLowerCase() || "png";
@@ -91,7 +93,7 @@ serve(async (req) => {
 
         const authorName = post.minterDisplayName || post.mintername || post.minterUsername || "Riftn";
         const username = post.minterUsername || "";
-        const avatarUrl = post.minterUser ? buildAvatarUrl(post.minterUser) : DEHUB_LOGO;
+        const avatarUrl = post.minterUser ? buildAvatarUrl(post.minterUser) : BLANK_AVATAR;
 
         // Clamp text length & pick font size
         const displayText = rawText.length > 320 ? rawText.slice(0, 317) + "…" : rawText;
@@ -255,10 +257,9 @@ serve(async (req) => {
                                             {
                                                 type: "img",
                                                 props: {
-                                                    src: DEHUB_LOGO,
-                                                    width: 30,
-                                                    height: 30,
-                                                    style: { borderRadius: "7px" },
+                                                    src: RIFTN_WORDMARK,
+                                                    width: 88,
+                                                    height: 26,
                                                 }
                                             },
                                             {

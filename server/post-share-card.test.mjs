@@ -66,14 +66,14 @@ test('mature posts and unreadable records share the brand card without their vid
     assert.ok(result.includes('summary_large_image') && result.includes('content="630"'));
   }
   const media = applyPostShareImage(html, { ...post, postType: 'video', videoUrl: 'videos/6501.mp4', thumbnail_url: 'images/6501.jpg' });
-  assert.equal((media.match(/https:\/\/riftn\.com\/_og\/post\/v6\/6501.png/g) || []).length, 3);
+  assert.equal((media.match(/https:\/\/riftn\.com\/_og\/post\/v7\/6501.png/g) || []).length, 3);
   assert.ok(media.includes('og:video'), 'a safe video keeps og:video for players that use it');
 });
 
 test('both crawler tags and structured data select the same versioned PNG', () => {
   const html = '<head><meta property="og:image" content="avatar.jpg"><meta name="twitter:image" content="avatar.jpg"><script type="application/ld+json">{"@type":"SocialMediaPosting","image":"avatar.jpg"}</script></head>';
   const result = applyPostShareImage(html, post);
-  assert.equal((result.match(/https:\/\/riftn\.com\/_og\/post\/v6\/6501.png/g) || []).length, 4);
+  assert.equal((result.match(/https:\/\/riftn\.com\/_og\/post\/v7\/6501.png/g) || []).length, 4);
   assert.ok(result.includes('content="1200"'));
   assert.ok(result.includes('content="630"'));
   assert.ok(result.includes('summary_large_image'));
@@ -119,7 +119,7 @@ test('post text and polls flow together without a bottom-anchored gap or overlap
 
 test('renders real PNGs at 1200 by 630 using the deployed font and official mark', async () => {
   await initWasm(readFileSync(new URL('../node_modules/@resvg/resvg-wasm/index_bg.wasm', import.meta.url)));
-  const logo = `data:image/png;base64,${readFileSync(new URL('../public/brand/mark-white.png', import.meta.url)).toString('base64')}`;
+  const logo = `data:image/png;base64,${readFileSync(new URL('../public/brand-kit/brand/riftn-logo-white.png', import.meta.url)).toString('base64')}`;
   const chrome = `data:image/png;base64,${readFileSync(new URL('../public/brand/share-chrome-edge.png', import.meta.url)).toString('base64')}`;
   const font = readFileSync(new URL('../public/brand-kit/font/manrope-500.ttf', import.meta.url));
   const photo = `data:image/jpeg;base64,${readFileSync(new URL('../public/og/apps.jpg', import.meta.url)).toString('base64')}`;
@@ -159,11 +159,11 @@ test('profiles share a rendered card with their name, handle and followers', asy
   for (const patch of [{ isBanned: true }, { username: '' }, { username: '../x' }]) assert.equal(profileCardData({ ...account, ...patch }), null);
   const html = '<head><meta property="og:image" content="avatar.jpg"><meta name="twitter:card" content="summary"></head>';
   const tagged = applyProfileShareImage(html, account);
-  assert.equal((tagged.match(/https:\/\/riftn\.com\/_og\/profile\/v2\/mal.eth.png/g) || []).length, 3);
+  assert.equal((tagged.match(/https:\/\/riftn\.com\/_og\/profile\/v3\/mal.eth.png/g) || []).length, 3);
   assert.ok(tagged.includes('summary_large_image') && tagged.includes('content="1200"') && !tagged.includes('avatar.jpg'));
   assert.equal(applyProfileShareImage(html, null), html);
   await initWasm(readFileSync(new URL('../node_modules/@resvg/resvg-wasm/index_bg.wasm', import.meta.url))).catch(() => {});
-  const logo = `data:image/png;base64,${readFileSync(new URL('../public/brand/mark-white.png', import.meta.url)).toString('base64')}`;
+  const logo = `data:image/png;base64,${readFileSync(new URL('../public/brand-kit/brand/riftn-logo-white.png', import.meta.url)).toString('base64')}`;
   const chrome = `data:image/png;base64,${readFileSync(new URL('../public/brand/share-chrome-edge.png', import.meta.url)).toString('base64')}`;
   const font = readFileSync(new URL('../public/brand-kit/font/manrope-500.ttf', import.meta.url));
   for (const [name, card] of [['profile', data], ['profile-long-name', { ...data, name: 'Alexandria Montgomery-Wellington of the Northern Reaches', followers: null }]]) {

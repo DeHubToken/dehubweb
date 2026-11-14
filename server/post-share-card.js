@@ -1,4 +1,4 @@
-export const POST_CARD_VERSION = 'v6';
+export const POST_CARD_VERSION = 'v7';
 export const POST_CARD_TTL = 300;
 const ORIGIN = 'https://riftn.com';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
@@ -310,7 +310,7 @@ export function renderPostCardSvg(data, { logo, avatar = '', badges = [], media 
   <rect x="48" y="132" width="306" height="412" rx="22" fill="#111215" stroke="#292b31"/>
   <rect x="390" y="84" width="742" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
-  <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
+  <image data-brand="riftn-wordmark" x="48" y="47" width="96" height="28.4" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
   ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Manrope" font-size="23">${escape(initials)}</text>`}
   <g font-family="Manrope" font-weight="500">
@@ -332,7 +332,7 @@ export function renderPostCardSvg(data, { logo, avatar = '', badges = [], media 
   </svg>`;
 }
 
-export const PROFILE_CARD_VERSION = 'v2';
+export const PROFILE_CARD_VERSION = 'v3';
 const PROFILE_HANDLE = /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$/;
 
 export function profileShareImageUrl(handle) {
@@ -389,7 +389,7 @@ export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
   <rect width="1200" height="630" fill="url(#bg)"/>
   ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
   <rect x="68" y="84" width="1064" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
-  <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
+  <image data-brand="riftn-wordmark" x="110" y="122" width="96" height="28.4" xlink:href="${logo}"/>
   <rect x="110" y="190" width="220" height="220" rx="56" fill="#25262c" stroke="#5d5f69"/>
   ${avatar ? `<image x="110" y="190" width="220" height="220" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="220" y="325" text-anchor="middle" fill="#dedee3" font-family="Manrope" font-size="76">${escape(initials)}</text>`}
   <g font-family="Manrope" font-weight="500">

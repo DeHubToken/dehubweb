@@ -6,7 +6,7 @@ import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js'
 const SHARE_IMAGE = 'https://riftn.com/og/riftn-share.png';
 let assets;
 let chromeAsset;
-const RENDER_REVISION = 8;
+const RENDER_REVISION = 9;
 const bytesToUri = (bytes, type) => {
   let binary = '';
   for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
@@ -14,7 +14,7 @@ const bytesToUri = (bytes, type) => {
 };
 
 async function loadAssets(env) {
-  if (!assets) assets = Promise.all(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png'].map(async (path) => {
+  if (!assets) assets = Promise.all(['/brand-kit/font/manrope-500.ttf', '/brand-kit/brand/riftn-logo-white.png'].map(async (path) => {
     const response = await env.ASSETS.fetch(new Request(`https://riftn.com${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Share card asset unavailable');
     return new Uint8Array(await response.arrayBuffer());
