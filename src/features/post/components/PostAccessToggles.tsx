@@ -1299,6 +1299,11 @@ function ChoiceRow({
   hint?: string;
 }) {
   const on = value !== offValue;
+  // Once the switch is on, the open default is listed beside the narrower
+  // choices. Without it a creator who flipped "Who can see this" on, reading
+  // the switch as "visible", got Followers only with no Everyone to go back
+  // to on screen, and posted it believing it was public.
+  const chips = [{ value: offValue, label: offLabel }, ...options];
   return (
     <div className="py-0.5">
       <label className="flex items-center justify-between gap-3 cursor-pointer">
@@ -1316,7 +1321,7 @@ function ChoiceRow({
       </label>
       {on && (
         <div className="mt-1 mb-1 flex flex-wrap gap-1.5 pl-6" role="radiogroup" aria-label={label}>
-          {options.map((o) => (
+          {chips.map((o) => (
             <button
               key={o.value}
               type="button"

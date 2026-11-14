@@ -42,7 +42,7 @@ We will start increasing activity in the coming days, test in public and start s
 
 This is the start of the endless campaign loop we've discussed for years. Every new creator who joins is content in itself. Some of their community joins, growth compounds, one user at a time. Until we flip the system and disrupt a sector once thought to be undisruptable. This is where it begins.
   `,
-  bannerImage: '/media/town-hall-feb-2026-banner.png',
+  bannerImage: '/media/were-finally-here-a-major-dehub-update-banner-r2.jpg',
   bannerImageAlt: 'Riftn Town Hall Overview February 2026 - A Major Riftn Update',
   author: {
     name: 'Riftn Team',
