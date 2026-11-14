@@ -24,6 +24,7 @@ import Search from "@/components/ui/cut-icons/search";
 import SlidersHorizontal from "@/components/ui/cut-icons/settings";
 import X from "@/components/ui/cut-icons/close";
 import Check from "@/components/ui/cut-icons/check";
+import SortIcon from "@/components/ui/cut-icons/sort";
 import { ChevronDown, LayoutGrid, List } from "lucide-react";
 import { setProfileViewMode, useProfileViewMode } from '@/lib/profile-view-mode';
 
@@ -80,6 +81,10 @@ interface ProfileContentToolbarProps {
   /** Items currently rendered under the toolbar — shown while a search runs. */
   resultCount: number;
   isLoading: boolean;
+  /** The creator saved their own order — adds it to the sort choices. */
+  hasCustomOrder?: boolean;
+  /** Own profile: opens the sheet where the creator arranges their posts. */
+  onArrange?: () => void;
 }
 
 /**
@@ -128,6 +133,8 @@ export function ProfileContentToolbar({
   showPostType,
   resultCount,
   isLoading,
+  hasCustomOrder = false,
+  onArrange,
 }: ProfileContentToolbarProps) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
@@ -156,6 +163,7 @@ export function ProfileContentToolbar({
   });
 
   const sortItems: { key: ProfileSortMode; label: string }[] = [
+    ...(hasCustomOrder ? [{ key: 'custom' as const, label: t('profile.sortCustomShort', 'Custom') }] : []),
     { key: 'newest', label: t('profile.sortNewest', 'Newest') },
     { key: 'oldest', label: t('profile.sortOldest', 'Oldest') },
     { key: 'views', label: isMobile ? t('profile.sortViews', 'Views') : t('profile.sortMostViewed', 'Most viewed') },
@@ -165,12 +173,13 @@ export function ProfileContentToolbar({
   // Phones: the Quiet Row — one "Newest ⌄" word that opens a glass menu,
   // with bare search and filter icons after it. No boxes.
   const fullSortItems: { key: ProfileSortMode; label: string }[] = [
+    ...(hasCustomOrder ? [{ key: 'custom' as const, label: t('profile.sortCustom', 'Custom order') }] : []),
     { key: 'newest', label: t('profile.sortNewest', 'Newest') },
     { key: 'oldest', label: t('profile.sortOldest', 'Oldest') },
     { key: 'views', label: t('profile.sortMostViewed', 'Most viewed') },
     { key: 'likes', label: t('profile.sortMostLiked', 'Most liked') },
   ];
-  const sortLabel = fullSortItems.find((item) => item.key === sort)?.label ?? fullSortItems[0].label;
+  const sortLabel = fullSortItems.find((item) => item.key === sort)?.label ?? t('profile.sortNewest', 'Newest');
 
   const categoryLabel = filters.category
     ? categories.find((cat) => cat.id === filters.category)?.name ?? filters.category
@@ -258,6 +267,18 @@ export function ProfileContentToolbar({
                           </button>
                         );
                       })}
+                      {onArrange && (
+                        <button
+                          type="button"
+                          role="menuitem"
+                          data-profile-arrange-open
+                          onClick={() => { setIsSortOpen(false); onArrange(); }}
+                          className="mt-1 flex w-full items-center justify-between rounded-xl border-t border-current/10 px-3 py-2 text-left text-sm font-normal opacity-80 transition-colors"
+                        >
+                          <span>{t('profile.arrangeButton', 'Arrange posts')}</span>
+                          <SortIcon className="h-4 w-4" aria-hidden />
+                        </button>
+                      )}
                     </div>
                   </PopoverContent>
                 </Popover>
@@ -329,6 +350,18 @@ className={cn('relative h-9 flex-shrink-0 px-3 text-xs font-medium transition-co
 </button>
 );
 })}
+{onArrange && (
+<button
+type="button"
+data-profile-sort-tab
+data-profile-arrange-open
+onClick={onArrange}
+className="relative flex h-9 flex-shrink-0 items-center gap-1.5 px-3 text-xs font-medium text-zinc-400 transition-colors hover:text-white"
+>
+<SortIcon className="h-[15px] w-[15px]" aria-hidden />
+{t('profile.arrangeButton', 'Arrange posts')}
+</button>
+)}
 {showPostType && <><span className="min-w-2 flex-1" /><ProfileViewToggle /></>}
 </div>
             )}

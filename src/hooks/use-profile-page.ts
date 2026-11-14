@@ -164,7 +164,11 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // (/api/feed takes sortBy/sortOrder/search alongside minter) — sorting only
   // the pages already downloaded would put the oldest *loaded* post first
   // rather than the creator's actual first upload.
-  const [contentSort, setContentSort] = useState<ProfileSortMode>('newest');
+  // A creator who arranged their own order has the profile open in it; a
+  // sort the visitor picks themselves wins until they move to another profile.
+  const [pickedSort, setContentSort] = useState<ProfileSortMode | null>(null);
+  const hasCustomOrder = apiProfile?.hasCustomOrder === true;
+  const contentSort: ProfileSortMode = pickedSort ?? (hasCustomOrder ? 'custom' : 'newest');
   const [contentSearch, setContentSearch] = useSurfaceDraft("src/hooks/use-profile-page.ts:contentSearch", '', lookupUsername || lookupUserId);
   const debouncedContentSearch = useDebouncedValue(contentSearch, 350);
 
@@ -209,7 +213,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const contentSearchRef = useRef(contentSearch);
   contentSearchRef.current = contentSearch;
   useEffect(() => {
-    setContentSort('newest');
+    setContentSort(null);
     setContentSearch.complete(contentSearchRef.current, '');
     setContentFilters(EMPTY_PROFILE_FILTERS);
     setContentFiltersOpen(false);
@@ -729,6 +733,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     // Channel toolbar
     contentSort,
     setContentSort,
+    hasCustomOrder,
     contentSearch,
     setContentSearch,
     contentFilters,

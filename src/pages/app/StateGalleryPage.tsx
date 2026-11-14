@@ -1,4 +1,5 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
+import { ProfileArrangeSheet, type ArrangeRow } from '@/components/app/profile/ProfileArrangeSheet';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 import PersonalKeys from '@/components/PersonalKeys';
 import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
@@ -210,6 +211,28 @@ const MCP_KEY_ROWS = [
   { id: 'k1', client_name: 'Posting bot', scopes: ['dehub:read', 'dehub:social', 'dehub:agents'], expires_at: Date.UTC(2026, 11, 9), kind: 'key', hint: '7f3a' },
   { id: 'k2', client_name: 'Cursor', scopes: ['dehub:read'], expires_at: Date.UTC(2026, 11, 2), kind: 'key', hint: 'c0de' },
 ];
+
+const ARRANGE_ROWS: ArrangeRow[] = [
+  { tokenId: 6, title: 'Start here: what this channel is about', image: GALLERY_COMIC_PAGES[0], kind: 'video' },
+  { tokenId: 5, title: 'Episode 1, the bed grows legs', image: GALLERY_COMIC_PAGES[1], kind: 'video' },
+  { tokenId: 4, title: 'Episode 2, over the rooftops', image: GALLERY_COMIC_PAGES[2], kind: 'video' },
+  { tokenId: 3, title: 'Behind the pages', image: GALLERY_COMIC_PAGES[3], kind: 'image' },
+  { tokenId: 2, title: 'A note to everyone who has been reading along since the first page went up', kind: 'text' },
+  { tokenId: 1, title: 'Episode 3, the moon', image: GALLERY_COMIC_PAGES[4], kind: 'video' },
+];
+
+/** The sheet a creator drags their posts into order with (profile sort row, own profile). */
+function ProfileArrangeGallery() {
+  const [open, setOpen] = useState(false);
+  return (
+    <section data-profile-arrange-gallery className="mb-5">
+      <button type="button" data-profile-arrange-gallery-open onClick={() => setOpen(true)} className="rounded-xl border border-white/15 px-4 py-2 text-sm font-medium">
+        Arrange posts
+      </button>
+      <ProfileArrangeSheet open={open} onOpenChange={setOpen} address="" hasCustomOrder onSaved={() => {}} preview={ARRANGE_ROWS} />
+    </section>
+  );
+}
 
 function McpKeysGallery() {
   return (
@@ -1670,6 +1693,7 @@ export default function StateGalleryPage() {
 
         <OwnKeysGallery />
         <McpKeysGallery />
+        <ProfileArrangeGallery />
         <ComicGallery />
         <UsernameReserveGallery />
 

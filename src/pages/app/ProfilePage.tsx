@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { fitIconInk } from '@/lib/optical-icon';
-import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect, lazy, Suspense } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { profileFeedUrl } from '@/lib/profile-feed-url';
@@ -71,6 +71,9 @@ import { buildFeedImageUrls as articleTileCover } from '@/lib/media-url';
 import { updateProfile } from '@/lib/api/dehub';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { checkUsernameAvailability } from '@/lib/api/dehub/auth';
+
+// Only the creator on their own profile ever opens this, so it stays out of every visitor's download.
+const ProfileArrangeSheet = lazy(() => import('@/components/app/profile/ProfileArrangeSheet').then((m) => ({ default: m.ProfileArrangeSheet })));
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos', 'articles'];
@@ -251,6 +254,7 @@ export default function ProfilePage() {
   // UI-only state managed in orchestrator
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [arrangeOpen, setArrangeOpen] = useState(false);
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useSurfaceDraft("pages/app/ProfilePage.tsx:offerAmount", '');
@@ -878,7 +882,22 @@ return () => rail.removeEventListener('wheel', onWheel);
                 : data.ALL_CONTENT.length
             }
             isLoading={data.isLoadingContent}
+            hasCustomOrder={data.hasCustomOrder}
+            onArrange={data.isViewingOwnProfile && data.profile?.walletAddress ? () => setArrangeOpen(true) : undefined}
           />
+        )}
+        {data.isViewingOwnProfile && data.profile?.walletAddress && (
+          <Suspense fallback={null}>
+            {arrangeOpen && (
+              <ProfileArrangeSheet
+                open={arrangeOpen}
+                onOpenChange={setArrangeOpen}
+                address={data.profile.walletAddress}
+                hasCustomOrder={data.hasCustomOrder}
+                onSaved={(custom) => data.setContentSort(custom ? 'custom' : 'newest')}
+              />
+            )}
+          </Suspense>
         )}
         <ProfilePostBgContext.Provider value={postBg}>
         <ProfilePostBgArtContext.Provider value={data.profile?.avatarUrl ?? null}>
