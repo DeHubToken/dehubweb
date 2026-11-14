@@ -292,6 +292,41 @@ describe('proxied render failures', () => {
     expect(res.robots).toBe('noindex');
   });
 
+  it('503s instead of 404 when the fn misses a post the API still has or cannot answer for', async () => {
+    const notFoundPage = new Response('<html><head><title>Not Found | Riftn</title></head><body></body></html>', {
+      status: 404,
+      headers: { 'Content-Type': 'text/html', 'X-DeHub-NotFound': '1' },
+    });
+    for (const api of [
+      () => new Response('{"statusCode":429}', { status: 429 }),
+      () => Response.json({ result: { tokenId: 123 } }),
+    ]) {
+      upstream = (u) => {
+        if (u.pathname.endsWith('/ssr-seo')) return notFoundPage.clone();
+        if (u.pathname === '/api/nft_info/123') return api();
+        return undefined;
+      };
+      const res = await get('/app/post/123');
+      expect(res.status).toBe(503);
+      expect(res.retryAfter).toBe('120');
+    }
+  });
+
+  it('still 404s a post the API says is gone', async () => {
+    upstream = (u) => {
+      if (u.pathname.endsWith('/ssr-seo')) {
+        return new Response('<html><head><title>Not Found | Riftn</title></head><body></body></html>', {
+          status: 404,
+          headers: { 'Content-Type': 'text/html', 'X-DeHub-NotFound': '1' },
+        });
+      }
+      if (u.pathname === '/api/nft_info/123') return Response.json({ error: 'Post not found' }, { status: 404 });
+      return undefined;
+    };
+    const res = await get('/app/post/123');
+    expect(res.status).toBe(404);
+  });
+
   it('keeps the fallback card for a previewer on the same failure', async () => {
     upstream = (u) => (u.pathname.endsWith('/ssr-seo') ? new Response('err', { status: 502 }) : undefined);
     const res = await get('/app/post/123', FACEBOOK);
