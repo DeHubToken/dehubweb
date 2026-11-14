@@ -4431,6 +4431,7 @@ export type Database = {
           status: string
           status_note: string | null
           title: string
+          title_auto: boolean
           updated_at: string
           vote_count: number
         }
@@ -4451,6 +4452,7 @@ export type Database = {
           status?: string
           status_note?: string | null
           title: string
+          title_auto?: boolean
           updated_at?: string
           vote_count?: number
         }
@@ -4471,6 +4473,7 @@ export type Database = {
           status?: string
           status_note?: string | null
           title?: string
+          title_auto?: boolean
           updated_at?: string
           vote_count?: number
         }
@@ -9895,6 +9898,10 @@ export type Database = {
         Args: { p_dhb: number; p_tx_hash: string; p_wallet: string }
         Returns: number
       }
+      apply_feature_request_auto_title: {
+        Args: { p_expected: string; p_id: string; p_title: string }
+        Returns: boolean
+      }
       attach_feature_request_device_info: {
         Args: { p_id: string; p_info: Json }
         Returns: boolean
@@ -10854,6 +10861,7 @@ export type Database = {
           status: string
           status_note: string | null
           title: string
+          title_auto: boolean
           updated_at: string
           vote_count: number
         }
