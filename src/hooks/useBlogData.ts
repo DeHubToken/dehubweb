@@ -12,6 +12,7 @@ import { newPostsMetadata as newPosts, excludedTitles } from '@/data/blog-metada
 // Posts pinned to the top of the Featured row, in this order. Everything else
 // that is featured follows, newest first.
 const PINNED_FEATURED_SLUGS = [
+  'open-appeal-binance-recover-876-bnb-pioneer-burn',
   'dehub-next-chapter-riftn-bnb-recovery-relaunch',
   'q4-development-overview',
 ];
