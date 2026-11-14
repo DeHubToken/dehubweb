@@ -85,7 +85,7 @@ export default function AffiliatePage() {
   const [savingLanding, setSavingLanding] = useState(false);
 
   // Bump this whenever the share-image renderer changes so all users pick up the new look.
-  const RENDERER_VERSION = "5";
+  const RENDERER_VERSION = "6";
   useEffect(() => {
     if (!versionKey) return;
     try {

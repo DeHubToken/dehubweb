@@ -192,6 +192,8 @@ project_id = "aigxuutjaqsywioxjefr"
   # requireDeHubAuth — not a Supabase JWT.
   [functions.feature-request-assistant]
     verify_jwt = false
+  [functions.feature-request-title]
+    verify_jwt = false
   [functions.finalize-stage-recording]
     verify_jwt = false
   [functions.free-stock-assets]

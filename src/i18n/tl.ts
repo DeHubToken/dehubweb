@@ -2021,7 +2021,6 @@ export const tl = {
   communityGuidelines: {
     title: 'Mga Alituntunin ng Komunidad',
     lastUpdated: 'Huling na - update:',
-    lastUpdatedDate: '26 Agosto 2026',
     intro: 'Ang Riftn ay isang desentralisado, platform na pag - aari ng gumagamit, ngunit hindi ito isang lugar na walang mga panuntunan. Itinatakda ng mga tagubiling ito kung ano ang pinapahintulutan at hindi pinapahintulutan, kung paano mag - ulat ng nilalaman, at kung ano ang mangyayari pagkatapos gawin ang isang ulat. Ang patakaran ay itinakda ng pamamahala ng komunidad; ang pagpapatupad ay isinasagawa kaagad ng mga itinalagang moderator.',
     notAllowed: 'Ano ang Hindi Pinapayagan',
     notAllowedText: 'Ipinagbabawal ang sumusunod na nilalaman at pag - uugali kahit saan sa Riftn, kabilang ang mga post, komento, stream, mensahe, profile at username:',
@@ -2029,7 +2028,6 @@ export const tl = {
     notAllowedItem2: 'Materyal na pang - aabusong sekswal ng bata, o anumang sekswal na paglalarawan ng mga menor de edad. Iniuulat ito sa mga kaugnay na awtoridad at nagreresulta sa agarang permanenteng pag - alis',
     notAllowedItem3: 'Pag - uudyok sa karahasan, pagbabanta ng karahasan, o pagluluwalhati sa marahas na ekstremismo at terorismo',
     notAllowedItem4: 'Pang - aabuso, pang - aabuso at naka - target na pang - aabuso, kabilang ang mga coordinated na pile - on',
-    notAllowedItem5: 'Hate speech, kabilang ang mga pag - atake sa mga tao batay sa lahi, etnisidad, bansang pinagmulan, relihiyon, kapansanan, sakit, kasarian, pagkakakilanlan ng kasarian o oryentasyong sekswal',
     notAllowedItem6: 'Doxxing o pag - publish ng pribadong impormasyon ng ibang tao nang wala ang kanilang pahintulot',
     notAllowedItem7: 'Spam, pagmamanipula ng pakikipag - ugnayan, mga network ng bot, at artipisyal na implasyon ng mga pagtingin, boto o gantimpala',
     notAllowedItem8: 'Pagpapanggap ng ibang tao, tagalikha, tatak o proyekto',
@@ -2052,6 +2050,10 @@ export const tl = {
     appealsText: 'Kung naniniwala kang mali ang isang desisyon sa pag - moderate, maaari itong iapela sa pamamagitan ng pamamahala ng komunidad. Ang pamamahala ay nagtatakda ng pagpapatupad ng mga moderator ng patakaran at maaaring suriin o baligtarin ang mga indibidwal na desisyon. Ang pagpapatupad, gayunpaman, ay agarang — ang nilalaman ay mananatiling pababa habang ang isang apela ay isinasaalang - alang.',
     contact: 'Makipag - ugnayan',
     contactText: 'Ang mga tanong tungkol sa mga alituntuning ito, o mga ulat na nangangailangan ng kagyat na pansin, ay maaaring ipadala sa dev@dehub.io.',
+    notAllowedItem5: 'Targeted hate speech: pag-atake, banta o pagdehumanisa sa isang tao o grupo dahil sa kanilang lahi, etnisidad, pinagmulan, relihiyon, kapansanan, sakit, kasarian, pagkakakilanlan sa kasarian o oryentasyong sekswal',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Malayang Pananalita',
+    freeSpeechText: 'Ang Riftn ay ginawa para sa malayang pagsasalita. Ang mga opinyon, debate, satira at kritisismo ng mga ideya, paniniwala, relihiyon at politika ay lahat ay tinatanggap, kasama na ang mga pananaw na hindi sang-ayon ng iba. Ang patakaran sa hate speech ay sumasaklaw sa mga target na pag-atake sa mga tao, hindi sa mga pananaw. Sa huli, ang komunidad ang magdedesisyon kung ano ang itinuturing na target na hate speech at magmamanage ng platform sa isang de-centrally na paraan, sa pamamagitan ng mga moderator na pinili ng komunidad at mga boto sa pamamahala. Ang pag-uulat, pag-block at pag-mute ay nananatiling magagamit para sa lahat.',
   },
   privacyPolicy: {
     title: 'Patakaran sa Pagkapribado',

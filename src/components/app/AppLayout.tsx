@@ -35,6 +35,7 @@ function DesktopRightRail() {
   if (!isDesktop) return null;
   return (
     <Suspense fallback={<RailPlaceholder />}>
+      <ProfileRimColors />
       <RightSidebar />
     </Suspense>
   );
@@ -115,6 +116,7 @@ import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 import { rememberScroll, restoreDocumentScroll, savedScroll } from '@/lib/back-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
+import { ProfileRimColors } from './ProfileRimColors';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useStageAlerts } from '@/hooks/use-stage-alerts';

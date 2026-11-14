@@ -3,7 +3,7 @@ import LogIn from "@/components/ui/cut-icons/sign-in";
 import CornerDownLeft from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { Suspense, lazy, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +57,9 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { warmLoginSheet } from '@/components/app/LoginModal';
+
+// Loaded on first empty search: it pulls in the Requests board's submit code.
+const SearchRequestPrompt = lazy(() => import('./SearchRequestPrompt').then((m) => ({ default: m.SearchRequestPrompt })));
 
 /**
  * Terminates the rail's nav list. Deliberately NOT in NAV_ITEMS: that array is
@@ -573,7 +576,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             6.5px above the panel, so both land in the wash with the panel's
             bright glass rim right underneath and stop being legible. The hook
             lets index.css drop the cast for the collapsed rail only. */}
-        <motion.div ref={sidePanelRef} data-side-panel data-sidebar-glass-surface data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden flex flex-col">
+        <motion.div ref={sidePanelRef} data-side-panel data-sidebar-glass-surface data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[9px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden flex flex-col">
           <div data-sidebar-glass-backdrop aria-hidden="true" />
           {/* Menu search — revealed by scrolling the list, retracted when it
               returns to the top. Animated through grid-template-rows so the
@@ -793,7 +796,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             </button>
           )}
           {navQuery && visibleRailItems.length === 0 && !isCollapsed && (
-            <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
+            navQuery.trim().length >= 2
+              ? <Suspense fallback={null}><SearchRequestPrompt query={navQuery} source="menu" compact className="mx-1 my-2" /></Suspense>
+              : <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
           )}
           {/* Always the last thing in the rail. Three conditions, each for its
               own reason:
@@ -941,7 +946,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              isCollapsed ? "text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
+              // leading-5: 13.5px text inherits a 20.25px line, which made the
+              // button 46.25px tall and left the nav bento above it ending on a
+              // quarter pixel, so its bottom corners blurred at 100% zoom.
+              isCollapsed ? "text-[13.5px] leading-5" : "py-[7px] lg:py-3 text-[13.5px] leading-5"
             )}>
               {isAuthenticated ? (
                  <>

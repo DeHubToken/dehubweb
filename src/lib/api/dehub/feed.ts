@@ -1,4 +1,5 @@
 import { apiCall, getAuthToken } from './core';
+import { noteSignInWall } from '@/lib/sign-in-wall';
 import { normalizeCategoryList } from '@/lib/category-names';
 import type {
   DeHubNFT,
@@ -61,6 +62,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
     requiresAuth: !!getAuthToken(),
   });
   
+  noteSignInWall(response);
   const items = response.result || [];
   const pagination = response.pagination;
   

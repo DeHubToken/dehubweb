@@ -2018,7 +2018,6 @@ export const jv = {
     contactText: 'Kanggo pitakonan babagan Katentuan Layanan iki, mangga melu ing saluran tata kelola komunitas kita utawa kirim proposal liwat mekanisme DAO.',
   },
   communityGuidelines: {
-    lastUpdatedDate: '26 Agustus 2026',
     notAllowedItem1: 'Kontén ilégal mané ngarani, atawa kontén yén ngarani aktivitas ilégal.',
     notAllowedItem3: 'Kedhongkongan akeh, ancaman akeh, atau pengagungan akeh ekstremisme dan terorisme yang berbau kekerasan.',
     notAllowedItem7: 'Spam, manipulasi interaksi, jaringan bot, dan inflasi buatan tawar-menawar, suka, atau hadiah.',
@@ -2047,10 +2046,13 @@ export const jv = {
     notAllowedText: 'Konten lan prilaku ing ngisor iki dilarang ing ngendi wae ing Riftn, kalebu kiriman, komentar, stream, pesen, profil, lan jeneng pangguna:',
     notAllowedItem2: 'Materi panyiksa seksual bocah, utawa gambaran seksual marang bocah cilik. Iki bakal dilaporake menyang panguwasa sing relevan lan bakal nyebabake pambusakan permanen sanalika iku uga',
     notAllowedItem4: 'Panyiksa, bullying, lan panyiksa sing ditargetake, kalebu serangan kelompok sing terkoordinasi',
-    notAllowedItem5: 'Ujaran sengit, kalebu serangan marang wong adhedhasar ras, etnis, asal-usul nasional, agama, cacat, penyakit, jinis, identitas gender, utawa orientasi seksual',
     notAllowedItem6: 'Doxxing utawa nerbitake informasi pribadi wong liya tanpa idin',
     reporting: 'Cara Nglaporake',
     reportingText: 'Nglaporake mung butuh sawetara tutul lan bisa ditindakake langsung saka konten kasebut:',
+    notAllowedItem5: 'Pidhato kebencian sing ditargetake: nyerang, ngancam utawa ngilangi manungsa utawa kelompok amarga ras, etnisitas, asal negara, agama, disabilitas, penyakit, jinis, identitas gender utawa orientasi seksual.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Kebebasan Ucapan',
+    freeSpeechText: 'Riftn dibangun kanggo kebebasan ujaran. Pendapat, debat, satir lan kritik babagan gagasan, kapercayan, agama lan politik kabeh disambut, kalebu pandangan sing ora disetujui wong liya. Aturan ujaran kebencian nutupi serangan sing ditargetake marang wong, dudu pandangan. Pungkasané komunitas sing mutusaké apa sing dianggep minangka ujaran kebencian sing ditargetake lan ngatur platform kanthi cara terdesentralisasi, liwat moderator sing dipilih komunitas lan voting tata pamrentahan. Pelaporan, blokir lan mute tetep kasedhiya kanggo kabeh wong.',
   },
   privacyPolicy: {
     blockchainConsiderations: 'Pertimbangan Blockchain:',

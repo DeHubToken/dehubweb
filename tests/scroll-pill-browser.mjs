@@ -99,7 +99,7 @@ try {
       await welcome.waitForFunction(() => {
         const feed = document.querySelector('#feed');
         const cut = feed.querySelector('[data-feed-swallow-cut]');
-        return getComputedStyle(cut).clipPath !== 'none' || getComputedStyle(feed).clipPath !== 'none';
+        return getComputedStyle(cut).overflowY === 'clip' || getComputedStyle(cut).clipPath !== 'none' || getComputedStyle(feed).clipPath !== 'none';
       });
       evidence.push({ browser: name, welcome: 'sharp card, frost configured, clipping restored', blurPixelsChecked: name === 'chromium' });
       await welcome.close();
@@ -120,8 +120,14 @@ try {
         }
         if (timeline) {
           // At rest, scrolling must not mutate the inline cut or run a JS tail.
-          const state = await page.evaluate(() => ({ driver: document.querySelector('#feed').dataset.feedSwallowDriver, clip: document.querySelector('#feed > [data-feed-swallow-cut]').style.clipPath }));
-          assert.equal(state.driver, 'scroll-transform'); assert.notEqual(state.clip, '');
+          const state = await page.evaluate(() => {
+            const cut = document.querySelector('#feed > [data-feed-swallow-cut]');
+            return { driver: document.querySelector('#feed').dataset.feedSwallowDriver, clip: getComputedStyle(cut).clipPath, overflow: getComputedStyle(cut).overflowY, shift: cut.style.translate };
+          });
+          assert.equal(state.driver, 'scroll-transform'); assert.notEqual(state.shift, '');
+          // clip-path would make the cut a backdrop root: frosted cards inside
+          // it would blur nothing and the theme canvas would show through sharp.
+          assert.equal(state.clip, 'none', `${name}/${width}: the cut must not use clip-path`); assert.equal(state.overflow, 'clip');
         }
         // Follow nav hide/show transitions rather than freezing mid-motion.
         for (const transform of ['translateY(calc(-100% - 3rem))', 'translateY(0px)']) {
@@ -213,11 +219,12 @@ try {
           const cuts = await page.locator('[data-feed-swallow-driver="scroll-transform"]').evaluateAll(elements => elements.map(el => {
             const clipped = el.querySelector(':scope > [data-feed-swallow-cut]') || el;
             const clip = getComputedStyle(clipped).clipPath;
+            const shifted = getComputedStyle(clipped).overflowY === 'clip' && clipped.style.translate;
             const scope = el.closest('[data-cached-page]') || document;
             const nav = Array.from(scope.querySelectorAll('[data-feed-nav], [data-feed-nav-outer] > [data-page-bento]')).find(n => n.getBoundingClientRect().width > 0);
             const cr = clipped.getBoundingClientRect(); const pr = nav?.getBoundingClientRect();
             const inset = clip.match(/inset\(([\d.-]+)px/);
-            return { clip, navTop: pr?.top, cutTop: inset ? +inset[1] + cr.top : null };
+            return { clip, navTop: pr?.top, cutTop: shifted ? cr.top : inset ? +inset[1] + cr.top : null };
           }));
           for (const cut of cuts) {
             assert.notEqual(cut.cutTop, null, 'Production must have an active cut');

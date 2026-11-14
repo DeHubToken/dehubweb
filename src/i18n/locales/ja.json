@@ -2932,7 +2932,17 @@
     "noMenuMatches": "メニューに一致するものがありません",
     "searchDehubFor": "Riftn で「{{query}}」を検索",
     "switchAccount": "アカウントを切り替える",
-    "signedInAs": "サインインしているのは {{name}} です"
+    "signedInAs": "サインインしているのは {{name}} です",
+    "requestPrompt": "まだない？リクエストとして送ろう",
+    "requestPromptShort": "まだない？",
+    "requestDraftMenu": "Riftn に {{query}} を追加",
+    "requestDraftSettings": "{{query}} の設定",
+    "requestSend": "リクエストを送信",
+    "requestPostsTo": "リクエストに投稿されます",
+    "requestHint": "あなたの名前でリクエストに投稿されます。公開されたらお知らせします。",
+    "requestSent": "リクエストに送信しました",
+    "requestSentHint": "公開されたらお知らせします。",
+    "requestSeeIt": "リクエストで見る"
   },
   "comments": {
     "reportComment": "コメントを報告",

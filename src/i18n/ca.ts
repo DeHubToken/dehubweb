@@ -2490,7 +2490,6 @@ export const ca = {
   communityGuidelines: {
     title: 'Directrius de la comunitat',
     lastUpdated: 'Darrera actualització:',
-    lastUpdatedDate: '26 d\'agost de 2026',
     intro: 'Riftn és una plataforma descentralitzada, propietat de l\'usuari, però no és un lloc sense regles. Aquestes directrius estableixen què està permès i què no, com informar sobre el contingut i què passa després de fer una denúncia. La política és establerta per la governança comunitària; el compliment es duu a terme immediatament pels moderadors designats.',
     notAllowed: 'Què no està permès',
     notAllowedText: 'Estan prohibits els següents continguts i comportaments en qualsevol lloc de Riftn, incloent-hi publicacions, comentaris, fluxos, missatges, perfils i noms d\'usuari:',
@@ -2498,7 +2497,6 @@ export const ca = {
     notAllowedItem2: 'Material d\'abús sexual infantil o qualsevol representació sexualitzada de menors. Això s\'informa a les autoritats pertinents i resulta en l\'eliminació permanent immediata',
     notAllowedItem3: 'Incitació a la violència, amenaces de violència o glorificació de l\'extremisme violent i el terrorisme',
     notAllowedItem4: 'L\'assetjament, l\'assetjament escolar i l\'abús selectiu, inclosos els muntanyes coordinades',
-    notAllowedItem5: 'Discurs d\'odi, incloent atacs a persones per raó de raça, ètnia, nacionalitat, religió, discapacitat, malaltia, sexe, identitat de gènere o orientació sexual',
     notAllowedItem6: 'Doxxar o publicar la informació privada d\'una altra persona sense el seu consentiment',
     notAllowedItem7: 'Correu brossa, manipulació de la participació, xarxes de bots i inflació artificial de visualitzacions, vots o recompenses',
     notAllowedItem8: 'Suplantació d\'una altra persona, creador, marca o projecte',
@@ -2521,6 +2519,10 @@ export const ca = {
     appealsText: 'Si creus que una decisió de moderació va ser incorrecta, es pot apel·lar a través de la governança comunitària. La governança defineix les polítiques que els moderadors fan complir i poden revisar o revertir les decisions individuals. No obstant això, l\'aplicació és immediata: el contingut es manté baix mentre es considera una apel·lació.',
     contact: 'Contacte',
     contactText: 'Les preguntes sobre aquestes directrius o els informes que necessiten atenció urgent es poden enviar a dev@dehub.io.',
+    notAllowedItem5: 'Discurs d\'odi dirigit: atacar, amenaçar o deshumanitzar una persona o un grup per motius de raça, ètnia, origen nacional, religió, discapacitat, malaltia, sexe, identitat de gènere o orientació sexual.',
+    lastUpdatedDate: '14 de novembre de 2026',
+    freeSpeech: 'Llibertat d\'expressió',
+    freeSpeechText: 'Riftn està dissenyat per a la llibertat d\'expressió. Són benvingudes les opinions, els debats, la sàtira i les crítiques a les idees, les creences, les religions i la política, incloent-hi les opinions amb les quals altres persones no estan d\'acord. La norma sobre els discursos d\'odi cobreix els atacs dirigits a persones, no a opinions. En última instància, la comunitat decideix què es considera un discurs d\'odi dirigit i modera la plataforma de manera descentralitzada, a través de moderadors elegits per la comunitat i vots de governança. Tothom pot denunciar, bloquejar i silenciar.',
   },
   adTools: {
     budgetCalculatorTitle: 'Calculadora de pressupost de campanya',

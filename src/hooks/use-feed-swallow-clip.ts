@@ -54,6 +54,8 @@ export function useFeedSwallowClip(
     let animationSource: HTMLElement | null = null;
     let lastFrames = '';
     let lastClip = '';
+    let lastShift = '';
+    let shiftPx = 0;
     let clipTarget: HTMLElement = el;
     let findCut = true;
     let cutInset = PILL_CUT_INSET;
@@ -77,8 +79,27 @@ export function useFeedSwallowClip(
       lastFrames = '';
       if (bounds) bounds.style.overflow = originalOverflow;
     };
-    const writeClip = (clip: string, target = el) => {
+    // The scroll-driven cut layer is NOT clipped with clip-path. clip-path
+    // makes an element a backdrop root, so every frosted post card inside it
+    // blurred an empty backdrop and the theme canvas showed through sharp.
+    // Instead the layer is shifted down to the cut line and clips its own
+    // overflow, and its content is shifted back up by the same distance.
+    // `translate` composes with the animated `transform`s on both layers, and
+    // neither overflow nor translate starts a backdrop root.
+    const writeShift = (y: number | null) => {
+      if (!cutLayer || !motion) return;
+      const value = y === null ? '' : `0 ${y.toFixed(2)}px`;
+      if (value === lastShift) return;
+      lastShift = value;
+      shiftPx = y === null ? 0 : Number(y.toFixed(2));
+      cutLayer.style.translate = value;
+      cutLayer.style.overflow = y === null ? '' : 'clip';
+      motion.style.translate = y === null ? '' : `0 ${(-y).toFixed(2)}px`;
+    };
+    const writeClip = (clip: string, target = el, shiftY: number | null = null) => {
+      if (shiftY === null) writeShift(null);
       if (clipTarget !== target) { clipTarget.style.clipPath = ''; lastClip = ''; clipTarget = target; }
+      if (shiftY !== null) { if (lastClip) { target.style.clipPath = ''; lastClip = ''; } writeShift(shiftY); return; }
       if (clip !== lastClip) { target.style.clipPath = clip; lastClip = clip; }
     };
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(update); };
@@ -155,7 +176,8 @@ export function useFeedSwallowClip(
         const cutRect = cutLayer.getBoundingClientRect();
         const cutTransform = getComputedStyle(cutLayer).transform;
         const cutOffset = cutTransform && cutTransform !== 'none' ? new DOMMatrixReadOnly(cutTransform).m42 : 0;
-        const layoutTop = cutRect.top + source.scrollTop - counterOffset - cutOffset;
+        // The cut's own shift (writeShift) is a `translate`, not part of `transform`.
+        const layoutTop = cutRect.top + source.scrollTop - counterOffset - cutOffset - shiftPx;
         const navTransform = getComputedStyle(outer).transform;
         const navOffset = navTransform && navTransform !== 'none' ? new DOMMatrixReadOnly(navTransform).m42 : 0;
         const transition = outer.getAnimations().find(candidate =>
@@ -198,7 +220,7 @@ export function useFeedSwallowClip(
             navAnimation?.cancel(); inverseNavAnimation?.cancel();
             navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
           }
-          lastFrames = key; writeClip(shape(y0), cutLayer); el.dataset.feedSwallowDriver = 'scroll-transform';
+          lastFrames = key; writeClip('', cutLayer, y0); el.dataset.feedSwallowDriver = 'scroll-transform';
         } else { writeClip(currentY > 0.5 ? shape(currentY) : ''); el.dataset.feedSwallowDriver = 'frame'; }
       } else {
         clearAnimation(); writeClip(currentY > 0.5 ? shape(currentY) : '');
@@ -239,7 +261,7 @@ export function useFeedSwallowClip(
       document.removeEventListener('transitioncancel', onMotion, true);
       themeObserver.disconnect(); pageObserver?.disconnect(); resizeObserver.disconnect();
       if (frame !== null) cancelAnimationFrame(frame);
-      clearAnimation(); clipTarget.style.clipPath = ''; el.style.clipPath = ''; delete el.dataset.feedSwallowDriver;
+      clearAnimation(); writeShift(null); clipTarget.style.clipPath = ''; el.style.clipPath = ''; delete el.dataset.feedSwallowDriver;
       if (bounds) bounds.style.overflow = originalOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

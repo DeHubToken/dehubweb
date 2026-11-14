@@ -2312,7 +2312,6 @@ export const et = {
   communityGuidelines: {
     title: 'Kogukonna reeglid',
     lastUpdated: 'Viimati uuendatud:',
-    lastUpdatedDate: '26. august 2026',
     intro: 'Riftn on detsentraliseeritud, kasutaja omanduses olev platvorm, kuid see ei ole reegliteta koht. Need juhised sätestavad, mis on ja mis ei ole lubatud, kuidas sisust teatada ja mis juhtub pärast aruande koostamist. Poliitika kehtestab kogukonna juhtimine; jõustamist teostavad viivitamatult määratud moderaatorid.',
     notAllowed: 'Mis ei ole lubatud',
     notAllowedText: 'Järgnev sisu ja käitumine on keelatud kõikjal Riftnis, sealhulgas postitused, kommentaarid, voogedastused, sõnumid, profiilid ja kasutajanimed:',
@@ -2320,7 +2319,6 @@ export const et = {
     notAllowedItem2: 'Laste seksuaalset kuritarvitamist kujutav materjal või alaealiste seksualiseeritud kujutamine. Sellest teatatakse asjaomastele ametiasutustele ja tulemuseks on viivitamatu lõplik eemaldamine',
     notAllowedItem3: 'Vägivallale õhutamine, vägivallaga ähvardamine või vägivaldse äärmusluse ja terrorismi ülistamine',
     notAllowedItem4: 'Ahistamine, kiusamine ja sihipärane väärkohtlemine, sealhulgas koordineeritud kuhjumine',
-    notAllowedItem5: 'Vihakõne, sealhulgas inimeste ründamine rassi, etnilise päritolu, rahvusliku päritolu, usutunnistuse, puude, haiguse, soo, soolise identiteedi või seksuaalse sättumuse alusel',
     notAllowedItem6: 'Teise isiku isikliku teabe tegemine või avaldamine ilma tema nõusolekuta',
     notAllowedItem7: 'Rämpspost, kaasamisega manipuleerimine, robotivõrgud ja vaadete, häälte või preemiate kunstlik inflatsioon',
     notAllowedItem8: 'Teise isiku, looja, kaubamärgi või projekti kehastamine',
@@ -2343,6 +2341,10 @@ export const et = {
     appealsText: 'Kui usute, et moderatsioonideetsioon oli vale, saab sedaappeelida kogukonna valitsuse kaudu. Valitsus määratleb poliitika, mida moderatoorid rakendavad, ja saab vaadata või kaasa teha üksikute otsuste üle. Ennetus, kuidas tegu on aga kiire — sisus jääb alla, kuniappeel on arutletud.',
     contact: 'Kontakt',
     contactText: 'Küsimusi selle juhendega või raporte, mis vajavad kiiret tähelepanu, saab saata dev@dehub.io.',
+    notAllowedItem5: 'Sihipärane vaenukõne: isiku või rühma ründamine, ähvardamine või inimväärikuse alandamine tema või nende rassi, etnilise kuuluvuse, rahvusliku päritolu, usutunnistuse, puude, haiguse, soo, soolise identiteedi või seksuaalse sättumuse tõttu',
+    lastUpdatedDate: '14. november 2026',
+    freeSpeech: 'Sõnavabadus',
+    freeSpeechText: 'Riftn on loodud sõnavabaduse jaoks. Arvamused, arutelud, satiir ning ideede, uskumuste, religioonide ja poliitika kritiseerimine on kõik teretulnud, sealhulgas seisukohad, millega teised ei nõustu. Vihakõne reegel hõlmab sihipäraseid rünnakuid inimeste, mitte vaadete vastu. Lõppkokkuvõttes otsustab kogukond, mida loetakse suunatud vaenukõneks, ja modereerib platvormi detsentraliseeritult kogukonna valitud moderaatorite ja juhtimisalaste hääletuste kaudu. Teavitamine, blokeerimine ja vaigistamine on kõigile jätkuvalt kättesaadavad.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampaania eelarvekalkulaator',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Gavel, Mail } from "lucide-react";
+import { Shield, Gavel, Mail, MessageSquareQuote } from "lucide-react";
 import Users from "@/components/ui/cut-icons/communities";
 import Flag from "@/components/ui/cut-icons/report";
 import Eye from "@/components/ui/cut-icons/visibility";
@@ -43,6 +43,10 @@ const CommunityGuidelines = () => {
       <Section title={t('communityGuidelines.notAllowed')} icon={<Shield className="w-5 h-5" />}>
         <p>{t('communityGuidelines.notAllowedText')}</p>
         <ItemList items={Array.from({ length: 9 }, (_, i) => t(`communityGuidelines.notAllowedItem${i + 1}`))} />
+      </Section>
+
+      <Section title={t('communityGuidelines.freeSpeech')} icon={<MessageSquareQuote className="w-5 h-5" />}>
+        <p>{t('communityGuidelines.freeSpeechText')}</p>
       </Section>
 
       <Section title={t('communityGuidelines.adultContent')} icon={<Eye className="w-5 h-5" />}>

@@ -2468,7 +2468,6 @@ export const fi = {
   communityGuidelines: {
     title: 'Yhteisöohjeet',
     lastUpdated: 'Päivitetty viimeksi:',
-    lastUpdatedDate: '26.8.2026',
     intro: 'Riftn on hajautettu, käyttäjien omistama alusta, mutta se ei ole paikka ilman sääntöjä. Näissä ohjeissa kerrotaan, mikä on sallittua ja mikä ei, miten sisällöstä ilmoitetaan ja mitä tapahtuu ilmoituksen tekemisen jälkeen. Käytännön määrittelee yhteisön hallinto; valvonnan suorittavat viipymättä nimetyt valvojat.',
     notAllowed: 'Mikä ei ole sallittua',
     notAllowedText: 'Seuraavat sisällöt ja käyttäytyminen ovat kiellettyjä missä tahansa Riftnissa, mukaan lukien julkaisut, kommentit, streamit, viestit, profiilit ja käyttäjätunnukset:',
@@ -2476,7 +2475,6 @@ export const fi = {
     notAllowedItem2: 'Lasten seksuaaliseen hyväksikäyttöön liittyvä materiaali tai mikä tahansa seksuaalinen kuvaus alaikäisistä. Tämä ilmoitetaan asianomaisille viranomaisille ja johtaa välittömään pysyvään poistamiseen',
     notAllowedItem3: 'Väkivaltaan yllyttäminen, väkivallalla uhkaaminen tai väkivaltaisen ekstremismin ja terrorismin ihannointi',
     notAllowedItem4: 'Häirintä, kiusaaminen ja kohdennettu väärinkäyttö, mukaan lukien koordinoidut paalut',
-    notAllowedItem5: 'Vihapuhe, mukaan lukien hyökkäykset ihmisiä vastaan rodun, etnisyyden, kansallisen alkuperän, uskonnon, vammaisuuden, sairauden, sukupuolen, sukupuoli-identiteetin tai seksuaalisen suuntautumisen perusteella',
     notAllowedItem6: 'Toisen henkilön yksityisten tietojen tekeminen tai julkaiseminen ilman hänen suostumustaan',
     notAllowedItem7: 'Roskaposti, sitoutumisen manipulointi, bottiverkostot ja näkymien, äänien tai palkintojen keinotekoinen inflaatio',
     notAllowedItem8: 'Toisena henkilönä, tekijänä, brändinä tai projektina esiintyminen',
@@ -2499,6 +2497,10 @@ export const fi = {
     appealsText: 'Jos pidät maltillista päätöstä vääränä, siitä voi valittaa yhteisöhallinnon kautta. Hallinto asettaa käytäntöjen valvojat valvomaan ja voivat tarkistaa tai kumota yksittäisiä päätöksiä. Täytäntöönpano on kuitenkin välitöntä — sisältö pysyy alhaalla muutoksenhaun ajan.',
     contact: 'Ota yhteyttä',
     contactText: 'Näitä ohjeita koskevat kysymykset tai kiireellistä huomiota vaativat raportit voi lähettää osoitteeseen dev@dehub.io.',
+    notAllowedItem5: 'Kohdennettu vihapuhe: henkilön tai ryhmän hyökkääminen, uhkaaminen tai epäinhimillistäminen heidän rotunsa, etnisen alkuperänsä, kansallisen alkuperänsä, uskontonsa, vammansa, sairautensa, sukupuolensa, sukupuoli-identiteettinsä tai seksuaalisen suuntautumisensa perusteella',
+    lastUpdatedDate: '14. marraskuuta 2026',
+    freeSpeech: 'Sananvapaus',
+    freeSpeechText: 'Riftn on luotu sananvapautta varten. Mielipiteet, keskustelu, satiiri sekä ideoiden, uskomusten, uskontojen ja politiikan kritisointi ovat kaikki tervetulleita, mukaan lukien näkemykset, joista muut ovat eri mieltä. Vihapuhetta koskeva sääntö kattaa kohdennetut hyökkäykset ihmisiä, ei näkemyksiä, vastaan. Lopulta yhteisö päättää, mikä katsotaan kohdennetuksi vihapuheeksi, ja moderoi alustaa hajautetusti yhteisön valitsemien moderaattoreiden ja hallintoon liittyvien äänestysten kautta. Ilmoittaminen, estäminen ja mykistys ovat edelleen kaikkien käytettävissä.',
   },
   adTools: {
     cpmRow: 'Hinta / 1 000 näyttöä:',

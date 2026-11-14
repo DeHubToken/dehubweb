@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef, recordAffiliateClick, recordAffiliateCtaClick, getPersistedViewerAddress } from "@/lib/affiliateRef";
 import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
-import { DEFAULT_AFFILIATE_LANDING, parseLandingCtas, withAffiliateRef, type AffiliateLandingCustomization } from "@/lib/affiliate";
+import { DEFAULT_AFFILIATE_LANDING, ownLandingCtaLabel, ownLandingHeadline, ownLandingMessage, parseLandingCtas, withAffiliateRef, type AffiliateLandingCustomization } from "@/lib/affiliate";
 
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://riftn.com";
@@ -40,7 +40,7 @@ export default function ReferralLanding() {
 
   // PNG for OG/social meta (cached cross-platform), SVG for the fast in-page preview.
   // Bump `v` whenever the share-image renderer changes so social platforms and browsers refetch.
-  const SHARE_IMG_VERSION = "5";
+  const SHARE_IMG_VERSION = "6";
   const ogImage = `${getAffiliateShareImageUrl(code, 1200, 630, "png")}&v=${SHARE_IMG_VERSION}`;
   const baseShareImage = `${getAffiliateShareImageUrl(code, 1200, 630, "svg")}&v=${SHARE_IMG_VERSION}`;
   const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
@@ -71,11 +71,12 @@ export default function ReferralLanding() {
         .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string; landing_headline: string | null; landing_message: string | null; landing_cta_label: string | null; landing_destination: string | null; landing_ctas: unknown } | null };
       if (cancelled) return;
       if (data) {
-        setHasCustomHeadline(Boolean(data.landing_headline?.trim()));
+        const headline = ownLandingHeadline(data.landing_headline);
+        setHasCustomHeadline(Boolean(headline));
         setLanding({
-          headline: data.landing_headline || DEFAULT_AFFILIATE_LANDING.headline,
-          message: data.landing_message || DEFAULT_AFFILIATE_LANDING.message,
-          ctaLabel: data.landing_cta_label || DEFAULT_AFFILIATE_LANDING.ctaLabel,
+          headline: headline || DEFAULT_AFFILIATE_LANDING.headline,
+          message: ownLandingMessage(data.landing_message) || DEFAULT_AFFILIATE_LANDING.message,
+          ctaLabel: ownLandingCtaLabel(data.landing_cta_label) || DEFAULT_AFFILIATE_LANDING.ctaLabel,
           destination: data.landing_destination || DEFAULT_AFFILIATE_LANDING.destination,
           ctas: parseLandingCtas(data.landing_ctas),
         });

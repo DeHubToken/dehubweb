@@ -2504,7 +2504,6 @@ export const pt = {
   communityGuidelines: {
     title: 'Orientações para a comunidade',
     lastUpdated: 'Última actualização:',
-    lastUpdatedDate: '26 de agosto de 2026',
     intro: 'O Riftn é uma plataforma descentralizada e de propriedade do usuário, mas não é um lugar sem regras. Essas diretrizes estabelecem o que é e o que não é permitido, como denunciar conteúdo e o que acontece após a denúncia. A política é definida pela governança da comunidade; a aplicação é realizada prontamente por moderadores designados.',
     notAllowed: 'O que não é permitido',
     notAllowedText: 'Os seguintes conteúdos e comportamentos são proibidos em qualquer lugar no Riftn, incluindo publicações, comentários, transmissões, mensagens, perfis e nomes de utilizador:',
@@ -2512,7 +2511,6 @@ export const pt = {
     notAllowedItem2: 'Material de abuso sexual infantil ou qualquer representação sexualizada de menores. Isso é relatado às autoridades relevantes e resulta em remoção permanente imediata',
     notAllowedItem3: 'Incitamento à violência, ameaças de violência ou glorificação do extremismo violento e do terrorismo',
     notAllowedItem4: 'Assédio, bullying e abuso direcionado, incluindo empilhamentos coordenados',
-    notAllowedItem5: 'Discurso de ódio, incluindo ataques a pessoas com base em raça, etnia, nacionalidade, religião, deficiência, doença, sexo, identidade de gênero ou orientação sexual',
     notAllowedItem6: 'Doxxing ou publicação de informações privadas de outra pessoa sem o seu consentimento',
     notAllowedItem7: 'Spam, manipulação de engajamento, redes de bots e inflação artificial de visualizações, votos ou recompensas',
     notAllowedItem8: 'Representação de outra pessoa, criador, marca ou projeto',
@@ -2535,6 +2533,10 @@ export const pt = {
     appealsText: 'Se você acredita que uma decisão de moderação foi errada, ela pode ser contestada por meio da governança da comunidade. A governança define as políticas que os moderadores aplicam e pode revisar ou reverter decisões individuais. A execução, no entanto, é imediata — o conteúdo permanece inativo enquanto um recurso é considerado.',
     contact: 'Contacto',
     contactText: 'Perguntas sobre essas diretrizes ou relatórios que precisam de atenção urgente podem ser enviadas para dev@dehub.io.',
+    notAllowedItem5: 'Discurso de ódio direcionado: atacar, ameaçar ou desumanizar uma pessoa ou grupo por causa de sua raça, etnia, origem nacional, religião, deficiência, doença, sexo, identidade de gênero ou orientação sexual',
+    lastUpdatedDate: '14 de novembro de 2026',
+    freeSpeech: 'Liberdade de expressão',
+    freeSpeechText: 'Riftn foi criado para a liberdade de expressão. Opiniões, debates, sátiras e críticas a ideias, crenças, religiões e política são bem-vindas, inclusive visões com as quais outros discordam. A regra de discurso de ódio cobre ataques direcionados a pessoas, não a opiniões. Em última análise, a comunidade decide o que conta como discurso de ódio direcionado e modera a plataforma de forma descentralizada, por meio de moderadores eleitos pela comunidade e votos de governança. Relatórios, bloqueios e silenciamento permanecem disponíveis para todos.',
   },
   brandGuidelines: {
     title: 'Diretrizes da marca',

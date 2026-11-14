@@ -2213,7 +2213,6 @@ export const tr = {
   communityGuidelines: {
     title: "Topluluk Kuralları",
     lastUpdated: "Son güncelleme:",
-    lastUpdatedDate: "26 Ağustos 2026",
     intro: "Riftn merkeziyetsiz, kullanıcıya ait bir platformdur, ama kuralsız bir yer değildir. Bu kurallar neye izin verilip verilmediğini, içeriğin nasıl bildirileceğini ve bir bildirimden sonra ne olacağını ortaya koyar. Politika topluluk yönetişimiyle belirlenir; uygulama görevli denetçilerce hızla yürütülür.",
     notAllowed: "Neye İzin Verilmez",
     notAllowedText: "Aşağıdaki içerik ve davranışlar; paylaşımlar, yorumlar, yayınlar, mesajlar, profiller ve kullanıcı adları dâhil Riftn'ın her yerinde yasaktır:",
@@ -2221,7 +2220,6 @@ export const tr = {
     notAllowedItem2: "Çocukların cinsel istismarına ilişkin materyal ya da reşit olmayanların cinselleştirilmiş her türlü tasviri. Bu, ilgili makamlara bildirilir ve derhal kalıcı olarak kaldırılmayla sonuçlanır",
     notAllowedItem3: "Şiddete teşvik, şiddet tehdidi ya da şiddet yanlısı aşırılığın ve terörizmin yüceltilmesi",
     notAllowedItem4: "Koordineli toplu saldırılar dâhil taciz, zorbalık ve hedefli kötüye kullanım",
-    notAllowedItem5: "Irk, etnik köken, ulusal köken, din, engellilik, hastalık, cinsiyet, cinsiyet kimliği ya da cinsel yönelime dayalı saldırılar dâhil nefret söylemi",
     notAllowedItem6: "Başkasının özel bilgilerini rızası olmadan ifşa etmek ya da yayımlamak",
     notAllowedItem7: "İstenmeyen posta, etkileşim manipülasyonu, bot ağları ve izlenme, oy ya da ödüllerin yapay olarak şişirilmesi",
     notAllowedItem8: "Başka bir kişinin, içerik oluşturucunun, markanın ya da projenin kimliğine bürünmek",
@@ -2244,6 +2242,10 @@ export const tr = {
     appealsText: "Bir denetim kararının yanlış olduğunu düşünüyorsanız, topluluk yönetişimi üzerinden itiraz edilebilir. Yönetişim, denetçilerin uyguladığı politikayı belirler ve tekil kararları gözden geçirebilir ya da tersine çevirebilir. Ancak uygulama anlıktır — itiraz değerlendirilirken içerik kaldırılmış olarak kalır.",
     contact: "İletişim",
     contactText: "Bu kurallar hakkındaki sorular ya da acil ilgi gerektiren bildirimler dev@dehub.io adresine gönderilebilir.",
+    notAllowedItem5: "Hedefli nefret söylemi: bir kişinin veya grubun ırkı, etnik kökeni, ulusal kökeni, dini, engelliliği, hastalığı, cinsiyeti, cinsiyet kimliği veya cinsel yönelimi nedeniyle saldırılması, tehdit edilmesi veya insanlık dışı kılınması.",
+    lastUpdatedDate: "14 November 2026",
+    freeSpeech: "İfade Özgürlüğü",
+    freeSpeechText: "Riftn, özgür konuşma için tasarlanmıştır. Fikirler, inançlar, dinler ve siyasete yönelik görüşler, tartışmalar, alaycılık ve eleştiriler dahil olmak üzere, başkalarının katılmadığı görüşler de dahil olmak üzere her türlü görüşe açıktır. Nefret söylemi kuralı, kişilere yönelik hedefli saldırıları kapsar, görüşleri değil. Sonuçta topluluk, hedefli nefret söyleminin ne sayılacağını belirler ve platformu merkezi olmayan bir şekilde, topluluk tarafından seçilen moderatörler ve yönetişim oylamaları aracılığıyla denetler. Raporlama, engelleme ve susturma herkes için kullanılabilir.",
   },
   privacyPolicy: {
     title: "Gizlilik Politikası",

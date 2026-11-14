@@ -5,10 +5,10 @@ import { useSyncExternalStore } from 'react';
  * Persists user video playback preferences (speed, loop, volume) in localStorage.
  * All video players read from and write to these shared preferences.
  *
- * Speed is remembered per creator as well as globally. Set 1.5× on someone who
- * talks slowly and it stays 1.5× for them next time, while everyone else keeps
- * playing at whatever you last used generally — a channel you have never tuned
- * inherits the global rate, a channel you have keeps its own.
+ * Speed is remembered per creator. Set 1.5× on someone who talks slowly and it
+ * stays 1.5× for them next time, while everyone else keeps playing at normal
+ * speed. A speed picked on one creator's video never follows the viewer onto
+ * anyone else's. Players with no creator (TV) share the general rate.
  */
 
 const STORAGE_KEY = 'video-preferences';
@@ -20,7 +20,11 @@ interface VideoPreferences {
   mediaMuted: boolean | null;
   /** Lowercased creator address → the rate chosen while watching them. */
   ratesByCreator: Record<string, number>;
+  /** 2 once speeds are kept per creator only; older blobs carried one speed everywhere. */
+  rateScope?: number;
 }
+
+const RATE_SCOPE = 2;
 
 const DEFAULTS: VideoPreferences = {
   playbackRate: 1,
@@ -28,6 +32,7 @@ const DEFAULTS: VideoPreferences = {
   volume: 0.8,
   mediaMuted: null,
   ratesByCreator: {},
+  rateScope: RATE_SCOPE,
 };
 
 let cached: VideoPreferences | null = null;
@@ -42,6 +47,11 @@ export function getVideoPreferences(): VideoPreferences {
         ...DEFAULTS,
         ...stored,
         isLooping: stored?.isLooping === true,
+        // One tap on a creator's speed button used to move every other video
+        // to that speed as well. Blobs written back then go back to normal
+        // speed once; the creators that were tuned keep their own.
+        playbackRate: stored?.rateScope === RATE_SCOPE && stored?.playbackRate > 0 ? stored.playbackRate : DEFAULTS.playbackRate,
+        rateScope: RATE_SCOPE,
         // Spread alone would carry through a null/array left by an older blob
         // and every read of it would then throw on lookup.
         ratesByCreator:
@@ -83,21 +93,19 @@ function save(prefs: VideoPreferences) {
 if (typeof window !== 'undefined') window.addEventListener('pagehide', flushSave);
 
 /**
- * Set the playback rate. Passing the creator whose video is playing also
- * remembers the rate for them: the global rate still moves, so the next
- * untouched channel inherits the habit, but this one is now pinned.
+ * Set the playback rate. With the creator whose video is playing, the rate is
+ * remembered for them alone and every other video keeps its own speed. With
+ * no creator it becomes the general rate.
  */
 export function setPlaybackRate(rate: number, creatorId?: string | null) {
   const prefs = getVideoPreferences();
   const key = normaliseCreator(creatorId);
-  save({
-    ...prefs,
-    playbackRate: rate,
-    ratesByCreator: key ? { ...prefs.ratesByCreator, [key]: rate } : prefs.ratesByCreator,
-  });
+  save(key
+    ? { ...prefs, ratesByCreator: { ...prefs.ratesByCreator, [key]: rate } }
+    : { ...prefs, playbackRate: rate });
 }
 
-/** The rate to start a creator's video at — theirs if pinned, else the global one. */
+/** The rate to start a creator's video at — theirs if pinned, else the general one. */
 export function getPlaybackRateFor(creatorId?: string | null): number {
   const prefs = getVideoPreferences();
   const key = normaliseCreator(creatorId);

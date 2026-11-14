@@ -2305,7 +2305,6 @@ export const lt = {
   communityGuidelines: {
     title: 'Bendruomenės gairės',
     lastUpdated: 'Paskutinį kartą atnaujinta:',
-    lastUpdatedDate: '2026 m. rugpjūčio 26 d.',
     intro: '„Riftn“ yra decentralizuota, vartotojui priklausanti platforma, tačiau tai nėra vieta be taisyklių. Šiose gairėse išdėstyta, kas yra ir kas neleidžiama, kaip pranešti apie turinį ir kas nutinka po pranešimo pateikimo. Politiką nustato bendruomenės valdymas; vykdymą greitai atlieka paskirti moderatoriai.',
     notAllowed: 'Kas neleidžiama',
     notAllowedText: 'Toliau nurodytas turinys ir elgesys draudžiamas bet kurioje „Riftn“ vietoje, įskaitant įrašus, komentarus, srautus, žinutes, profilius ir naudotojų vardus:',
@@ -2313,7 +2312,6 @@ export const lt = {
     notAllowedItem2: 'Vaikų seksualinio išnaudojimo medžiaga arba bet koks seksualizuotas nepilnamečių vaizdavimas. Apie tai pranešama atitinkamoms institucijoms ir nedelsiant visam laikui pašalinama',
     notAllowedItem3: 'Smurto kurstymas, grasinimas smurtu arba smurtinio ekstremizmo ir terorizmo šlovinimas',
     notAllowedItem4: 'Priekabiavimas, patyčios ir tikslinė prievarta, įskaitant koordinuotus pylimus',
-    notAllowedItem5: 'Neapykantą kurstančios kalbos, įskaitant išpuolius prieš žmones dėl rasės, etninės kilmės, tautinės kilmės, religijos, negalios, ligos, lyties, lytinės tapatybės ar seksualinės orientacijos',
     notAllowedItem6: '„Doxxing“ arba kito asmens privačios informacijos paskelbimas be jo sutikimo',
     notAllowedItem7: 'Šlamštas, manipuliavimas dalyvavimu, robotų tinklai ir dirbtinė nuomonių, balsų ar atlygių infliacija',
     notAllowedItem8: 'Kito asmens, kūrėjo, prekės ženklo ar projekto įkūnijimas',
@@ -2336,6 +2334,10 @@ export const lt = {
     contact: 'Susisiekti',
     contactText: 'Klausimus apie šias gaires arba ataskaitas, į kurias reikia skubiai atkreipti dėmesį, galite siųsti adresu dev@dehub.io.',
     reporting: 'Kaip pranešti',
+    notAllowedItem5: 'Tikslinė neapykantos kalba: asmens ar grupės atakavimas, grasinimas ar dehumanizavimas dėl jų rasės, etninės kilmės, nacionalinės kilmės, religijos, negalios, ligos, lyties, lytinės tapatybės ar seksualinės orientacijos.',
+    lastUpdatedDate: '14 November 2026',
+    freeSpeech: 'Laisvoji kalba',
+    freeSpeechText: 'Riftn sukurtas laisvai kalbai. Nuomonės, diskusijos, satyra ir kritika idėjų, įsitikinimų, religijų ir politikos yra visada laukiami, įskaitant požiūrius, su kuriais kiti nesutinka. Įžeidžiančių kalbų taisyklė apima tikslinius išpuolius prieš žmones, o ne požiūrius. Galų gale bendruomenė nusprendžia, kas yra tikslinis įžeidžiantis kalbėjimas, ir moderuoja platformą decentralizuotu būdu, per bendruomenės išrinktus moderatorius ir valdymo balsavimus. Pranešimas, blokavimas ir nutildymas lieka prieinami visiems.',
   },
   adTools: {
     budgetCalculatorTitle: 'Kampanijos biudžeto skaičiuoklė',

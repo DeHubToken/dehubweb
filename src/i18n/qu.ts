@@ -2504,7 +2504,6 @@ export const qu = {
   communityGuidelines: {
     title: 'Ayllullaktapak kamachiykuna',
     lastUpdated: 'Qhipa musuqchasqa:',
-    lastUpdatedDate: '26 ñiqin anta situwa killapi 2026 watapi',
     intro: 'Riftn huk descentralizado, usuariopa kaqnin, ichaqa mana mana kamachiyniyuq sitiochu. Kay kamachiykunam churan imakunam saqisqa hinaspa mana saqisqa, imayna willakuy ruwasqa kasqanmanta, chaymanta imakuna willakuy ruwasqa kasqanmanta. Política nisqataqa llaqta kamachiywanmi churakun; kamachiy hunt’achiyqa usqhayllan ruwakun moderadores designados nisqakuna.',
     notAllowed: 'Imakuna Mana Saqisqa',
     notAllowedText: 'Kay qatiq ruwanakuna chaymanta ruwaykuna maypipas Riftn kaqpi hark&#39;asqa kanku, chaymanta qillqakuna, rimaykuna, mayukuna, willakuykuna, perfiles chaymanta usernamekuna:',
@@ -2512,7 +2511,6 @@ export const qu = {
     notAllowedItem2: 'Wawakunata abuso sexualmanta material, utaq ima sexualizado siq’ipas menor de edad nisqamanta. Chaytaqa willanku kamachiqkunamanmi, chaymi chaylla wiñaypaq hurqusqa kan',
     notAllowedItem3: 'Maqanakuyman tanqay, maqanakuyman amenazay utaq maqanakuy extremismo nisqa, terrorismo nisqa hatunchasqa',
     notAllowedItem4: 'Acoso, acoso y abuso dirigido, chaymanta pila-ons coordinados nisqakuna',
-    notAllowedItem5: 'Chiqninakuy rimay, chaymanta runakunaman atacay, raza, etnia, origen nacional, religion, discapacidad, unquy, qari utaq warmi, identidad de género utaq orientación sexual',
     notAllowedItem6: 'Doxxing utaq wak runap sapalla willayta mana munayninwan lluqsichiy',
     notAllowedItem7: 'Spam, compromiso manipulación, bot llikakuna chaymanta artificial inflación qhawaykunamanta, votokunamanta utaq premiokunamanta',
     notAllowedItem8: 'Huk runapa, kamaqpa, markapa utaq proyectopa rikchakuynin',
@@ -2535,6 +2533,9 @@ export const qu = {
     appealsText: 'Sichus creenki huk decisión moderación pantasqa kasqanmanta chayqa, apelasqa kanman gobierno comunitario nisqawan. Gobernabilidad nisqa churan política moderadorkuna hunt’achisqankuta hinaspa sapankama decisionkunata qhawayta utaq kutichiyta atinku. Kamachiy ichaqa, chaylla — contenidoqa uraypi qhipakuchkan huk apelación qhawasqa kachkaptin.',
     contact: 'Tupaqmasi',
     contactText: 'Kay kamachiykunamanta tapuykuna, utaq willakuykuna usqhaylla qhawayta munanku, kay dev@dehub.io kaqman apachiyta atikunku.',
+    lastUpdatedDate: '2026 ñukanchay 14',
+    freeSpeech: 'Sumaq kawsay',
+    freeSpeechText: 'Riftn nisqaqa kacharari rimaypaq ruwasqam. Yuyaykuna, rimanakuykuna, asipaykuna, hinallataq yuyaykunata, iñiykunata, religionkunata, politikatapas pisichayqa chaskisqam, wakin runakuna mana tupachikuptinkupas. Chiqniy rimay kamachiyqa runakunaman qaqchiykunallatam harkan, manam yuyaykunatachu. Qipamanqa, ayllum akllan imayna chiqniy rimay kasqanta, hinallataqmi llapa runapa akllasqan kamachiqkuna, kamachiy t\'aqakuna, hinallataq akllanakuykunawan kay pampata kamachinku. Willakuy, harkay, hinallataq upallachiyqa llapa runapaqmi kachkan.',
   },
   brandGuidelines: {
     title: 'Markamanta kamachiykuna',

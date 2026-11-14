@@ -2428,7 +2428,6 @@ export const ht = {
   communityGuidelines: {
     title: 'Gid Kominotè',
     lastUpdated: 'Dènye mizajou:',
-    lastUpdatedDate: '26 Out 2026',
     intro: 'Riftn se yon platfòm desantralize, itilizatè-posede, men li pa yon kote san règ. Gid sa yo tabli ki sa ki pèmèt ak ki pa pèmèt, ki jan yo rapòte kontni, ak sa k ap pase apre yo fin fè yon rapò. Gouvènans kominotè a fikse politik; moderatè deziyen yo fè aplikasyon san pèdi tan.',
     notAllowed: 'Ki sa ki pa pèmèt',
     notAllowedText: 'Kontni ak konpòtman sa yo entèdi nenpòt kote sou Riftn, ki gen ladan posts, kòmantè, kouran, mesaj, pwofil ak non itilizatè:',
@@ -2436,7 +2435,6 @@ export const ht = {
     notAllowedItem2: 'Materyèl abi seksyèl timoun, oswa nenpòt reprezantasyon seksyèl minè yo. Yo rapòte sa bay otorite ki enpòtan yo epi sa lakòz yo retire yo imedyatman pou toutan',
     notAllowedItem3: 'Ensitasyon pou vyolans, menas vyolans, oswa glorifikasyon ekstremis vyolan ak teworis',
     notAllowedItem4: 'Asèlman, entimidasyon ak abi vize, ki gen ladan pil-ons kowòdone',
-    notAllowedItem5: 'Diskou rayi, ki gen ladan atak sou moun ki baze sou ras, etnisite, orijin nasyonal, relijyon, andikap, maladi, sèks, idantite seksyèl oswa oryantasyon seksyèl',
     notAllowedItem6: 'Doxxing oswa pibliye enfòmasyon prive yon lòt moun san konsantman yo',
     notAllowedItem7: 'Spam, manipilasyon angajman, rezo bot, ak enflasyon atifisyèl nan opinyon, vòt oswa rekonpans',
     notAllowedItem8: 'Imitasyon yon lòt moun, kreyatè, mak oswa pwojè',
@@ -2459,6 +2457,10 @@ export const ht = {
     appealsText: 'Si ou kwè yon desizyon modération te mal, yo ka fè apèl kont li atravè gouvènans kominotè. Gouvènans etabli moderatè politik yo aplike epi yo ka revize oswa ranvèse desizyon endividyèl yo. Sepandan, aplikasyon an imedya, kontni an rete desann pandan y ap konsidere yon apèl.',
     contact: 'Kontak',
     contactText: 'Kesyon sou direktiv sa yo, oswa rapò ki bezwen atansyon ijan, ka voye nan dev@dehub.io.',
+    notAllowedItem5: 'Diskou rayisman ki vize yon moun: atake, menase oswa dezekzante yon moun oswa yon gwoup akòz ras yo, etnisite yo, orijin nasyonal yo, relijyon yo, andikap yo, maladi yo, sèks yo, idantite seksyèl yo oswa oryantasyon seksyèl yo',
+    lastUpdatedDate: '14 novanm 2026',
+    freeSpeech: 'Libète lapawòl',
+    freeSpeechText: 'Riftn fèt pou libète lapawòl. Opinyon, deba, sati ak kritik lide, kwayans, relijyon ak politik yo tout byenveni, ki gen ladan opinyon lòt moun pa dakò avèk yo. Règ sou diskou rayisman an kouvri atak ki vize moun, pa opinyon. Alafen, se kominote a ki deside kisa ki konte kòm diskou rayisman ki vize yon moun epi li modere platfòm nan yon fason desantralize, atravè moderatè kominote a eli ak vòt gouvènans. Siyalman, blokaj ak silansman rete disponib pou tout moun.',
   },
   adTools: {
     cpmRow: 'Pri pou chak 1,000 afichaj (CPM):',

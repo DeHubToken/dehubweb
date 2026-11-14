@@ -2281,7 +2281,12 @@
     "loadFailed": "No se pudieron cargar las solicitudes"
   },
   "auth": {
-    "loginRequired": "Inicio de sesión requerido"
+    "loginRequired": "Inicio de sesión requerido",
+    "accountDeleted": "Esta cuenta fue eliminada. Puedes registrarte de nuevo con una cuenta nueva.",
+    "accountDeletedHours_one": "Esta cuenta fue eliminada. Podrás registrarte de nuevo con el mismo correo o teléfono en aproximadamente {{count}} hora.",
+    "accountDeletedHours_other": "Esta cuenta fue eliminada. Podrás registrarte de nuevo con el mismo correo o teléfono en aproximadamente {{count}} horas.",
+    "accountDeletedDays_one": "Esta cuenta fue eliminada. Podrás registrarte de nuevo con el mismo correo o teléfono en aproximadamente {{count}} día.",
+    "accountDeletedDays_other": "Esta cuenta fue eliminada. Podrás registrarte de nuevo con el mismo correo o teléfono en aproximadamente {{count}} días."
   },
   "messages": {
     "newDrawer": {
@@ -2500,7 +2505,24 @@
     "sortMostLiked": "Más favoritos",
     "searchThisChannel": "Buscar en este canal",
     "searchResultCount": "1 resultado para \"{{query}}\"",
-    "searchResultCountPlural": "{{count}} resultados para \"{{query}}\""
+    "searchResultCountPlural": "{{count}} resultados para \"{{query}}\"",
+    "sortCustom": "Orden personalizado",
+    "sortCustomShort": "Personalizado",
+    "arrangeButton": "Ordenar publicaciones",
+    "arrange": {
+      "title": "Ordena tus publicaciones",
+      "hint": "Arrastra tus publicaciones al orden que quieras. Los visitantes verán este orden primero.",
+      "drag": "Arrastra para mover",
+      "toTop": "Mover arriba del todo",
+      "save": "Guardar orden",
+      "saving": "Guardando...",
+      "saved": "Tu orden se ha guardado",
+      "reset": "Volver a lo más reciente primero",
+      "resetDone": "De nuevo lo más reciente primero",
+      "saveFailed": "No se pudo guardar tu orden. Inténtalo de nuevo.",
+      "loadFailed": "No se pudieron cargar tus publicaciones. Cierra esto e inténtalo de nuevo.",
+      "empty": "Aún no hay nada que ordenar. Publica algo primero."
+    }
   },
   "tv": {
     "seoTitle": "TV en directo: Canales gratuitos de todo el mundo",
@@ -3126,7 +3148,17 @@
     "noMenuMatches": "Nada en el menú coincide",
     "searchDehubFor": "Buscar «{{query}}» en Riftn",
     "switchAccount": "Cambiar de cuenta",
-    "signedInAs": "Conectado como {{name}}"
+    "signedInAs": "Conectado como {{name}}",
+    "requestPrompt": "¿Aún no está? Envíalo como petición",
+    "requestPromptShort": "¿Aún no está?",
+    "requestDraftMenu": "Añadir {{query}} a Riftn",
+    "requestDraftSettings": "Un ajuste para {{query}}",
+    "requestSend": "Enviar petición",
+    "requestPostsTo": "Se publica en Peticiones",
+    "requestHint": "Se publica en Peticiones con tu cuenta. Te avisaremos cuando salga.",
+    "requestSent": "Enviado a Peticiones",
+    "requestSentHint": "Te avisaremos cuando salga.",
+    "requestSeeIt": "Verlo en Peticiones"
   },
   "comments": {
     "reportComment": "Denunciar comentario",

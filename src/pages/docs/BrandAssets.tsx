@@ -19,10 +19,10 @@ import Download from "@/components/ui/cut-icons/download";
 import { useLanguage } from '@/contexts/LanguageContext';
 const designSystemZip = { url: '/brand/dehub-design-system.zip' };
 const figmaDuplicateInstruction = { url: '/docs/figma-duplicate-instruction.png' };
-const wordmarkWhite = { url: '/brand/wordmark-white.png' };
-const wordmarkBlack = { url: '/brand/wordmark-black.png' };
-const markWhite = { url: '/brand/mark-white.png' };
-const markBlack = { url: '/brand/mark-black.png' };
+const wordmarkWhite = { url: '/brand/riftn-wordmark-white.png' };
+const wordmarkBlack = { url: '/brand/riftn-wordmark-black.png' };
+const markWhite = { url: '/brand/riftn-icon-white.png' };
+const markBlack = { url: '/brand/riftn-icon-black.png' };
 
 type LogoAsset = {
   id: string;
@@ -40,6 +40,7 @@ const BrandAssets = () => {
   const handleDownload = async (url: string, filename: string) => {
     try {
       const res = await fetch(url, { mode: 'cors' });
+      if (!res.ok) throw new Error('Logo download failed');
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -61,7 +62,7 @@ const BrandAssets = () => {
       name: t('brandAssets.logoWordmarkWhite'),
       description: _copy("copy.febe4ba8ab01", { defaultValue: "Full Riftn wordmark for use on dark backgrounds." }),
       url: wordmarkWhite.url,
-      filename: 'dehub-wordmark-white.png',
+      filename: 'riftn-wordmark-white.png',
       bg: 'dark',
     },
     {
@@ -69,7 +70,7 @@ const BrandAssets = () => {
       name: t('brandAssets.logoWordmarkBlack'),
       description: _copy("copy.b3a0a6360ee6", { defaultValue: "Full Riftn wordmark for use on light backgrounds." }),
       url: wordmarkBlack.url,
-      filename: 'dehub-wordmark-black.png',
+      filename: 'riftn-wordmark-black.png',
       bg: 'light',
     },
     {
@@ -77,7 +78,7 @@ const BrandAssets = () => {
       name: t('brandAssets.logoMarkWhite'),
       description: _copy("copy.91387693b21c", { defaultValue: "Riftn icon mark for use on dark backgrounds." }),
       url: markWhite.url,
-      filename: 'dehub-mark-white.png',
+      filename: 'riftn-icon-white.png',
       bg: 'dark',
     },
     {
@@ -85,7 +86,7 @@ const BrandAssets = () => {
       name: t('brandAssets.logoMarkBlack'),
       description: _copy("copy.eef94579ec7c", { defaultValue: "Riftn icon mark for use on light backgrounds." }),
       url: markBlack.url,
-      filename: 'dehub-mark-black.png',
+      filename: 'riftn-icon-black.png',
       bg: 'light',
     },
   ];
@@ -136,17 +137,24 @@ const BrandAssets = () => {
                 <div className="space-y-2">
                   <h3 className="font-semibold text-lg text-foreground">{asset.name}</h3>
                   <p className="text-sm text-muted-foreground">{asset.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs bg-muted px-2 py-1 rounded">PNG</span>
-                    <Button
-                      onClick={() => handleDownload(asset.url, asset.filename)}
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      <Download className="w-4 h-4" />
-                      {t('brandAssets.download')}
-                    </Button>
+                  <div className="flex flex-wrap gap-2">
+                    {(['png', 'svg'] as const).map((format) => (
+                      <Button
+                        key={format}
+                        onClick={() => handleDownload(asset.url.replace(/\.png$/, `.${format}`), asset.filename.replace(/\.png$/, `.${format}`))}
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        {t('brandAssets.download')} {format.toUpperCase()}
+                      </Button>
+                    ))}
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    {asset.id.startsWith('wordmark')
+                      ? 'PNG image or scalable vector SVG with editable paths.'
+                      : 'PNG image or scalable vector SVG. The icon is separate from the R in the wordmark.'}
+                  </p>
                 </div>
               </div>
             ))}
