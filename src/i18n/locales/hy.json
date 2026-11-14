@@ -438,6 +438,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "բեռնել հավելվածը, Android, iPhone, բջջային հավելված, տեղադրել, APK, դեսկթոփ հավելված, տեղադրել համակարգչում, Windows, Mac"
+    },
     "reorderHint": "Վերադասավորելու համար պահեք և քաշեք ցանկացած պատկերակ",
     "reorderReset": "Վերականգնել",
     "reorderResetLong": "Վերականգնել ճաշացանկի հերթականությունը",
@@ -712,6 +715,10 @@
     "media": "Lratvikhner",
     "language": "Lezvou",
     "languageDesc": "Entratsoutzek dzainor nahentseliq lezvoune",
+    "desktopApp": "Դեսկթոփ հավելված",
+    "desktopAppDesc": "Տեղադրեք Riftn այս համակարգչում։ Այն բացվում է իր սեփական պատուհանում և ինքնուրույն թարմացվում է։",
+    "desktopAppInstall": "Տեղադրել",
+    "desktopAppInstalled": "Տեղադրված",
     "light": "Louys",
     "minimal": "Մինիմալ",
     "minimalLight": "Մինիմալ բաց",
@@ -11889,7 +11896,25 @@
     "shareX": "Կիսվել X-ում",
     "shareFacebook": "Կիսվել Facebook-ում",
     "shareTelegram": "Կիսվել Telegram-ում",
-    "copyLink": "Պատճենել հղումը"
+    "copyLink": "Պատճենել հղումը",
+    "seoTitleAll": "Ստացեք Riftn հավելվածը: Դեսկթոփ և Android APK",
+    "seoDescriptionAll": "Տեղադրեք Riftn ձեր համակարգչում մեկ կտտոցով, կամ բաց թողեք խանութները և ստացեք վերջին Android կառուցումը ուղղակի APK-ով։ Բաց աղբյուր, օգտատիրոջ սեփական սոցիալական մեդիա։",
+    "shareTextAll": "Բաց թողեք խանութները: ստացեք Riftn ձեր համակարգչում, կամ վերցրեք վերջին Android կառուցումը ուղղակի։",
+    "tabsLabel": "Ընտրեք ձեր սարքը",
+    "tabDesktop": "Դեսկթոփ",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn ձեր համակարգչում։",
+    "desktopSubtitle": "Ինձ սեփական պատուհան, իմ սեփական պատկերակ, և այն ինքնուրույն թարմացվում է ամեն անգամ, երբ մենք առաքում ենք։ Չկա խանութ և ոչինչ ներբեռնելու համար։",
+    "install": "Տեղադրեք Riftn",
+    "installed": "Տեղադրված",
+    "installedHint": "Բացեք Riftn ձեր Սկիզբի ընտրացանկից, Dock-ից կամ հավելվածների ցանկից։",
+    "inAppHint": "Դուք արդեն օգտագործում եք տեղադրված հավելվածը։",
+    "desktopHint": "Ձեր զննարկիչը մեկ անգամ հարցնում է, ապա Riftn բացվում է իր սեփական պատուհանում։",
+    "howChromium": "Կտտացրեք տեղադրման պատկերակը հասցեի գոտու աջ կողմում, ապա Տեղադրել։",
+    "howSafari": "Safari-ում, բացեք Ֆայլի ընտրացանկը և ընտրեք Ավելացնել Dock‑ին։",
+    "howFirefox": "Firefox չի կարող տեղադրել հավելվածներ։ Բացեք այս էջը Chrome, Edge կամ Safari‑ում Riftn տեղադրելու համար։",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Նախընտրում եք Microsoft Store‑ը? Ստացեք այն այնտեղ։"
   },
   "postStage": {
     "back": "Հետ գնալ",

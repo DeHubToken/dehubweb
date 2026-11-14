@@ -134,6 +134,7 @@ import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
 import { GettingStartedSetting } from '@/components/app/settings/GettingStartedSetting';
+import { DesktopAppSetting } from '@/components/app/settings/DesktopAppSetting';
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import type { SocialPlatform, VerifiedSocialAccount } from '@/lib/social-reach';
 import { SocialConnectControl, useOwnSocialReach } from '@/components/app/settings/SocialReachConnect';
@@ -281,6 +282,7 @@ import { AccountAllowReactions } from '@/components/app/remix/AllowReactionsSwit
 import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
+import { SignedFollowsSetting } from '@/components/app/settings/SignedFollowsSetting';
 import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 
@@ -1138,6 +1140,9 @@ function ProfileSettings() {
 
       {/* Fediverse — the @username@riftn.com address Mastodon can follow */}
       <FediverseHandleSetting />
+
+      {/* Your follows, on chain — signed by the wallet, stamped on Base daily */}
+      <SignedFollowsSetting />
 
       {/* Connected apps — Mastodon apps signed in to this account */}
       <ConnectedAppsSetting />
@@ -2699,6 +2704,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
             action={<LanguageSelector />}
           />
           <GettingStartedSetting />
+          <DesktopAppSetting />
         </div>
       </div>
 

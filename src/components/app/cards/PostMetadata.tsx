@@ -19,8 +19,25 @@ import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useBoostedPost } from './boosted-post';
+import { formatVsUsual, usePostVsUsual } from '@/components/app/post-stats/vs-usual';
 
 const PostStatsSheet = lazy(() => import('@/components/app/post-stats/PostStatsSheet'));
+
+/** How far this post is above or below the creator's usual, inside the view button. */
+function ViewVsUsual({ tokenId }: { tokenId: string | number }) {
+  const { t } = useTranslation();
+  const pct = usePostVsUsual(tokenId).data?.pct;
+  if (pct == null) return null;
+  return (
+    <span
+      data-post-vs-usual={pct >= 10 ? 'up' : pct <= -10 ? 'down' : 'even'}
+      title={t('postStats.vsUsualPct', { defaultValue: '{{pct}} vs your usual post', pct: formatVsUsual(pct) })}
+      className="tabular-nums font-semibold"
+    >
+      {formatVsUsual(pct)}
+    </span>
+  );
+}
 
 interface PostMetadataProps {
   className?: string;
@@ -155,6 +172,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
         >
           {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
           <span className="tabular-nums">{displayedCount}</span>
+          <ViewVsUsual tokenId={tokenId!} />
           <Stats aria-hidden="true" className="w-3 h-3" />
         </button>
       ) : (

@@ -436,6 +436,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "soo dejiso app-ka, Android, iPhone, app mobil, rakib, APK, app desktop, rakib kombiyuutarka, Windows, Mac"
+    },
     "reorderHint": "Qabso oo jiido icon kasta si ay dib u abaabulaan",
     "reorderReset": "Dib u deji",
     "reorderResetLong": "Dib u deji amarka menu",
@@ -700,6 +703,10 @@
     "media": "Warbaahinta",
     "language": "Luqadda",
     "languageDesc": "Dooro luqaddaada la doorbido",
+    "desktopApp": "Desktop app",
+    "desktopAppDesc": "Ku rakib Riftn kombiyuutarkan. Waxay furan tahay daaqad u gaar ah oo is-dhaqameysa.",
+    "desktopAppInstall": "Install",
+    "desktopAppInstalled": "Installed",
     "light": "Iftiinka",
     "minimal": "Fudud",
     "minimalLight": "Fudud Iftiinka",
@@ -11817,7 +11824,24 @@
     "shareX": "Ku wadaag X",
     "shareFacebook": "Ku wadaag Facebook",
     "shareTelegram": "Ku wadaag Telegram",
-    "copyLink": "Koobi linkiga"
+    "copyLink": "Koobi linkiga",
+    "seoDescriptionAll": "Ku rakib Riftn kombiyuutarkaaga hal gujin, ama iska dhaaf dukaamada oo hel nooca ugu dambeeya ee Android sida APK toos ah. Koodh furan, warbaahinta bulshada ee ay leedahay isticmaale.",
+    "shareTextAll": "Ka bood dukaamada: hel Riftn kombiyuutarkaaga, ama soo qaado dhismaha Android ee ugu dambeeya si toos ah.",
+    "tabsLabel": "Xulo qalabkaaga",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn ku saabsan kombiyuutarkaaga.",
+    "desktopSubtitle": "Daabacadiisa, astaantiisa, iyo waxa uu is-dhaqaaqaa mar kasta oo aan soo dirno. Ma jiro dukaam iyo wax aan la soo dejisan.",
+    "install": "Install Riftn",
+    "installed": "Installed",
+    "installedHint": "Fur Riftn adigoo ka soo qaadaya Menu-gaaga Bilowga, Dock-ga ama liiska app-yada.",
+    "inAppHint": "Waxaad horey u isticmaalaysaa app‑ka la rakibay.",
+    "desktopHint": "Baarahaaga wuxuu weydiinayaa hal mar, ka dibna Riftn wuxuu furaa daaqadkiisa gaarka ah.",
+    "howChromium": "Riix astaanta rakibaadda ee ku taal dhamaadka midig ee bareegga cinwaanka, ka dibna Riix Rakib.",
+    "howSafari": "Safari, fur menu-ga File oo dooro Add to Dock.",
+    "howFirefox": "Firefox ma rakibi karo apps. Furo boggan Chrome, Edge ama Safari si aad u rakibto Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Ma doorbidaa Microsoft Store? Halkaas ka hel."
   },
   "postStage": {
     "back": "Dib u noqo",

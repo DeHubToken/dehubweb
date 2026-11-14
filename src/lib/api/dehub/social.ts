@@ -85,12 +85,20 @@ export interface CommentLikeResponse {
   likeCount?: number;
 }
 
+/** Signs the follow with the wallet's follow key in the background (lib/follow-graph). */
+function signFollowLater(action: 'follow' | 'unfollow', targets: string[]) {
+  if (!targets.length) return;
+  import("@/lib/follow-graph").then(m => targets.forEach(t => m.signFollow(action, t))).catch(() => {});
+}
+
 export async function followUser(walletAddress: string): Promise<{ result: boolean; status?: string; isPrivateAccount?: boolean }> {
-  return apiCall<{ result: boolean; status?: string; isPrivateAccount?: boolean }>("/api/request_follow", {
+  const response = await apiCall<{ result: boolean; status?: string; isPrivateAccount?: boolean }>("/api/request_follow", {
     method: "POST",
     body: { following: walletAddress.toLowerCase() },
     requiresAuth: true,
   });
+  if (response?.result && response.status !== 'pending') signFollowLater('follow', [walletAddress]);
+  return response;
 }
 
 export interface FollowBatchResult {
@@ -107,6 +115,7 @@ export async function followUsersBatch(walletAddresses: string[]): Promise<Follo
     body: { addresses: walletAddresses.map(address => address.toLowerCase()) },
     requiresAuth: true,
   });
+  signFollowLater('follow', (response.results ?? []).filter(r => r.ok && r.status !== 'pending').map(r => r.address));
   return response.results ?? [];
 }
 
@@ -118,6 +127,7 @@ export async function unfollowUser(walletAddress: string): Promise<{ result: boo
   });
   // Cancelling a pending request is not unfollowing someone.
   if (!response?.wasPending) noteUnfollow(typeof response?.followsYou === 'boolean' ? response.followsYou : undefined);
+  if (response?.result && !response.wasPending) signFollowLater('unfollow', [walletAddress]);
   return response;
 }
 

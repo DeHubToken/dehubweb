@@ -7235,15 +7235,6 @@ html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(
   }
 }
 
-/* Full-screen chat (/chat). A soft dot pattern behind the thread so bubbles
-   read as objects on a surface; it follows the theme's own text colour, so
-   light and dark themes both get a faint version of themselves. */
-[data-chat-wallpaper] {
-  background-image: radial-gradient(color-mix(in srgb, currentColor 9%, transparent) 1px, transparent 1.4px);
-  background-size: 22px 22px;
-  background-position: 11px 11px;
-}
-
 /* Phones: the open chat slides in over the list instead of appearing. */
 @media (max-width: 767px) {
   [data-fsc-chat-open] {
@@ -7276,6 +7267,16 @@ html[data-system-tone="light"] .thread-part-row {
 html[data-theme="light"] .thread-part-row[data-reorder-dragging],
 html[data-system-tone="light"] .thread-part-row[data-reorder-dragging] {
   background-color: rgb(255 255 255);
+}
+/* The thread line and its rings (AuthorThread) are white hairlines on dark;
+   paper themes get the same weight in black. */
+html[data-theme="light"] .author-thread-line,
+html[data-system-tone="light"] .author-thread-line {
+  background-color: rgb(0 0 0 / 0.18);
+}
+html[data-theme="light"] .author-thread-ring,
+html[data-system-tone="light"] .author-thread-ring {
+  border-color: rgb(0 0 0 / 0.18);
 }
 html[data-theme="light"] .thread-part-num,
 html[data-system-tone="light"] .thread-part-num {

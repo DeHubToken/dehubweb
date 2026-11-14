@@ -11,7 +11,7 @@ export const badgePosterBounds: Record<string, [number, number, number, number]>
   'Great White Shark': [5, 15, 120, 121],
   'Killer Whale': [19, 11, 93, 98],
   'Blue Whale': [16, 24, 122, 126],
-  'Megalodon': [5, 19, 124, 126],
+  'Megalodon': [9, 11, 119, 117],
 };
 
 /**
@@ -23,5 +23,5 @@ export const badgePosterBounds: Record<string, [number, number, number, number]>
 export const badgePosterSit: Record<string, number> = {
   'Crab': 113, 'Ghost Lobster': 114, 'Piranha': 116, 'Giant Tortoise': 111, 'King Cobra': 122, 'Octopus': 122,
   'Crocodile': 120, 'Dolphin': 119, 'Tiger Shark': 112, 'Great White Shark': 114, 'Killer Whale': 94,
-  'Blue Whale': 120, 'Megalodon': 121,
+  'Blue Whale': 120, 'Megalodon': 112,
 };

@@ -441,6 +441,9 @@
   },
   "nav": {
     "launchpad": "ลอนช์แพด",
+    "findWords": {
+      "getTheApp": "ดาวน์โหลดแอป, Android, iPhone, แอปมือถือ, ติดตั้ง, APK, แอปเดสก์ท็อป, ติดตั้งบนคอมพิวเตอร์, Windows, Mac"
+    },
     "reorderHint": "กดค้างไว้แล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
     "reorderReset": "รีเซ็ต",
     "reorderResetLong": "รีเซ็ตการสั่งซื้อเมนู",
@@ -715,6 +718,10 @@
     "media": "สื่อ",
     "language": "ภาษา",
     "languageDesc": "เลือกภาษาที่คุณต้องการ",
+    "desktopApp": "แอปเดสก์ท็อป",
+    "desktopAppDesc": "ติดตั้ง Riftn บนคอมพิวเตอร์นี้ มันจะเปิดในหน้าต่างของตัวเองและอัปเดตตัวเอง",
+    "desktopAppInstall": "ติดตั้ง",
+    "desktopAppInstalled": "ติดตั้งแล้ว",
     "light": "สว่าง",
     "minimal": "มินิมอล",
     "minimalLight": "มินิมอล สว่าง",
@@ -11902,7 +11909,25 @@
     "shareX": "แชร์บน X",
     "shareFacebook": "แชร์บน Facebook",
     "shareTelegram": "แชร์บน Telegram",
-    "copyLink": "คัดลอกลิงก์"
+    "copyLink": "คัดลอกลิงก์",
+    "seoTitleAll": "รับแอป Riftn: Desktop และ Android APK",
+    "seoDescriptionAll": "ติดตั้ง Riftn บนคอมพิวเตอร์ของคุณในคลิกเดียว หรือข้ามร้านค้าและรับรุ่น Android ล่าสุดเป็น APK ตรง ๆ เปิดแหล่งโค้ด, สื่อสังคมที่ผู้ใช้เป็นเจ้าของ",
+    "shareTextAll": "ข้ามร้านค้า: รับ Riftn บนคอมพิวเตอร์ของคุณ หรือดึงรุ่น Android ล่าสุดตรง ๆ",
+    "tabsLabel": "เลือกอุปกรณ์ของคุณ",
+    "tabDesktop": "เดสก์ท็อป",
+    "tabAndroid": "แอนดรอยด์",
+    "desktopTitle": "Riftn บนคอมพิวเตอร์ของคุณ",
+    "desktopSubtitle": "หน้าต่างของตัวเอง ไอคอนของตัวเอง และมันอัปเดตตัวเองทุกครั้งที่เราส่งออก ไม่มีร้านค้าและไม่มีอะไรให้ดาวน์โหลด",
+    "install": "ติดตั้ง Riftn",
+    "installed": "ติดตั้งแล้ว",
+    "installedHint": "เปิด Riftn จากเมนูเริ่ม, Dock หรือรายการแอปของคุณ",
+    "inAppHint": "คุณกำลังใช้แอปที่ติดตั้งอยู่แล้ว",
+    "desktopHint": "เบราว์เซอร์ของคุณถามครั้งเดียว จากนั้น Riftn จะเปิดในหน้าต่างของตัวเอง",
+    "howChromium": "คลิกไอคอนติดตั้งที่ด้านขวาของแถบที่อยู่ แล้วคลิก ติดตั้ง",
+    "howSafari": "ใน Safari เปิดเมนู File และเลือก Add to Dock",
+    "howFirefox": "Firefox ไม่สามารถติดตั้งแอปได้ เปิดหน้านี้ใน Chrome, Edge หรือ Safari เพื่อติดตั้ง Riftn",
+    "desktopMeta": "วินโดว์ส · แมค · ลินุกซ์ · ครอมหรือครอมน",
+    "microsoftStore": "ต้องการ Microsoft Store? รับมันที่นั่นแทน"
   },
   "postStage": {
     "back": "ย้อนกลับ",

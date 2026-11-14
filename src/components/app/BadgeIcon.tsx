@@ -63,14 +63,14 @@ const BADGE_OPTICS: Record<string, { left: number; top: number; right: number; b
   "Killer Whale": { left: 19, top: 17, right: 109, bottom: 121 },
   "Great White Shark": { left: 8, top: 13, right: 121, bottom: 120 },
   "Blue Whale": { left: 7, top: 13, right: 119, bottom: 121 },
-  "Megalodon": { left: 8, top: 15, right: 120, bottom: 117 },
+  "Megalodon": { left: 9, top: 11, right: 119, bottom: 117 },
 };
 
 // Optical resting line of the original stills, measured like badgePosterSit.
 const BADGE_SIT: Record<string, number> = {
   "Crab": 114, "Ghost Lobster": 108, "Piranha": 112, "Giant Tortoise": 112, "King Cobra": 117, "Octopus": 118,
   "Crocodile": 115, "Dolphin": 117, "Tiger Shark": 113, "Killer Whale": 118, "Great White Shark": 114,
-  "Blue Whale": 115, "Megalodon": 114,
+  "Blue Whale": 115, "Megalodon": 112,
 };
 
 function badgeNameFromAssetUrl(url: string | null): string | undefined {
@@ -123,7 +123,8 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // +10%, +10% on 2026-11-04, +5% on 2026-11-05). Every tier's measured bounds
   // scale from this one number. The box ends on the tier's resting line, so
   // that line sits on the name's baseline and thin tips overshoot just below.
-  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
+  const baseCap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
+  const cap = visualName === 'Megalodon' ? `calc(${baseCap} * 1.069)` : baseCap;
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: `calc(${sit} * ${cap})`,

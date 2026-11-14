@@ -436,6 +436,9 @@
   },
   "nav": {
     "launchpad": "משטח שיגור",
+    "findWords": {
+      "getTheApp": "הורד את האפליקציה, אנדרואיד, אייפון, אפליקציה ניידת, התקן, APK, אפליקציה שולחנית, התקן במחשב, Windows, Mac"
+    },
     "reorderHint": "יש להחזיק ולגרור כל סמל כדי לארגן מחדש",
     "reorderReset": "איפוס",
     "reorderResetLong": "איפוס סדר התפריט",
@@ -710,6 +713,10 @@
     "media": "מדיה",
     "language": "שפה",
     "languageDesc": "בחר את השפה המועדפת עליך",
+    "desktopApp": "אפליקציה שולחנית",
+    "desktopAppDesc": "התקן את Riftn במחשב זה. הוא נפתח בחלון משלו ומעדכן את עצמו.",
+    "desktopAppInstall": "התקן",
+    "desktopAppInstalled": "הותקן",
     "light": "בהיר",
     "minimal": "מינימלי",
     "minimalLight": "מינימלי בהיר",
@@ -11888,7 +11895,24 @@
     "shareX": "שתף ב-X",
     "shareFacebook": "שתף ב-Facebook",
     "shareTelegram": "שתף ב-Telegram",
-    "copyLink": "העתק קישור"
+    "copyLink": "העתק קישור",
+    "seoTitleAll": "קבל את אפליקציית Riftn: Desktop ו-Android APK",
+    "seoDescriptionAll": "התקן את Riftn במחשב שלך בלחיצה אחת, או דלג על החנויות וקבל את הגרסה האחרונה של Android כ-APK ישיר. קוד פתוח, מדיה חברתית בבעלות המשתמש.",
+    "shareTextAll": "דלג על החנויות: קבל את Riftn במחשב שלך, או קבל את הגרסה האחרונה של Android ישירות.",
+    "tabsLabel": "בחר את המכשיר שלך",
+    "tabDesktop": "שולחן עבודה",
+    "tabAndroid": "אנדרואיד",
+    "desktopTitle": "Riftn במחשב שלך.",
+    "desktopSubtitle": "הוא בחלון משלו, סמל משלו, והוא מעדכן את עצמו בכל פעם שנשלח. אין חנות ואין צורך להוריד.",
+    "install": "התקן Riftn",
+    "installed": "הותקן",
+    "installedHint": "פתח את Riftn מתפריט ההתחלה, הדוק או רשימת האפליקציות.",
+    "inAppHint": "אתה כבר משתמש באפליקציה המותקנת.",
+    "desktopHint": "הדפדפן שלך מבקש פעם אחת, ואז Riftn נפתח בחלון משלו.",
+    "howChromium": "לחץ על סמל ההתקנה בקצה הימני של סרגל הכתובת, ואז התקן.",
+    "howSafari": "ב-Safari, פתח את תפריט הקובץ ובחר הוסף לדוק.",
+    "howFirefox": "Firefox אינו יכול להתקין אפליקציות. פתח דף זה ב-Chrome, Edge או Safari כדי להתקין את Riftn.",
+    "microsoftStore": "העדיף את Microsoft Store? קבל אותו שם במקום."
   },
   "postStage": {
     "back": "חזרה",

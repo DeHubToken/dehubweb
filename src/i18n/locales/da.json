@@ -439,6 +439,9 @@
   },
   "nav": {
     "launchpad": "Launchpad",
+    "findWords": {
+      "getTheApp": "download appen, Android, iPhone, mobilapp, installer, APK, desktopapp, installer på computer, Windows, Mac"
+    },
     "reorderHint": "Hold og træk et ikon for at omarrangere",
     "reorderReset": "Nulstil",
     "reorderResetLong": "Nulstil menurækkefølge",
@@ -713,6 +716,10 @@
     "media": "Medier",
     "language": "Sprog",
     "languageDesc": "Vælg dit foretrukne sprog",
+    "desktopApp": "Desktopapp",
+    "desktopAppDesc": "Installer Riftn på denne computer. Den åbner i sit eget vindue og opdaterer sig selv.",
+    "desktopAppInstall": "Installer",
+    "desktopAppInstalled": "Installeret",
     "light": "Lys",
     "minimal": "Minimal",
     "minimalLight": "Minimal Lys",
@@ -11897,7 +11904,25 @@
     "shareX": "Del på X",
     "shareFacebook": "Del på Facebook",
     "shareTelegram": "Del på Telegram",
-    "copyLink": "Kopier link"
+    "copyLink": "Kopier link",
+    "seoTitleAll": "Få Riftn-appen: Desktop og Android APK",
+    "seoDescriptionAll": "Installer Riftn på din computer med ét klik, eller spring butikkerne over og få den seneste Android-build som en direkte APK. Open source, bruger-ejet socialt medie.",
+    "shareTextAll": "Spring butikkerne over: få Riftn på din computer, eller hent den seneste Android-build direkte.",
+    "tabsLabel": "Vælg din enhed",
+    "tabDesktop": "DESKTOP",
+    "tabAndroid": "ANDROID",
+    "desktopTitle": "Riftn på din computer.",
+    "desktopSubtitle": "Det eget vindue, sin egen ikon, og det opdaterer sig selv hver gang vi sender. Ingen butik og intet at downloade.",
+    "install": "Installer Riftn",
+    "installed": "Installeret",
+    "installedHint": "Åbn Riftn fra din Start-menu, Dock eller appliste.",
+    "inAppHint": "Du bruger allerede den installerede app.",
+    "desktopHint": "Din browser spørger én gang, så åbner Riftn i sit eget vindue.",
+    "howChromium": "Klik på installationsikonet i den højre ende af adresselinjen, så Installer.",
+    "howSafari": "I Safari, åbn Fil-menuen og vælg Tilføj til Dock.",
+    "howFirefox": "Firefox kan ikke installere apps. Åbn denne side i Chrome, Edge eller Safari for at installere Riftn.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS",
+    "microsoftStore": "Foretrækker du Microsoft Store? Få den der i stedet."
   },
   "postStage": {
     "back": "Gå tilbage",

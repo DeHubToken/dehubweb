@@ -437,6 +437,9 @@
   },
   "nav": {
     "launchpad": "ላውንችፓድ",
+    "findWords": {
+      "getTheApp": "የመተግበሪያውን ማውረድ፣ Android፣ iPhone፣ ሞባይል መተግበሪያ፣ አገልግሎት ፋይል (APK)፣ ዴስክቶፕ መተግበሪያ፣ በኮምፒውተር ላይ አገልግሎት ፣ Windows፣ Mac"
+    },
     "reorderHint": "የተሰጠው አይኮን ይጠየቀው እና ይምረጡ",
     "reorderReset": "ዳግም አስጀምር",
     "reorderResetLong": "ምናሌ ትዕዛዝ ዳግም አስጀምር",
@@ -711,6 +714,10 @@
     "media": "ሚዲያ",
     "language": "ቋንቋ",
     "languageDesc": "የምትመርጠውን ቋንቋ ምረጥ",
+    "desktopApp": "ዴስክቶፕ መተግበሪያ",
+    "desktopAppDesc": "Riftnን በዚህ ኮምፒውተር ላይ አገልግሎት ያድርጉ። በራሱ መስኮት ይከፈታል እና ራሱን ይዘምናል።",
+    "desktopAppInstall": "አገልግሎት",
+    "desktopAppInstalled": "ተገጥሟል",
     "light": "ብርሃን",
     "minimal": "ቀላል",
     "minimalLight": "ቀላል ብርሃን",
@@ -11890,7 +11897,23 @@
     "shareX": "በX ላይ አጋራ",
     "shareFacebook": "በFacebook ላይ አጋራ",
     "shareTelegram": "በTelegram ላይ አጋራ",
-    "copyLink": "ማገናኛ ቅዳ"
+    "copyLink": "ማገናኛ ቅዳ",
+    "seoTitleAll": "Riftn መተግበሪያውን ያግኙ፡ ዴስክቶፕ እና Android APK",
+    "seoDescriptionAll": "Riftnን በአንድ ጊዜ በኮምፒውተርዎ ላይ አገልግሎት ያድርጉ፣ ወይም ሱቅዎቹን ይተው የቅርብ ጊዜውን Android ብልጭ በቀጥታ APK ያገኙ። ክፍት ምንጭ፣ ተጠቃሚ-ባለቤት ማህበራዊ ሚዲያ።",
+    "shareTextAll": "ሱቅዎቹን ይተው፡ Riftnን በኮምፒውተርዎ ላይ ያገኙ፣ ወይም የቅርብ ጊዜውን Android ብልጭ በቀጥታ ያገኙ።",
+    "tabsLabel": "መሣሪያዎን ይምረጡ",
+    "tabDesktop": "ዴስክቶፕ",
+    "desktopTitle": "Riftn በኮምፒውተርዎ ላይ።",
+    "desktopSubtitle": "ራሱ መስኮት፣ ራሱ አዶ፣ እና በእያንዳንዱ ጊዜ እንደምንልክ ራሱን ይዘምናል። ሱቅ የለም እና ምንም ለማውረድ የለም።",
+    "install": "Riftnን አገልግሎት",
+    "installed": "ተገጥሟል",
+    "installedHint": "Riftnን ከጀምር ምናሌ፣ Dock ወይም መተግበሪያ ዝርዝር ክፈት።",
+    "inAppHint": "እርስዎ አስቀድሞ የተገጥሙትን መተግበሪያ እየተጠቀሙ ነው።",
+    "desktopHint": "አሳሽዎ አንዴ ይጠይቃል፣ ከዚያም Riftn በራሱ መስኮት ይከፈታል።",
+    "howChromium": "በአድራሻ አሞሌው በቀኝ ጎን ያለውን አገልግሎት አዶ ጠቅ ያድርጉ፣ ከዚያም አገልግሎት።",
+    "howSafari": "በSafari፣ ፋይል ምናሌን ክፈት እና Add to Dock ይምረጡ።",
+    "howFirefox": "Firefox መተግበሪያዎችን ማግኘት አይችልም። ይህን ገጽ በChrome፣ Edge ወይም Safari ውስጥ ክፈት ለRiftn አገልግሎት።",
+    "microsoftStore": "Microsoft Storeን ተመርጠው ይፈልጋሉ? በዚያ ቦታ ያገኙ።"
   },
   "postStage": {
     "back": "ወደ ኋላ ተመለስ",

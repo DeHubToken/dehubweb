@@ -440,6 +440,9 @@
   },
   "nav": {
     "launchpad": "Launchpad nisqa",
+    "findWords": {
+      "getTheApp": "chay appta uraykachiy, Android, iPhone, movil app, churay, APK, escritorio app, computadorapi churay, Windows, Mac"
+    },
     "reorderHint": "Ima iconotapas hap’ispa aysay mosoqmanta churanaykipaq",
     "reorderReset": "Reset nisqa",
     "reorderResetLong": "Menú ordenta kutichiy",
@@ -704,6 +707,10 @@
     "media": "Multimedia",
     "language": "Simi",
     "languageDesc": "Munasqa simiykita akllay",
+    "desktopApp": "Escritorio nisqapi app",
+    "desktopAppDesc": "Kay computadorapi Riftn nisqa churay. Kikin ventananta kicharikun hinaspa kikinmanta musuqyachin.",
+    "desktopAppInstall": "Churay",
+    "desktopAppInstalled": "Instalasqa",
     "light": "K'anchay",
     "minimal": "Ch'uqchay",
     "minimalLight": "Ch'uqchay K'anchay",
@@ -11903,7 +11910,25 @@
     "shareX": "X-pi rakiy",
     "shareFacebook": "Facebook-pi rakiy",
     "shareTelegram": "Telegram-pi rakiy",
-    "copyLink": "Linkta kopiay"
+    "copyLink": "Linkta kopiay",
+    "seoTitleAll": "Riftn App nisqapi tariy: Escritorio y Android APK",
+    "seoDescriptionAll": "Riftn computadoraykipi huk ñit'iypi churay, utaq tiendakunata saltay chaymanta qhipa Android ruwayta chiqa APK hina tariy. Kichasqa qullqisapa, llamk'aqpa kaqnin social medios.",
+    "shareTextAll": "Tiendakunata saltay: Riftn computadoraykipi hap'iy, utaq qhipa Android ruwayta chiqamanta hap'iy.",
+    "tabsLabel": "Dispositivoykita akllay",
+    "tabDesktop": "ESCRITORIO",
+    "tabAndroid": "ANDROID nisqa",
+    "desktopTitle": "Riftn computadoraykipi.",
+    "desktopSubtitle": "Kikin ventana, kikin icono, chaymanta sapa apachisqaykupi kikinmanta musuqyachin. Mana tiendayuq nitaq imapas uraykachinapaq.",
+    "install": "Riftn nisqapi churay",
+    "installed": "Instalasqa",
+    "installedHint": "Riftn kichay Qallarina menú kaqmanta, Dock utaq app listaykimanta.",
+    "inAppHint": "Ñam churasqa appta llamk'achkanki.",
+    "desktopHint": "Navegadorniyki huk kuti tapun, chaymanta Riftn kikin ventananta kichan.",
+    "howChromium": "Direccionkuna barrapa paña puntanpi churana icono ñitiy, chaymanta Instalar.",
+    "howSafari": "Safari kaqpi, Archivo menú kichay chaymanta akllay Yanapakuy Dock kaqman.",
+    "howFirefox": "Firefox mana ruwanakuna churayta atinchu. Kay p'anqata kichay Chrome, Edge utaq Safari kaqpi Riftn churanapaq.",
+    "desktopMeta": "Windows · Mac · Linux · ChromeOS kaqpi",
+    "microsoftStore": "¿Microsoft Tiendata aswan allinchu? Chaypa rantinpi chayman chayay."
   },
   "postStage": {
     "back": "Kutiy",
