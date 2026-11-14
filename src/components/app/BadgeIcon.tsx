@@ -124,9 +124,9 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // +10%, +10% on 2026-11-04, +5% on 2026-11-05). Every tier's measured bounds
   // scale from this one number. The box ends on the tier's resting line, so
   // that line sits on the name's baseline and thin tips overshoot just below.
-  const baseCap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
   const tierScale = badgeTierScale[visualName ?? ''] ?? 1;
-  const cap = `calc(${baseCap} * ${tierScale})`;
+  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap')
+    ? `${1.27 * tierScale}cap` : `${0.93 * tierScale}em`;
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: `calc(${sit} * ${cap})`,
